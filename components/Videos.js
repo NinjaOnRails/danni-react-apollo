@@ -9,7 +9,9 @@ const ALL_VIDEOS_QUERY = gql`
     videos {
       id
       title
-      source
+      channelTitle
+      thumbnailUrl
+      defaultLanguage
       audio {
         id
         source
@@ -32,7 +34,7 @@ const VideosList = styled.div`
   margin: 0 auto;
 `;
 
-export default class Videos extends Component {
+class Videos extends Component {
   render() {
     return (
       <div>
@@ -41,11 +43,19 @@ export default class Videos extends Component {
           {({ loading, error, data }) => {
             if (loading) return <p>Loading...</p>;
             if (error) return <p>Error: {error.message}</p>;
+
             return (
               <VideosList>
-                {data.videos.map(video => (
-                  <p key={video.id}>{video.source}</p>
-                ))}
+                {data.videos.map(video => {
+                  return (
+                    <div key={video.id}>
+                      <img src={video.thumbnailUrl} alt={video.title} />
+                      <p>{video.title}</p>
+                      <p>Channel: {video.channelTitle}</p>
+                      <p>Original Language: {video.defaultLanguage}</p>
+                    </div>
+                  );
+                })}
               </VideosList>
             );
           }}
@@ -54,3 +64,6 @@ export default class Videos extends Component {
     );
   }
 }
+
+export default Videos;
+export { ALL_VIDEOS_QUERY };
