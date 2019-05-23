@@ -20,17 +20,23 @@ const VIDEO_QUERY = gql`
       audio {
         id
         source
-        language
       }
       createdAt
     }
   }
 `;
 
-const SoundCloud = styled.div`
-  /* visibility: hidden; */
+const SoundCloudStyles = styled.div`
+  iframe {
+    width: 0;
+    height: 0;
+    border: 0;
+    border: none;
+    position: absolute;
+  }
 `;
 
+// Interval to be counted as Youtube seek change in seconds
 const interval = 1.02;
 
 class Watch extends Component {
@@ -44,7 +50,7 @@ class Watch extends Component {
   };
 
   onProgressYoutube = ({ playedSeconds }) => {
-    // Synchronize Soundcloud player progress with Youtube player progress by checking Youtube progress change interval (larger than 1.02s)
+    // Synchronize Soundcloud player progress with Youtube player progress on Youtube seek change
     if (Math.abs(playedSeconds - this.state.playedYoutube) > interval) {
       this.playerSoundcloud.seekTo(playedSeconds);
     }
@@ -77,21 +83,25 @@ class Watch extends Component {
               <div>
                 <h2>{video.title}</h2>
                 <YouTubePlayer
-                  url={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                  url={`https://www.youtube.com/watch?v=${video.youtubeId}"`}
                   muted
-                  controls
                   playing
+                  controls
                   onPause={() => this.setState({ playingSoundcloud: false })}
                   onPlay={() => this.setState({ playingSoundcloud: true })}
                   onProgress={this.onProgressYoutube}
                 />
-                <SoundCloud>
+                {video.audio[0] && (
+                  // <SoundCloudStyles>
                   <SoundCloudPlayer
                     ref={this.ref}
-                    url="https://soundcloud.com/user-566264679/addiction-cz"
+                    url={video.audio[0].source}
+                    height="0%"
+                    width="0%"
                     playing={this.state.playingSoundcloud}
                   />
-                </SoundCloud>
+                  // </SoundCloudStyles>
+                )}
               </div>
             </div>
           );

@@ -88,7 +88,7 @@ class AddVideo extends Component {
                       id="youtubeId"
                       name="youtubeId"
                       required
-                      placeholder="required"
+                      placeholder="e.g. 0Y59Yf9lEP0"
                       value={youtubeId}
                       onChange={this.handleChange}
                     />
@@ -99,6 +99,7 @@ class AddVideo extends Component {
                       type="text"
                       id="audioSource"
                       name="audioSource"
+                      placeholder="e.g. https://soundcloud.com/user-566264679/addiction-cz"
                       value={audioSource}
                       onChange={this.handleChange}
                     />

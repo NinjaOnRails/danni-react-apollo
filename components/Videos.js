@@ -41,8 +41,7 @@ const VideosList = styled.div`
 class Videos extends Component {
   render() {
     return (
-      <div>
-        <p>Videos</p>
+      <Center>
         <Query query={ALL_VIDEOS_QUERY}>
           {({ loading, error, data }) => {
             if (loading) return <p>Loading...</p>;
@@ -61,9 +60,9 @@ class Videos extends Component {
                       >
                         <img src={video.thumbnailUrl} alt={video.title} />
                       </Link>
-                      <p>{video.title}</p>
-                      <p>Channel: {video.channelTitle}</p>
-                      <p>Original Language: {video.defaultLanguage}</p>
+                      <h3>{video.title}</h3>
+                      <h4>{video.channelTitle}</h4>
+                      {video.defaultLanguage && <p>{video.defaultLanguage}</p>}
                     </div>
                   );
                 })}
@@ -71,7 +70,7 @@ class Videos extends Component {
             );
           }}
         </Query>
-      </div>
+      </Center>
     );
   }
 }
