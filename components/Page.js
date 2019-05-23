@@ -24,7 +24,7 @@ const Inner = styled.div`
   padding: 2rem;
 `;
 
-createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'radnika_next';
     src: url('/static/radnikanext-medium-webfont.woff2') format('woff2');
@@ -58,6 +58,7 @@ class Page extends Component {
     return (
       <ThemeProvider theme={theme}>
         <StyledPage>
+          <GlobalStyle />
           <Meta />
           <Header />
           <Inner>{children}</Inner>
