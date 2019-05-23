@@ -9,15 +9,15 @@ const Nav = () => (
     <Link href="/">
       <a>Home</a>
     </Link>
-    <Link href="/browse">
+    {/* <Link href="/browse">
       <a>Watch</a>
-    </Link>
+    </Link> */}
     <Link href="/new">
       <a>+</a>
     </Link>
-    <Link href="/signin">
+    {/* <Link href="/signin">
       <a>Sign In</a>
-    </Link>
+    </Link> */}
     <Link href="/about">
       <a>About</a>
     </Link>

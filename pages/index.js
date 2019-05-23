@@ -1,7 +1,8 @@
+import Videos from '../components/Videos'
+
 const Home = props => (
   <div>
-    Index page
+    <Videos />
   </div>
-);
-
-export default Home;
+)
+export default Home

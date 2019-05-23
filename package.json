@@ -31,6 +31,7 @@
     "react-adopt": "^0.6.0",
     "react-apollo": "^2.5.5",
     "react-dom": "^16.8.6",
+    "react-player": "^1.11.0",
     "styled-components": "^4.2.0"
   },
   "jest": {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
+import Link from 'next/link';
 import Error from './ErrorMessage';
 
 const ALL_VIDEOS_QUERY = gql`
@@ -32,6 +33,9 @@ const VideosList = styled.div`
   grid-gap: 60px;
   max-width: ${props => props.theme.maxWidth};
   margin: 0 auto;
+  img {
+    cursor: pointer;
+  }
 `;
 
 class Videos extends Component {
@@ -49,7 +53,14 @@ class Videos extends Component {
                 {data.videos.map(video => {
                   return (
                     <div key={video.id}>
-                      <img src={video.thumbnailUrl} alt={video.title} />
+                      <Link
+                        href={{
+                          pathname: '/watch',
+                          query: { id: video.id },
+                        }}
+                      >
+                        <img src={video.thumbnailUrl} alt={video.title} />
+                      </Link>
                       <p>{video.title}</p>
                       <p>Channel: {video.channelTitle}</p>
                       <p>Original Language: {video.defaultLanguage}</p>
