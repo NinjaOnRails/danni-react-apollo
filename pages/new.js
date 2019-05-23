@@ -1,8 +1,8 @@
-import NewVideo from '../components/NewVideo';
+import AddVideo from '../components/AddVideo';
 
 const New = props => (
   <div>
-    <NewVideo />
+    <AddVideo />
   </div>
 );
 

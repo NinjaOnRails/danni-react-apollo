@@ -13,7 +13,7 @@ const Nav = () => (
       <a>Watch</a>
     </Link> */}
     <Link href="/new">
-      <a>+</a>
+      <a>Add Video</a>
     </Link>
     {/* <Link href="/signin">
       <a>Sign In</a>
