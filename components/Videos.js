@@ -61,8 +61,8 @@ class Videos extends Component {
                         <img src={video.thumbnailUrl} alt={video.title} />
                       </Link>
                       <h3>{video.title}</h3>
-                      <h4>{video.channelTitle}</h4>
-                      {video.defaultLanguage && <p>{video.defaultLanguage}</p>}
+                      {/* <h4>{video.channelTitle}</h4> */}
+                      {/* {video.defaultLanguage && <p>{video.defaultLanguage}</p>} */}
                     </div>
                   );
                 })}
