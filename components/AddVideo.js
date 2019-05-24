@@ -10,6 +10,7 @@ const CREATE_VIDEO_MUTATION = gql`
   mutation CREATE_VIDEO_MUTATION($youtubeId: String!) {
     createVideo(youtubeId: $youtubeId) {
       id
+      youtubeId
     }
   }
 `;
@@ -21,7 +22,6 @@ const CREATE_AUDIO_MUTATION = gql`
       source
       video {
         id
-        title
       }
     }
   }
