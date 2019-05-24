@@ -31,15 +31,20 @@ class AddVideo extends Component {
   state = {
     youtubeId: '',
     audioSource: '',
+    tags: '',
+    tagsArray: [],
   };
 
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+    if (name === 'tags') {
+      this.setState({ tagsArray: value.split(' ') });
+    }
   };
 
   render() {
-    const { youtubeId, audioSource } = this.state;
+    const { youtubeId, audioSource, tags, tagsArray } = this.state;
     return (
       <Mutation
         mutation={CREATE_AUDIO_MUTATION}
@@ -81,7 +86,7 @@ class AddVideo extends Component {
               >
                 <Error error={error} />
                 <fieldset disabled={loading} aria-busy={loading}>
-                  <label htmlFor="title">
+                  <label htmlFor="youtubeId">
                     YouTube ID:
                     <input
                       type="text"
@@ -93,7 +98,18 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label>
-                  <label htmlFor="title">
+                  <label htmlFor="tags">
+                    Tags:
+                    <input
+                      type="text"
+                      id="tags"
+                      name="tags"
+                      placeholder="e.g. technology inspiring informative science politics"
+                      value={tags}
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <label htmlFor="audioSource">
                     Audio source:
                     <input
                       type="text"
