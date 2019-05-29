@@ -85,7 +85,8 @@ class Watch extends Component {
                 <YouTubePlayer
                   url={`https://www.youtube.com/watch?v=${video.youtubeId}"`}
                   volume={0.08}
-                  playing
+                  // playing
+                  muted
                   controls
                   onPause={() => this.setState({ playingSoundcloud: false })}
                   onPlay={() => this.setState({ playingSoundcloud: true })}
