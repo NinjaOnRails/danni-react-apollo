@@ -96,8 +96,8 @@ class Watch extends Component {
                   <SoundCloudPlayer
                     ref={this.ref}
                     url={video.audio[0].source}
-                    height="0%"
-                    width="0%"
+                    // height="0%"
+                    // width="0%"
                     playing={this.state.playingSoundcloud}
                   />
                   // </SoundCloudStyles>
