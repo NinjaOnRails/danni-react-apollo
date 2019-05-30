@@ -7,19 +7,19 @@ import NavStyles from './styles/NavStyles';
 const Nav = () => (
   <NavStyles>
     <Link href="/">
-      <a>Home</a>
+      <a>Trang Chủ</a>
     </Link>
     {/* <Link href="/browse">
       <a>Watch</a>
     </Link> */}
     <Link href="/new">
-      <a>Add Video</a>
+      <a>Thêm Video</a>
     </Link>
     {/* <Link href="/signin">
       <a>Sign In</a>
     </Link> */}
     <Link href="/about">
-      <a>About</a>
+      <a>Info</a>
     </Link>
   </NavStyles>
   // <User>

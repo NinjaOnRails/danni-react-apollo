@@ -7,10 +7,25 @@ import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
 
 const CREATE_VIDEO_MUTATION = gql`
-  mutation CREATE_VIDEO_MUTATION($youtubeId: String!) {
-    createVideo(youtubeId: $youtubeId) {
+  mutation CREATE_VIDEO_MUTATION(
+    $source: String!
+    $titleVi: String!
+    $addedBy: String!
+    $startAt: String!
+  ) {
+    createVideo(
+      data: {
+        source: $source
+        titleVi: $titleVi
+        addedBy: $addedBy
+        startAt: $startAt
+      }
+    ) {
       id
-      youtubeId
+      originId
+      titleVi
+      addedBy
+      startAt
     }
   }
 `;
@@ -29,22 +44,34 @@ const CREATE_AUDIO_MUTATION = gql`
 
 class AddVideo extends Component {
   state = {
-    youtubeId: '',
+    source: '',
+    titleVi: '',
+    addedBy: '',
+    startAt: '',
     audioSource: '',
     tags: '',
     tagsArray: [],
   };
 
   handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+    const { name, type, value } = e.target;
+    const val = type === 'number' ? parseFloat(value) : value;
+    this.setState({ [name]: val });
     if (name === 'tags') {
-      this.setState({ tagsArray: value.split(' ') });
+      this.setState({ tagsArray: val.split(' ') });
     }
   };
 
   render() {
-    const { youtubeId, audioSource, tags, tagsArray } = this.state;
+    const {
+      source,
+      audioSource,
+      tags,
+      titleVi,
+      addedBy,
+      startAt,
+      tagsArray,
+    } = this.state;
     return (
       <Mutation
         mutation={CREATE_AUDIO_MUTATION}
@@ -53,7 +80,7 @@ class AddVideo extends Component {
         {(createAudio, { loading, errorCreateAudio }) => (
           <Mutation
             mutation={CREATE_VIDEO_MUTATION}
-            variables={{ youtubeId }}
+            variables={{ source, titleVi, addedBy, startAt }}
             refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
           >
             {(createVideo, { loading, error }) => (
@@ -86,15 +113,49 @@ class AddVideo extends Component {
               >
                 <Error error={error} />
                 <fieldset disabled={loading} aria-busy={loading}>
-                  <label htmlFor="youtubeId">
-                    YouTube ID:
+                  <label htmlFor="source">
+                    Nguồn (YouTube):
                     <input
                       type="text"
-                      id="youtubeId"
-                      name="youtubeId"
+                      id="source"
+                      name="source"
                       required
-                      placeholder="e.g. 0Y59Yf9lEP0"
-                      value={youtubeId}
+                      placeholder="ví dụ 0Y59Yf9lEP0 hoặc https://www.youtube.com/watch?v=h4Uu5eyN6VU"
+                      value={source}
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <label htmlFor="startAt">
+                    Bắt đầu tại:
+                    <input
+                      type="number"
+                      id="startAt"
+                      name="startAt"
+                      placeholder="ví dụ 04:25"
+                      value={startAt}
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <label htmlFor="titleVi">
+                    Tiêu đề:
+                    <input
+                      type="text"
+                      id="titleVi"
+                      name="titleVi"
+                      required
+                      placeholder="ví dụ "
+                      value={titleVi}
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <label htmlFor="addedBy">
+                    Thêm bởi:
+                    <input
+                      type="text"
+                      id="addedBy"
+                      name="addedBy"
+                      placeholder="ví dụ Ánh Nhật"
+                      value={addedBy}
                       onChange={this.handleChange}
                     />
                   </label>
@@ -110,7 +171,7 @@ class AddVideo extends Component {
                     />
                   </label>
                   <label htmlFor="audioSource">
-                    Audio source:
+                    Nguồn Audio:
                     <input
                       type="text"
                       id="audioSource"
