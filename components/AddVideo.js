@@ -11,7 +11,7 @@ const CREATE_VIDEO_MUTATION = gql`
     $source: String!
     $titleVi: String!
     $addedBy: String!
-    $startAt: String!
+    $startAt: Int!
   ) {
     createVideo(
       data: {
@@ -47,7 +47,7 @@ class AddVideo extends Component {
     source: '',
     titleVi: '',
     addedBy: '',
-    startAt: '',
+    startAt: 0,
     audioSource: '',
     tags: '',
     tagsArray: [],
@@ -55,7 +55,7 @@ class AddVideo extends Component {
 
   handleChange = e => {
     const { name, type, value } = e.target;
-    const val = type === 'number' ? parseFloat(value) : value;
+    const val = type === 'number' ? parseInt(value, 10) : value;
     this.setState({ [name]: val });
     if (name === 'tags') {
       this.setState({ tagsArray: val.split(' ') });
@@ -148,7 +148,7 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label>
-                  <label htmlFor="addedBy">
+                  {/* <label htmlFor="addedBy">
                     Thêm bởi:
                     <input
                       type="text"
@@ -158,8 +158,8 @@ class AddVideo extends Component {
                       value={addedBy}
                       onChange={this.handleChange}
                     />
-                  </label>
-                  <label htmlFor="tags">
+                  </label> */}
+                  {/* <label htmlFor="tags">
                     Tags:
                     <input
                       type="text"
@@ -169,7 +169,7 @@ class AddVideo extends Component {
                       value={tags}
                       onChange={this.handleChange}
                     />
-                  </label>
+                  </label> */}
                   <label htmlFor="audioSource">
                     Nguồn Audio:
                     <input

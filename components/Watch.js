@@ -12,11 +12,12 @@ const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!) {
     video(where: { id: $id }) {
       id
-      youtubeId
-      title
-      channelTitle
-      thumbnailUrl
-      defaultLanguage
+      originId
+      titleVi
+      originAuthor
+      originThumbnailUrl
+      originLanguage
+      startAt
       audio {
         id
         source
@@ -78,12 +79,12 @@ class Watch extends Component {
           return (
             <div>
               <Head>
-                <title>Danni | {video.title}</title>
+                <title>Danni | {video.titleVi}</title>
               </Head>
               <div>
-                <h2>{video.title}</h2>
+                <h2>{video.titleVi}</h2>
                 <YouTubePlayer
-                  url={`https://www.youtube.com/watch?v=${video.youtubeId}"`}
+                  url={`https://www.youtube.com/watch?v=${video.originId}?t=${video.startAt.toString()}`}
                   // volume={0.08}
                   // playing
                   muted

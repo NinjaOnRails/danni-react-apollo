@@ -9,10 +9,11 @@ const ALL_VIDEOS_QUERY = gql`
   query ALL_ITEMS_QUERY {
     videos {
       id
-      title
-      channelTitle
-      thumbnailUrl
-      defaultLanguage
+      titleVi
+      originAuthor
+      originThumbnailUrl
+      originLanguage
+      addedBy
       audio {
         id
         source
@@ -58,9 +59,12 @@ class Videos extends Component {
                           query: { id: video.id },
                         }}
                       >
-                        <img src={video.thumbnailUrl} alt={video.title} />
+                        <img
+                          src={video.originThumbnailUrl}
+                          alt={video.titleVi}
+                        />
                       </Link>
-                      <h3>{video.title}</h3>
+                      <h3>{video.titleVi}</h3>
                       {/* <h4>{video.channelTitle}</h4> */}
                       {/* {video.defaultLanguage && <p>{video.defaultLanguage}</p>} */}
                     </div>
