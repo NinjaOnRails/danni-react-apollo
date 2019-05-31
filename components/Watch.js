@@ -52,10 +52,12 @@ class Watch extends Component {
 
   onProgressYoutube = ({ playedSeconds }) => {
     // Synchronize Soundcloud player progress with Youtube player progress on Youtube seek change
-    if (Math.abs(playedSeconds - this.state.playedYoutube) > interval) {
-      this.playerSoundcloud.seekTo(playedSeconds);
+    if (this.playerSoundcloud) {
+      if (Math.abs(playedSeconds - this.state.playedYoutube) > interval) {
+        this.playerSoundcloud.seekTo(playedSeconds);
+      }
+      this.setState({ playedYoutube: playedSeconds });
     }
-    this.setState({ playedYoutube: playedSeconds });
   };
 
   ref = playerSoundcloud => {
@@ -75,16 +77,18 @@ class Watch extends Component {
           if (error) return <Error error={error} />;
           if (loading) return <p>Loading...</p>;
           if (!data.video) return <p>No Video Found for {id}</p>;
-          const { video } = data;
+          const {
+            video: { titleVi, originId, startAt, audio },
+          } = data;
           return (
             <div>
               <Head>
-                <title>Danni | {video.titleVi}</title>
+                <title>Danni | {titleVi}</title>
               </Head>
               <div>
-                <h2>{video.titleVi}</h2>
+                <h2>{titleVi}</h2>
                 <YouTubePlayer
-                  url={`https://www.youtube.com/watch?v=${video.originId}?t=${video.startAt.toString()}`}
+                  url={`https://www.youtube.com/watch?v=${originId}?t=${startAt.toString()}`}
                   // volume={0.08}
                   // playing
                   muted
@@ -93,11 +97,13 @@ class Watch extends Component {
                   onPlay={() => this.setState({ playingSoundcloud: true })}
                   onProgress={this.onProgressYoutube}
                 />
-                {video.audio[0] && (
+                {audio[0] && (
                   // <SoundCloudStyles>
                   <SoundCloudPlayer
                     ref={this.ref}
-                    url={video.audio[0].source}
+                    url={`${audio[0].source}#t=${Math.floor(
+                      startAt / 3600
+                    )}h${Math.floor(startAt / 60)}m${Math.floor(startAt % 60)}`}
                     // height="0%"
                     // width="0%"
                     playing={this.state.playingSoundcloud}
