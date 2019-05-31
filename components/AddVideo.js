@@ -51,15 +51,21 @@ class AddVideo extends Component {
     audioSource: '',
     tags: '',
     tagsArray: [],
+    isStartAt: false,
   };
 
   handleChange = e => {
-    const { name, type, value } = e.target;
-    const val = type === 'number' ? parseInt(value, 10) : value;
+    const { name, type, value, checked } = e.target;
+    const val =
+      type === 'checkbox'
+        ? checked
+        : type === 'number'
+        ? parseInt(value, 10)
+        : value;
     this.setState({ [name]: val });
-    if (name === 'tags') {
-      this.setState({ tagsArray: val.split(' ') });
-    }
+    // if (name === 'tags') {
+    //   this.setState({ tagsArray: val.split(' ') });
+    // }
   };
 
   render() {
@@ -71,6 +77,7 @@ class AddVideo extends Component {
       addedBy,
       startAt,
       tagsArray,
+      isStartAt,
     } = this.state;
     return (
       <Mutation
@@ -80,22 +87,29 @@ class AddVideo extends Component {
         {(createAudio, { loading, errorCreateAudio }) => (
           <Mutation
             mutation={CREATE_VIDEO_MUTATION}
-            variables={{ source, titleVi, addedBy, startAt }}
+            variables={{
+              source,
+              titleVi,
+              addedBy,
+              startAt: isStartAt ? startAt : 0,
+            }}
             refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
           >
             {(createVideo, { loading, error }) => (
               <Form
                 data-test="form"
                 onSubmit={async e => {
-                  // Stop the form from submitting
+                  // Stop form from submitting
                   e.preventDefault();
-                  // Call the createVideo mutation
+
+                  // Call createVideo mutation
                   const {
                     data: {
                       createVideo: { id },
                     },
                   } = await createVideo();
-                  // Call the createAudio mutation
+
+                  // Call createAudio mutation
                   if (audioSource) {
                     await createAudio({
                       variables: {
@@ -104,7 +118,8 @@ class AddVideo extends Component {
                       },
                     });
                   }
-                  // Redirect to the newly created Video watch page
+
+                  // Redirect to newly created Video watch page
                   Router.push({
                     pathname: '/watch',
                     query: { id },
@@ -114,7 +129,7 @@ class AddVideo extends Component {
                 <Error error={error} />
                 <fieldset disabled={loading} aria-busy={loading}>
                   <label htmlFor="source">
-                    Nguồn (YouTube):
+                    Nguồn (Link hoặc YouTube ID):
                     <input
                       type="text"
                       id="source"
@@ -126,15 +141,23 @@ class AddVideo extends Component {
                     />
                   </label>
                   <label htmlFor="startAt">
-                    Bắt đầu tại:
                     <input
-                      type="number"
-                      id="startAt"
-                      name="startAt"
-                      placeholder="ví dụ 04:25"
-                      value={startAt}
+                      name="isStartAt"
+                      type="checkbox"
+                      checked={isStartAt}
                       onChange={this.handleChange}
                     />
+                    Bắt đầu từ giây thứ:
+                    {isStartAt && (
+                      <input
+                        type="number"
+                        id="startAt"
+                        name="startAt"
+                        placeholder="ví dụ 04:25"
+                        value={startAt}
+                        onChange={this.handleChange}
+                      />
+                    )}
                   </label>
                   <label htmlFor="titleVi">
                     Tiêu đề:
@@ -171,7 +194,7 @@ class AddVideo extends Component {
                     />
                   </label> */}
                   <label htmlFor="audioSource">
-                    Nguồn Audio:
+                    Nguồn Audio (Link Soundcloud):
                     <input
                       type="text"
                       id="audioSource"

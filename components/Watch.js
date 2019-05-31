@@ -50,8 +50,8 @@ class Watch extends Component {
     id: PropTypes.string.isRequired,
   };
 
+  // Synchronize Soundcloud player progress with Youtube player progress on Youtube seek change
   onProgressYoutube = ({ playedSeconds }) => {
-    // Synchronize Soundcloud player progress with Youtube player progress on Youtube seek change
     if (this.playerSoundcloud) {
       if (Math.abs(playedSeconds - this.state.playedYoutube) > interval) {
         this.playerSoundcloud.seekTo(playedSeconds);
@@ -60,6 +60,7 @@ class Watch extends Component {
     }
   };
 
+  // Soundcloud player association variable
   ref = playerSoundcloud => {
     this.playerSoundcloud = playerSoundcloud;
   };
@@ -80,6 +81,15 @@ class Watch extends Component {
           const {
             video: { titleVi, originId, startAt, audio },
           } = data;
+
+          // Soundcloud startAt param
+          const startAtSoundcloud =
+            startAt <= 0
+              ? ''
+              : `#t=${Math.floor(startAt / 3600)}h${Math.floor(
+                  startAt / 60
+                )}m${Math.floor(startAt % 60)}s`;
+
           return (
             <div>
               <Head>
@@ -101,9 +111,7 @@ class Watch extends Component {
                   // <SoundCloudStyles>
                   <SoundCloudPlayer
                     ref={this.ref}
-                    url={`${audio[0].source}#t=${Math.floor(
-                      startAt / 3600
-                    )}h${Math.floor(startAt / 60)}m${Math.floor(startAt % 60)}`}
+                    url={audio[0].source + startAtSoundcloud}
                     // height="0%"
                     // width="0%"
                     playing={this.state.playingSoundcloud}
