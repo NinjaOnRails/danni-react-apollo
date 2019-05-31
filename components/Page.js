@@ -37,14 +37,14 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-size: 1.5rem;
     line-height: 2;
-    font-family: 'Courier New'
+    font-family: 'Verdana'
   }
   a {
     text-decoration: none;
     color: ${theme.black};
-    font-family: 'Courier New'
+    font-family: 'Verdana'
   }
-  button {  font-family: 'Courier New' }
+  button {  font-family: 'Verdana' }
 `;
 
 class Page extends Component {

@@ -10,8 +10,8 @@ const CREATE_VIDEO_MUTATION = gql`
   mutation CREATE_VIDEO_MUTATION(
     $source: String!
     $titleVi: String!
-    $addedBy: String!
-    $startAt: Int!
+    $addedBy: String
+    $startAt: Int
   ) {
     createVideo(
       data: {
@@ -52,6 +52,7 @@ class AddVideo extends Component {
     tags: '',
     tagsArray: [],
     isStartAt: false,
+    isAudioSource: false,
   };
 
   handleChange = e => {
@@ -78,6 +79,7 @@ class AddVideo extends Component {
       startAt,
       tagsArray,
       isStartAt,
+      isAudioSource,
     } = this.state;
     return (
       <Mutation
@@ -110,7 +112,7 @@ class AddVideo extends Component {
                   } = await createVideo();
 
                   // Call createAudio mutation
-                  if (audioSource) {
+                  if (audioSource && isAudioSource) {
                     await createAudio({
                       variables: {
                         source: audioSource,
@@ -135,8 +137,20 @@ class AddVideo extends Component {
                       id="source"
                       name="source"
                       required
-                      placeholder="ví dụ 0Y59Yf9lEP0 hoặc https://www.youtube.com/watch?v=h4Uu5eyN6VU"
+                      placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
                       value={source}
+                      onChange={this.handleChange}
+                    />
+                  </label>
+                  <label htmlFor="titleVi">
+                    Tiêu đề:
+                    <input
+                      type="text"
+                      id="titleVi"
+                      name="titleVi"
+                      required
+                      placeholder="ví dụ 'Sự sống trên mặt trăng xanh'"
+                      value={titleVi}
                       onChange={this.handleChange}
                     />
                   </label>
@@ -153,23 +167,11 @@ class AddVideo extends Component {
                         type="number"
                         id="startAt"
                         name="startAt"
-                        placeholder="ví dụ 04:25"
+                        placeholder="ví dụ '04:25'"
                         value={startAt}
                         onChange={this.handleChange}
                       />
                     )}
-                  </label>
-                  <label htmlFor="titleVi">
-                    Tiêu đề:
-                    <input
-                      type="text"
-                      id="titleVi"
-                      name="titleVi"
-                      required
-                      placeholder="ví dụ "
-                      value={titleVi}
-                      onChange={this.handleChange}
-                    />
                   </label>
                   {/* <label htmlFor="addedBy">
                     Thêm bởi:
@@ -193,16 +195,25 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label> */}
+
                   <label htmlFor="audioSource">
-                    Nguồn Audio (Link Soundcloud):
                     <input
-                      type="text"
-                      id="audioSource"
-                      name="audioSource"
-                      placeholder="e.g. https://soundcloud.com/user-566264679/addiction-cz"
-                      value={audioSource}
+                      name="isAudioSource"
+                      type="checkbox"
+                      checked={isAudioSource}
                       onChange={this.handleChange}
                     />
+                    Nguồn Audio (Link Soundcloud):
+                    {isAudioSource && (
+                      <input
+                        type="text"
+                        id="audioSource"
+                        name="audioSource"
+                        placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
+                        value={audioSource}
+                        onChange={this.handleChange}
+                      />
+                    )}
                   </label>
                   <button type="submit">Submit</button>
                 </fieldset>
