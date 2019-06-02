@@ -17,6 +17,7 @@ const VIDEO_QUERY = gql`
       originAuthor
       originThumbnailUrl
       originLanguage
+      defaultVolume
       startAt
       audio {
         id
@@ -79,7 +80,7 @@ class Watch extends Component {
           if (loading) return <p>Loading...</p>;
           if (!data.video) return <p>No Video Found for {id}</p>;
           const {
-            video: { titleVi, originId, startAt, audio },
+            video: { titleVi, originId, startAt, defaultVolume, audio },
           } = data;
 
           // Soundcloud startAt param
@@ -99,9 +100,9 @@ class Watch extends Component {
                 <h2>{titleVi}</h2>
                 <YouTubePlayer
                   url={`https://www.youtube.com/watch?v=${originId}?t=${startAt.toString()}`}
-                  // volume={0.08}
+                  volume={defaultVolume / 100}
                   // playing
-                  muted
+                  // muted
                   controls
                   onPause={() => this.setState({ playingSoundcloud: false })}
                   onPlay={() => this.setState({ playingSoundcloud: true })}

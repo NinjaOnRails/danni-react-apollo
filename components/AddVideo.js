@@ -12,6 +12,8 @@ const CREATE_VIDEO_MUTATION = gql`
     $titleVi: String!
     $addedBy: String
     $startAt: Int
+    $tags: String
+    $defaultVolume: Int
   ) {
     createVideo(
       data: {
@@ -19,12 +21,13 @@ const CREATE_VIDEO_MUTATION = gql`
         titleVi: $titleVi
         addedBy: $addedBy
         startAt: $startAt
+        tags: $tags
+        defaultVolume: $defaultVolume
       }
     ) {
       id
       originId
       titleVi
-      addedBy
       startAt
     }
   }
@@ -50,9 +53,11 @@ class AddVideo extends Component {
     startAt: 0,
     audioSource: '',
     tags: '',
-    tagsArray: [],
     isStartAt: false,
     isAudioSource: false,
+    isTags: false,
+    defaultVolume: 0,
+    isDefaultVolume: false,
   };
 
   handleChange = e => {
@@ -60,13 +65,12 @@ class AddVideo extends Component {
     const val =
       type === 'checkbox'
         ? checked
+        : name === 'defaultVolume' && value > 100
+        ? 100
         : type === 'number'
         ? parseInt(value, 10)
         : value;
     this.setState({ [name]: val });
-    // if (name === 'tags') {
-    //   this.setState({ tagsArray: val.split(' ') });
-    // }
   };
 
   render() {
@@ -77,9 +81,11 @@ class AddVideo extends Component {
       titleVi,
       addedBy,
       startAt,
-      tagsArray,
       isStartAt,
       isAudioSource,
+      isTags,
+      defaultVolume,
+      isDefaultVolume,
     } = this.state;
     return (
       <Mutation
@@ -94,6 +100,8 @@ class AddVideo extends Component {
               titleVi,
               addedBy,
               startAt: isStartAt ? startAt : 0,
+              tags,
+              defaultVolume: isDefaultVolume ? defaultVolume : undefined,
             }}
             refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
           >
@@ -154,6 +162,26 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label>
+                  <label htmlFor="defaultVolume">
+                    <input
+                      name="isDefaultVolume"
+                      type="checkbox"
+                      checked={isDefaultVolume}
+                      onChange={this.handleChange}
+                    />
+                    Âm lượng (%):
+                    {isDefaultVolume && (
+                      <input
+                        type="number"
+                        id="defaultVolume"
+                        name="defaultVolume"
+                        min="0"
+                        max="100"
+                        value={defaultVolume}
+                        onChange={this.handleChange}
+                      />
+                    )}
+                  </label>
                   <label htmlFor="startAt">
                     <input
                       name="isStartAt"
@@ -184,18 +212,6 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label> */}
-                  {/* <label htmlFor="tags">
-                    Tags:
-                    <input
-                      type="text"
-                      id="tags"
-                      name="tags"
-                      placeholder="e.g. technology inspiring informative science politics"
-                      value={tags}
-                      onChange={this.handleChange}
-                    />
-                  </label> */}
-
                   <label htmlFor="audioSource">
                     <input
                       name="isAudioSource"
@@ -211,6 +227,25 @@ class AddVideo extends Component {
                         name="audioSource"
                         placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
                         value={audioSource}
+                        onChange={this.handleChange}
+                      />
+                    )}
+                  </label>
+                  <label htmlFor="tags">
+                    <input
+                      name="isTags"
+                      type="checkbox"
+                      checked={isTags}
+                      onChange={this.handleChange}
+                    />
+                    Tags:
+                    {isTags && (
+                      <input
+                        type="text"
+                        id="tags"
+                        name="tags"
+                        placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                        value={tags}
                         onChange={this.handleChange}
                       />
                     )}

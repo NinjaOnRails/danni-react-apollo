@@ -18,9 +18,9 @@ const Nav = () => (
     {/* <Link href="/signin">
       <a>Sign In</a>
     </Link> */}
-    <Link href="/about">
+    {/* <Link href="/about">
       <a>Info</a>
-    </Link>
+    </Link> */}
   </NavStyles>
   // <User>
   //   {({ data }) => {
