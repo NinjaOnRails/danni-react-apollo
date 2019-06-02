@@ -203,37 +203,6 @@ class AddVideo extends Component {
                       />
                     )}
                   </label>
-                  {/* <label htmlFor="addedBy">
-                    Thêm bởi:
-                    <input
-                      type="text"
-                      id="addedBy"
-                      name="addedBy"
-                      placeholder="ví dụ Ánh Nhật"
-                      value={addedBy}
-                      onChange={this.handleChange}
-                    />
-                  </label> */}
-                  <label htmlFor="audioSource">
-                    <input
-                      id="audioSource"
-                      name="isAudioSource"
-                      type="checkbox"
-                      checked={isAudioSource}
-                      onChange={this.handleChange}
-                    />
-                    Nguồn Audio (Link Soundcloud):
-                    {isAudioSource && (
-                      <input
-                        type="text"
-                        id="audioSource"
-                        name="audioSource"
-                        placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
-                        value={audioSource}
-                        onChange={this.handleChange}
-                      />
-                    )}
-                  </label>
                   <label htmlFor="tags">
                     <input
                       id="tags"
@@ -254,6 +223,37 @@ class AddVideo extends Component {
                       />
                     )}
                   </label>
+                  <label htmlFor="audioSource">
+                    <input
+                      id="audioSource"
+                      name="isAudioSource"
+                      type="checkbox"
+                      checked={isAudioSource}
+                      onChange={this.handleChange}
+                    />
+                    Nguồn Audio (Link Soundcloud):
+                    {isAudioSource && (
+                      <input
+                        type="text"
+                        id="audioSource"
+                        name="audioSource"
+                        placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
+                        value={audioSource}
+                        onChange={this.handleChange}
+                      />
+                    )}
+                  </label>
+                  {/* <label htmlFor="addedBy">
+                    Thêm bởi:
+                    <input
+                      type="text"
+                      id="addedBy"
+                      name="addedBy"
+                      placeholder="ví dụ Ánh Nhật"
+                      value={addedBy}
+                      onChange={this.handleChange}
+                    />
+                  </label> */}
                   <button type="submit">Submit</button>
                 </fieldset>
               </Form>
