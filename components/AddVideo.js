@@ -171,18 +171,17 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                     Âm lượng (%):
-                    {isDefaultVolume && (
-                      <input
-                        type="number"
-                        id="defaultVolume"
-                        name="defaultVolume"
-                        min="0"
-                        max="100"
-                        value={defaultVolume}
-                        onChange={this.handleChange}
-                      />
-                    )}
                   </label>
+                  {isDefaultVolume && (
+                    <input
+                      type="number"
+                      name="defaultVolume"
+                      min="0"
+                      max="100"
+                      value={defaultVolume}
+                      onChange={this.handleChange}
+                    />
+                  )}
                   <label htmlFor="startAt">
                     <input
                       id="startAt"
@@ -192,17 +191,16 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                     Bắt đầu từ giây thứ:
-                    {isStartAt && (
-                      <input
-                        type="number"
-                        id="startAt"
-                        name="startAt"
-                        placeholder="ví dụ '04:25'"
-                        value={startAt}
-                        onChange={this.handleChange}
-                      />
-                    )}
                   </label>
+                  {isStartAt && (
+                    <input
+                      type="number"
+                      name="startAt"
+                      placeholder="ví dụ '04:25'"
+                      value={startAt}
+                      onChange={this.handleChange}
+                    />
+                  )}
                   <label htmlFor="tags">
                     <input
                       id="tags"
@@ -212,17 +210,16 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                     Tags:
-                    {isTags && (
-                      <input
-                        type="text"
-                        id="tags"
-                        name="tags"
-                        placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                        value={tags}
-                        onChange={this.handleChange}
-                      />
-                    )}
                   </label>
+                  {isTags && (
+                    <input
+                      type="text"
+                      name="tags"
+                      placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                      value={tags}
+                      onChange={this.handleChange}
+                    />
+                  )}
                   <label htmlFor="audioSource">
                     <input
                       id="audioSource"
@@ -232,17 +229,16 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                     Nguồn Audio (Link Soundcloud):
-                    {isAudioSource && (
-                      <input
-                        type="text"
-                        id="audioSource"
-                        name="audioSource"
-                        placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
-                        value={audioSource}
-                        onChange={this.handleChange}
-                      />
-                    )}
                   </label>
+                  {isAudioSource && (
+                    <input
+                      type="text"
+                      name="audioSource"
+                      placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
+                      value={audioSource}
+                      onChange={this.handleChange}
+                    />
+                  )}
                   {/* <label htmlFor="addedBy">
                     Thêm bởi:
                     <input
