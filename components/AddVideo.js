@@ -56,7 +56,7 @@ class AddVideo extends Component {
     isStartAt: false,
     isAudioSource: false,
     isTags: false,
-    defaultVolume: 0,
+    defaultVolume: 20,
     isDefaultVolume: false,
   };
 
