@@ -54,7 +54,7 @@ class AddVideo extends Component {
     audioSource: '',
     tags: '',
     isStartAt: false,
-    isAudioSource: false,
+    isAudioSource: true,
     isTags: false,
     defaultVolume: 20,
     isDefaultVolume: false,
@@ -164,6 +164,7 @@ class AddVideo extends Component {
                   </label>
                   <label htmlFor="defaultVolume">
                     <input
+                      id="defaultVolume"
                       name="isDefaultVolume"
                       type="checkbox"
                       checked={isDefaultVolume}
@@ -184,6 +185,7 @@ class AddVideo extends Component {
                   </label>
                   <label htmlFor="startAt">
                     <input
+                      id="startAt"
                       name="isStartAt"
                       type="checkbox"
                       checked={isStartAt}
@@ -214,6 +216,7 @@ class AddVideo extends Component {
                   </label> */}
                   <label htmlFor="audioSource">
                     <input
+                      id="audioSource"
                       name="isAudioSource"
                       type="checkbox"
                       checked={isAudioSource}
@@ -233,6 +236,7 @@ class AddVideo extends Component {
                   </label>
                   <label htmlFor="tags">
                     <input
+                      id="tags"
                       name="isTags"
                       type="checkbox"
                       checked={isTags}
