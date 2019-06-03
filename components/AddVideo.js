@@ -72,6 +72,9 @@ class AddVideo extends Component {
     textareaHeight: 20,
     ssmlObject: null,
     ssmlPart: '0',
+    image: '',
+    channelTitle: '',
+    originTitle: '',
   };
 
   // componentDidUpdate(prevProps, prevState) {
@@ -96,6 +99,9 @@ class AddVideo extends Component {
     if (youtubeId && (name === 'isSsml' && checked)) this.getSsml();
     if (youtubeId && isSsml && name === 'ssmlBreak' && val >= 0)
       this.getSsml(val);
+    if (youtubeId && isSsml && name === 'ssmlLanguage' && val.length >= 2)
+      this.getSsml(null, val);
+
     this.setState({ [name]: val });
   };
 
@@ -148,14 +154,22 @@ class AddVideo extends Component {
         defaultAudioLanguage,
       } = res.data.items[0].snippet;
 
-      this.setState({ youtubeId: originId });
+      this.setState({
+        youtubeId: originId,
+        image: url,
+        originTitle: title,
+        channelTitle,
+      });
     } catch (err) {
       console.log(err);
     }
   };
 
-  getSsml = async (val = this.state.ssmlBreak) => {
-    const { youtubeId, ssmlLanguage } = this.state;
+  getSsml = async (
+    val = this.state.ssmlBreak,
+    ssmlLanguage = this.state.ssmlLanguage
+  ) => {
+    const { youtubeId } = this.state;
     try {
       const { data } = await axios.get(
         `https://www.youtube.com/api/timedtext?lang=${ssmlLanguage}&v=${youtubeId}`
@@ -220,6 +234,9 @@ class AddVideo extends Component {
       textareaHeight,
       ssmlObject,
       ssmlPart,
+      image,
+      originTitle,
+      channelTitle,
     } = this.state;
     return (
       <Mutation
@@ -284,6 +301,9 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label>
+                  {originTitle && <div>{originTitle}</div>}
+                  {channelTitle && <div>{channelTitle}</div>}
+                  {image && <img width="200" src={image} alt="thumbnail" />}
                   <label htmlFor="titleVi">
                     Tiêu đề:
                     <input
