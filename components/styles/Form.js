@@ -46,6 +46,7 @@ const Form = styled.form`
     font-weight: 600;
     padding: 0.5rem 1.2rem;
   }
+  input[type='radio'],
   input[type='checkbox'] {
     width: auto;
   }
