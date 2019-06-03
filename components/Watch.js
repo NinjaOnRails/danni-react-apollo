@@ -6,7 +6,7 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import SoundCloudPlayer from 'react-player/lib/players/SoundCloud';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
 
@@ -38,15 +38,15 @@ const VIDEO_DELETE = gql`
   }
 `;
 
-const SoundCloudStyles = styled.div`
-  iframe {
-    width: 0;
-    height: 0;
-    border: 0;
-    border: none;
-    position: absolute;
-  }
-`;
+// const SoundCloudStyles = styled.div`
+//   iframe {
+//     width: 0;
+//     height: 0;
+//     border: 0;
+//     border: none;
+//     position: absolute;
+//   }
+// `;
 
 // Interval to be counted as Youtube seek change in seconds
 const interval = 1.02;
@@ -63,7 +63,7 @@ class Watch extends Component {
     id: PropTypes.string.isRequired,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (
       /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
         navigator.userAgent
