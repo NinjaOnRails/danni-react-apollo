@@ -75,6 +75,7 @@ class AddVideo extends Component {
     image: '',
     channelTitle: '',
     originTitle: '',
+    languageTags: [],
   };
 
   // componentDidUpdate(prevProps, prevState) {
@@ -160,6 +161,25 @@ class AddVideo extends Component {
         originTitle: title,
         channelTitle,
       });
+
+      try {
+        const {
+          data: { items },
+        } = await youtube.get('/captions', {
+          params: {
+            videoId: originId,
+          },
+        });
+        if (!items) throw new Error('No captions found');
+
+        const languageTags = [];
+        items.forEach(item => {
+          languageTags.push(item.snippet.language);
+        });
+        this.setState({ languageTags });
+      } catch (err) {
+        console.log(err);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -237,6 +257,7 @@ class AddVideo extends Component {
       image,
       originTitle,
       channelTitle,
+      languageTags,
     } = this.state;
     return (
       <Mutation
@@ -405,6 +426,7 @@ class AddVideo extends Component {
                   </label>
                   {isSsml && (
                     <>
+                      Break time (ms):
                       <input
                         type="number"
                         name="ssmlBreak"
@@ -415,6 +437,11 @@ class AddVideo extends Component {
                         value={ssmlBreak}
                         onChange={this.handleChange}
                       />
+                      {languageTags &&
+                        languageTags.map(languageTag => (
+                          <span key={languageTag}>{languageTag} </span>
+                        ))}
+
                       <input
                         type="text"
                         name="ssmlLanguage"
