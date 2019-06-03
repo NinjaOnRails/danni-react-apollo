@@ -78,15 +78,9 @@ class AddVideo extends Component {
     languageTags: [],
   };
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { isSsml, youtubeId, source } = this.state;
-  //   console.log(youtubeId);
-  //   if (youtubeId && source !== prevState.source) ;
-  // }
-
   handleChange = e => {
     const { name, type, value, checked } = e.target;
-    const { isSsml, youtubeId } = this.state;
+    const { isSsml, youtubeId, ssmlObject } = this.state;
     const val =
       type === 'checkbox'
         ? checked
@@ -102,6 +96,14 @@ class AddVideo extends Component {
       this.getSsml(val);
     if (youtubeId && isSsml && name === 'ssmlLanguage' && val.length >= 2)
       this.getSsml(null, val);
+    if (name === 'ssmlPart') {
+      this.setState({
+        textareaHeight: parseInt(
+          this.state.ssmlObject[val].split('\n').length,
+          10
+        ),
+      });
+    }
 
     this.setState({ [name]: val });
   };
@@ -218,7 +220,6 @@ class AddVideo extends Component {
           //   const breakTag =
           //     breakTime > 0 ? ` <break time=\\"${breakTime}s\\" />` : '';
           const line = texts[i]._ + breakTag + '\n';
-          //   const line = he.unescape(texts[i]._) + breakTag + '\n';
           if ((ssml[n] + line).length <= charLimit) {
             ssml[n] += line;
           } else {
@@ -227,7 +228,10 @@ class AddVideo extends Component {
           }
         }
 
-        this.setState({ ssmlObject: { ...ssml } });
+        this.setState({
+          ssmlObject: { ...ssml },
+          textareaHeight: parseInt(ssml[0].split('\n').length, 10),
+        });
       });
     } catch (err) {
       console.log(err);
@@ -441,7 +445,6 @@ class AddVideo extends Component {
                         languageTags.map(languageTag => (
                           <span key={languageTag}>{languageTag} </span>
                         ))}
-
                       <input
                         type="text"
                         name="ssmlLanguage"
