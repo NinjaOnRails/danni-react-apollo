@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router from 'next/router';
-import axios from 'axios';
-import { parseString } from 'xml2js';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
 import youtube from '../lib/youtube';
 
-const charLimit = 5000;
 const youtubeIdLength = 11;
 
 const CREATE_VIDEO_MUTATION = gql`
@@ -64,23 +61,14 @@ class AddVideo extends Component {
     isTags: false,
     defaultVolume: 20,
     isDefaultVolume: false,
-    ssml: '',
-    isSsml: false,
-    ssmlLanguage: 'vi',
-    ssmlBreak: 500,
-    youtubeId: '',
-    textareaHeight: 20,
-    ssmlObject: null,
-    ssmlPart: '0',
+    youtubeIdStatus: '',
     image: '',
     channelTitle: '',
     originTitle: '',
-    languageTags: [],
   };
 
   handleChange = e => {
     const { name, type, value, checked } = e.target;
-    const { isSsml, youtubeId, ssmlObject } = this.state;
     const val =
       type === 'checkbox'
         ? checked
@@ -91,19 +79,6 @@ class AddVideo extends Component {
         : value;
 
     if (name === 'source' && val.length >= 11) this.onSourceFill(val);
-    if (youtubeId && (name === 'isSsml' && checked)) this.getSsml();
-    if (youtubeId && isSsml && name === 'ssmlBreak' && val >= 0)
-      this.getSsml(val);
-    if (youtubeId && isSsml && name === 'ssmlLanguage' && val.length >= 2)
-      this.getSsml(null, val);
-    if (name === 'ssmlPart') {
-      this.setState({
-        textareaHeight: parseInt(
-          this.state.ssmlObject[val].split('\n').length,
-          10
-        ),
-      });
-    }
 
     this.setState({ [name]: val });
   };
@@ -135,6 +110,12 @@ class AddVideo extends Component {
     } else if (youtubeId.length === youtubeIdLength) {
       originId = youtubeId;
     } else {
+      this.setState({
+        youtubeIdStatus: 'Invalid source',
+        image: '',
+        originTitle: '',
+        channelTitle: '',
+      });
       throw new Error('No valid YouTube source was provided');
     }
 
@@ -146,7 +127,15 @@ class AddVideo extends Component {
         },
       });
 
-      if (!res.data.items.length) throw new Error('Video not found on Youtube');
+      if (!res.data.items.length) {
+        this.setState({
+          youtubeIdStatus: 'Not found on Youtube',
+          image: '',
+          originTitle: '',
+          channelTitle: '',
+        });
+        throw new Error('Video not found on Youtube');
+      }
 
       const {
         thumbnails: {
@@ -154,87 +143,21 @@ class AddVideo extends Component {
         },
         channelTitle,
         localized: { title },
-        defaultAudioLanguage,
       } = res.data.items[0].snippet;
 
       this.setState({
-        youtubeId: originId,
+        youtubeIdStatus: '',
         image: url,
         originTitle: title,
         channelTitle,
       });
-
-      try {
-        const {
-          data: { items },
-        } = await youtube.get('/captions', {
-          params: {
-            videoId: originId,
-          },
-        });
-        if (!items) throw new Error('No captions found');
-
-        const languageTags = [];
-        items.forEach(item => {
-          languageTags.push(item.snippet.language);
-        });
-        this.setState({ languageTags });
-      } catch (err) {
-        console.log(err);
-      }
     } catch (err) {
-      console.log(err);
-    }
-  };
-
-  getSsml = async (
-    val = this.state.ssmlBreak,
-    ssmlLanguage = this.state.ssmlLanguage
-  ) => {
-    const { youtubeId } = this.state;
-    try {
-      const { data } = await axios.get(
-        `https://www.youtube.com/api/timedtext?lang=${ssmlLanguage}&v=${youtubeId}`
-      );
-
-      if (!data) throw new Error('Could not fetch XML');
-
-      parseString(data, (err, { transcript: { text } }) => {
-        const texts = { ...text };
-        const ssml = {};
-        let n = 0;
-        ssml[n] = '';
-        for (let i = 0; i < text.length - 1; i += 1) {
-          const breakTime = (
-            parseInt(
-              (parseFloat(texts[i + 1].$.start) -
-                parseFloat(texts[i].$.start) -
-                parseFloat(texts[i].$.dur)) *
-                100,
-              10
-            ) + val
-          )
-            .toFixed(2)
-            .toString();
-          const breakTag = ` <break time=\\"${breakTime}ms\\" />`;
-          //   const breakTag =
-          //     breakTime > 0 ? ` <break time=\\"${breakTime}s\\" />` : '';
-          const line = texts[i]._ + breakTag + '\n';
-          if ((ssml[n] + line).length <= charLimit) {
-            ssml[n] += line;
-          } else {
-            n += 1;
-            ssml[n] = line;
-          }
-        }
-
-        this.setState({
-          ssmlObject: { ...ssml },
-          textareaHeight: parseInt(ssml[0].split('\n').length, 10),
-        });
+      this.setState({
+        youtubeIdStatus: 'Network error',
+        image: '',
+        originTitle: '',
+        channelTitle: '',
       });
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -251,17 +174,10 @@ class AddVideo extends Component {
       isTags,
       defaultVolume,
       isDefaultVolume,
-      ssml,
-      isSsml,
-      ssmlLanguage,
-      ssmlBreak,
-      textareaHeight,
-      ssmlObject,
-      ssmlPart,
       image,
       originTitle,
       channelTitle,
-      languageTags,
+      youtubeIdStatus,
     } = this.state;
     return (
       <Mutation
@@ -313,7 +229,10 @@ class AddVideo extends Component {
                 }}
               >
                 <Error error={error} />
-                <fieldset disabled={loading} aria-busy={loading}>
+                <fieldset
+                  disabled={loadingCreateVideo}
+                  aria-busy={loadingCreateVideo}
+                >
                   <label htmlFor="source">
                     Nguồn (Link hoặc YouTube ID):
                     <input
@@ -326,6 +245,7 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   </label>
+                  {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
                   {originTitle && <div>{originTitle}</div>}
                   {channelTitle && <div>{channelTitle}</div>}
                   {image && <img width="200" src={image} alt="thumbnail" />}
@@ -375,7 +295,7 @@ class AddVideo extends Component {
                     <input
                       type="number"
                       name="startAt"
-                      placeholder="ví dụ '04:25'"
+                      placeholder="ví dụ '75'"
                       value={startAt}
                       onChange={this.handleChange}
                     />
@@ -418,42 +338,6 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   )}
-                  <label htmlFor="ssml">
-                    <input
-                      id="ssml"
-                      name="isSsml"
-                      type="checkbox"
-                      checked={isSsml}
-                      onChange={this.handleChange}
-                    />
-                    ssml:
-                  </label>
-                  {isSsml && (
-                    <>
-                      Break time (ms):
-                      <input
-                        type="number"
-                        name="ssmlBreak"
-                        min="0"
-                        max="30000"
-                        step="10"
-                        placeholder="ví dụ '500'"
-                        value={ssmlBreak}
-                        onChange={this.handleChange}
-                      />
-                      {languageTags &&
-                        languageTags.map(languageTag => (
-                          <span key={languageTag}>{languageTag} </span>
-                        ))}
-                      <input
-                        type="text"
-                        name="ssmlLanguage"
-                        placeholder="ví dụ 'vi'"
-                        value={ssmlLanguage}
-                        onChange={this.handleChange}
-                      />
-                    </>
-                  )}
                   {/* <label htmlFor="addedBy">
                     Thêm bởi:
                     <input
@@ -466,29 +350,6 @@ class AddVideo extends Component {
                     />
                   </label> */}
                   <button type="submit">Submit</button>
-                  {isSsml && ssmlObject && (
-                    <>
-                      {Object.keys(ssmlObject).map(key => (
-                        <li key={key}>
-                          <input
-                            type="radio"
-                            name="ssmlPart"
-                            value={key}
-                            checked={ssmlPart === key}
-                            onChange={this.handleChange}
-                          />
-                          {key}
-                        </li>
-                      ))}
-                      <textarea
-                        type="textarea"
-                        name="ssml"
-                        value={ssmlObject[ssmlPart]}
-                        onChange={this.handleChange}
-                        rows={Math.round(textareaHeight)}
-                      />
-                    </>
-                  )}
                 </fieldset>
               </Form>
             )}
