@@ -6,4 +6,3 @@ node_modules/
 layout.md
 *.env
 config/
-next.config.js
