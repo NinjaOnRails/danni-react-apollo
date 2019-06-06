@@ -129,19 +129,30 @@ class Watch extends Component {
                   <div>
                     <h2>{titleVi}</h2>
                     {(!audio[0] || filePlayerReady) && (
-                      <YouTubePlayer
-                        url={'https://www.youtube.com/watch?v=' + originId}
-                        muted={isMobile}
-                        volume={defaultVolume / 100}
-                        // controls
-                        onPause={() =>
-                          this.setState({ playingFilePlayer: false })
-                        }
-                        onPlay={() =>
-                          this.setState({ playingFilePlayer: true })
-                        }
-                        onProgress={this.onProgressYoutube}
-                      />
+                      <>
+                        <YouTubePlayer
+                          url={'https://www.youtube.com/watch?v=' + originId}
+                          muted={isMobile}
+                          volume={defaultVolume / 100}
+                          playing={playingFilePlayer}
+                          // controls
+                          onPause={() =>
+                            this.setState({ playingFilePlayer: false })
+                          }
+                          onPlay={() =>
+                            this.setState({ playingFilePlayer: true })
+                          }
+                          onProgress={this.onProgressYoutube}
+                        />
+                        <button
+                          type="submit"
+                          onClick={() =>
+                            this.setState({ playingFilePlayer: true })
+                          }
+                        >
+                          Play
+                        </button>
+                      </>
                     )}
                     Tác giả: {originAuthor}
                     {audio[0] && this.renderAudio(audio[0].source)}
