@@ -69,26 +69,29 @@ class Watch extends Component {
   };
 
   renderAudio(url) {
-    if (!isMobile || this.state.mobileFirstInteract) {
-      return (
-        // <div style={{ visibility: 'hidden' }}>
+    // if (!isMobile || this.state.mobileFirstInteract) {
+    // if (!isMobile || this.state.mobileFirstInteract) {
+    return (
+      // <div style={{ visibility: 'hidden' }}>
+      <>
         <FilePlayer
           onReady={() => this.setState({ filePlayerReady: true })}
           ref={this.refFilePlayer}
           url={url}
           playing={this.state.playingFilePlayer}
         />
-        // </div>)
-      );
-    }
-    return (
-      <button
-        type="submit"
-        onClick={() => this.setState({ mobileFirstInteract: true })}
-      >
-        Mobile
-      </button>
+      </>
+      // </div>
     );
+    // }
+    // return (
+    //   <button
+    //     type="submit"
+    //     onClick={() => this.setState({ mobileFirstInteract: true })}
+    //   >
+    //     Mobile
+    //   </button>
+    // );
   }
 
   render() {
