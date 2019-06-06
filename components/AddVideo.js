@@ -14,7 +14,7 @@ const CREATE_VIDEO_MUTATION = gql`
     $source: String!
     $titleVi: String!
     $addedBy: String
-    $startAt: Int
+    # $startAt: Int
     $tags: String
     $defaultVolume: Int
   ) {
@@ -23,7 +23,7 @@ const CREATE_VIDEO_MUTATION = gql`
         source: $source
         titleVi: $titleVi
         addedBy: $addedBy
-        startAt: $startAt
+        # startAt: $startAt
         tags: $tags
         defaultVolume: $defaultVolume
       }
@@ -53,14 +53,14 @@ class AddVideo extends Component {
     source: '',
     titleVi: '',
     addedBy: '',
-    startAt: 0,
+    // startAt: 0,
     audioSource: '',
     tags: '',
-    isStartAt: false,
+    // isStartAt: false,
     isAudioSource: true,
-    isTags: false,
+    isTags: true,
     defaultVolume: 20,
-    isDefaultVolume: false,
+    isDefaultVolume: true,
     youtubeIdStatus: '',
     image: '',
     channelTitle: '',
@@ -119,11 +119,15 @@ class AddVideo extends Component {
       throw new Error('No valid YouTube source was provided');
     }
 
+    this.fetchYoutube(originId);
+  };
+
+  fetchYoutube = async id => {
     // Fetch info from Youtube
     try {
       const res = await youtube.get('/videos', {
         params: {
-          id: originId,
+          id,
         },
       });
 
@@ -168,8 +172,8 @@ class AddVideo extends Component {
       tags,
       titleVi,
       addedBy,
-      startAt,
-      isStartAt,
+      // startAt,
+      // isStartAt,
       isAudioSource,
       isTags,
       defaultVolume,
@@ -191,7 +195,7 @@ class AddVideo extends Component {
               source,
               titleVi,
               addedBy,
-              startAt: isStartAt ? startAt : 0,
+              // startAt: isStartAt ? startAt : 0,
               tags,
               defaultVolume: isDefaultVolume ? defaultVolume : undefined,
             }}
@@ -281,7 +285,7 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   )}
-                  <label htmlFor="startAt">
+                  {/* <label htmlFor="startAt">
                     <input
                       id="startAt"
                       name="isStartAt"
@@ -299,7 +303,7 @@ class AddVideo extends Component {
                       value={startAt}
                       onChange={this.handleChange}
                     />
-                  )}
+                  )} */}
                   <label htmlFor="tags">
                     <input
                       id="tags"
