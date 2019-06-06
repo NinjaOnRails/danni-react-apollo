@@ -5,8 +5,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
-import SoundCloudPlayer from 'react-player/lib/players/SoundCloud';
-// import styled from 'styled-components';
+import FilePlayer from 'react-player/lib/players/FilePlayer';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
 
@@ -38,25 +37,16 @@ const VIDEO_DELETE = gql`
   }
 `;
 
-// const SoundCloudStyles = styled.div`
-//   iframe {
-//     width: 0;
-//     height: 0;
-//     border: 0;
-//     border: none;
-//     position: absolute;
-//   }
-// `;
-
 // Interval to be counted as Youtube seek change in seconds
 const interval = 1.02;
 
 class Watch extends Component {
   state = {
-    playingSoundcloud: false,
+    playingFilePlayer: false,
     playedYoutube: 0,
     password: '',
     isMobile: false,
+    filePlayerReady: false,
   };
 
   static propTypes = {
@@ -76,24 +66,28 @@ class Watch extends Component {
     }
   }
 
-  // Synchronize Soundcloud player progress with Youtube player progress on Youtube seek change
+  // Synchronize FilePlayer progress with Youtube player progress on Youtube seek change
   onProgressYoutube = ({ playedSeconds }) => {
-    if (this.playerSoundcloud) {
+    if (this.playerFilePlayer) {
       if (Math.abs(playedSeconds - this.state.playedYoutube) > interval) {
-        this.playerSoundcloud.seekTo(playedSeconds);
+        this.playerFilePlayer.seekTo(playedSeconds);
       }
       this.setState({ playedYoutube: playedSeconds });
     }
   };
 
-  // Soundcloud player association variable
-  ref = playerSoundcloud => {
-    this.playerSoundcloud = playerSoundcloud;
+  refFilePlayer = playerFilePlayer => {
+    this.playerFilePlayer = playerFilePlayer;
   };
 
   render() {
     const { id } = this.props;
-    const { password, playingSoundcloud, isMobile } = this.state;
+    const {
+      password,
+      isMobile,
+      playingFilePlayer,
+      filePlayerReady,
+    } = this.state;
     return (
       <Mutation
         mutation={VIDEO_DELETE}
@@ -111,23 +105,8 @@ class Watch extends Component {
               if (loading) return <p>Loading...</p>;
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
-                video: {
-                  id: idInDB,
-                  titleVi,
-                  originId,
-                  startAt,
-                  defaultVolume,
-                  audio,
-                },
+                video: { id: idInDB, titleVi, originId, defaultVolume, audio },
               } = data;
-
-              // Soundcloud startAt param
-              const startAtSoundcloud =
-                startAt <= 0
-                  ? ''
-                  : `#t=${Math.floor(startAt / 3600)}h${Math.floor(
-                      startAt / 60
-                    )}m${Math.floor(startAt % 60)}s`;
 
               return (
                 <div>
@@ -137,27 +116,28 @@ class Watch extends Component {
                   <div>
                     <h2>{titleVi}</h2>
                     <YouTubePlayer
-                      url={`https://www.youtube.com/watch?v=${originId}?t=${startAt.toString()}`}
+                      url={'https://www.youtube.com/watch?v=' + originId}
                       volume={defaultVolume / 100}
-                      // playing
+                      playing={filePlayerReady && playingFilePlayer}
                       muted={isMobile}
                       controls
                       onPause={() =>
-                        this.setState({ playingSoundcloud: false })
+                        this.setState({ playingFilePlayer: false })
                       }
-                      onPlay={() => this.setState({ playingSoundcloud: true })}
+                      onPlay={() => this.setState({ playingFilePlayer: true })}
                       onProgress={this.onProgressYoutube}
                     />
                     {audio[0] && (
-                      // <SoundCloudStyles>
-                      <SoundCloudPlayer
-                        ref={this.ref}
-                        url={audio[0].source + startAtSoundcloud}
-                        // height="0%"
-                        // width="0%"
-                        playing={playingSoundcloud}
-                      />
-                      // </SoundCloudStyles>
+                      <div style={{ visibility: 'hidden' }}>
+                        <FilePlayer
+                          onReady={() =>
+                            this.setState({ filePlayerReady: true })
+                          }
+                          ref={this.refFilePlayer}
+                          url={audio[0].source}
+                          playing={playingFilePlayer}
+                        />
+                      </div>
                     )}
                   </div>
                   <input
