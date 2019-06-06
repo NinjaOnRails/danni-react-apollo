@@ -47,6 +47,7 @@ class Watch extends Component {
     playedYoutube: 0,
     password: '',
     filePlayerReady: false,
+    mobileFirstInteract: false,
   };
 
   static propTypes = {
@@ -66,6 +67,29 @@ class Watch extends Component {
   refFilePlayer = playerFilePlayer => {
     this.playerFilePlayer = playerFilePlayer;
   };
+
+  renderAudio(url) {
+    if (!isMobile || this.state.mobileFirstInteract) {
+      return (
+        // <div style={{ visibility: 'hidden' }}>
+        <FilePlayer
+          onReady={() => this.setState({ filePlayerReady: true })}
+          ref={this.refFilePlayer}
+          url={url}
+          playing={this.state.playingFilePlayer}
+        />
+        // </div>)
+      );
+    }
+    return (
+      <button
+        type="submit"
+        onClick={() => this.setState({ mobileFirstInteract: true })}
+      >
+        Mobile
+      </button>
+    );
+  }
 
   render() {
     const { id } = this.props;
@@ -87,7 +111,14 @@ class Watch extends Component {
               if (loading) return <p>Loading...</p>;
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
-                video: { id: idInDB, titleVi, originId, defaultVolume, audio },
+                video: {
+                  id: idInDB,
+                  titleVi,
+                  originId,
+                  defaultVolume,
+                  audio,
+                  originAuthor,
+                },
               } = data;
 
               return (
@@ -97,12 +128,12 @@ class Watch extends Component {
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
-                    {filePlayerReady && (
+                    {(!audio[0] || filePlayerReady) && (
                       <YouTubePlayer
                         url={'https://www.youtube.com/watch?v=' + originId}
                         muted={isMobile}
                         volume={defaultVolume / 100}
-                        controls
+                        // controls
                         onPause={() =>
                           this.setState({ playingFilePlayer: false })
                         }
@@ -112,16 +143,8 @@ class Watch extends Component {
                         onProgress={this.onProgressYoutube}
                       />
                     )}
-                    {audio[0] && (
-                      // <div style={{ visibility: 'hidden' }}>
-                      <FilePlayer
-                        onReady={() => this.setState({ filePlayerReady: true })}
-                        ref={this.refFilePlayer}
-                        url={audio[0].source}
-                        playing={playingFilePlayer}
-                      />
-                      // </div>
-                    )}
+                    Tác giả: {originAuthor}
+                    {audio[0] && this.renderAudio(audio[0].source)}
                   </div>
                   <input
                     type="text"
