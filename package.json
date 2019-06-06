@@ -30,6 +30,7 @@
     "react": "^16.8.6",
     "react-adopt": "^0.6.0",
     "react-apollo": "^2.5.5",
+    "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
     "react-player": "^1.11.0",
     "styled-components": "^4.2.0",
