@@ -115,18 +115,20 @@ class Watch extends Component {
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
-                    <YouTubePlayer
-                      url={'https://www.youtube.com/watch?v=' + originId}
-                      volume={defaultVolume / 100}
-                      playing={filePlayerReady && playingFilePlayer}
-                      muted={isMobile}
-                      controls
-                      onPause={() =>
-                        this.setState({ playingFilePlayer: false })
-                      }
-                      onPlay={() => this.setState({ playingFilePlayer: true })}
-                      onProgress={this.onProgressYoutube}
-                    />
+                    {filePlayerReady && (
+                      <YouTubePlayer
+                        url={'https://www.youtube.com/watch?v=' + originId}
+                        volume={defaultVolume / 100}
+                        muted={isMobile}
+                        controls
+                        onPause={() =>
+                          this.setState({ playingFilePlayer: false })
+                        }
+                        onPlay={() => this.setState({ playingFilePlayer: true })}
+                        onProgress={this.onProgressYoutube}
+                      />
+
+                    )}
                     {audio[0] && (
                       <div style={{ visibility: 'hidden' }}>
                         <FilePlayer
