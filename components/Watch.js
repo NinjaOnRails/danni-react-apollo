@@ -83,11 +83,7 @@ class Watch extends Component {
   };
 
   renderYoutube({ defaultVolume, originId, audio }) {
-    const {
-      playingFilePlayer,
-      mobileFirstInteract,
-      youtubePlayerReady,
-    } = this.state;
+    const { playingFilePlayer, mobileFirstInteract } = this.state;
     if (!isMobile || !audio[0] || mobileFirstInteract) {
       return (
         <YouTubePlayer
@@ -96,6 +92,7 @@ class Watch extends Component {
           volume={defaultVolume / 100}
           playing={playingFilePlayer}
           controls
+          onReady={() => this.setState({ youtubePlayerReady: true })}
           onPause={() => this.setState({ playingFilePlayer: false })}
           onPlay={() => this.setState({ playingFilePlayer: true })}
           onProgress={this.onProgressYoutube}
@@ -111,17 +108,7 @@ class Watch extends Component {
           })
         }
       >
-        <YouTubePlayer
-          url={`https://www.youtube.com/embed/${originId}`}
-          muted={isMobile}
-          volume={defaultVolume / 100}
-          playing={playingFilePlayer}
-          controls
-          onReady={() => this.setState({ youtubePlayerReady: true })}
-          onPause={() => this.setState({ playingFilePlayer: false })}
-          onPlay={() => this.setState({ playingFilePlayer: true })}
-          onProgress={this.onProgressYoutube}
-        />
+        <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
       </YoutubeOverlay>
     );
   }
