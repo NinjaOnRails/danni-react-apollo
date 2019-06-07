@@ -61,7 +61,6 @@ class Watch extends Component {
     password: '',
     filePlayerReady: false,
     mobileFirstInteract: false,
-    youtubePlayerReady: false,
   };
 
   static propTypes = {
@@ -92,7 +91,6 @@ class Watch extends Component {
           volume={defaultVolume / 100}
           playing={playingFilePlayer}
           controls
-          onReady={() => this.setState({ youtubePlayerReady: true })}
           onPause={() => this.setState({ playingFilePlayer: false })}
           onPlay={() => this.setState({ playingFilePlayer: true })}
           onProgress={this.onProgressYoutube}
@@ -115,12 +113,7 @@ class Watch extends Component {
 
   render() {
     const { id } = this.props;
-    const {
-      password,
-      playingFilePlayer,
-      filePlayerReady,
-      youtubePlayerReady,
-    } = this.state;
+    const { password, playingFilePlayer, filePlayerReady } = this.state;
     return (
       <Mutation
         mutation={VIDEO_DELETE}
@@ -156,7 +149,7 @@ class Watch extends Component {
                         onReady={() => this.setState({ filePlayerReady: true })}
                         ref={this.refFilePlayer}
                         url={audio[0].source}
-                        playing={youtubePlayerReady && playingFilePlayer}
+                        playing={playingFilePlayer}
                       />
                     )}
                   </div>
