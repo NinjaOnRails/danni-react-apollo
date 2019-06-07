@@ -5,7 +5,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
-import ReactPlayer from 'react-player' 
+import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
@@ -83,7 +83,7 @@ class Watch extends Component {
 
   renderYoutube({ defaultVolume, originId }) {
     const { playingFilePlayer, mobileFirstInteract } = this.state;
-    // if (!isMobile || mobileFirstInteract) {
+    if (!isMobile || mobileFirstInteract) {
       return (
         <YouTubePlayer
           url={`https://www.youtube.com/embed/${originId}`}
@@ -96,20 +96,20 @@ class Watch extends Component {
           onProgress={this.onProgressYoutube}
         />
       );
-    // }
+    }
 
-    // return (
-    //   <YoutubeOverlay
-    //     onClick={() =>
-    //       this.setState({
-    //         playingFilePlayer: true,
-    //         mobileFirstInteract: true,
-    //       })
-    //     }
-    //   >
-    //     <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
-    //   </YoutubeOverlay>
-    // );
+    return (
+      <YoutubeOverlay
+        onClick={() =>
+          this.setState({
+            //         playingFilePlayer: true,
+            mobileFirstInteract: true,
+          })
+        }
+      >
+        <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
+      </YoutubeOverlay>
+    );
   }
 
   render() {
