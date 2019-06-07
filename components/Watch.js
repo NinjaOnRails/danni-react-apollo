@@ -81,9 +81,9 @@ class Watch extends Component {
     this.playerFilePlayer = playerFilePlayer;
   };
 
-  renderYoutube({ defaultVolume, originId, audio }) {
+  renderYoutube({ defaultVolume, originId }) {
     const { playingFilePlayer, mobileFirstInteract } = this.state;
-    if (!isMobile || !audio[0] || mobileFirstInteract) {
+    if (!isMobile || mobileFirstInteract) {
       return (
         <YouTubePlayer
           url={`https://www.youtube.com/embed/${originId}`}
@@ -97,6 +97,7 @@ class Watch extends Component {
         />
       );
     }
+
     return (
       <YoutubeOverlay
         onClick={() =>
@@ -143,6 +144,7 @@ class Watch extends Component {
                     <h2>{titleVi}</h2>
                     {(!audio[0] || filePlayerReady) &&
                       this.renderYoutube(data.video)}
+                    {audio[0] && !filePlayerReady && <p>Loading...</p>}
                     Tác giả: {originAuthor}
                     {audio[0] && (
                       <FilePlayer
