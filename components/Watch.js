@@ -57,7 +57,6 @@ const interval = 1.02;
 
 class Watch extends Component {
   state = {
-    playingYoutubePlayer: false,
     playingFilePlayer: false,
     playedYoutube: 0,
     password: '',
@@ -93,12 +92,7 @@ class Watch extends Component {
           playing={playingFilePlayer}
           controls
           onPause={() => this.setState({ playingFilePlayer: false })}
-          onPlay={() =>
-            this.setState({
-              playingFilePlayer: true,
-              playingYoutubePlayer: true,
-            })
-          }
+          onPlay={() => this.setState({ playingFilePlayer: true })}
           onProgress={this.onProgressYoutube}
         />
       );
@@ -120,7 +114,7 @@ class Watch extends Component {
 
   render() {
     const { id } = this.props;
-    const { password, playingFilePlayer, playingYoutubePlayer } = this.state;
+    const { password, playingFilePlayer } = this.state;
     return (
       <Mutation
         mutation={VIDEO_DELETE}
@@ -154,7 +148,7 @@ class Watch extends Component {
                       <ReactPlayer
                         ref={this.refFilePlayer}
                         url={audio[0].source}
-                        playing={playingFilePlayer && playingYoutubePlayer}
+                        playing={playingFilePlayer}
                       />
                     )}
                   </div>
