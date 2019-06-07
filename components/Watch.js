@@ -101,7 +101,7 @@ class Watch extends Component {
       <YoutubeOverlay
         onClick={() =>
           this.setState({
-            playingFilePlayer: true,
+            // playingFilePlayer: true,
             mobileFirstInteract: true,
           })
         }
