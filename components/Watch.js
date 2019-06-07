@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
+import ReactPlayer from 'react-player' 
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
@@ -82,33 +83,33 @@ class Watch extends Component {
 
   renderYoutube({ defaultVolume, originId }) {
     const { playingFilePlayer, mobileFirstInteract } = this.state;
-    if (!isMobile || mobileFirstInteract) {
+    // if (!isMobile || mobileFirstInteract) {
       return (
         <YouTubePlayer
           url={`https://www.youtube.com/embed/${originId}`}
           muted={isMobile}
           volume={defaultVolume / 100}
-          playing={playingFilePlayer}
+          // playing={playingFilePlayer}
           controls
           onPause={() => this.setState({ playingFilePlayer: false })}
           onPlay={() => this.setState({ playingFilePlayer: true })}
           onProgress={this.onProgressYoutube}
         />
       );
-    }
+    // }
 
-    return (
-      <YoutubeOverlay
-        onClick={() =>
-          this.setState({
-            playingFilePlayer: true,
-            mobileFirstInteract: true,
-          })
-        }
-      >
-        <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
-      </YoutubeOverlay>
-    );
+    // return (
+    //   <YoutubeOverlay
+    //     onClick={() =>
+    //       this.setState({
+    //         playingFilePlayer: true,
+    //         mobileFirstInteract: true,
+    //       })
+    //     }
+    //   >
+    //     <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
+    //   </YoutubeOverlay>
+    // );
   }
 
   render() {
@@ -144,7 +145,7 @@ class Watch extends Component {
                     {this.renderYoutube(data.video)}
                     Tác giả: {originAuthor}
                     {audio[0] && (
-                      <FilePlayer
+                      <ReactPlayer
                         ref={this.refFilePlayer}
                         url={audio[0].source}
                         playing={playingFilePlayer}
