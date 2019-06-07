@@ -59,7 +59,6 @@ class Watch extends Component {
     playingFilePlayer: false,
     playedYoutube: 0,
     password: '',
-    filePlayerReady: false,
     mobileFirstInteract: false,
   };
 
@@ -114,7 +113,7 @@ class Watch extends Component {
 
   render() {
     const { id } = this.props;
-    const { password, playingFilePlayer, filePlayerReady } = this.state;
+    const { password, playingFilePlayer } = this.state;
     return (
       <Mutation
         mutation={VIDEO_DELETE}
@@ -142,13 +141,10 @@ class Watch extends Component {
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
-                    {(!audio[0] || filePlayerReady) &&
-                      this.renderYoutube(data.video)}
-                    {audio[0] && !filePlayerReady && <p>Loading...</p>}
+                    {this.renderYoutube(data.video)}
                     Tác giả: {originAuthor}
                     {audio[0] && (
                       <FilePlayer
-                        onReady={() => this.setState({ filePlayerReady: true })}
                         ref={this.refFilePlayer}
                         url={audio[0].source}
                         playing={playingFilePlayer}
