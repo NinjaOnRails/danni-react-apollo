@@ -39,16 +39,9 @@ const VIDEO_DELETE = gql`
   }
 `;
 
-// const YoutubeOverlay = styled.div`
-// display: inline-block; position: relative;
-// :after{content:""; position: absolute; top: 0; left: 0; bottom: 0; right: 0; cursor: pointer; background-color: black; background-repeat: no-repeat; background-position: center; background-size: 64px 64px;
-// :after{content:""; position: absolute; top: 70px; left: 0; bottom: 50px; right: 0; cursor: pointer; background-color: black; background-repeat: no-repeat; background-position: center; background-size: 40px 40px;
-// `;
-
 const YoutubeOverlay = styled.div`
   position: relative;
-  cursor: pointer;
-  height 360px;
+  height: 360px;
   width: 640px;
   :before {
     content: '';
