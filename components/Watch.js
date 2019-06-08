@@ -59,10 +59,6 @@ const YoutubeStyle = styled.div`
   }
 `;
 
-const FilePlayerStyle = styled.div`
-  visibility: hidden;
-`;
-
 class Watch extends Component {
   state = {
     playingFilePlayer: false,
@@ -158,16 +154,16 @@ class Watch extends Component {
                     </YoutubeStyle>
                     Tác giả: {originAuthor}
                     {audio[0] && (
-                      <FilePlayerStyle>
-                        <FilePlayer
-                          onProgress={({ playedSeconds }) =>
-                            this.setState({ playedFilePlayer: playedSeconds })
-                          }
-                          ref={this.refFilePlayer}
-                          url={audio[0].source}
-                          playing={playingFilePlayer}
-                        />
-                      </FilePlayerStyle>
+                      <FilePlayer
+                        onProgress={({ playedSeconds }) =>
+                          this.setState({ playedFilePlayer: playedSeconds })
+                        }
+                        ref={this.refFilePlayer}
+                        url={audio[0].source}
+                        playing={playingFilePlayer}
+                        height="100%"
+                        width="100%"
+                      />
                     )}
                   </div>
                   <input
