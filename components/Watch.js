@@ -49,6 +49,8 @@ const YoutubeOverlay = styled.div`
     position: absolute;
     height: 85%;
     width: 100%;
+    background: blue;
+    opacity: 0.3;
   }
 `;
 
@@ -58,7 +60,6 @@ const interval = 1.02;
 class Watch extends Component {
   state = {
     playingFilePlayer: false,
-    playingYouPlayer: false,
     playedYoutube: 0,
     password: '',
     mobileFirstInteract: false,
@@ -83,13 +84,13 @@ class Watch extends Component {
   };
 
   renderYoutube({ defaultVolume, originId }) {
-    const { playingFilePlayer, mobileFirstInteract, playingYouPlayer } = this.state;
+    const { playingFilePlayer, mobileFirstInteract } = this.state;
     // if (!isMobile || mobileFirstInteract) {
     return (
       <YoutubeOverlay
         onClick={() =>
           this.setState({
-            playingYouPlayer: !playingYouPlayer,
+            playingFilePlayer: !playingFilePlayer,
           })
         }
       >
@@ -97,7 +98,7 @@ class Watch extends Component {
           url={`https://www.youtube.com/embed/${originId}`}
           muted={isMobile}
           volume={defaultVolume / 100}
-          playing={playingYouPlayer}
+          playing={playingFilePlayer}
           controls
           onPause={() => this.setState({ playingFilePlayer: false })}
           onPlay={() => this.setState({ playingFilePlayer: true })}
