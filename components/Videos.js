@@ -37,6 +37,12 @@ const VideosList = styled.div`
   img {
     cursor: pointer;
   }
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 1300px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 `;
 
 class Videos extends Component {
