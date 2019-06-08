@@ -5,7 +5,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
-import ReactPlayer from 'react-player';
+// import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
@@ -47,7 +47,7 @@ const YoutubeOverlay = styled.div`
   :before {
     content: '';
     position: absolute;
-    height: 100%;
+    height: 85%;
     width: 100%;
   }
 `;
@@ -58,6 +58,7 @@ const interval = 1.02;
 class Watch extends Component {
   state = {
     playingFilePlayer: false,
+    playingYouPlayer: false,
     playedYoutube: 0,
     password: '',
     mobileFirstInteract: false,
@@ -82,20 +83,27 @@ class Watch extends Component {
   };
 
   renderYoutube({ defaultVolume, originId }) {
-    const { playingFilePlayer, mobileFirstInteract } = this.state;
+    const { playingFilePlayer, mobileFirstInteract, playingYouPlayer } = this.state;
     // if (!isMobile || mobileFirstInteract) {
     return (
-      <ReactPlayer
-        url={`https://www.youtube.com/embed/${originId}`}
-        muted={isMobile}
-        volume={defaultVolume / 100}
-        // playing={playingFilePlayer}
-        controls
-        onPause={() => this.setState({ playingFilePlayer: false })}
-        onPlay={() => this.setState({ playingFilePlayer: true })}
-        onProgress={this.onProgressYoutube}
-        light={isMobile}
-      />
+      <YoutubeOverlay
+        onClick={() =>
+          this.setState({
+            playingYouPlayer: !playingYouPlayer,
+          })
+        }
+      >
+        <YouTubePlayer
+          url={`https://www.youtube.com/embed/${originId}`}
+          muted={isMobile}
+          volume={defaultVolume / 100}
+          playing={playingYouPlayer}
+          controls
+          onPause={() => this.setState({ playingFilePlayer: false })}
+          onPlay={() => this.setState({ playingFilePlayer: true })}
+          onProgress={this.onProgressYoutube}
+        />
+      </YoutubeOverlay>
     );
     // }
 
@@ -103,8 +111,7 @@ class Watch extends Component {
     //   <YoutubeOverlay
     //     onClick={() =>
     //       this.setState({
-    //         playingFilePlayer: true,
-    //         mobileFirstInteract: true,
+    //         playingFilePlayer: !playingFilePlayer,
     //       })
     //     }
     //   >
