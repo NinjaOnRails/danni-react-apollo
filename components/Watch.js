@@ -83,33 +83,34 @@ class Watch extends Component {
 
   renderYoutube({ defaultVolume, originId }) {
     const { playingFilePlayer, mobileFirstInteract } = this.state;
-    if (!isMobile || mobileFirstInteract) {
-      return (
-        <YouTubePlayer
-          url={`https://www.youtube.com/embed/${originId}`}
-          muted={isMobile}
-          volume={defaultVolume / 100}
-          playing={playingFilePlayer}
-          controls
-          onPause={() => this.setState({ playingFilePlayer: false })}
-          onPlay={() => this.setState({ playingFilePlayer: true })}
-          onProgress={this.onProgressYoutube}
-        />
-      );
-    }
-
+    // if (!isMobile || mobileFirstInteract) {
     return (
-      <YoutubeOverlay
-        onClick={() =>
-          this.setState({
-            playingFilePlayer: true,
-            mobileFirstInteract: true,
-          })
-        }
-      >
-        <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
-      </YoutubeOverlay>
+      <ReactPlayer
+        url={`https://www.youtube.com/embed/${originId}`}
+        muted={isMobile}
+        volume={defaultVolume / 100}
+        // playing={playingFilePlayer}
+        controls
+        onPause={() => this.setState({ playingFilePlayer: false })}
+        onPlay={() => this.setState({ playingFilePlayer: true })}
+        onProgress={this.onProgressYoutube}
+        light={isMobile}
+      />
     );
+    // }
+
+    // return (
+    //   <YoutubeOverlay
+    //     onClick={() =>
+    //       this.setState({
+    //         playingFilePlayer: true,
+    //         mobileFirstInteract: true,
+    //       })
+    //     }
+    //   >
+    //     <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
+    //   </YoutubeOverlay>
+    // );
   }
 
   render() {
@@ -145,7 +146,7 @@ class Watch extends Component {
                     {this.renderYoutube(data.video)}
                     Tác giả: {originAuthor}
                     {audio[0] && (
-                      <ReactPlayer
+                      <FilePlayer
                         ref={this.refFilePlayer}
                         url={audio[0].source}
                         playing={playingFilePlayer}
