@@ -52,24 +52,20 @@ const YoutubeOverlay = styled.div`
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 2;
-    background: red;
+    z-index: 1;
   }
   .youtube-player {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
   }
 `;
-
-// Interval to be counted as Youtube seek change in seconds
-const interval = 1.02;
 
 class Watch extends Component {
   state = {
     playingFilePlayer: false,
     playedYoutube: 0,
+    playedFilePlayer: 0,
     password: '',
   };
 
@@ -77,14 +73,17 @@ class Watch extends Component {
     id: PropTypes.string.isRequired,
   };
 
-  // Synchronize FilePlayer progress with Youtube player progress on Youtube seek change
+  // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
+    const { playedYoutube, playedFilePlayer } = this.state;
     if (this.playerFilePlayer) {
-      if (Math.abs(playedSeconds - this.state.playedYoutube) > interval) {
+      // if (Math.abs(playedSeconds - playedYoutube) > interval) {
+      if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
         this.playerFilePlayer.seekTo(playedSeconds);
+        console.log('seeking');
       }
-      this.setState({ playedYoutube: playedSeconds });
     }
+    this.setState({ playedYoutube: playedSeconds });
   };
 
   refFilePlayer = playerFilePlayer => {
@@ -156,6 +155,9 @@ class Watch extends Component {
                     Tác giả: {originAuthor}
                     {audio[0] && (
                       <FilePlayer
+                        onProgress={({ playedSeconds }) =>
+                          this.setState({ playedFilePlayer: playedSeconds })
+                        }
                         ref={this.refFilePlayer}
                         url={audio[0].source}
                         playing={playingFilePlayer}
