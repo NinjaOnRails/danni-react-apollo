@@ -186,6 +186,7 @@ class AddVideo extends Component {
     return (
       <Mutation
         mutation={CREATE_AUDIO_MUTATION}
+        refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
       >
         {(
           createAudio,

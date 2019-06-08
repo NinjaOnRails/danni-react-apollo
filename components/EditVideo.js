@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import Router from 'next/router';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
-import { ALL_VIDEOS_QUERY } from './Videos';
+// import { ALL_VIDEOS_QUERY } from './Videos';
 import { VIDEO_QUERY } from './Watch';
 import { CREATE_AUDIO_MUTATION } from './AddVideo';
 import youtube from '../lib/youtube';
@@ -39,20 +39,11 @@ const UPDATE_VIDEO_MUTATION = gql`
   }
 `;
 
-class AddVideo extends Component {
+class EditVideo extends Component {
   state = {
-    source: '',
-    titleVi: '',
-    audioSource: '',
-    tags: '',
     isAudioSource: true,
     isTags: true,
-    defaultVolume: 20,
     isDefaultVolume: true,
-    youtubeIdStatus: '',
-    image: '',
-    channelTitle: '',
-    originTitle: '',
   };
 
   handleChange = e => {
@@ -186,9 +177,6 @@ class AddVideo extends Component {
           } = data;
 
           let oldTags = '';
-          // for (let [key, value] of Object.entries(oldTagsObj)) {
-          //   oldTags = oldTags + value.text + ' ';
-          // }
           Object.values(oldTagsObj).forEach(val => {
             oldTags = oldTags + val.text + ' ';
           });
@@ -196,7 +184,9 @@ class AddVideo extends Component {
           return (
             <Mutation
               mutation={CREATE_AUDIO_MUTATION}
-              refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+              refetchQueries={[
+                { query: VIDEO_QUERY, variables: { id: idInDB } },
+              ]}
             >
               {(
                 createAudio,
@@ -208,16 +198,20 @@ class AddVideo extends Component {
                     id: idInDB,
                     oldSource: oldOriginId,
                     newSource: oldOriginId !== source ? source : '',
-                    titleVi,
-                    tags,
-                    defaultVolume: isDefaultVolume ? defaultVolume : undefined,
+                    titleVi: titleVi ? titleVi : oldTitleVi,
+                    tags: tags ? tags : oldTags,
+                    defaultVolume: isDefaultVolume
+                      ? defaultVolume
+                      : oldDefaultVolume,
                     password,
                   }}
-                  refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+                  refetchQueries={[
+                    { query: VIDEO_QUERY, variables: { id: idInDB } },
+                  ]}
                 >
                   {(
                     updateVideo,
-                    { loading: loadingCreateVideo, error: errorCreateVideo }
+                    { loading: loadingUpdateVideo, error: errorUpdateVideo }
                   ) => (
                     <Form
                       data-test="form"
@@ -225,7 +219,7 @@ class AddVideo extends Component {
                         // Stop form from submitting
                         e.preventDefault();
 
-                        // Call createVideo mutation
+                        // Call updateVideo mutation
                         const {
                           data: {
                             updateVideo: { id },
@@ -247,7 +241,7 @@ class AddVideo extends Component {
                           });
                         }
 
-                        // Redirect to newly created Video watch page
+                        // Redirect to newly updated Video watch page
                         Router.push({
                           pathname: '/watch',
                           query: { id },
@@ -255,10 +249,10 @@ class AddVideo extends Component {
                       }}
                     >
                       <Error error={errorCreateAudio} />
-                      <Error error={errorCreateVideo} />
+                      <Error error={errorUpdateVideo} />
                       <fieldset
-                        disabled={loadingCreateVideo || loadingCreateAudio}
-                        aria-busy={loadingCreateVideo}
+                        disabled={loadingUpdateVideo || loadingCreateAudio}
+                        aria-busy={loadingUpdateVideo}
                       >
                         <label htmlFor="source">
                           Nguồn (Link hoặc YouTube ID):
@@ -343,7 +337,7 @@ class AddVideo extends Component {
                           <input
                             type="text"
                             name="audioSource"
-                            placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
+                            placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
                             defaultValue={
                               data.video.audio.length
                                 ? data.video.audio[data.video.audio.length - 1]
@@ -367,4 +361,4 @@ class AddVideo extends Component {
   }
 }
 
-export default AddVideo;
+export default EditVideo;
