@@ -5,7 +5,6 @@ import Head from 'next/head';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
-// import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
@@ -40,17 +39,27 @@ const VIDEO_DELETE = gql`
   }
 `;
 
+// Create element on top of Youtube Player to limit interaction
 const YoutubeOverlay = styled.div`
   position: relative;
-  height: 360px;
-  width: 640px;
+  /* height: 360px;
+  width: 640px; */
+  padding-top: 56.25%;
   :before {
     content: '';
     position: absolute;
     height: 85%;
     width: 100%;
-    background: blue;
-    opacity: 0.3;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: red;
+  }
+  .youtube-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
   }
 `;
 
@@ -62,7 +71,6 @@ class Watch extends Component {
     playingFilePlayer: false,
     playedYoutube: 0,
     password: '',
-    mobileFirstInteract: false,
   };
 
   static propTypes = {
@@ -82,44 +90,6 @@ class Watch extends Component {
   refFilePlayer = playerFilePlayer => {
     this.playerFilePlayer = playerFilePlayer;
   };
-
-  renderYoutube({ defaultVolume, originId }) {
-    const { playingFilePlayer, mobileFirstInteract } = this.state;
-    // if (!isMobile || mobileFirstInteract) {
-    return (
-      <YoutubeOverlay
-        onClick={() =>
-          this.setState({
-            playingFilePlayer: !playingFilePlayer,
-          })
-        }
-      >
-        <YouTubePlayer
-          url={`https://www.youtube.com/embed/${originId}`}
-          muted={isMobile}
-          volume={defaultVolume / 100}
-          playing={playingFilePlayer}
-          controls
-          onPause={() => this.setState({ playingFilePlayer: false })}
-          onPlay={() => this.setState({ playingFilePlayer: true })}
-          onProgress={this.onProgressYoutube}
-        />
-      </YoutubeOverlay>
-    );
-    // }
-
-    // return (
-    //   <YoutubeOverlay
-    //     onClick={() =>
-    //       this.setState({
-    //         playingFilePlayer: !playingFilePlayer,
-    //       })
-    //     }
-    //   >
-    //     <YouTubePlayer url={`https://www.youtube.com/embed/${originId}`} />
-    //   </YoutubeOverlay>
-    // );
-  }
 
   render() {
     const { id } = this.props;
@@ -141,7 +111,14 @@ class Watch extends Component {
               if (loading) return <p>Loading...</p>;
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
-                video: { id: idInDB, titleVi, audio, originAuthor },
+                video: {
+                  id: idInDB,
+                  titleVi,
+                  audio,
+                  originAuthor,
+                  defaultVolume,
+                  originId,
+                },
               } = data;
 
               return (
@@ -151,7 +128,31 @@ class Watch extends Component {
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
-                    {this.renderYoutube(data.video)}
+                    <YoutubeOverlay
+                      onClick={() =>
+                        this.setState({
+                          playingFilePlayer: !playingFilePlayer,
+                        })
+                      }
+                    >
+                      <YouTubePlayer
+                        className="youtube-player"
+                        url={`https://www.youtube.com/embed/${originId}`}
+                        width="100%"
+                        height="100%"
+                        muted={isMobile}
+                        volume={defaultVolume / 100}
+                        playing={playingFilePlayer}
+                        controls
+                        onPause={() =>
+                          this.setState({ playingFilePlayer: false })
+                        }
+                        onPlay={() =>
+                          this.setState({ playingFilePlayer: true })
+                        }
+                        onProgress={this.onProgressYoutube}
+                      />
+                    </YoutubeOverlay>
                     Tác giả: {originAuthor}
                     {audio[0] && (
                       <FilePlayer
