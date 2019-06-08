@@ -39,12 +39,10 @@ const VIDEO_DELETE = gql`
   }
 `;
 
-// Create element on top of Youtube Player to limit interaction
 const YoutubeOverlay = styled.div`
   position: relative;
-  /* height: 360px;
-  width: 640px; */
   padding-top: 56.25%;
+  /* Create element on top of Youtube Player to limit interaction */
   :before {
     content: '';
     position: absolute;
@@ -76,7 +74,7 @@ class Watch extends Component {
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
     const { playedYoutube, playedFilePlayer } = this.state;
-    if (this.playerFilePlayer) {
+    if (playedFilePlayer > 0 && playedYoutube > 0) {
       // if (Math.abs(playedSeconds - playedYoutube) > interval) {
       if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
         this.playerFilePlayer.seekTo(playedSeconds);
