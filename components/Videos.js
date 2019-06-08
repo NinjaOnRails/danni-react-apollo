@@ -10,16 +10,7 @@ const ALL_VIDEOS_QUERY = gql`
     videos {
       id
       titleVi
-      originAuthor
       originThumbnailUrl
-      originLanguage
-      addedBy
-      audio {
-        id
-        source
-        language
-      }
-      createdAt
     }
   }
 `;
@@ -52,8 +43,7 @@ class Videos extends Component {
         <Query query={ALL_VIDEOS_QUERY}>
           {({ loading, error, data }) => {
             if (loading) return <p>Loading...</p>;
-            if (error) return <p>Error: {error.message}</p>;
-
+            if (error) return <Error>Error: {error.message}</Error>;
             return (
               <VideosList>
                 {data.videos.map(video => {
@@ -71,8 +61,6 @@ class Videos extends Component {
                         />
                       </Link>
                       <h3>{video.titleVi}</h3>
-                      {/* <h4>{video.channelTitle}</h4> */}
-                      {/* {video.defaultLanguage && <p>{video.defaultLanguage}</p>} */}
                     </div>
                   );
                 })}

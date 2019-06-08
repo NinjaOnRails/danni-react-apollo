@@ -186,9 +186,11 @@ class AddVideo extends Component {
     return (
       <Mutation
         mutation={CREATE_AUDIO_MUTATION}
-        refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
       >
-        {(createAudio, { loading, errorCreateAudio }) => (
+        {(
+          createAudio,
+          { loading: loadingCreateAudio, error: errorCreateAudio }
+        ) => (
           <Mutation
             mutation={CREATE_VIDEO_MUTATION}
             variables={{
@@ -201,7 +203,10 @@ class AddVideo extends Component {
             }}
             refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
           >
-            {(createVideo, { loading: loadingCreateVideo, error }) => (
+            {(
+              createVideo,
+              { loading: loadingCreateVideo, error: errorCreateVideo }
+            ) => (
               <Form
                 data-test="form"
                 onSubmit={async e => {
@@ -232,9 +237,10 @@ class AddVideo extends Component {
                   });
                 }}
               >
-                <Error error={error} />
+                <Error error={errorCreateAudio} />
+                <Error error={errorCreateVideo} />
                 <fieldset
-                  disabled={loadingCreateVideo}
+                  disabled={loadingCreateVideo || loadingCreateAudio}
                   aria-busy={loadingCreateVideo}
                 >
                   <label htmlFor="source">
@@ -365,3 +371,4 @@ class AddVideo extends Component {
 }
 
 export default AddVideo;
+export { CREATE_AUDIO_MUTATION };

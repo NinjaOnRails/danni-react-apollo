@@ -6,6 +6,7 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
+import ReactPlayer from 'react-player';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import Error from './ErrorMessage';
@@ -19,14 +20,15 @@ const VIDEO_QUERY = gql`
       titleVi
       originAuthor
       originThumbnailUrl
-      originLanguage
       defaultVolume
       startAt
       audio {
         id
         source
       }
-      createdAt
+      tags {
+        text
+      }
     }
   }
 `;
@@ -153,13 +155,13 @@ class Watch extends Component {
                       />
                     </YoutubeStyle>
                     Tác giả: {originAuthor}
-                    {audio[0] && (
-                      <FilePlayer
+                    {audio.length && (
+                      <ReactPlayer
                         onProgress={({ playedSeconds }) =>
                           this.setState({ playedFilePlayer: playedSeconds })
                         }
                         ref={this.refFilePlayer}
-                        url={audio[0].source}
+                        url={audio[audio.length - 1].source}
                         playing={playingFilePlayer}
                         height="100%"
                         width="100%"
@@ -176,8 +178,8 @@ class Watch extends Component {
                   <button
                     type="submit"
                     onClick={async () => {
-                      if (password !== 'delete') {
-                        alert('Wrong delete password');
+                      if (password !== 'dracarys') {
+                        alert('Wrong password');
                       } else if (
                         confirm('Are you sure you want to delete this video?')
                       ) {
@@ -194,6 +196,21 @@ class Watch extends Component {
                     }}
                   >
                     Delete
+                  </button>
+                  <button
+                    type="submit"
+                    onClick={async () => {
+                      if (password !== 'dracarys') {
+                        alert('Wrong password');
+                      } else {
+                        Router.push({
+                          pathname: '/edit',
+                          query: { id: idInDB, password },
+                        });
+                      }
+                    }}
+                  >
+                    Edit
                   </button>
                 </div>
               );
