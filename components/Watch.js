@@ -39,7 +39,7 @@ const VIDEO_DELETE = gql`
   }
 `;
 
-const YoutubeOverlay = styled.div`
+const YoutubeStyle = styled.div`
   position: relative;
   padding-top: 56.25%;
   /* Create element on top of Youtube Player to limit interaction */
@@ -74,11 +74,13 @@ class Watch extends Component {
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
     const { playedYoutube, playedFilePlayer } = this.state;
-    if (playedFilePlayer > 0 && playedYoutube > 0) {
-      // if (Math.abs(playedSeconds - playedYoutube) > interval) {
+    if (
+      playedFilePlayer > 0 &&
+      playedYoutube > 0 &&
+      playedSeconds !== playedYoutube
+    ) {
       if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
         this.playerFilePlayer.seekTo(playedSeconds);
-        console.log('seeking');
       }
     }
     this.setState({ playedYoutube: playedSeconds });
@@ -125,7 +127,7 @@ class Watch extends Component {
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
-                    <YoutubeOverlay
+                    <YoutubeStyle
                       onClick={() =>
                         this.setState({
                           playingFilePlayer: !playingFilePlayer,
@@ -149,7 +151,7 @@ class Watch extends Component {
                         }
                         onProgress={this.onProgressYoutube}
                       />
-                    </YoutubeOverlay>
+                    </YoutubeStyle>
                     Tác giả: {originAuthor}
                     {audio[0] && (
                       <FilePlayer
