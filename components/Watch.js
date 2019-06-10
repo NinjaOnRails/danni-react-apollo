@@ -148,6 +148,7 @@ class Watch extends Component {
                   originAuthor,
                   defaultVolume,
                   originId,
+                  originThumbnailUrl,
                 },
               } = data;
 
@@ -155,6 +156,13 @@ class Watch extends Component {
                 <div>
                   <Head>
                     <title>Danni | {titleVi}</title>
+                    <meta
+                      property="og:url"
+                      content={'https://dannitv.herokuapp.com/watch?id=' + id}
+                    />
+                    <meta property="og:title" content={titleVi} />
+                    <meta property="og:image" content={originThumbnailUrl} />
+                    <meta property="og:locale" content="vi_VN" />
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
