@@ -14,9 +14,8 @@ const youtubeIdLength = 11;
 const UPDATE_VIDEO_MUTATION = gql`
   mutation UPDATE_VIDEO_MUTATION(
     $id: ID!
-    $oldSource: String!
-    $newSource: String
-    $titleVi: String!
+    $source: String
+    $titleVi: String
     $tags: String
     $defaultVolume: Int
     $password: String!
@@ -25,8 +24,7 @@ const UPDATE_VIDEO_MUTATION = gql`
       id: $id
       password: $password
       data: {
-        oldSource: $oldSource
-        newSource: $newSource
+        source: $source
         titleVi: $titleVi
         tags: $tags
         defaultVolume: $defaultVolume
@@ -168,7 +166,6 @@ class EditVideo extends Component {
           if (!data.video) return <p>No Video Found for {id}</p>;
           const {
             video: {
-              id: idInDB,
               titleVi: oldTitleVi,
               defaultVolume: oldDefaultVolume,
               originId: oldOriginId,
@@ -184,9 +181,7 @@ class EditVideo extends Component {
           return (
             <Mutation
               mutation={CREATE_AUDIO_MUTATION}
-              refetchQueries={[
-                { query: VIDEO_QUERY, variables: { id: idInDB } },
-              ]}
+              refetchQueries={[{ query: VIDEO_QUERY, variables: { id } }]}
             >
               {(
                 createAudio,
@@ -195,19 +190,14 @@ class EditVideo extends Component {
                 <Mutation
                   mutation={UPDATE_VIDEO_MUTATION}
                   variables={{
-                    id: idInDB,
-                    oldSource: oldOriginId,
-                    newSource: oldOriginId !== source ? source : '',
-                    titleVi: titleVi ? titleVi : oldTitleVi,
-                    tags: tags ? tags : oldTags,
-                    defaultVolume: isDefaultVolume
-                      ? defaultVolume
-                      : oldDefaultVolume,
+                    id,
+                    source,
+                    titleVi,
+                    tags,
+                    defaultVolume,
                     password,
                   }}
-                  refetchQueries={[
-                    { query: VIDEO_QUERY, variables: { id: idInDB } },
-                  ]}
+                  refetchQueries={[{ query: VIDEO_QUERY, variables: { id } }]}
                 >
                   {(
                     updateVideo,

@@ -43,16 +43,33 @@ const VIDEO_DELETE = gql`
 
 const YoutubeStyle = styled.div`
   position: relative;
-  padding-top: 56.25%;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  height: 0;
   /* Create element on top of Youtube Player to limit interaction */
   :before {
     content: '';
     position: absolute;
-    height: 85%;
+    height: 75%;
     width: 100%;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 1;
+    background: red;
+    @media (min-width: 515px) {
+      position: absolute;
+      height: 85%;
+    }
+    @media (min-width: 655px) {
+      position: absolute;
+      height: 88%;
+    }
+    @media (min-width: 1300px) {
+      position: absolute;
+      height: 91%;
+    }
   }
   .youtube-player {
     position: absolute;
