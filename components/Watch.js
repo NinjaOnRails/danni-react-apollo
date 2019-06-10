@@ -57,7 +57,7 @@ const YoutubeStyle = styled.div`
     right: 0;
     bottom: 0;
     z-index: 1;
-    background: red;
+    /* background: red; */
     @media (min-width: 515px) {
       position: absolute;
       height: 85%;
