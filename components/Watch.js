@@ -90,6 +90,18 @@ class Watch extends Component {
     id: PropTypes.string.isRequired,
   };
 
+  componentDidMount() {
+    (function(d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+  }
+
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
     const { playedYoutube, playedFilePlayer } = this.state;
@@ -171,7 +183,13 @@ class Watch extends Component {
                         onProgress={this.onProgressYoutube}
                       />
                     </YoutubeStyle>
-                    Tác giả: {originAuthor}
+                    <div>Tác giả: {originAuthor}</div>
+                    <div
+                      className="fb-share-button"
+                      data-href="https://dannitv.herokuapp.com/"
+                      data-layout="button_count"
+                      data-size="large"
+                    ></div>
                     {audio.length && (
                       <ReactPlayer
                         onProgress={({ playedSeconds }) =>
