@@ -142,7 +142,7 @@ class Watch extends Component {
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
                 video: {
-                  id: idInDB,
+                  id,
                   titleVi,
                   audio,
                   originAuthor,
@@ -186,10 +186,10 @@ class Watch extends Component {
                     <div>Tác giả: {originAuthor}</div>
                     <div
                       className="fb-share-button"
-                      data-href="https://dannitv.herokuapp.com/"
+                      data-href={'https://dannitv.herokuapp.com/watch?id=' + id}
                       data-layout="button_count"
                       data-size="large"
-                    ></div>
+                    />
                     {audio.length && (
                       <ReactPlayer
                         onProgress={({ playedSeconds }) =>
@@ -219,7 +219,7 @@ class Watch extends Component {
                         confirm('Are you sure you want to delete this video?')
                       ) {
                         const res = await deleteVideo({
-                          variables: { id: idInDB, password },
+                          variables: { id, password },
                         }).catch(err => {
                           alert(err.message);
                         });
@@ -240,7 +240,7 @@ class Watch extends Component {
                       } else {
                         Router.push({
                           pathname: '/edit',
-                          query: { id: idInDB, password },
+                          query: { id, password },
                         });
                       }
                     }}
