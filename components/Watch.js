@@ -156,13 +156,18 @@ class Watch extends Component {
                 <div>
                   <Head>
                     <title>Danni | {titleVi}</title>
-                    <meta
+                    <meta property="og:url"           content="https://www.your-domain.com/your-page.html" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="Your Website Title" />
+  <meta property="og:description"   content="Your description" />
+  <meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />
+                    {/* <meta
                       property="og:url"
                       content={'https://dannitv.herokuapp.com/watch?id=' + id}
                     />
                     <meta property="og:title" content={titleVi} />
                     <meta property="og:image" content={originThumbnailUrl} />
-                    <meta property="og:locale" content="vi_VN" />
+                    <meta property="og:locale" content="vi_VN" /> */}
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
