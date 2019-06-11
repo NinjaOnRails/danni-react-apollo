@@ -156,22 +156,13 @@ class Watch extends Component {
                 <div>
                   <Head>
                     <title>Danni | {titleVi}</title>
-                    <meta
+                    {/* <meta
                       property="og:url"
-                      content={
-                        'http://danni.tv/watch?id=' +
-                        'cjwg6v6i9001t0701qjpduo1m'
-                      }
+                      content={'http://danni.tv/watch?id=' + id}
                     />
-                    <meta
-                      property="og:title"
-                      content="EU Thực Sự Dân Chủ Như Thế Nào?"
-                    />
-                    <meta
-                      property="og:image"
-                      content="https://i.ytimg.com/vi/h4Uu5eyN6VU/mqdefault.jpg"
-                    />
-                    <meta property="og:locale" content="vi_VN" />
+                    <meta property="og:title" content={titleVi} />
+                    <meta property="og:image" content={originThumbnailUrl} />
+                    <meta property="og:locale" content="vi_VN" /> */}
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
