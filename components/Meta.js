@@ -9,7 +9,7 @@ const Meta = () => (
     <meta property="og:title" content="EU Thực Sự Dân Chủ Như Thế Nào?" />
     <meta
       property="og:image"
-      content="https://i.ytimg.com/vi/h4Uu5eyN6VU/mqdefault.jpg"
+      content="https://i.ytimg.com/vi/h4Uu5eyN6VU/hqdefault.jpg"
     />
     <meta property="og:locale" content="vi_VN" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
