@@ -88,6 +88,7 @@ class Watch extends Component {
 
   static propTypes = {
     id: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
@@ -122,7 +123,19 @@ class Watch extends Component {
   };
 
   render() {
-    const { id } = this.props;
+    const {
+      data: {
+        video: {
+          titleVi,
+          audio,
+          originAuthor,
+          defaultVolume,
+          originId,
+          originThumbnailUrl,
+        },
+        id,
+      },
+    } = this.props;
     const { password, playingFilePlayer } = this.state;
     return (
       <Mutation
@@ -130,135 +143,95 @@ class Watch extends Component {
         refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
       >
         {(deleteVideo, { error }) => (
-          <Query
-            query={VIDEO_QUERY}
-            variables={{
-              id,
-            }}
-          >
-            {({ error, loading, data }) => {
-              if (error) return <Error error={error} />;
-              if (loading) return <p>Loading...</p>;
-              if (!data.video) return <p>No Video Found for {id}</p>;
-              const {
-                video: {
-                  id,
-                  titleVi,
-                  audio,
-                  originAuthor,
-                  defaultVolume,
-                  originId,
-                  originThumbnailUrl,
-                },
-              } = data;
-
-              return (
-                <div>
-                  <Head>
-                    <title>Danni | {titleVi}</title>
-                    {/* <meta
-                      property="og:url"
-                      content={'http://danni.tv/watch?id=' + id}
-                    />
-                    <meta property="og:title" content={titleVi} />
-                    <meta property="og:image" content={originThumbnailUrl} />
-                    <meta property="og:locale" content="vi_VN" /> */}
-                  </Head>
-                  <div>
-                    <h2>{titleVi}</h2>
-                    <YoutubeStyle
-                      onClick={() =>
-                        this.setState({
-                          playingFilePlayer: !playingFilePlayer,
-                        })
-                      }
-                    >
-                      <ReactPlayer
-                        className="youtube-player"
-                        url={`https://www.youtube.com/embed/${originId}`}
-                        width="100%"
-                        height="100%"
-                        muted={isMobile}
-                        volume={defaultVolume / 100}
-                        playing={playingFilePlayer}
-                        controls
-                        onPause={() =>
-                          this.setState({ playingFilePlayer: false })
-                        }
-                        onPlay={() =>
-                          this.setState({ playingFilePlayer: true })
-                        }
-                        onProgress={this.onProgressYoutube}
-                      />
-                    </YoutubeStyle>
-                    <div>Tác giả: {originAuthor}</div>
-                    <div
-                      className="fb-share-button"
-                      data-href={'http://danni.tv/watch?id=' + id}
-                      data-layout="button_count"
-                      data-size="large"
-                    />
-                    {audio.length && (
-                      <ReactPlayer
-                        onProgress={({ playedSeconds }) =>
-                          this.setState({ playedFilePlayer: playedSeconds })
-                        }
-                        ref={this.refFilePlayer}
-                        url={audio[audio.length - 1].source}
-                        playing={playingFilePlayer}
-                        height="100%"
-                        width="100%"
-                      />
-                    )}
-                  </div>
-                  <input
-                    type="text"
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={e => this.setState({ password: e.target.value })}
-                  />
-                  <button
-                    type="submit"
-                    onClick={async () => {
-                      if (password !== 'dracarys') {
-                        alert('Wrong password');
-                      } else if (
-                        confirm('Are you sure you want to delete this video?')
-                      ) {
-                        const res = await deleteVideo({
-                          variables: { id, password },
-                        }).catch(err => {
-                          alert(err.message);
-                        });
-                        if (res.data)
-                          Router.push({
-                            pathname: '/',
-                          });
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={async () => {
-                      if (password !== 'dracarys') {
-                        alert('Wrong password');
-                      } else {
-                        Router.push({
-                          pathname: '/edit',
-                          query: { id, password },
-                        });
-                      }
-                    }}
-                  >
-                    Edit
-                  </button>
-                </div>
-              );
-            }}
-          </Query>
+          <div>
+            <div>
+              <h2>{titleVi}</h2>
+              <YoutubeStyle
+                onClick={() =>
+                  this.setState({
+                    playingFilePlayer: !playingFilePlayer,
+                  })
+                }
+              >
+                <ReactPlayer
+                  className="youtube-player"
+                  url={`https://www.youtube.com/embed/${originId}`}
+                  width="100%"
+                  height="100%"
+                  muted={isMobile}
+                  volume={defaultVolume / 100}
+                  playing={playingFilePlayer}
+                  controls
+                  onPause={() => this.setState({ playingFilePlayer: false })}
+                  onPlay={() => this.setState({ playingFilePlayer: true })}
+                  onProgress={this.onProgressYoutube}
+                />
+              </YoutubeStyle>
+              <div>Tác giả: {originAuthor}</div>
+              <div
+                className="fb-share-button"
+                data-href={'http://danni.tv/watch?id=' + id}
+                data-layout="button_count"
+                data-size="large"
+              />
+              {audio.length && (
+                <ReactPlayer
+                  onProgress={({ playedSeconds }) =>
+                    this.setState({ playedFilePlayer: playedSeconds })
+                  }
+                  ref={this.refFilePlayer}
+                  url={audio[audio.length - 1].source}
+                  playing={playingFilePlayer}
+                  height="100%"
+                  width="100%"
+                />
+              )}
+            </div>
+            <input
+              type="text"
+              id="password"
+              name="password"
+              value={password}
+              onChange={e => this.setState({ password: e.target.value })}
+            />
+            <button
+              type="submit"
+              onClick={async () => {
+                if (password !== 'dracarys') {
+                  alert('Wrong password');
+                } else if (
+                  confirm('Are you sure you want to delete this video?')
+                ) {
+                  const res = await deleteVideo({
+                    variables: { id, password },
+                  }).catch(err => {
+                    alert(err.message);
+                  });
+                  if (res.data)
+                    Router.push({
+                      pathname: '/',
+                    });
+                }
+              }}
+            >
+              Delete
+            </button>
+            <button
+              type="submit"
+              onClick={async () => {
+                if (password !== 'dracarys') {
+                  alert('Wrong password');
+                } else {
+                  Router.push({
+                    pathname: '/edit',
+                    query: { id, password },
+                  });
+                }
+              }}
+            >
+              Edit
+            </button>
+          </div>
         )}
       </Mutation>
     );
