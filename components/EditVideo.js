@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import Router from 'next/router';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
-// import { ALL_VIDEOS_QUERY } from './Videos';
 import { VIDEO_QUERY } from './Watch';
 import { CREATE_AUDIO_MUTATION } from './AddVideo';
 import youtube from '../lib/youtube';
@@ -321,7 +320,7 @@ class EditVideo extends Component {
                             checked={isAudioSource}
                             onChange={this.handleChange}
                           />
-                          Nguồn Audio (Link Soundcloud):
+                          Nguồn Audio:
                         </label>
                         {isAudioSource && (
                           <input

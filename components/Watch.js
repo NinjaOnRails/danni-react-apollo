@@ -156,18 +156,13 @@ class Watch extends Component {
                 <div>
                   <Head>
                     <title>Danni | {titleVi}</title>
-                    <meta property="og:url"           content="https://www.your-domain.com/your-page.html" />
-  <meta property="og:type"          content="website" />
-  <meta property="og:title"         content="Your Website Title" />
-  <meta property="og:description"   content="Your description" />
-  <meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />
-                    {/* <meta
+                    <meta
                       property="og:url"
-                      content={'https://dannitv.herokuapp.com/watch?id=' + id}
+                      content={'http://danni.tv/watch?id=' + id}
                     />
                     <meta property="og:title" content={titleVi} />
                     <meta property="og:image" content={originThumbnailUrl} />
-                    <meta property="og:locale" content="vi_VN" /> */}
+                    <meta property="og:locale" content="vi_VN" />
                   </Head>
                   <div>
                     <h2>{titleVi}</h2>
@@ -199,7 +194,7 @@ class Watch extends Component {
                     <div>Tác giả: {originAuthor}</div>
                     <div
                       className="fb-share-button"
-                      data-href={'https://dannitv.herokuapp.com/watch?id=' + id}
+                      data-href={'http://danni.tv/watch?id=' + id}
                       data-layout="button_count"
                       data-size="large"
                     />

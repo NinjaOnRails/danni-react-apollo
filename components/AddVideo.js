@@ -14,7 +14,6 @@ const CREATE_VIDEO_MUTATION = gql`
     $source: String!
     $titleVi: String!
     $addedBy: String
-    # $startAt: Int
     $tags: String
     $defaultVolume: Int
   ) {
@@ -23,7 +22,6 @@ const CREATE_VIDEO_MUTATION = gql`
         source: $source
         titleVi: $titleVi
         addedBy: $addedBy
-        # startAt: $startAt
         tags: $tags
         defaultVolume: $defaultVolume
       }
@@ -53,10 +51,8 @@ class AddVideo extends Component {
     source: '',
     titleVi: '',
     addedBy: '',
-    // startAt: 0,
     audioSource: '',
     tags: '',
-    // isStartAt: false,
     isAudioSource: true,
     isTags: true,
     defaultVolume: 20,
@@ -172,8 +168,6 @@ class AddVideo extends Component {
       tags,
       titleVi,
       addedBy,
-      // startAt,
-      // isStartAt,
       isAudioSource,
       isTags,
       defaultVolume,
@@ -198,7 +192,6 @@ class AddVideo extends Component {
               source,
               titleVi,
               addedBy,
-              // startAt: isStartAt ? startAt : 0,
               tags,
               defaultVolume: isDefaultVolume ? defaultVolume : undefined,
             }}
@@ -292,25 +285,6 @@ class AddVideo extends Component {
                       onChange={this.handleChange}
                     />
                   )}
-                  {/* <label htmlFor="startAt">
-                    <input
-                      id="startAt"
-                      name="isStartAt"
-                      type="checkbox"
-                      checked={isStartAt}
-                      onChange={this.handleChange}
-                    />
-                    Bắt đầu từ giây thứ:
-                  </label>
-                  {isStartAt && (
-                    <input
-                      type="number"
-                      name="startAt"
-                      placeholder="ví dụ '75'"
-                      value={startAt}
-                      onChange={this.handleChange}
-                    />
-                  )} */}
                   <label htmlFor="tags">
                     <input
                       id="tags"
@@ -338,28 +312,17 @@ class AddVideo extends Component {
                       checked={isAudioSource}
                       onChange={this.handleChange}
                     />
-                    Nguồn Audio (Link Soundcloud):
+                    Nguồn Audio:
                   </label>
                   {isAudioSource && (
                     <input
                       type="text"
                       name="audioSource"
-                      placeholder="ví dụ 'https://soundcloud.com/user-566264679/addiction-cz'"
+                      placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
                       value={audioSource}
                       onChange={this.handleChange}
                     />
                   )}
-                  {/* <label htmlFor="addedBy">
-                    Thêm bởi:
-                    <input
-                      type="text"
-                      id="addedBy"
-                      name="addedBy"
-                      placeholder="ví dụ Ánh Nhật"
-                      value={addedBy}
-                      onChange={this.handleChange}
-                    />
-                  </label> */}
                   <button type="submit">Submit</button>
                 </fieldset>
               </Form>
