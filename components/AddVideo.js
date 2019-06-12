@@ -13,6 +13,7 @@ const CREATE_VIDEO_MUTATION = gql`
   mutation CREATE_VIDEO_MUTATION(
     $source: String!
     $titleVi: String!
+    $descriptionVi: String
     $addedBy: String
     $tags: String
     $defaultVolume: Int
@@ -21,6 +22,7 @@ const CREATE_VIDEO_MUTATION = gql`
       data: {
         source: $source
         titleVi: $titleVi
+        descriptionVi: $descriptionVi
         addedBy: $addedBy
         tags: $tags
         defaultVolume: $defaultVolume
@@ -50,7 +52,8 @@ class AddVideo extends Component {
   state = {
     source: '',
     titleVi: '',
-    addedBy: '',
+    descriptionVi: '',
+    isDescriptionVi: true,
     audioSource: '',
     tags: '',
     isAudioSource: true,
@@ -170,7 +173,8 @@ class AddVideo extends Component {
       audioSource,
       tags,
       titleVi,
-      addedBy,
+      descriptionVi,
+      isDescriptionVi,
       isAudioSource,
       isTags,
       defaultVolume,
@@ -195,7 +199,7 @@ class AddVideo extends Component {
             variables={{
               source,
               titleVi,
-              addedBy,
+              descriptionVi,
               tags,
               defaultVolume: isDefaultVolume ? defaultVolume : undefined,
             }}
@@ -264,11 +268,30 @@ class AddVideo extends Component {
                       id="titleVi"
                       name="titleVi"
                       required
-                      placeholder="ví dụ 'Sự sống trên mặt trăng xanh'"
                       value={titleVi}
                       onChange={this.handleChange}
                     />
                   </label>
+                  <label htmlFor="descriptionVi">
+                    <input
+                      id="descriptionVi"
+                      name="isDescriptionVi"
+                      type="checkbox"
+                      checked={isDescriptionVi}
+                      onChange={this.handleChange}
+                    />
+                    Mô tả:
+                  </label>
+                  {isDescriptionVi && (
+                    <label htmlFor="descriptionVi">
+                      <input
+                        type="text"
+                        name="descriptionVi"
+                        value={descriptionVi}
+                        onChange={this.handleChange}
+                      />
+                    </label>
+                  )}
                   <label htmlFor="defaultVolume">
                     <input
                       id="defaultVolume"

@@ -16,6 +16,7 @@ const UPDATE_VIDEO_MUTATION = gql`
     $id: ID!
     $source: String
     $titleVi: String
+    $descriptionVi: String
     $tags: String
     $defaultVolume: Int
     $password: String!
@@ -26,6 +27,7 @@ const UPDATE_VIDEO_MUTATION = gql`
       data: {
         source: $source
         titleVi: $titleVi
+        description: $descriptionVi
         tags: $tags
         defaultVolume: $defaultVolume
       }
@@ -39,6 +41,7 @@ const UPDATE_VIDEO_MUTATION = gql`
 
 class EditVideo extends Component {
   state = {
+    isDescriptionVi: true,
     isAudioSource: true,
     isTags: true,
     isDefaultVolume: true,
@@ -157,6 +160,8 @@ class EditVideo extends Component {
       audioSource,
       tags,
       titleVi,
+      descriptionVi,
+      isDescriptionVi,
       isAudioSource,
       isTags,
       defaultVolume,
@@ -175,6 +180,7 @@ class EditVideo extends Component {
           const {
             video: {
               titleVi: oldTitleVi,
+              descriptionVi: oldDescriptionVi,
               defaultVolume: oldDefaultVolume,
               originId: oldOriginId,
               tags: oldTagsObj,
@@ -201,6 +207,7 @@ class EditVideo extends Component {
                     id,
                     source,
                     titleVi,
+                    descriptionVi,
                     tags,
                     defaultVolume,
                     password,
@@ -282,6 +289,26 @@ class EditVideo extends Component {
                             onChange={this.handleChange}
                           />
                         </label>
+                        <label htmlFor="descriptionVi">
+                          <input
+                            id="descriptionVi"
+                            name="isDescriptionVi"
+                            type="checkbox"
+                            checked={isDescriptionVi}
+                            onChange={this.handleChange}
+                          />
+                          Mô tả:
+                        </label>
+                        {isDescriptionVi && (
+                          <label htmlFor="descriptionVi">
+                            <input
+                              type="text"
+                              name="descriptionVi"
+                              defaultValue={oldDescriptionVi}
+                              onChange={this.handleChange}
+                            />
+                          </label>
+                        )}
                         <label htmlFor="defaultVolume">
                           <input
                             id="defaultVolume"

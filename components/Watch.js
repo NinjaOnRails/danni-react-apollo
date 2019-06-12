@@ -18,6 +18,7 @@ const VIDEO_QUERY = gql`
       id
       originId
       titleVi
+      descriptionVi
       originAuthor
       originThumbnailUrl
       originThumbnailUrlSd
@@ -148,11 +149,11 @@ class Watch extends Component {
               const {
                 video: {
                   titleVi,
+                  descriptionVi,
                   audio,
                   originAuthor,
                   defaultVolume,
                   originId,
-                  originThumbnailUrl,
                   originThumbnailUrlSd,
                 },
               } = data;
@@ -197,6 +198,7 @@ class Watch extends Component {
                       />
                     </YoutubeStyle>
                     <div>Tác giả: {originAuthor}</div>
+                    {descriptionVi && <div>{descriptionVi}</div>}
                     <div
                       className="fb-share-button"
                       data-href={`http://danni.tv/watch?id=${id}`}
