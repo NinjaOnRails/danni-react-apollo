@@ -297,7 +297,7 @@ class EditVideo extends Component {
                             checked={isDescriptionVi}
                             onChange={this.handleChange}
                           />
-                          Mô tả:
+                          Nội dung:
                         </label>
                         {isDescriptionVi && (
                           <label htmlFor="descriptionVi">
