@@ -61,6 +61,7 @@ class AddVideo extends Component {
     image: '',
     channelTitle: '',
     originTitle: '',
+    originTags: [],
   };
 
   handleChange = e => {
@@ -143,6 +144,7 @@ class AddVideo extends Component {
         },
         channelTitle,
         localized: { title },
+        tags: originTags,
       } = res.data.items[0].snippet;
 
       this.setState({
@@ -150,6 +152,7 @@ class AddVideo extends Component {
         image: url,
         originTitle: title,
         channelTitle,
+        originTags,
       });
     } catch (err) {
       this.setState({
@@ -176,6 +179,7 @@ class AddVideo extends Component {
       originTitle,
       channelTitle,
       youtubeIdStatus,
+      originTags,
     } = this.state;
     return (
       <Mutation
@@ -295,14 +299,18 @@ class AddVideo extends Component {
                     />
                     Tags:
                   </label>
+
                   {isTags && (
-                    <input
-                      type="text"
-                      name="tags"
-                      placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                      value={tags}
-                      onChange={this.handleChange}
-                    />
+                    <>
+                      <div>{originTags.join(' ')}</div>
+                      <input
+                        type="text"
+                        name="tags"
+                        placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                        value={tags}
+                        onChange={this.handleChange}
+                      />
+                    </>
                   )}
                   <label htmlFor="audioSource">
                     <input
