@@ -20,6 +20,7 @@ const VIDEO_QUERY = gql`
       titleVi
       originAuthor
       originThumbnailUrl
+      originThumbnailUrlMax
       defaultVolume
       startAt
       audio {
@@ -152,6 +153,7 @@ class Watch extends Component {
                   defaultVolume,
                   originId,
                   originThumbnailUrl,
+                  originThumbnailUrlMax,
                 },
               } = data;
 
@@ -164,7 +166,7 @@ class Watch extends Component {
                       content={`http://danni.tv/watch?id=${id}`}
                     />
                     <meta property="og:title" content={titleVi} />
-                    <meta property="og:image" content={originThumbnailUrl} />
+                    <meta property="og:image" content={originThumbnailUrlMax} />
                     <meta property="og:locale" content="vi_VN" />
                   </Head>
                   <div>
