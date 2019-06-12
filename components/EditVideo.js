@@ -27,7 +27,7 @@ const UPDATE_VIDEO_MUTATION = gql`
       data: {
         source: $source
         titleVi: $titleVi
-        description: $descriptionVi
+        descriptionVi: $descriptionVi
         tags: $tags
         defaultVolume: $defaultVolume
       }
