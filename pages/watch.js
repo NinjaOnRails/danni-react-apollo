@@ -1,9 +1,11 @@
 import Watch from '../components/Watch';
 
-const WatchPage = props => (
-  <div>
-    <Watch id={props.query.id} />
-  </div>
-);
+const WatchPage = props => {
+  return (
+    <div>
+      <Watch />
+    </div>
+  );
+};
 
 export default WatchPage;

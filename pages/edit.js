@@ -1,8 +1,8 @@
 import EditVideo from '../components/EditVideo';
 
-const Edit = ({ query }) => (
+const Edit = () => (
   <div>
-    <EditVideo id={query.id} password={query.password} />
+    <EditVideo />
   </div>
 );
 

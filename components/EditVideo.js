@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import Router from 'next/router';
+import Router, { withRouter } from 'next/router';
+import PropTypes from 'prop-types';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { VIDEO_QUERY } from './Watch';
@@ -41,6 +42,10 @@ class EditVideo extends Component {
     isAudioSource: true,
     isTags: true,
     isDefaultVolume: true,
+  };
+
+  static propTypes = {
+    router: PropTypes.object.isRequired,
   };
 
   handleChange = e => {
@@ -142,7 +147,11 @@ class EditVideo extends Component {
   };
 
   render() {
-    const { id, password } = this.props;
+    const {
+      router: {
+        query: { id, password },
+      },
+    } = this.props;
     const {
       source,
       audioSource,
@@ -350,4 +359,4 @@ class EditVideo extends Component {
   }
 }
 
-export default EditVideo;
+export default withRouter(EditVideo);

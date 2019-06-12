@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Mutation, Query } from 'react-apollo';
 import Head from 'next/head';
-import Router from 'next/router';
+import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 // import YouTubePlayer from 'react-player/lib/players/YouTube';
 // import FilePlayer from 'react-player/lib/players/FilePlayer';
@@ -87,7 +87,7 @@ class Watch extends Component {
   };
 
   static propTypes = {
-    id: PropTypes.string.isRequired,
+    router: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
@@ -122,7 +122,11 @@ class Watch extends Component {
   };
 
   render() {
-    const { id } = this.props;
+    const {
+      router: {
+        query: { id },
+      },
+    } = this.props;
     const { password, playingFilePlayer } = this.state;
     return (
       <Mutation
@@ -142,7 +146,6 @@ class Watch extends Component {
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
                 video: {
-                  id,
                   titleVi,
                   audio,
                   originAuthor,
@@ -158,7 +161,7 @@ class Watch extends Component {
                     <title>Danni | {titleVi}</title>
                     <meta
                       property="og:url"
-                      content={'http://danni.tv/watch?id=' + id}
+                      content={`http://danni.tv/watch?id=${id}`}
                     />
                     <meta property="og:title" content={titleVi} />
                     <meta property="og:image" content={originThumbnailUrl} />
@@ -194,11 +197,11 @@ class Watch extends Component {
                     <div>Tác giả: {originAuthor}</div>
                     <div
                       className="fb-share-button"
-                      data-href={'http://danni.tv/watch?id=' + id}
+                      data-href={`http://danni.tv/watch?id=${id}`}
                       data-layout="button_count"
                       data-size="large"
                     />
-                    {audio.length && (
+                    {audio.length !== 0 && (
                       <ReactPlayer
                         onProgress={({ playedSeconds }) =>
                           this.setState({ playedFilePlayer: playedSeconds })
@@ -265,5 +268,5 @@ class Watch extends Component {
   }
 }
 
-export default Watch;
+export default withRouter(Watch);
 export { VIDEO_QUERY };
