@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
+import { Segment, Header } from 'semantic-ui-react';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
 
@@ -52,31 +53,40 @@ const YoutubeStyle = styled.div`
   :before {
     content: '';
     position: absolute;
-    height: 75%;
+    height: 78%;
     width: 100%;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     z-index: 1;
     /* background: red; */
-    @media (min-width: 515px) {
+    @media (min-width: 793px) {
       position: absolute;
       height: 85%;
     }
-    @media (min-width: 655px) {
+    /* @media (min-width: 515px) {
+      position: absolute;
+      height: 85%;
+    } */
+    /* @media (min-width: 655px) {
       position: absolute;
       height: 88%;
     }
     @media (min-width: 1300px) {
       position: absolute;
       height: 91%;
-    }
+    } */
   }
   .youtube-player {
     position: absolute;
     top: 0;
     left: 0;
+  }
+`;
+
+const ShareButton = styled.div`
+  margin-top: 10px;
+  .fb-share-button {
+    float: right;
   }
 `;
 
@@ -167,7 +177,7 @@ class Watch extends Component {
               } = data;
 
               return (
-                <div>
+                <>
                   <Head>
                     <title>Danni | {titleVi}</title>
                     <meta
@@ -181,7 +191,6 @@ class Watch extends Component {
                     <meta property="fb:app_id" content="444940199652956" />
                   </Head>
                   <div>
-                    <h2>{titleVi}</h2>
                     <YoutubeStyle
                       onClick={() =>
                         this.setState({
@@ -207,16 +216,23 @@ class Watch extends Component {
                         onProgress={this.onProgressYoutube}
                       />
                     </YoutubeStyle>
-                    <div>Tác giả: {originAuthor}</div>
-                    {descriptionVi && <div>{descriptionVi}</div>}
-                    <div id="fb">
+                    <ShareButton id="fb">
                       <div
                         className="fb-share-button"
                         data-href={`http://danni.tv/watch?id=${id}`}
                         data-layout="button_count"
                         data-size="large"
                       />
-                    </div>
+                    </ShareButton>
+                    <Header>
+                      <h2>{titleVi}</h2>
+                    </Header>
+                    <Segment>
+                      <Header>
+                        <h4>Tác giả: {originAuthor}</h4>
+                      </Header>
+                      {descriptionVi && <div>{descriptionVi}</div>}
+                    </Segment>
                     {audio.length !== 0 && (
                       <ReactPlayer
                         onProgress={({ playedSeconds }) =>
@@ -274,7 +290,7 @@ class Watch extends Component {
                   >
                     Edit
                   </button>
-                </div>
+                </>
               );
             }}
           </Query>
