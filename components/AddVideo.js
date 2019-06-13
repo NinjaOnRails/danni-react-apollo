@@ -128,6 +128,8 @@ class AddVideo extends Component {
       const res = await youtube.get('/videos', {
         params: {
           id,
+          part: 'snippet',
+          key: process.env.YOUTUBE_API_KEY,
         },
       });
 

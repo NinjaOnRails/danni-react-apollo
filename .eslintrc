@@ -21,6 +21,9 @@
     "browser": true,
     "jest": true
   },
+  "globals": {
+    "FB": true
+  },
   "rules": {
     "no-unused-expressions": [
       2,

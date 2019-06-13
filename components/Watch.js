@@ -93,6 +93,7 @@ class Watch extends Component {
   };
 
   componentDidMount() {
+    // Load Facebook JavaScript SDK
     (function(d, s, id) {
       var js,
         fjs = d.getElementsByTagName(s)[0];
@@ -102,6 +103,10 @@ class Watch extends Component {
       js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
       fjs.parentNode.insertBefore(js, fjs);
     })(document, 'script', 'facebook-jssdk');
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    FB.XFBML.parse(document.getElementById('watch'));
   }
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
@@ -170,8 +175,9 @@ class Watch extends Component {
                     <meta property="og:image" content={originThumbnailUrlSd} />
                     <meta property="og:locale" content="vi_VN" />
                     <meta property="og:description" content={descriptionVi} />
+                    <meta property="fb:app_id" content="444940199652956" />
                   </Head>
-                  <div>
+                  <div id="watch">
                     <h2>{titleVi}</h2>
                     <YoutubeStyle
                       onClick={() =>
