@@ -93,6 +93,9 @@ class Watch extends Component {
   };
 
   componentDidMount() {
+    if (window.FB) {
+      FB.XFBML.parse(document.getElementById('fb'));
+    }
     // Load Facebook JavaScript SDK
     (function(d, s, id) {
       var js,
@@ -105,8 +108,8 @@ class Watch extends Component {
     })(document, 'script', 'facebook-jssdk');
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    FB.XFBML.parse(document.getElementById('watch'));
+  componentDidUpdate() {
+    FB.XFBML.parse(document.getElementById('fb'));
   }
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
@@ -177,7 +180,7 @@ class Watch extends Component {
                     <meta property="og:description" content={descriptionVi} />
                     <meta property="fb:app_id" content="444940199652956" />
                   </Head>
-                  <div id="watch">
+                  <div>
                     <h2>{titleVi}</h2>
                     <YoutubeStyle
                       onClick={() =>
@@ -206,12 +209,14 @@ class Watch extends Component {
                     </YoutubeStyle>
                     <div>Tác giả: {originAuthor}</div>
                     {descriptionVi && <div>{descriptionVi}</div>}
-                    <div
-                      className="fb-share-button"
-                      data-href={`http://danni.tv/watch?id=${id}`}
-                      data-layout="button_count"
-                      data-size="large"
-                    />
+                    <div id="fb">
+                      <div
+                        className="fb-share-button"
+                        data-href={`http://danni.tv/watch?id=${id}`}
+                        data-layout="button_count"
+                        data-size="large"
+                      />
+                    </div>
                     {audio.length !== 0 && (
                       <ReactPlayer
                         onProgress={({ playedSeconds }) =>
