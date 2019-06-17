@@ -13,12 +13,14 @@ const WatchPage = () => {
         />
       </Head>
       <Grid columns={2} stackable>
-        <Grid.Column width={11}>
-          <Watch />
-        </Grid.Column>
-        <Grid.Column width={5}>
-          <VideoList />
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column width={11}>
+            <Watch />
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <VideoList />
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     </>
   );
