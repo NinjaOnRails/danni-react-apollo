@@ -13,6 +13,8 @@ const loading = keyframes`
 `;
 
 const Form = styled.form`
+  max-width: ${props => props.theme.maxWidth};
+  margin: 0 auto;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
   background: rgba(0, 0, 0, 0.02);
   border: 5px solid white;

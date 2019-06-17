@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { Container } from 'semantic-ui-react';
 import Header from './Header';
 import Meta from './Meta';
 
@@ -19,8 +20,8 @@ const StyledPage = styled.div`
 `;
 
 const Inner = styled.div`
-  max-width: ${props => props.theme.maxWidth};
-  margin: 0 auto;
+  /* max-width: ${props => props.theme.maxWidth};
+  margin: 0 auto; */
   padding: 2rem;
 `;
 
@@ -56,7 +57,9 @@ class Page extends Component {
           <GlobalStyle />
           <Meta />
           <Header />
-          <Inner>{children}</Inner>
+          <Container>
+            <Inner>{children}</Inner>
+          </Container>
         </StyledPage>
       </ThemeProvider>
     );

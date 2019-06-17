@@ -12,18 +12,14 @@ const WatchPage = () => {
           href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
         />
       </Head>
-      <Container>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={11}>
-              <Watch />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <VideoList />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      <Grid columns={2} stackable>
+        <Grid.Column width={11}>
+          <Watch />
+        </Grid.Column>
+        <Grid.Column width={5}>
+          <VideoList />
+        </Grid.Column>
+      </Grid>
     </>
   );
 };

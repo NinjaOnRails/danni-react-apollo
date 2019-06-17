@@ -1,9 +1,8 @@
 import React from 'react';
-import Router from 'next/router';
+import Router, { withRouter } from 'next/router';
 import { Query } from 'react-apollo';
 import { List, Image } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { withRouter } from 'next/router';
 import propTypes from 'prop-types';
 import { ALL_VIDEOS_QUERY } from './Videos';
 import Error from './ErrorMessage';

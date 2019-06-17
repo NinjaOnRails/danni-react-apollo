@@ -4,9 +4,9 @@ import { Mutation, Query } from 'react-apollo';
 import Head from 'next/head';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-// import YouTubePlayer from 'react-player/lib/players/YouTube';
+import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import ReactPlayer from 'react-player';
+// import ReactPlayer from 'react-player';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import { Segment, Header } from 'semantic-ui-react';
@@ -198,7 +198,7 @@ class Watch extends Component {
                         })
                       }
                     >
-                      <ReactPlayer
+                      <YouTubePlayer
                         className="youtube-player"
                         url={`https://www.youtube.com/embed/${originId}`}
                         width="100%"
