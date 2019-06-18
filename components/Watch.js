@@ -203,7 +203,7 @@ class Watch extends Component {
                         url={`https://www.youtube.com/embed/${originId}`}
                         width="100%"
                         height="100%"
-                        muted={isMobile && defaultVolume !== 100}
+                        muted={isMobile && audio.length === 0}
                         volume={defaultVolume / 100}
                         playing={playingFilePlayer}
                         controls
