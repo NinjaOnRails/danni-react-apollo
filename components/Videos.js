@@ -56,7 +56,7 @@ class Videos extends Component {
                         }}
                       >
                         <img
-                          src={video.originThumbnailUrl}
+                          src={video.originThumbnailUrlSd}
                           alt={video.titleVi}
                         />
                       </Link>
