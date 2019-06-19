@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Router, { withRouter } from 'next/router';
 import { Query } from 'react-apollo';
 import { List, Image } from 'semantic-ui-react';
@@ -21,8 +21,8 @@ const VideoItem = styled.div`
   }
 `;
 
-class VideoList extends React.Component {
-  componentDidUpdate(prevProps, prevState) {
+class VideoList extends Component {
+  componentDidUpdate() {
     window.scrollTo(0, 0);
   }
 
