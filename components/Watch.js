@@ -120,7 +120,6 @@ class Watch extends Component {
 
   componentDidUpdate() {
     FB.XFBML.parse(document.getElementById('fb'));
-    window.scrollTo(0, 0);
   }
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds

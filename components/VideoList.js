@@ -21,47 +21,54 @@ const VideoItem = styled.div`
   }
 `;
 
-function VideoList({
-  router: {
-    query: { id },
-  },
-}) {
-  return (
-    <Query query={ALL_VIDEOS_QUERY}>
-      {({ loading, error, data }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <Error>Error: {error.message}</Error>;
-        return (
-          <List divided relaxed>
-            {data.videos.map(
-              video =>
-                video.id !== id && (
-                  <List.Item
-                    key={video.id}
-                    onClick={() =>
-                      Router.push({
-                        pathname: '/watch',
-                        query: { id: video.id },
-                      })
-                    }
-                  >
-                    <VideoItem>
-                      <Image
-                        src={video.originThumbnailUrl}
-                        alt={video.titleVi}
-                      />
-                      <List.Content>
-                        <List.Header>{video.titleVi}</List.Header>
-                      </List.Content>
-                    </VideoItem>
-                  </List.Item>
-                )
-            )}
-          </List>
-        );
-      }}
-    </Query>
-  );
+class VideoList extends React.Component {
+  componentDidUpdate(prevProps, prevState) {
+    window.scrollTo(0, 0);
+  }
+
+  render() {
+    const {
+      router: {
+        query: { id },
+      },
+    } = this.props;
+    return (
+      <Query query={ALL_VIDEOS_QUERY}>
+        {({ loading, error, data }) => {
+          if (loading) return <p>Loading...</p>;
+          if (error) return <Error>Error: {error.message}</Error>;
+          return (
+            <List divided relaxed>
+              {data.videos.map(
+                video =>
+                  video.id !== id && (
+                    <List.Item
+                      key={video.id}
+                      onClick={() =>
+                        Router.push({
+                          pathname: '/watch',
+                          query: { id: video.id },
+                        })
+                      }
+                    >
+                      <VideoItem>
+                        <Image
+                          src={video.originThumbnailUrl}
+                          alt={video.titleVi}
+                        />
+                        <List.Content>
+                          <List.Header>{video.titleVi}</List.Header>
+                        </List.Content>
+                      </VideoItem>
+                    </List.Item>
+                  )
+              )}
+            </List>
+          );
+        }}
+      </Query>
+    );
+  }
 }
 
 VideoList.propTypes = {
