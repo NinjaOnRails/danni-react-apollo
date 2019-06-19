@@ -116,6 +116,7 @@ class Watch extends Component {
       js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
       fjs.parentNode.insertBefore(js, fjs);
     })(document, 'script', 'facebook-jssdk');
+    window.scrollTo(0, 0);
   }
 
   componentDidUpdate() {
