@@ -3,7 +3,7 @@ import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Dimmer, Loader } from 'semantic-ui-react';
+import { Loader } from 'semantic-ui-react';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { VIDEO_QUERY } from './Watch';
@@ -176,12 +176,7 @@ class EditVideo extends Component {
       <Query query={VIDEO_QUERY} variables={{ id }}>
         {({ error, loading, data }) => {
           if (error || password !== 'dracarys') return <p>Error</p>;
-          if (loading)
-            return (
-              <Dimmer active>
-                <Loader />
-              </Dimmer>
-            );
+          if (loading) return <Loader active />;
           if (!data.video) return <p>No Video Found for {id}</p>;
           const {
             video: {

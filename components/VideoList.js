@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Router, { withRouter } from 'next/router';
 import { Query } from 'react-apollo';
-import { List, Image, Dimmer, Loader } from 'semantic-ui-react';
+import { List, Image, Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import propTypes from 'prop-types';
 import { ALL_VIDEOS_QUERY } from './Videos';
@@ -35,12 +35,7 @@ class VideoList extends Component {
     return (
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
-          if (loading)
-            return (
-              <Dimmer active>
-                <Loader />
-              </Dimmer>
-            );
+          if (loading) return <Loader active />;
           if (error) return <Error>Error: {error.message}</Error>;
           return (
             <List divided relaxed>

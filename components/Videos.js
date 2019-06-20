@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
-import { Dimmer, Loader } from 'semantic-ui-react';
+import { Loader } from 'semantic-ui-react';
 import Link from 'next/link';
 import Error from './ErrorMessage';
 
@@ -43,12 +43,7 @@ class Videos extends Component {
       <Center>
         <Query query={ALL_VIDEOS_QUERY}>
           {({ loading, error, data }) => {
-            if (loading)
-              return (
-                <Dimmer active>
-                  <Loader />
-                </Dimmer>
-              );
+            if (loading) return <Loader active />;
             if (error) return <Error>Error: {error.message}</Error>;
             return (
               <VideosList>
