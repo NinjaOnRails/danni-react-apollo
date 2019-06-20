@@ -110,7 +110,7 @@ class Watch extends Component {
       },
     } = this.props;
     if (id !== prevProps.router.query.id && isMobile)
-      this.setState({ playedFilePlayer: false });
+      this.setState({ playingFilePlayer: false });
   }
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
