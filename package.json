@@ -34,6 +34,7 @@
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
     "react-player": "^1.11.0",
+    "react-share": "^3.0.0",
     "semantic-ui-react": "^0.87.1",
     "styled-components": "^4.2.0",
     "xml2js": "^0.4.19"

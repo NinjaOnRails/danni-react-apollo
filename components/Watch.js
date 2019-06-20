@@ -6,10 +6,10 @@ import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-// import ReactPlayer from 'react-player';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import { Segment, Header } from 'semantic-ui-react';
+import { FacebookShareButton, FacebookIcon } from 'react-share';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
 
@@ -101,26 +101,6 @@ class Watch extends Component {
   static propTypes = {
     router: PropTypes.object.isRequired,
   };
-
-  componentDidMount() {
-    if (window.FB) {
-      FB.XFBML.parse(document.getElementById('fb'));
-    }
-    // Load Facebook JavaScript SDK
-    (function(d, s, id) {
-      var js,
-        fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s);
-      js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
-      fjs.parentNode.insertBefore(js, fjs);
-    })(document, 'script', 'facebook-jssdk');
-  }
-
-  componentDidUpdate() {
-    FB.XFBML.parse(document.getElementById('fb'));
-  }
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
@@ -216,13 +196,14 @@ class Watch extends Component {
                         onProgress={this.onProgressYoutube}
                       />
                     </YoutubeStyle>
+
                     <ShareButton id="fb">
-                      <div
+                      <FacebookShareButton
                         className="fb-share-button"
-                        data-href={`http://danni.tv/watch?id=${id}`}
-                        data-layout="button_count"
-                        data-size="large"
-                      />
+                        url={`http://danni.tv/watch?id=${id}`}
+                      >
+                        <FacebookIcon size={32} round />
+                      </FacebookShareButton>
                     </ShareButton>
                     <Header>
                       <h2>{titleVi}</h2>
