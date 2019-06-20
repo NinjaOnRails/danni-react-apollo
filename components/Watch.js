@@ -83,7 +83,7 @@ const YoutubeStyle = styled.div`
   }
 `;
 
-const ShareButton = styled.div`
+const ShareButtonStyle = styled.div`
   margin-top: 10px;
   .fb-share-button {
     float: right;
@@ -196,15 +196,14 @@ class Watch extends Component {
                         onProgress={this.onProgressYoutube}
                       />
                     </YoutubeStyle>
-
-                    <ShareButton id="fb">
+                    <ShareButtonStyle>
                       <FacebookShareButton
                         className="fb-share-button"
                         url={`http://danni.tv/watch?id=${id}`}
                       >
                         <FacebookIcon size={32} round />
                       </FacebookShareButton>
-                    </ShareButton>
+                    </ShareButtonStyle>
                     <Header>
                       <h2>{titleVi}</h2>
                     </Header>
@@ -271,7 +270,7 @@ class Watch extends Component {
                   >
                     Edit
                   </button>
-                </>
+                </Sh>
               );
             }}
           </Query>
