@@ -12,12 +12,12 @@ const WatchPage = () => {
           href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
         />
       </Head>
-      <Grid columns={2} stackable>
+      <Grid>
         <Grid.Row>
-          <Grid.Column width={11}>
+          <Grid.Column mobile={16} tablet={16} computer={11}>
             <Watch />
           </Grid.Column>
-          <Grid.Column width={5}>
+          <Grid.Column mobile={16} tablet={16} computer={5}>
             <VideoList />
           </Grid.Column>
         </Grid.Row>
