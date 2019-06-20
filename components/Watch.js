@@ -222,6 +222,9 @@ class Watch extends Component {
                         ref={this.refFilePlayer}
                         url={audio[audio.length - 1].source}
                         playing={playingFilePlayer}
+                        onPause={() =>
+                          this.setState({ playingFilePlayer: false })
+                        }
                         height="100%"
                         width="100%"
                       />
