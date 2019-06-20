@@ -8,7 +8,7 @@ import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
-import { Segment, Header } from 'semantic-ui-react';
+import { Segment, Header, Dimmer, Loader } from 'semantic-ui-react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
@@ -153,7 +153,12 @@ class Watch extends Component {
           >
             {({ error, loading, data }) => {
               if (error) return <Error error={error} />;
-              if (loading) return <p>Loading...</p>;
+              if (loading)
+                return (
+                  <Dimmer active>
+                    <Loader />
+                  </Dimmer>
+                );
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
                 video: {

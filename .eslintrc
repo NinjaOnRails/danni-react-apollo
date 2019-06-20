@@ -47,6 +47,7 @@
     ],
     "no-alert": 0,
     "no-nested-ternary": 0,
+    "react/no-did-update-set-state": 0,
     "react/react-in-jsx-scope": 0,
     "react/prefer-stateless-function": 0,
     "react/no-unescaped-entities": 0,
