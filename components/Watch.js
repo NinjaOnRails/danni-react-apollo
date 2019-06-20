@@ -87,6 +87,7 @@ const ShareButtonStyle = styled.div`
   margin-top: 10px;
   .fb-share-button {
     float: right;
+    cursor: pointer;
   }
 `;
 
@@ -270,7 +271,7 @@ class Watch extends Component {
                   >
                     Edit
                   </button>
-                </Sh>
+                </>
               );
             }}
           </Query>
