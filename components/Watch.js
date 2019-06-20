@@ -103,6 +103,16 @@ class Watch extends Component {
     router: PropTypes.object.isRequired,
   };
 
+  componentDidUpdate(prevProps) {
+    const {
+      router: {
+        query: { id },
+      },
+    } = this.props;
+    if (id !== prevProps.router.query.id && isMobile)
+      this.setState({ playedFilePlayer: false });
+  }
+
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
     const { playedYoutube, playedFilePlayer } = this.state;
