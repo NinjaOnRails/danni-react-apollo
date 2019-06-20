@@ -153,7 +153,7 @@ class Watch extends Component {
           >
             {({ error, loading, data }) => {
               if (error) return <Error error={error} />;
-              if (loading) return <Loader active />;
+              if (loading) return <Loader active inline="centered" />;
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
                 video: {
