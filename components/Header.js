@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import Nav from './Nav';
+import Search from './Search';
 
 Router.onRouteChangeStart = () => {
   NProgress.start();
@@ -55,13 +56,14 @@ const StyledHeader = styled.header`
 
 const Header = () => (
   <StyledHeader>
-    <div className="bar">
+    <div className='bar'>
       {/* <Logo>
         <Link href="/">
           <a>Danni</a>
         </Link>
       </Logo> */}
       <Nav />
+      <Search />
     </div>
   </StyledHeader>
 );
