@@ -56,11 +56,11 @@ const StyledHeader = styled.header`
 const Header = () => (
   <StyledHeader>
     <div className="bar">
-      {/* <Logo>
+      <Logo>
         <Link href="/">
-          <a>Danni</a>
+          <a>danni.tv</a>
         </Link>
-      </Logo> */}
+      </Logo>
       <Nav />
     </div>
   </StyledHeader>
