@@ -91,6 +91,14 @@ const ShareButtonStyle = styled.div`
   }
 `;
 
+const VideoDetailStyle = styled.div`
+  h1,
+  h2,
+  .description {
+    font-family: ${props => props.theme.font};
+  }
+`;
+
 class Watch extends Component {
   state = {
     playingFilePlayer: false,
@@ -215,15 +223,19 @@ class Watch extends Component {
                         <FacebookIcon size={32} round />
                       </FacebookShareButton>
                     </ShareButtonStyle>
-                    <Header>
-                      <h1>{titleVi}</h1>
-                    </Header>
-                    <Segment>
+                    <VideoDetailStyle>
                       <Header>
-                        <h2>Tác giả: {originAuthor}</h2>
+                        <h1>{titleVi}</h1>
                       </Header>
-                      {descriptionVi && <div>{descriptionVi}</div>}
-                    </Segment>
+                      <Segment>
+                        <Header>
+                          <h2>Tác giả: {originAuthor}</h2>
+                        </Header>
+                        {descriptionVi && (
+                          <div className="description">{descriptionVi}</div>
+                        )}
+                      </Segment>
+                    </VideoDetailStyle>
                     {audio.length !== 0 && (
                       <FilePlayer
                         onProgress={({ playedSeconds }) =>
