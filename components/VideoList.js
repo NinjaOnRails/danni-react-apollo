@@ -11,13 +11,17 @@ const VideoItem = styled.div`
   display: flex !important;
   align-items: center !important;
   cursor: pointer;
-
   .content {
     padding: 0 0 0 0.5em;
   }
-
   img.ui.image {
     max-width: 180px;
+  }
+`;
+
+const ListHeaderStyled = styled(List.Header)`
+  &&&& {
+    font-family: ${props => props.theme.font};
   }
 `;
 
@@ -57,7 +61,7 @@ class VideoList extends Component {
                           alt={video.titleVi}
                         />
                         <List.Content>
-                          <List.Header>{video.titleVi}</List.Header>
+                          <ListHeaderStyled>{video.titleVi}</ListHeaderStyled>
                         </List.Content>
                       </VideoItem>
                     </List.Item>
