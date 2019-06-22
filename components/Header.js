@@ -63,8 +63,8 @@ const Header = () => (
         </Link>
       </Logo>
       <Nav />
-      <Search />
     </div>
+    <Search />
   </StyledHeader>
 );
 
