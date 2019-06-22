@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import Nav from './Nav';
+import Search from './Search';
 
 Router.onRouteChangeStart = () => {
   NProgress.start();
@@ -62,6 +63,7 @@ const Header = () => (
         </Link>
       </Logo>
       <Nav />
+      <Search />
     </div>
   </StyledHeader>
 );
