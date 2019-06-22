@@ -1,6 +1,6 @@
 import AddVideo from '../components/AddVideo';
 
-const New = props => (
+const New = () => (
   <div>
     <AddVideo />
   </div>

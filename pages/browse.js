@@ -1,8 +1,9 @@
-import Videos from '../components/Videos'
+import Videos from '../components/Videos';
 
-const Home = props => (
+const Home = () => (
   <div>
     <Videos />
   </div>
-)
-export default Home
+);
+
+export default Home;

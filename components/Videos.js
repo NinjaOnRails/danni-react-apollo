@@ -20,7 +20,7 @@ const Center = styled.div`
   text-align: center;
 `;
 
-const VideosList = styled.div`
+const VideosListStyled = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 60px;
@@ -35,6 +35,9 @@ const VideosList = styled.div`
   @media (min-width: 1300px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
+  h2 {
+    font-family: ${props => props.theme.font};
+  }
 `;
 
 class Videos extends Component {
@@ -46,7 +49,7 @@ class Videos extends Component {
             if (loading) return <Loader active />;
             if (error) return <Error>Error: {error.message}</Error>;
             return (
-              <VideosList>
+              <VideosListStyled>
                 {data.videos.map(video => {
                   return (
                     <div key={video.id}>
@@ -61,11 +64,11 @@ class Videos extends Component {
                           alt={video.titleVi}
                         />
                       </Link>
-                      <h3>{video.titleVi}</h3>
+                      <h2>{video.titleVi}</h2>
                     </div>
                   );
                 })}
-              </VideosList>
+              </VideosListStyled>
             );
           }}
         </Query>

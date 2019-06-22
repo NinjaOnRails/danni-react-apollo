@@ -40,14 +40,14 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-size: 1.5rem;
     line-height: 2;
-    font-family: 'Verdana'
+    font-family: ${props => props.theme.font}
   }
   a {
     text-decoration: none;
     color: ${theme.black};
-    font-family: 'Verdana'
+    font-family: ${props => props.theme.font}
   }
-  button {  font-family: 'Verdana' }
+  button {  font-family: ${props => props.theme.font} }
 `;
 
 class Page extends Component {
