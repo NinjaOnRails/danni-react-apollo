@@ -109,7 +109,10 @@ class Autocomplete extends Component {
                     </DropDownItem>
                   ))}
                   {!this.state.videos.length && !this.state.loading && (
-                    <DropDownItem> Nothing Found {inputValue}</DropDownItem>
+                    <DropDownItem>
+                      {' '}
+                      Nothing Found For "{inputValue}"
+                    </DropDownItem>
                   )}
                 </DropDown>
               )}
