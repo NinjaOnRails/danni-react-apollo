@@ -12,6 +12,7 @@ import { Segment, Header, Loader } from 'semantic-ui-react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
+import youtube from '../lib/youtube';
 
 const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!) {
@@ -89,6 +90,9 @@ const ShareButtonStyle = styled.div`
     float: right;
     cursor: pointer;
   }
+  h2 {
+    float: right;
+  }
 `;
 
 const VideoDetailStyle = styled.div`
@@ -105,6 +109,7 @@ class Watch extends Component {
     playedYoutube: 0,
     playedFilePlayer: 0,
     password: '',
+    youtubeViews: '',
   };
 
   static propTypes = {
@@ -120,6 +125,17 @@ class Watch extends Component {
     if (id !== prevProps.router.query.id && isMobile)
       this.setState({ playingFilePlayer: false });
   }
+
+  fetchYoutubeViews = async id => {
+    const res = await youtube.get('/videos', {
+      params: {
+        id,
+        part: 'statistics',
+        key: process.env.YOUTUBE_API_KEY,
+      },
+    });
+    return res.data.items[0].statistics.viewCount;
+  };
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
@@ -146,7 +162,7 @@ class Watch extends Component {
         query: { id },
       },
     } = this.props;
-    const { password, playingFilePlayer } = this.state;
+    const { password, playingFilePlayer, youtubeViews } = this.state;
     return (
       <Mutation
         mutation={VIDEO_DELETE}
@@ -216,6 +232,7 @@ class Watch extends Component {
                       />
                     </YoutubeStyle>
                     <ShareButtonStyle>
+                      <h2>Lượt Xem YouTube: {this.fetchYoutubeViews(id)}</h2>
                       <FacebookShareButton
                         className="fb-share-button"
                         url={`http://danni.tv/watch?id=${id}`}
