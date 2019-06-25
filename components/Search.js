@@ -44,16 +44,21 @@ class Autocomplete extends Component {
   };
 
   onChange = debounce(async (e, client) => {
-    this.setState({ loading: true });
-    const res = await client.query({
-      query: SEARCH_VIDEOS_QUERY,
-      variables: { searchTerm: e.target.value },
-    });
-
-    this.setState({
-      videos: res.data.videos,
-      loading: false,
-    });
+    if (e.target.value) {
+      this.setState({ loading: true });
+      const res = await client.query({
+        query: SEARCH_VIDEOS_QUERY,
+        variables: { searchTerm: e.target.value },
+      });
+      if (!res) {
+        return this.setState({ videos: [], loading: false });
+      }
+      return this.setState({
+        videos: res.data.videos,
+        loading: false,
+      });
+    }
+    return this.setState({ videos: [], loading: true });
   }, 350);
 
   render() {
@@ -96,7 +101,7 @@ class Autocomplete extends Component {
                       highlighted={index === highlightedIndex}
                     >
                       <img
-                        width="50"
+                        width='50'
                         src={item.originThumbnailUrl}
                         alt={item.titleVi}
                       />
@@ -104,7 +109,9 @@ class Autocomplete extends Component {
                     </DropDownItem>
                   ))}
                   {!this.state.videos.length && !this.state.loading && (
-                    <DropDownItem> Nothing Found {inputValue}</DropDownItem>
+                    <DropDownItem>
+                      Nothing Found For "{inputValue}"
+                    </DropDownItem>
                   )}
                 </DropDown>
               )}
