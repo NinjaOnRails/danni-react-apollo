@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { Mutation, Query } from 'react-apollo';
+import { Query } from 'react-apollo';
 import Head from 'next/head';
-import Router, { withRouter } from 'next/router';
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
@@ -11,7 +11,6 @@ import styled from 'styled-components';
 import { Segment, Header, Loader } from 'semantic-ui-react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import Error from './ErrorMessage';
-import { ALL_VIDEOS_QUERY } from './Videos';
 import YoutubeViews from './YoutubeViews';
 
 const VIDEO_QUERY = gql`
@@ -33,14 +32,6 @@ const VIDEO_QUERY = gql`
       tags {
         text
       }
-    }
-  }
-`;
-
-const VIDEO_DELETE = gql`
-  mutation VIDEO_DELETE($id: ID!, $password: String!) {
-    deleteVideo(id: $id, password: $password) {
-      id
     }
   }
 `;
@@ -85,6 +76,7 @@ const YoutubeStyle = styled.div`
 `;
 
 const VideoInfoStyle = styled.div`
+  margin-bottom: 10px;
   h1,
   h2,
   .description {
@@ -108,7 +100,6 @@ class Watch extends Component {
     playingFilePlayer: false,
     playedYoutube: 0,
     playedFilePlayer: 0,
-    password: '',
   };
 
   static propTypes = {
@@ -150,167 +141,110 @@ class Watch extends Component {
         query: { id },
       },
     } = this.props;
-    const { password, playingFilePlayer, youtubeViews } = this.state;
+    const { playingFilePlayer } = this.state;
     return (
-      <Mutation
-        mutation={VIDEO_DELETE}
-        refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+      <Query
+        query={VIDEO_QUERY}
+        variables={{
+          id,
+        }}
       >
-        {(deleteVideo, { error }) => (
-          <Query
-            query={VIDEO_QUERY}
-            variables={{
-              id,
-            }}
-          >
-            {({ error, loading, data }) => {
-              if (error) return <Error error={error} />;
-              if (loading) return <Loader active inline="centered" />;
-              if (!data.video) return <p>No Video Found for {id}</p>;
-              const {
-                video: {
-                  titleVi,
-                  descriptionVi,
-                  audio,
-                  originAuthor,
-                  defaultVolume,
-                  originId,
-                  originThumbnailUrlSd,
-                },
-              } = data;
+        {({ error, loading, data }) => {
+          if (error) return <Error error={error} />;
+          if (loading) return <Loader active inline="centered" />;
+          if (!data.video) return <p>No Video Found for {id}</p>;
+          const {
+            video: {
+              titleVi,
+              descriptionVi,
+              audio,
+              originAuthor,
+              defaultVolume,
+              originId,
+              originThumbnailUrlSd,
+            },
+          } = data;
 
-              return (
-                <>
-                  <Head>
-                    <title>Danni | {titleVi}</title>
-                    <meta
-                      property="og:url"
-                      content={`http://danni.tv/watch?id=${id}`}
-                    />
-                    <meta property="og:title" content={titleVi} />
-                    <meta property="og:image" content={originThumbnailUrlSd} />
-                    <meta property="og:locale" content="vi_VN" />
-                    <meta property="og:description" content={descriptionVi} />
-                    <meta property="fb:app_id" content="444940199652956" />
-                  </Head>
-                  <div>
-                    <YoutubeStyle
-                      onClick={() =>
-                        this.setState({
-                          playingFilePlayer: !playingFilePlayer,
-                        })
-                      }
-                    >
-                      <YouTubePlayer
-                        className="youtube-player"
-                        url={`https://www.youtube.com/embed/${originId}`}
-                        width="100%"
-                        height="100%"
-                        muted={isMobile && audio.length !== 0}
-                        volume={defaultVolume / 100}
-                        playing={playingFilePlayer}
-                        controls
-                        onPause={() =>
-                          this.setState({ playingFilePlayer: false })
-                        }
-                        onPlay={() =>
-                          this.setState({ playingFilePlayer: true })
-                        }
-                        onProgress={this.onProgressYoutube}
-                      />
-                    </YoutubeStyle>
-                    <VideoInfoStyle>
-                      <div className="basic-info">
-                        <Header>
-                          <h1>{titleVi}</h1>
-                        </Header>
-                        <div className="views-social">
-                          <YoutubeViews originId={originId} />
-                          <div>
-                            <FacebookShareButton
-                              className="fb-share-button"
-                              url={`http://danni.tv/watch?id=${id}`}
-                            >
-                              <FacebookIcon size={32} round />
-                            </FacebookShareButton>
-                          </div>
-                        </div>
-                      </div>
-                      <Segment>
-                        <Header>
-                          <h2>Kênh: {originAuthor}</h2>
-                        </Header>
-                        {descriptionVi && (
-                          <div className="description">{descriptionVi}</div>
-                        )}
-                      </Segment>
-                    </VideoInfoStyle>
-                    {audio.length !== 0 && (
-                      <FilePlayer
-                        onProgress={({ playedSeconds }) =>
-                          this.setState({ playedFilePlayer: playedSeconds })
-                        }
-                        ref={this.refFilePlayer}
-                        url={audio[audio.length - 1].source}
-                        playing={playingFilePlayer}
-                        onPause={() =>
-                          this.setState({ playingFilePlayer: false })
-                        }
-                        height="100%"
-                        width="100%"
-                      />
-                    )}
-                  </div>
-                  <input
-                    type="text"
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={e => this.setState({ password: e.target.value })}
+          return (
+            <>
+              <Head>
+                <title>Danni | {titleVi}</title>
+                <meta
+                  property="og:url"
+                  content={`http://danni.tv/watch?id=${id}`}
+                />
+                <meta property="og:title" content={titleVi} />
+                <meta property="og:image" content={originThumbnailUrlSd} />
+                <meta property="og:locale" content="vi_VN" />
+                <meta property="og:description" content={descriptionVi} />
+                <meta property="fb:app_id" content="444940199652956" />
+              </Head>
+              <div>
+                <YoutubeStyle
+                  onClick={() =>
+                    this.setState({
+                      playingFilePlayer: !playingFilePlayer,
+                    })
+                  }
+                >
+                  <YouTubePlayer
+                    className="youtube-player"
+                    url={`https://www.youtube.com/embed/${originId}`}
+                    width="100%"
+                    height="100%"
+                    muted={isMobile && audio.length !== 0}
+                    volume={defaultVolume / 100}
+                    playing={playingFilePlayer}
+                    controls
+                    onPause={() => this.setState({ playingFilePlayer: false })}
+                    onPlay={() => this.setState({ playingFilePlayer: true })}
+                    onProgress={this.onProgressYoutube}
                   />
-                  <button
-                    type="submit"
-                    onClick={async () => {
-                      if (password !== 'dracarys') {
-                        alert('Wrong password');
-                      } else if (
-                        confirm('Are you sure you want to delete this video?')
-                      ) {
-                        const res = await deleteVideo({
-                          variables: { id, password },
-                        }).catch(err => {
-                          alert(err.message);
-                        });
-                        if (res.data)
-                          Router.push({
-                            pathname: '/',
-                          });
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={async () => {
-                      if (password !== 'dracarys') {
-                        alert('Wrong password');
-                      } else {
-                        Router.push({
-                          pathname: '/edit',
-                          query: { id, password },
-                        });
-                      }
-                    }}
-                  >
-                    Edit
-                  </button>
-                </>
-              );
-            }}
-          </Query>
-        )}
-      </Mutation>
+                </YoutubeStyle>
+                <VideoInfoStyle>
+                  <div className="basic-info">
+                    <Header>
+                      <h1>{titleVi}</h1>
+                    </Header>
+                    <div className="views-social">
+                      <YoutubeViews originId={originId} />
+                      <div>
+                        <FacebookShareButton
+                          className="fb-share-button"
+                          url={`http://danni.tv/watch?id=${id}`}
+                        >
+                          <FacebookIcon size={32} round />
+                        </FacebookShareButton>
+                      </div>
+                    </div>
+                  </div>
+                  <Segment>
+                    <Header>
+                      <h2>Kênh: {originAuthor}</h2>
+                    </Header>
+                    {descriptionVi && (
+                      <div className="description">{descriptionVi}</div>
+                    )}
+                  </Segment>
+                </VideoInfoStyle>
+                {audio.length !== 0 && (
+                  <FilePlayer
+                    onProgress={({ playedSeconds }) =>
+                      this.setState({ playedFilePlayer: playedSeconds })
+                    }
+                    ref={this.refFilePlayer}
+                    url={audio[audio.length - 1].source}
+                    playing={playingFilePlayer}
+                    onPause={() => this.setState({ playingFilePlayer: false })}
+                    height="100%"
+                    width="100%"
+                  />
+                )}
+              </div>
+            </>
+          );
+        }}
+      </Query>
     );
   }
 }
