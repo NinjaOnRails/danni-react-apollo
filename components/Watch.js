@@ -12,7 +12,7 @@ import { Segment, Header, Loader } from 'semantic-ui-react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import Error from './ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
-import youtube from '../lib/youtube';
+import YoutubeViews from './YoutubeViews';
 
 const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!) {
@@ -84,22 +84,22 @@ const YoutubeStyle = styled.div`
   }
 `;
 
-const ShareButtonStyle = styled.div`
-  margin-top: 10px;
-  .fb-share-button {
-    float: right;
-    cursor: pointer;
-  }
-  h2 {
-    float: right;
-  }
-`;
-
-const VideoDetailStyle = styled.div`
+const VideoInfoStyle = styled.div`
   h1,
   h2,
   .description {
     font-family: ${props => props.theme.font};
+  }
+  .fb-share-button {
+    float: right;
+    cursor: pointer;
+  }
+  .basic-info {
+    margin-top: 10px;
+  }
+  .views-social {
+    display: flex;
+    justify-content: space-between;
   }
 `;
 
@@ -109,7 +109,6 @@ class Watch extends Component {
     playedYoutube: 0,
     playedFilePlayer: 0,
     password: '',
-    youtubeViews: '',
   };
 
   static propTypes = {
@@ -125,17 +124,6 @@ class Watch extends Component {
     if (id !== prevProps.router.query.id && isMobile)
       this.setState({ playingFilePlayer: false });
   }
-
-  fetchYoutubeViews = async id => {
-    const res = await youtube.get('/videos', {
-      params: {
-        id,
-        part: 'statistics',
-        key: process.env.YOUTUBE_API_KEY,
-      },
-    });
-    return res.data.items[0].statistics.viewCount;
-  };
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
   onProgressYoutube = ({ playedSeconds }) => {
@@ -231,28 +219,32 @@ class Watch extends Component {
                         onProgress={this.onProgressYoutube}
                       />
                     </YoutubeStyle>
-                    <ShareButtonStyle>
-                      <h2>Lượt Xem YouTube: {this.fetchYoutubeViews(id)}</h2>
-                      <FacebookShareButton
-                        className="fb-share-button"
-                        url={`http://danni.tv/watch?id=${id}`}
-                      >
-                        <FacebookIcon size={32} round />
-                      </FacebookShareButton>
-                    </ShareButtonStyle>
-                    <VideoDetailStyle>
-                      <Header>
-                        <h1>{titleVi}</h1>
-                      </Header>
+                    <VideoInfoStyle>
+                      <div className="basic-info">
+                        <Header>
+                          <h1>{titleVi}</h1>
+                        </Header>
+                        <div className="views-social">
+                          <YoutubeViews originId={originId} />
+                          <div>
+                            <FacebookShareButton
+                              className="fb-share-button"
+                              url={`http://danni.tv/watch?id=${id}`}
+                            >
+                              <FacebookIcon size={32} round />
+                            </FacebookShareButton>
+                          </div>
+                        </div>
+                      </div>
                       <Segment>
                         <Header>
-                          <h2>Tác giả: {originAuthor}</h2>
+                          <h2>Kênh: {originAuthor}</h2>
                         </Header>
                         {descriptionVi && (
                           <div className="description">{descriptionVi}</div>
                         )}
                       </Segment>
-                    </VideoDetailStyle>
+                    </VideoInfoStyle>
                     {audio.length !== 0 && (
                       <FilePlayer
                         onProgress={({ playedSeconds }) =>
