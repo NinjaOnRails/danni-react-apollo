@@ -64,7 +64,7 @@ const Header = () => (
       </Logo>
       <Nav />
     </div>
-    <Search />
+    {/* <Search /> */}
   </StyledHeader>
 );
 
