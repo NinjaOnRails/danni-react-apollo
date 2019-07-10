@@ -8,7 +8,7 @@ import Error from './ErrorMessage';
 
 const ALL_VIDEOS_QUERY = gql`
   query ALL_ITEMS_QUERY {
-    videos {
+    videos(orderBy: createdAt_DESC) {
       id
       titleVi
       originThumbnailUrl
