@@ -48,7 +48,7 @@ class Autocomplete extends Component {
       this.setState({ loading: true });
       const res = await client.query({
         query: SEARCH_VIDEOS_QUERY,
-        variables: { searchTerm: e.target.value },
+        variables: { searchTerm: e.target.value.toLowerCase() },
       });
       if (!res) {
         return this.setState({ videos: [], loading: false });
