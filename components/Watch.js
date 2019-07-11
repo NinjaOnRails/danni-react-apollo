@@ -28,6 +28,7 @@ const VIDEO_QUERY = gql`
       audio {
         id
         source
+        author
       }
       tags {
         text
@@ -222,6 +223,11 @@ class Watch extends Component {
                     <Header>
                       <h2>Kênh: {originAuthor}</h2>
                     </Header>
+                    {audio[audio.length - 1].author && (
+                      <Header>
+                        <h3>Người đọc: {audio[audio.length - 1].author}</h3>
+                      </Header>
+                    )}
                     {descriptionVi && (
                       <div className="description">{descriptionVi}</div>
                     )}
