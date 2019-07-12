@@ -169,6 +169,7 @@ class EditVideo extends Component {
     const {
       source,
       audioSource,
+      audioAuthor,
       tags,
       titleVi,
       descriptionVi,
@@ -259,6 +260,7 @@ class EditVideo extends Component {
                               await createAudio({
                                 variables: {
                                   source: audioSource,
+                                  author: audioAuthor,
                                   video: id,
                                 },
                               });
@@ -377,19 +379,35 @@ class EditVideo extends Component {
                               Nguồn Audio:
                             </label>
                             {isAudioSource && (
-                              <input
-                                type="text"
-                                name="audioSource"
-                                placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
-                                defaultValue={
-                                  data.video.audio.length
-                                    ? data.video.audio[
-                                        data.video.audio.length - 1
-                                      ].source
-                                    : ''
-                                }
-                                onChange={this.handleChange}
-                              />
+                              <>
+                                <input
+                                  type="text"
+                                  name="audioSource"
+                                  placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
+                                  defaultValue={
+                                    data.video.audio.length
+                                      ? data.video.audio[
+                                          data.video.audio.length - 1
+                                        ].source
+                                      : ''
+                                  }
+                                  onChange={this.handleChange}
+                                />
+                                Người đọc:
+                                <input
+                                  type="text"
+                                  name="audioAuthor"
+                                  placeholder="ví dụ 'Paní'"
+                                  defaultValue={
+                                    data.video.audio.length
+                                      ? data.video.audio[
+                                          data.video.audio.length - 1
+                                        ].author
+                                      : ''
+                                  }
+                                  onChange={this.handleChange}
+                                />
+                              </>
                             )}
                             <button type="submit">Save Changes</button>
                           </fieldset>

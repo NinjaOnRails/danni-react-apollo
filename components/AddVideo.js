@@ -37,8 +37,12 @@ const CREATE_VIDEO_MUTATION = gql`
 `;
 
 const CREATE_AUDIO_MUTATION = gql`
-  mutation CREATE_AUDIO_MUTATION($source: String!, $video: ID) {
-    createAudio(data: { source: $source, video: $video }) {
+  mutation CREATE_AUDIO_MUTATION(
+    $source: String!
+    $author: String
+    $video: ID
+  ) {
+    createAudio(data: { source: $source, author: $author, video: $video }) {
       id
       source
       video {
@@ -55,6 +59,7 @@ class AddVideo extends Component {
     descriptionVi: '',
     isDescriptionVi: true,
     audioSource: '',
+    audioAuthor: '',
     tags: '',
     isAudioSource: true,
     isTags: true,
@@ -173,6 +178,7 @@ class AddVideo extends Component {
     const {
       source,
       audioSource,
+      audioAuthor,
       tags,
       titleVi,
       descriptionVi,
@@ -229,6 +235,7 @@ class AddVideo extends Component {
                     await createAudio({
                       variables: {
                         source: audioSource,
+                        author: audioAuthor,
                         video: id,
                       },
                     });
@@ -348,13 +355,23 @@ class AddVideo extends Component {
                     Nguồn Audio:
                   </label>
                   {isAudioSource && (
-                    <input
-                      type="text"
-                      name="audioSource"
-                      placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
-                      value={audioSource}
-                      onChange={this.handleChange}
-                    />
+                    <>
+                      <input
+                        type="text"
+                        name="audioSource"
+                        placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
+                        value={audioSource}
+                        onChange={this.handleChange}
+                      />
+                      Người đọc:
+                      <input
+                        type="text"
+                        name="audioAuthor"
+                        placeholder="ví dụ 'Paní'"
+                        value={audioAuthor}
+                        onChange={this.handleChange}
+                      />
+                    </>
                   )}
                   <button type="submit">Submit</button>
                 </fieldset>
