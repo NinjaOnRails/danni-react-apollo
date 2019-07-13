@@ -84,6 +84,7 @@ const CREATE_AUDIO_MUTATION = gql`
     ) {
       id
       source
+      language
       video {
         id
       }
@@ -281,6 +282,7 @@ class AddVideo extends Component {
                         source: audioSource,
                         author: audioAuthor,
                         video: id,
+                        language: audioLanguage,
                       },
                     });
                   }
