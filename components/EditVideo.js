@@ -24,6 +24,9 @@ const languageOptions = {
   vn: 'VIETNAMESE',
   gb: 'ENGLISH',
   cz: 'CZECH',
+  VIETNAMESE: 'vn',
+  CZECH: 'cz',
+  ENGLISH: 'gb',
 };
 
 const DropdownForm = styled.div`
@@ -81,16 +84,14 @@ const UPDATE_VIDEO_MUTATION = gql`
 
 const UPDATE_AUDIO_MUTATION = gql`
   mutation UPDATE_AUDIO_MUTATION(
-    $source: String!
+    $id: ID!
+    $source: String
     $author: String
     $language: Language
   ) {
     updateAudio(
-      data: {
-        source: $source
-        author: $author
-        language: $language
-      }
+      id: $id
+      data: { source: $source, author: $author, language: $language }
     ) {
       id
       source
@@ -127,7 +128,6 @@ class EditVideo extends Component {
         : value;
 
     if (name === 'source' && val.length >= 11) this.onSourceFill(val);
-
     this.setState({ [name]: val });
   };
 
@@ -323,8 +323,8 @@ class EditVideo extends Component {
                                     updateVideo: { id },
                                   },
                                 } = await updateVideo();
-
                                 // Call createAudio mutation
+
                                 if (
                                   audioSource &&
                                   isAudioSource &&
@@ -339,15 +339,14 @@ class EditVideo extends Component {
                                     },
                                   });
                                 } else if (
-                                  audioSource &&
                                   isAudioSource &&
-                                  (!data.video.audio[0] ||
-                                    data.video.audio[0].source === audioSource)
+                                  (audioAuthor || audioLanguage)
                                 ) {
                                   await updateAudio({
                                     variables: {
                                       language: audioLanguage,
                                       author: audioAuthor,
+                                      id: data.video.audio[0].id,
                                     },
                                   });
                                 }
@@ -364,7 +363,9 @@ class EditVideo extends Component {
                               <Error error={errorUpdateAudio} />
                               <fieldset
                                 disabled={
-                                  loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio
+                                  loadingUpdateVideo ||
+                                  loadingCreateAudio ||
+                                  loadingUpdateAudio
                                 }
                                 aria-busy={loadingUpdateVideo}
                               >
@@ -509,7 +510,11 @@ class EditVideo extends Component {
                                         selection
                                         options={countryOptions}
                                         onChange={this.handleDropdown}
-                                        defaultValue='Vietnamese'
+                                        defaultValue={
+                                          languageOptions[
+                                            data.video.audio[0].language
+                                          ]
+                                        }
                                         name='audioLanguage'
                                         className='semantic-dropdown'
                                       />
