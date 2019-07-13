@@ -83,7 +83,6 @@ const UPDATE_AUDIO_MUTATION = gql`
   mutation UPDATE_AUDIO_MUTATION(
     $source: String!
     $author: String
-    $video: ID
     $language: Language
   ) {
     updateAudio(
@@ -343,7 +342,7 @@ class EditVideo extends Component {
                                   audioSource &&
                                   isAudioSource &&
                                   (!data.video.audio[0] ||
-                                    data.video.audio[0].source !== audioSource)
+                                    data.video.audio[0].source === audioSource)
                                 ) {
                                   await updateAudio({
                                     variables: {
