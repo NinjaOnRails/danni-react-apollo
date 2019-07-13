@@ -29,6 +29,7 @@ const VIDEO_QUERY = gql`
         id
         source
         author
+        language
       }
       tags {
         text

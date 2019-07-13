@@ -3,7 +3,8 @@ import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Dropdown } from 'semantic-ui-react';
+import styled from 'styled-components';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { VIDEO_QUERY } from './Watch';
@@ -12,6 +13,35 @@ import { ALL_VIDEOS_QUERY } from './Videos';
 import youtube from '../lib/youtube';
 
 const youtubeIdLength = 11;
+
+const countryOptions = [
+  { key: 'vn', value: 'vn', flag: 'vn', text: 'Vietnamese' },
+  { key: 'gb', value: 'gb', flag: 'gb', text: 'English' },
+  { key: 'cz', value: 'cz', flag: 'cz', text: 'Czech' },
+];
+
+const languageOptions = {
+  vn: 'VIETNAMESE',
+  gb: 'ENGLISH',
+  cz: 'CZECH',
+};
+
+const DropdownForm = styled.div`
+  .semantic-dropdown.ui.fluid.selection.dropdown {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid black;
+    margin-bottom: 5px;
+    &:focus {
+      outline: 0;
+      border-color: ${props => props.theme.red};
+    }
+  }
+  .text {
+    margin: auto;
+  }
+`;
 
 const VIDEO_DELETE = gql`
   mutation VIDEO_DELETE($id: ID!, $password: String!) {
@@ -49,6 +79,31 @@ const UPDATE_VIDEO_MUTATION = gql`
   }
 `;
 
+const UPDATE_AUDIO_MUTATION = gql`
+  mutation UPDATE_AUDIO_MUTATION(
+    $source: String!
+    $author: String
+    $video: ID
+    $language: Language
+  ) {
+    updateAudio(
+      data: {
+        source: $source
+        author: $author
+        video: $video
+        language: $language
+      }
+    ) {
+      id
+      source
+      language
+      video {
+        id
+      }
+    }
+  }
+`;
+
 class EditVideo extends Component {
   state = {
     isDescriptionVi: true,
@@ -78,6 +133,10 @@ class EditVideo extends Component {
     this.setState({ [name]: val });
   };
 
+  handleDropdown = (e, { value }) => {
+    this.setState({ audioLanguage: languageOptions[value] });
+  };
+
   onSourceFill = async source => {
     // Check if source is YouTube and extract ID from it
     const youtubeId = source.trim();
@@ -96,7 +155,7 @@ class EditVideo extends Component {
       { domain: 'www.youtu.be/', length: 13 },
     ];
     const isYouTube = sourceYouTube.find(value =>
-      youtubeId.startsWith(value.domain)
+      youtubeId.startsWith(value.domain),
     );
     let originId;
     if (isYouTube) {
@@ -170,6 +229,7 @@ class EditVideo extends Component {
       source,
       audioSource,
       audioAuthor,
+      audioLanguage,
       tags,
       titleVi,
       descriptionVi,
@@ -216,238 +276,288 @@ class EditVideo extends Component {
                 >
                   {(
                     createAudio,
-                    { loading: loadingCreateAudio, error: errorCreateAudio }
+                    { loading: loadingCreateAudio, error: errorCreateAudio },
                   ) => (
                     <Mutation
-                      mutation={UPDATE_VIDEO_MUTATION}
-                      variables={{
-                        id,
-                        source,
-                        titleVi,
-                        descriptionVi,
-                        tags,
-                        defaultVolume,
-                        password,
-                      }}
+                      mutation={UPDATE_AUDIO_MUTATION}
                       refetchQueries={[
                         { query: VIDEO_QUERY, variables: { id } },
                       ]}
                     >
                       {(
-                        updateVideo,
-                        { loading: loadingUpdateVideo, error: errorUpdateVideo }
+                        updateAudio,
+                        {
+                          loading: loadingUpdateAudio,
+                          error: errorUpdateAudio,
+                        },
                       ) => (
-                        <Form
-                          data-test="form"
-                          onSubmit={async e => {
-                            // Stop form from submitting
-                            e.preventDefault();
-
-                            // Call updateVideo mutation
-                            const {
-                              data: {
-                                updateVideo: { id },
-                              },
-                            } = await updateVideo();
-
-                            // Call createAudio mutation
-                            if (
-                              audioSource &&
-                              isAudioSource &&
-                              (!data.video.audio[0] ||
-                                data.video.audio[0].source !== audioSource)
-                            ) {
-                              await createAudio({
-                                variables: {
-                                  source: audioSource,
-                                  author: audioAuthor,
-                                  video: id,
-                                },
-                              });
-                            }
-
-                            // Redirect to newly updated Video watch page
-                            Router.push({
-                              pathname: '/watch',
-                              query: { id },
-                            });
+                        <Mutation
+                          mutation={UPDATE_VIDEO_MUTATION}
+                          variables={{
+                            id,
+                            source,
+                            titleVi,
+                            descriptionVi,
+                            tags,
+                            defaultVolume,
+                            password,
                           }}
+                          refetchQueries={[
+                            { query: VIDEO_QUERY, variables: { id } },
+                          ]}
                         >
-                          <Error error={errorCreateAudio} />
-                          <Error error={errorUpdateVideo} />
-                          <fieldset
-                            disabled={loadingUpdateVideo || loadingCreateAudio}
-                            aria-busy={loadingUpdateVideo}
-                          >
-                            <label htmlFor="source">
-                              Nguồn (Link hoặc YouTube ID):
-                              <input
-                                type="text"
-                                id="source"
-                                name="source"
-                                required
-                                placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
-                                defaultValue={oldOriginId}
-                                onChange={this.handleChange}
-                              />
-                            </label>
-                            {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
-                            {originTitle && <div>{originTitle}</div>}
-                            {channelTitle && <div>{channelTitle}</div>}
-                            {image && (
-                              <img width="200" src={image} alt="thumbnail" />
-                            )}
-                            <label htmlFor="titleVi">
-                              Tiêu đề:
-                              <input
-                                type="text"
-                                id="titleVi"
-                                name="titleVi"
-                                required
-                                placeholder="ví dụ 'Sự sống trên mặt trăng xanh'"
-                                defaultValue={oldTitleVi}
-                                onChange={this.handleChange}
-                              />
-                            </label>
-                            <label htmlFor="descriptionVi">
-                              <input
-                                id="descriptionVi"
-                                name="isDescriptionVi"
-                                type="checkbox"
-                                checked={isDescriptionVi}
-                                onChange={this.handleChange}
-                              />
-                              Nội dung:
-                            </label>
-                            {isDescriptionVi && (
-                              <label htmlFor="descriptionVi">
-                                <input
-                                  type="text"
-                                  name="descriptionVi"
-                                  defaultValue={oldDescriptionVi}
-                                  onChange={this.handleChange}
-                                />
-                              </label>
-                            )}
-                            <label htmlFor="defaultVolume">
-                              <input
-                                id="defaultVolume"
-                                name="isDefaultVolume"
-                                type="checkbox"
-                                checked={isDefaultVolume}
-                                onChange={this.handleChange}
-                              />
-                              Âm lượng (%):
-                            </label>
-                            {isDefaultVolume && (
-                              <input
-                                type="number"
-                                name="defaultVolume"
-                                min="0"
-                                max="100"
-                                defaultValue={oldDefaultVolume}
-                                onChange={this.handleChange}
-                              />
-                            )}
-                            <label htmlFor="tags">
-                              <input
-                                id="tags"
-                                name="isTags"
-                                type="checkbox"
-                                checked={isTags}
-                                onChange={this.handleChange}
-                              />
-                              Tags:
-                            </label>
-                            {isTags && (
-                              <input
-                                type="text"
-                                name="tags"
-                                placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                                defaultValue={oldTags.trim()}
-                                onChange={this.handleChange}
-                              />
-                            )}
-                            <label htmlFor="audioSource">
-                              <input
-                                id="audioSource"
-                                name="isAudioSource"
-                                type="checkbox"
-                                checked={isAudioSource}
-                                onChange={this.handleChange}
-                              />
-                              Nguồn Audio:
-                            </label>
-                            {isAudioSource && (
-                              <>
-                                <input
-                                  type="text"
-                                  name="audioSource"
-                                  placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
-                                  defaultValue={
-                                    data.video.audio.length
-                                      ? data.video.audio[
-                                          data.video.audio.length - 1
-                                        ].source
-                                      : ''
-                                  }
-                                  onChange={this.handleChange}
-                                />
-                                Người đọc:
-                                <input
-                                  type="text"
-                                  name="audioAuthor"
-                                  placeholder="ví dụ 'Paní'"
-                                  defaultValue={
-                                    data.video.audio.length
-                                      ? data.video.audio[
-                                          data.video.audio.length - 1
-                                        ].author
-                                      : ''
-                                  }
-                                  onChange={this.handleChange}
-                                />
-                              </>
-                            )}
-                            <button type="submit">Save Changes</button>
-                          </fieldset>
-                          <input
-                            type="text"
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={e =>
-                              this.setState({ password: e.target.value })
-                            }
-                          />
-                          <button
-                            type="submit"
-                            onClick={async () => {
-                              if (this.state.password !== 'dracarys') {
-                                alert('Wrong password');
-                              } else if (
-                                confirm(
-                                  'Are you sure you want to delete this video?'
-                                )
-                              ) {
-                                const res = await deleteVideo({
-                                  variables: {
-                                    id,
-                                    password: this.state.password,
+                          {(
+                            updateVideo,
+                            {
+                              loading: loadingUpdateVideo,
+                              error: errorUpdateVideo,
+                            },
+                          ) => (
+                            <Form
+                              data-test='form'
+                              onSubmit={async e => {
+                                // Stop form from submitting
+                                e.preventDefault();
+
+                                // Call updateVideo mutation
+                                const {
+                                  data: {
+                                    updateVideo: { id },
                                   },
-                                }).catch(err => {
-                                  alert(err.message);
-                                });
-                                if (res.data)
-                                  Router.push({
-                                    pathname: '/',
+                                } = await updateVideo();
+
+                                // Call createAudio mutation
+                                if (
+                                  audioSource &&
+                                  isAudioSource &&
+                                  (!data.video.audio[0] ||
+                                    data.video.audio[0].source !== audioSource)
+                                ) {
+                                  await createAudio({
+                                    variables: {
+                                      source: audioSource,
+                                      author: audioAuthor,
+                                      video: id,
+                                    },
                                   });
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </Form>
+                                } else if (
+                                  audioSource &&
+                                  isAudioSource &&
+                                  (!data.video.audio[0] ||
+                                    data.video.audio[0].source !== audioSource)
+                                ) {
+                                  await updateAudio({
+                                    variables: {
+                                      language: audioLanguage,
+                                      author: audioAuthor,
+                                    },
+                                  });
+                                }
+
+                                // Redirect to newly updated Video watch page
+                                Router.push({
+                                  pathname: '/watch',
+                                  query: { id },
+                                });
+                              }}
+                            >
+                              <Error error={errorCreateAudio} />
+                              <Error error={errorUpdateVideo} />
+                              <fieldset
+                                disabled={
+                                  loadingUpdateVideo || loadingCreateAudio
+                                }
+                                aria-busy={loadingUpdateVideo}
+                              >
+                                <label htmlFor='source'>
+                                  Nguồn (Link hoặc YouTube ID):
+                                  <input
+                                    type='text'
+                                    id='source'
+                                    name='source'
+                                    required
+                                    placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
+                                    defaultValue={oldOriginId}
+                                    onChange={this.handleChange}
+                                  />
+                                </label>
+                                {youtubeIdStatus && (
+                                  <div>{youtubeIdStatus}</div>
+                                )}
+                                {originTitle && <div>{originTitle}</div>}
+                                {channelTitle && <div>{channelTitle}</div>}
+                                {image && (
+                                  <img
+                                    width='200'
+                                    src={image}
+                                    alt='thumbnail'
+                                  />
+                                )}
+                                <label htmlFor='titleVi'>
+                                  Tiêu đề:
+                                  <input
+                                    type='text'
+                                    id='titleVi'
+                                    name='titleVi'
+                                    required
+                                    placeholder="ví dụ 'Sự sống trên mặt trăng xanh'"
+                                    defaultValue={oldTitleVi}
+                                    onChange={this.handleChange}
+                                  />
+                                </label>
+                                <label htmlFor='descriptionVi'>
+                                  <input
+                                    id='descriptionVi'
+                                    name='isDescriptionVi'
+                                    type='checkbox'
+                                    checked={isDescriptionVi}
+                                    onChange={this.handleChange}
+                                  />
+                                  Nội dung:
+                                </label>
+                                {isDescriptionVi && (
+                                  <label htmlFor='descriptionVi'>
+                                    <input
+                                      type='text'
+                                      name='descriptionVi'
+                                      defaultValue={oldDescriptionVi}
+                                      onChange={this.handleChange}
+                                    />
+                                  </label>
+                                )}
+                                <label htmlFor='defaultVolume'>
+                                  <input
+                                    id='defaultVolume'
+                                    name='isDefaultVolume'
+                                    type='checkbox'
+                                    checked={isDefaultVolume}
+                                    onChange={this.handleChange}
+                                  />
+                                  Âm lượng (%):
+                                </label>
+                                {isDefaultVolume && (
+                                  <input
+                                    type='number'
+                                    name='defaultVolume'
+                                    min='0'
+                                    max='100'
+                                    defaultValue={oldDefaultVolume}
+                                    onChange={this.handleChange}
+                                  />
+                                )}
+                                <label htmlFor='tags'>
+                                  <input
+                                    id='tags'
+                                    name='isTags'
+                                    type='checkbox'
+                                    checked={isTags}
+                                    onChange={this.handleChange}
+                                  />
+                                  Tags:
+                                </label>
+                                {isTags && (
+                                  <input
+                                    type='text'
+                                    name='tags'
+                                    placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                                    defaultValue={oldTags.trim()}
+                                    onChange={this.handleChange}
+                                  />
+                                )}
+                                <label htmlFor='audioSource'>
+                                  <input
+                                    id='audioSource'
+                                    name='isAudioSource'
+                                    type='checkbox'
+                                    checked={isAudioSource}
+                                    onChange={this.handleChange}
+                                  />
+                                  Nguồn Audio:
+                                </label>
+                                {isAudioSource && (
+                                  <>
+                                    <input
+                                      type='text'
+                                      name='audioSource'
+                                      placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
+                                      defaultValue={
+                                        data.video.audio.length
+                                          ? data.video.audio[
+                                              data.video.audio.length - 1
+                                            ].source
+                                          : ''
+                                      }
+                                      onChange={this.handleChange}
+                                    />
+                                    Người đọc:
+                                    <input
+                                      type='text'
+                                      name='audioAuthor'
+                                      placeholder="ví dụ 'Paní'"
+                                      defaultValue={
+                                        data.video.audio.length
+                                          ? data.video.audio[
+                                              data.video.audio.length - 1
+                                            ].author
+                                          : ''
+                                      }
+                                      onChange={this.handleChange}
+                                    />
+                                    Language:
+                                    <DropdownForm>
+                                      <Dropdown
+                                        fluid
+                                        selection
+                                        options={countryOptions}
+                                        onChange={this.handleDropdown}
+                                        defaultValue='Vietnamese'
+                                        name='audioLanguage'
+                                        className='semantic-dropdown'
+                                      />
+                                    </DropdownForm>
+                                  </>
+                                )}
+                                <button type='submit'>Save Changes</button>
+                              </fieldset>
+                              <input
+                                type='text'
+                                id='password'
+                                name='password'
+                                value={password}
+                                onChange={e =>
+                                  this.setState({ password: e.target.value })
+                                }
+                              />
+                              <button
+                                type='submit'
+                                onClick={async () => {
+                                  if (this.state.password !== 'dracarys') {
+                                    alert('Wrong password');
+                                  } else if (
+                                    confirm(
+                                      'Are you sure you want to delete this video?',
+                                    )
+                                  ) {
+                                    const res = await deleteVideo({
+                                      variables: {
+                                        id,
+                                        password: this.state.password,
+                                      },
+                                    }).catch(err => {
+                                      alert(err.message);
+                                    });
+                                    if (res.data)
+                                      Router.push({
+                                        pathname: '/',
+                                      });
+                                  }
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </Form>
+                          )}
+                        </Mutation>
                       )}
                     </Mutation>
                   )}
