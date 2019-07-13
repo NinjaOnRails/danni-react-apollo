@@ -424,7 +424,7 @@ class AddVideo extends Component {
                           selection
                           options={countryOptions}
                           onChange={this.handleDropdown}
-                          defaultValue='Vietnamese'
+                          defaultValue='gb'
                           name='audioLanguage'
                           className='semantic-dropdown'
                         />
