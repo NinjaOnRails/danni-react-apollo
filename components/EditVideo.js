@@ -90,7 +90,6 @@ const UPDATE_AUDIO_MUTATION = gql`
       data: {
         source: $source
         author: $author
-        video: $video
         language: $language
       }
     ) {
@@ -363,9 +362,10 @@ class EditVideo extends Component {
                             >
                               <Error error={errorCreateAudio} />
                               <Error error={errorUpdateVideo} />
+                              <Error error={errorUpdateAudio} />
                               <fieldset
                                 disabled={
-                                  loadingUpdateVideo || loadingCreateAudio
+                                  loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio
                                 }
                                 aria-busy={loadingUpdateVideo}
                               >
