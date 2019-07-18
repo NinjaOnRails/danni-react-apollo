@@ -224,7 +224,7 @@ class Watch extends Component {
                     <Header>
                       <h2>Kênh: {originAuthor}</h2>
                     </Header>
-                    {audio[audio.length - 1].author && (
+                    {audio.length > 0 && audio[audio.length - 1].author && (
                       <Header>
                         <h3>Người đọc: {audio[audio.length - 1].author}</h3>
                       </Header>

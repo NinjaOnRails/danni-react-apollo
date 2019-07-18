@@ -498,6 +498,7 @@ class EditVideo extends Component {
                                         name="audioAuthor"
                                         placeholder="ví dụ 'Paní'"
                                         defaultValue={
+                                          data.video.audio.length &&
                                           data.video.audio[
                                             data.video.audio.length - 1
                                           ].author
@@ -516,6 +517,7 @@ class EditVideo extends Component {
                                           options={countryOptions}
                                           onChange={this.handleDropdown}
                                           defaultValue={
+                                            data.video.audio.length &&
                                             languageOptions[
                                               data.video.audio[
                                                 data.video.audio.length - 1
@@ -530,15 +532,9 @@ class EditVideo extends Component {
                                   )}
                                   <button type="submit">Save Changes</button>
                                 </fieldset>
-                                <input
-                                  type="text"
-                                  id="password"
-                                  name="password"
-                                  value={password}
-                                  onChange={this.handleChange}
-                                />
                               </Form>
                               <button
+                                type="submit"
                                 onClick={async () => {
                                   if (password !== 'dracarys') {
                                     alert('Wrong password');
