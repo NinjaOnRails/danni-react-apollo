@@ -343,7 +343,10 @@ class EditVideo extends Component {
                                     variables: {
                                       language: audioLanguage,
                                       author: audioAuthor,
-                                      id: data.video.audio[0].id,
+                                      id:
+                                        data.video.audio[
+                                          data.video.audio.length - 1
+                                        ].id,
                                     },
                                   });
                                 }
@@ -511,7 +514,9 @@ class EditVideo extends Component {
                                         onChange={this.handleDropdown}
                                         defaultValue={
                                           languageOptions[
-                                            data.video.audio[0].language
+                                            data.video.audio[
+                                              data.video.audio.length - 1
+                                            ].language
                                           ]
                                         }
                                         name="audioLanguage"
