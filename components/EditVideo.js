@@ -109,7 +109,6 @@ class EditVideo extends Component {
     isAudioSource: true,
     isTags: true,
     isDefaultVolume: true,
-    password: this.props.router.query.password,
   };
 
   static propTypes = {
@@ -220,7 +219,7 @@ class EditVideo extends Component {
   render() {
     const {
       router: {
-        query: { id },
+        query: { id, password },
       },
     } = this.props;
     const {
@@ -240,7 +239,6 @@ class EditVideo extends Component {
       originTitle,
       channelTitle,
       youtubeIdStatus,
-      password,
     } = this.state;
     return (
       <Mutation
