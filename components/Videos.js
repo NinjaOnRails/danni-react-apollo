@@ -12,6 +12,7 @@ const ALL_VIDEOS_QUERY = gql`
       id
       titleVi
       originThumbnailUrl
+      originThumbnailUrlSd
     }
   }
 `;
@@ -60,7 +61,11 @@ class Videos extends Component {
                         }}
                       >
                         <img
-                          src={video.originThumbnailUrl}
+                          src={
+                            video.originThumbnailUrl
+                              ? video.originThumbnailUrl
+                              : video.originThumbnailUrlSd
+                          }
                           alt={video.titleVi}
                         />
                       </Link>

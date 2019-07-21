@@ -57,7 +57,11 @@ class VideoList extends Component {
                     >
                       <VideoItem>
                         <Image
-                          src={video.originThumbnailUrl}
+                          src={
+                            video.originThumbnailUrl
+                              ? video.originThumbnailUrl
+                              : video.originThumbnailUrlSd
+                          }
                           alt={video.titleVi}
                         />
                         <List.Content>
