@@ -109,6 +109,7 @@ class Watch extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    console.log(process.env.YOUTUBE_API_KEY)
     const {
       router: {
         query: { id },
