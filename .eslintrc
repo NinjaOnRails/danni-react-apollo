@@ -22,7 +22,8 @@
     "jest": true
   },
   "globals": {
-    "FB": true
+    "FB": true,
+    "mixpanel": true
   },
   "rules": {
     "no-unused-expressions": [

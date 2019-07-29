@@ -8,5 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = {
   env: {
     YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
+    GA_TRACKING_ID: process.env.GA_TRACKING_ID,
   },
 };

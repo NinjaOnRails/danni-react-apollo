@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import Router, { withRouter } from 'next/router';
+import { withRouter } from 'next/router';
 import { Query } from 'react-apollo';
 import { List, Image, Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import propTypes from 'prop-types';
+import Link from 'next/link';
 import { ALL_VIDEOS_QUERY } from './Videos';
 import Error from './ErrorMessage';
 
@@ -46,28 +47,30 @@ class VideoList extends Component {
               {data.videos.map(
                 video =>
                   video.id !== id && (
-                    <List.Item
-                      key={video.id}
-                      onClick={() =>
-                        Router.push({
+                    <List.Item key={video.id}>
+                      <Link
+                        href={{
                           pathname: '/watch',
                           query: { id: video.id },
-                        })
-                      }
-                    >
-                      <VideoItem>
-                        <Image
-                          src={
-                            video.originThumbnailUrl
-                              ? video.originThumbnailUrl
-                              : video.originThumbnailUrlSd
-                          }
-                          alt={video.titleVi}
-                        />
-                        <List.Content>
-                          <ListHeaderStyled>{video.titleVi}</ListHeaderStyled>
-                        </List.Content>
-                      </VideoItem>
+                        }}
+                      >
+                        <a>
+                          <VideoItem>
+                            <Image
+                              src={
+                                video.originThumbnailUrl ||
+                                video.originThumbnailUrlSd
+                              }
+                              alt={video.titleVi}
+                            />
+                            <List.Content>
+                              <ListHeaderStyled>
+                                {video.titleVi}
+                              </ListHeaderStyled>
+                            </List.Content>
+                          </VideoItem>
+                        </a>
+                      </Link>
                     </List.Item>
                   )
               )}

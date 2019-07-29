@@ -20,11 +20,15 @@ const VIDEO_QUERY = gql`
       originId
       titleVi
       descriptionVi
+      originPlatform
+      originLanguage
+      originTitle
       originAuthor
       originThumbnailUrl
       originThumbnailUrlSd
       defaultVolume
       startAt
+      addedBy
       audio {
         id
         source
@@ -157,6 +161,9 @@ class Watch extends Component {
           if (!data.video) return <p>No Video Found for {id}</p>;
           const {
             video: {
+              originTitle,
+              originPlatform,
+              originLanguage,
               titleVi,
               descriptionVi,
               audio,
@@ -164,6 +171,7 @@ class Watch extends Component {
               defaultVolume,
               originId,
               originThumbnailUrlSd,
+              addedBy,
             },
           } = data;
 
@@ -236,6 +244,11 @@ class Watch extends Component {
                 </VideoInfoStyle>
                 {audio.length !== 0 && (
                   <FilePlayer
+                    config={{
+                      file: {
+                        forceAudio: true,
+                      },
+                    }}
                     onProgress={({ playedSeconds }) =>
                       this.setState({ playedFilePlayer: playedSeconds })
                     }
@@ -245,6 +258,19 @@ class Watch extends Component {
                     onPause={() => this.setState({ playingFilePlayer: false })}
                     height="100%"
                     width="100%"
+                    onStart={() =>
+                      mixpanel.track('Audio Play', {
+                        'Audio ID': audio[audio.length - 1].id,
+                        'Audio Language': audio[audio.length - 1].language,
+                        'Audio Author': audio[audio.length - 1].author,
+                        'Video ID': id,
+                        'Video Title': originTitle,
+                        'Video Platform': originPlatform,
+                        'Video Language': originLanguage,
+                        'Video Author': originAuthor,
+                        'Video AddedBy': addedBy,
+                      })
+                    }
                   />
                 )}
               </div>

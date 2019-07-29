@@ -52,6 +52,12 @@ class Videos extends Component {
             return (
               <VideosListStyled>
                 {data.videos.map(video => {
+                  const {
+                    originThumbnailUrl,
+                    originThumbnailUrlSd,
+                    id,
+                    titleVi,
+                  } = video;
                   return (
                     <div key={video.id}>
                       <Link
@@ -60,16 +66,23 @@ class Videos extends Component {
                           query: { id: video.id },
                         }}
                       >
-                        <img
-                          src={
-                            video.originThumbnailUrl
-                              ? video.originThumbnailUrl
-                              : video.originThumbnailUrlSd
-                          }
-                          alt={video.titleVi}
-                        />
+                        <a>
+                          <img
+                            src={originThumbnailUrl || originThumbnailUrlSd}
+                            alt={video.titleVi}
+                          />
+                        </a>
                       </Link>
-                      <h2>{video.titleVi}</h2>
+                      <Link
+                        href={{
+                          pathname: '/watch',
+                          query: { id },
+                        }}
+                      >
+                        <a>
+                          <h2>{titleVi}</h2>
+                        </a>
+                      </Link>
                     </div>
                   );
                 })}

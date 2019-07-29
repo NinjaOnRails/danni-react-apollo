@@ -150,7 +150,7 @@ class AddVideo extends Component {
       { domain: 'www.youtu.be/', length: 13 },
     ];
     const isYouTube = sourceYouTube.find(value =>
-      youtubeId.startsWith(value.domain),
+      youtubeId.startsWith(value.domain)
     );
     let originId;
     if (isYouTube) {
@@ -245,7 +245,7 @@ class AddVideo extends Component {
       >
         {(
           createAudio,
-          { loading: loadingCreateAudio, error: errorCreateAudio },
+          { loading: loadingCreateAudio, error: errorCreateAudio }
         ) => (
           <Mutation
             mutation={CREATE_VIDEO_MUTATION}
@@ -260,10 +260,10 @@ class AddVideo extends Component {
           >
             {(
               createVideo,
-              { loading: loadingCreateVideo, error: errorCreateVideo },
+              { loading: loadingCreateVideo, error: errorCreateVideo }
             ) => (
               <Form
-                data-test='form'
+                data-test="form"
                 onSubmit={async e => {
                   // Stop form from submitting
                   e.preventDefault();
@@ -292,6 +292,12 @@ class AddVideo extends Component {
                     pathname: '/watch',
                     query: { id },
                   });
+
+                  mixpanel.track('New Video', {
+                    'Audio Language': isAudioSource
+                      ? audioLanguage
+                      : 'no-audio',
+                  });
                 }}
               >
                 <Error error={errorCreateAudio} />
@@ -300,12 +306,12 @@ class AddVideo extends Component {
                   disabled={loadingCreateVideo || loadingCreateAudio}
                   aria-busy={loadingCreateVideo}
                 >
-                  <label htmlFor='source'>
+                  <label htmlFor="source">
                     Nguồn (Link hoặc YouTube ID):
                     <input
-                      type='text'
-                      id='source'
-                      name='source'
+                      type="text"
+                      id="source"
+                      name="source"
                       required
                       placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
                       value={source}
@@ -315,43 +321,43 @@ class AddVideo extends Component {
                   {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
                   {originTitle && <div>{originTitle}</div>}
                   {channelTitle && <div>{channelTitle}</div>}
-                  {image && <img width='200' src={image} alt='thumbnail' />}
-                  <label htmlFor='titleVi'>
+                  {image && <img width="200" src={image} alt="thumbnail" />}
+                  <label htmlFor="titleVi">
                     Tiêu đề:
                     <input
-                      type='text'
-                      id='titleVi'
-                      name='titleVi'
+                      type="text"
+                      id="titleVi"
+                      name="titleVi"
                       required
                       value={titleVi}
                       onChange={this.handleChange}
                     />
                   </label>
-                  <label htmlFor='descriptionVi'>
+                  <label htmlFor="descriptionVi">
                     <input
-                      id='descriptionVi'
-                      name='isDescriptionVi'
-                      type='checkbox'
+                      id="descriptionVi"
+                      name="isDescriptionVi"
+                      type="checkbox"
                       checked={isDescriptionVi}
                       onChange={this.handleChange}
                     />
                     Nội dung:
                   </label>
                   {isDescriptionVi && (
-                    <label htmlFor='descriptionVi'>
+                    <label htmlFor="descriptionVi">
                       <input
-                        type='text'
-                        name='descriptionVi'
+                        type="text"
+                        name="descriptionVi"
                         value={descriptionVi}
                         onChange={this.handleChange}
                       />
                     </label>
                   )}
-                  <label htmlFor='defaultVolume'>
+                  <label htmlFor="defaultVolume">
                     <input
-                      id='defaultVolume'
-                      name='isDefaultVolume'
-                      type='checkbox'
+                      id="defaultVolume"
+                      name="isDefaultVolume"
+                      type="checkbox"
                       checked={isDefaultVolume}
                       onChange={this.handleChange}
                     />
@@ -359,19 +365,19 @@ class AddVideo extends Component {
                   </label>
                   {isDefaultVolume && (
                     <input
-                      type='number'
-                      name='defaultVolume'
-                      min='0'
-                      max='100'
+                      type="number"
+                      name="defaultVolume"
+                      min="0"
+                      max="100"
                       value={defaultVolume}
                       onChange={this.handleChange}
                     />
                   )}
-                  <label htmlFor='tags'>
+                  <label htmlFor="tags">
                     <input
-                      id='tags'
-                      name='isTags'
-                      type='checkbox'
+                      id="tags"
+                      name="isTags"
+                      type="checkbox"
                       checked={isTags}
                       onChange={this.handleChange}
                     />
@@ -382,19 +388,19 @@ class AddVideo extends Component {
                     <>
                       <div>{originTags.join(' ')}</div>
                       <input
-                        type='text'
-                        name='tags'
+                        type="text"
+                        name="tags"
                         placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
                         value={tags}
                         onChange={this.handleChange}
                       />
                     </>
                   )}
-                  <label htmlFor='audioSource'>
+                  <label htmlFor="audioSource">
                     <input
-                      id='audioSource'
-                      name='isAudioSource'
-                      type='checkbox'
+                      id="audioSource"
+                      name="isAudioSource"
+                      type="checkbox"
                       checked={isAudioSource}
                       onChange={this.handleChange}
                     />
@@ -403,16 +409,16 @@ class AddVideo extends Component {
                   {isAudioSource && (
                     <>
                       <input
-                        type='text'
-                        name='audioSource'
+                        type="text"
+                        name="audioSource"
                         placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
                         value={audioSource}
                         onChange={this.handleChange}
                       />
                       Người đọc:
                       <input
-                        type='text'
-                        name='audioAuthor'
+                        type="text"
+                        name="audioAuthor"
                         placeholder="ví dụ 'Paní'"
                         value={audioAuthor}
                         onChange={this.handleChange}
@@ -424,14 +430,14 @@ class AddVideo extends Component {
                           selection
                           options={countryOptions}
                           onChange={this.handleDropdown}
-                          defaultValue='gb'
-                          name='audioLanguage'
-                          className='semantic-dropdown'
+                          defaultValue="gb"
+                          name="audioLanguage"
+                          className="semantic-dropdown"
                         />
                       </DropdownForm>
                     </>
                   )}
-                  <button type='submit'>Submit</button>
+                  <button type="submit">Submit</button>
                 </fieldset>
               </Form>
             )}
