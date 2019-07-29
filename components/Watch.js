@@ -171,6 +171,7 @@ class Watch extends Component {
               defaultVolume,
               originId,
               originThumbnailUrlSd,
+              originThumbnailUrl,
               addedBy,
             },
           } = data;
@@ -184,7 +185,10 @@ class Watch extends Component {
                   content={`http://danni.tv/watch?id=${id}`}
                 />
                 <meta property="og:title" content={titleVi} />
-                <meta property="og:image" content={originThumbnailUrlSd} />
+                <meta
+                  property="og:image"
+                  content={originThumbnailUrl || originThumbnailUrlSd}
+                />
                 <meta property="og:locale" content="vi_VN" />
                 <meta property="og:description" content={descriptionVi} />
                 <meta property="fb:app_id" content="444940199652956" />

@@ -35,6 +35,7 @@
     "react-apollo": "^2.5.8",
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
+    "react-facebook-login": "^4.1.1",
     "react-player": "^1.11.0",
     "react-share": "^3.0.0",
     "semantic-ui-react": "^0.87.1",
