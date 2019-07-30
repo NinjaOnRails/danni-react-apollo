@@ -1,49 +1,46 @@
 import Link from 'next/link';
 // import { Mutation } from 'react-apollo';
 import NavStyles from './styles/NavStyles';
-// import User from './User';
-// import Signout from './Signout';
+import User from './User';
+import Signout from './Signout';
 
 const Nav = () => (
-  <NavStyles>
-    <Link href="/">
-      <a>Trang Chủ</a>
-    </Link>
-    {/* <Link href="/browse">
-      <a>Watch</a>
-    </Link> */}
-    <Link href="/new">
-      <a>Thêm Video</a>
-    </Link>
-    {/* <Link href="/signin">
-      <a>Sign In</a>
-    </Link> */}
-    {/* <Link href="/about">
+  <User>
+    {({ data }) => {
+      const currentUser = data ? data.currentUser : null;
+      return (
+        <NavStyles data-test="nav">
+          <Link href="/">
+            <a>Trang Chủ</a>
+          </Link>
+          <Link href="/new">
+            <a>Thêm Video</a>
+          </Link>
+          {/* <Link href="/about">
       <a>Info</a>
     </Link> */}
-  </NavStyles>
-  // <User>
-  //   {({ data }) => {
-  //     const me = data ? data.me : null;
-  //     return (
-  //       <NavStyles data-test="nav">
-  //         {me && (
-  //           <>
-  //             <Link href="/me">
-  //               <a>Account</a>
-  //             </Link>
-  //             <Signout />
-  //           </>
-  //         )}
-  //         {!me && (
-  //           <Link href="/signup">
-  //             <a>Sign In</a>
-  //           </Link>
-  //         )}
-  //       </NavStyles>
-  //     );
-  //   }}
-  // </User>
+          {currentUser && (
+            <>
+              <Link href="/currentUser">
+                <a>Tài Khoản</a>
+              </Link>
+              <Signout />
+            </>
+          )}
+          {!currentUser && (
+            <>
+              <Link href="/signup">
+                <a>Đăng Ký</a>
+              </Link>
+              <Link href="/signin">
+                <a>Đăng Nhập</a>
+              </Link>
+            </>
+          )}
+        </NavStyles>
+      );
+    }}
+  </User>
 );
 
 export default Nav;

@@ -22,7 +22,8 @@ const Form = styled.form`
   font-size: 1.5rem;
   line-height: 1.5;
   font-weight: 600;
-  label {
+  label,
+  a {
     display: block;
     margin-bottom: 1rem;
   }
@@ -47,6 +48,7 @@ const Form = styled.form`
     font-size: 2rem;
     font-weight: 600;
     padding: 0.5rem 1.2rem;
+    margin-bottom: 1rem;
   }
   input[type='radio'],
   input[type='checkbox'] {
@@ -73,6 +75,9 @@ const Form = styled.form`
     &[aria-busy='true']::before {
       background-size: 50% auto;
       animation: ${loading} 0.5s linear infinite;
+    }
+    h2 {
+      font-family: ${props => props.theme.font};
     }
   }
 `;
