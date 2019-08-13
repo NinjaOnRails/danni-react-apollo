@@ -59,17 +59,17 @@ class Videos extends Component {
                     titleVi,
                   } = video;
                   return (
-                    <div key={video.id}>
+                    <div key={id}>
                       <Link
                         href={{
                           pathname: '/watch',
-                          query: { id: video.id },
+                          query: { id },
                         }}
                       >
                         <a>
                           <img
                             src={originThumbnailUrl || originThumbnailUrlSd}
-                            alt={video.titleVi}
+                            alt={titleVi}
                           />
                         </a>
                       </Link>

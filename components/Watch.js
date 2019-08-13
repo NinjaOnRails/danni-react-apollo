@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import Head from 'next/head';
-import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
@@ -108,17 +107,9 @@ class Watch extends Component {
     playedFilePlayer: 0,
   };
 
-  static propTypes = {
-    router: PropTypes.object.isRequired,
-  };
-
   componentDidUpdate(prevProps) {
-    const {
-      router: {
-        query: { id },
-      },
-    } = this.props;
-    if (id !== prevProps.router.query.id && isMobile)
+    const { id } = this.props;
+    if (id !== prevProps.id && isMobile)
       this.setState({ playingFilePlayer: false });
   }
 
@@ -142,11 +133,7 @@ class Watch extends Component {
   };
 
   render() {
-    const {
-      router: {
-        query: { id },
-      },
-    } = this.props;
+    const { id } = this.props;
     const { playingFilePlayer } = this.state;
     return (
       <Query
@@ -187,7 +174,7 @@ class Watch extends Component {
                 <meta property="og:title" content={titleVi} />
                 <meta
                   property="og:image"
-                  content={originThumbnailUrlSd || originThumbnailUrl}
+                  content={originThumbnailUrl || originThumbnailUrlSd}
                 />
                 <meta property="og:locale" content="vi_VN" />
                 <meta property="og:description" content={descriptionVi} />
@@ -286,5 +273,9 @@ class Watch extends Component {
   }
 }
 
-export default withRouter(Watch);
+Watch.propTypes = {
+  id: PropTypes.string.isRequired,
+};
+
+export default Watch;
 export { VIDEO_QUERY };
