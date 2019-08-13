@@ -11,20 +11,28 @@ const Nav = () => (
       return (
         <NavStyles data-test="nav">
           <Link href="/">
-            <a>Trang Chủ</a>
+            <a>
+              <span role="img" aria-label="home">
+                🏠
+              </span>
+            </a>
           </Link>
           <Link href="/new">
-            <a>Thêm Video</a>
+            <a>THÊM VIDEO</a>
           </Link>
           {/* <Link href="/about">
       <a>Info</a>
     </Link> */}
           {currentUser && (
             <>
-              <Link href="/currentUser">
-                <a>Tài Khoản</a>
-              </Link>
               <Signout />
+              {/* <Link href="/currentUser">
+                <a>
+                  <span role="img" aria-label="account">
+                    🤷
+                  </span>
+                </a>
+              </Link> */}
             </>
           )}
           {!currentUser && (
