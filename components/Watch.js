@@ -187,7 +187,7 @@ class Watch extends Component {
                 <meta property="og:title" content={titleVi} />
                 <meta
                   property="og:image"
-                  content={originThumbnailUrl || originThumbnailUrlSd}
+                  content={originThumbnailUrlSd || originThumbnailUrl}
                 />
                 <meta property="og:locale" content="vi_VN" />
                 <meta property="og:description" content={descriptionVi} />

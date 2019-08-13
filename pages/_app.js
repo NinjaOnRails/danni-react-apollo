@@ -6,18 +6,8 @@ import withApollo from '../lib/withApolloClient';
 import Page from '../components/Page';
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-    pageProps.query = ctx.query;
-    return { pageProps };
-  }
-
   render() {
-    const { Component, apollo, pageProps } = this.props;
+    const { Component, pageProps, apollo } = this.props;
 
     return (
       <Container>
@@ -30,21 +20,5 @@ class MyApp extends App {
     );
   }
 }
-
-// class MyApp extends App {
-//   render() {
-//     const { Component, pageProps, apolloClient } = this.props;
-
-//     return (
-//       <Container>
-//         <ApolloProvider client={apolloClient}>
-//           <Page>
-//             <Component {...pageProps} />
-//           </Page>
-//         </ApolloProvider>
-//       </Container>
-//     );
-//   }
-// }
 
 export default withApollo(MyApp);
