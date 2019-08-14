@@ -7,3 +7,4 @@ layout.md
 *.env
 config/
 now.json
+bundles/

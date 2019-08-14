@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Icon } from 'semantic-ui-react';
 // import { Mutation } from 'react-apollo';
 import NavStyles from './styles/NavStyles';
 import User from './User';
@@ -12,9 +13,7 @@ const Nav = () => (
         <NavStyles data-test="nav">
           <Link href="/">
             <a>
-              <span role="img" aria-label="home">
-                🏠
-              </span>
+              <Icon name="home" size="large" />
             </a>
           </Link>
           <Link href="/new">

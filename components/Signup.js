@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
+import generateName from 'sillyname';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
@@ -34,6 +35,10 @@ class Signup extends Component {
     password: '',
     displayName: '',
   };
+
+  componentDidMount() {
+    this.setState({ displayName: generateName() });
+  }
 
   saveToState = e => {
     this.setState({ [e.target.name]: e.target.value });
