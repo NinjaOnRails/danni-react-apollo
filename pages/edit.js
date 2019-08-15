@@ -1,9 +1,5 @@
 import EditVideo from '../components/EditVideo';
 
-const Edit = () => (
-  <div>
-    <EditVideo />
-  </div>
-);
+const Edit = () => <EditVideo />;
 
 export default Edit;

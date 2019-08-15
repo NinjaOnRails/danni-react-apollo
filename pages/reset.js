@@ -1,9 +1,5 @@
 import Reset from '../components/Reset';
 
-const ResetPage = props => (
-  <div>
-    <Reset />
-  </div>
-);
+const ResetPage = () => <Reset />;
 
 export default ResetPage;

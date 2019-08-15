@@ -19,17 +19,17 @@ const Nav = () => (
           <Link href="/new">
             <a>THÊM VIDEO</a>
           </Link>
-          {/* <Link href="/about">
-      <a>Info</a>
-    </Link> */}
+          <Link href="/about">
+            <a>About</a>
+          </Link>
           {currentUser && (
             <>
               <Signout />
               {/* <Link href="/currentUser">
                 <a>
-                  <span role="img" aria-label="account">
-                    🤷
-                  </span>
+                <span role="img" aria-label="account">
+                🤷
+                </span>
                 </a>
               </Link> */}
             </>

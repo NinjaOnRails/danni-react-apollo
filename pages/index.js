@@ -1,9 +1,5 @@
 import Videos from '../components/Videos';
 
-const Home = () => (
-  <div>
-    <Videos />
-  </div>
-);
+const Home = () => <Videos />;
 
 export default Home;
