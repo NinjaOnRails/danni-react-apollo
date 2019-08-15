@@ -10,10 +10,9 @@ export class About extends Component {
         <Header as="h2">WHAT WE DO</Header>
         <p>
           Our community researches, translates and dubs relevant online videos
-          into other languages. We curate video content which we believe to
-          contain elements of innovation, inspiration, education, personal and
-          professional growth, smart entertainment, and insights about issues
-          that matter in multiple languages.
+          into other languages. We focus on video content which we believe to
+          contain elements of education, inspiration, personal and professional
+          growth, smart entertainment, and insights about issues that matter.
         </p>
         <Header as="h2">CALL FOR ACTION</Header>
         <p>
@@ -41,6 +40,7 @@ export class About extends Component {
           feedback, write about us Mention us in your videos, blogs or posts.
           Join the team!
         </p>
+        <p>Contact: info.dannitv@gmail.com, (+420) 774897789</p>
       </Container>
     );
   }

@@ -6,8 +6,6 @@ const CURRENT_USER_QUERY = gql`
   query {
     currentUser {
       id
-      email
-      name
       displayName
       permissions
     }

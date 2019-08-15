@@ -2,10 +2,10 @@ import React from 'react';
 import { Button, Comment, Form } from 'semantic-ui-react';
 
 const CommentList = () => (
-  <Comment.Group threaded size="massive">
+  <Comment.Group threaded size="large">
     <Form reply>
       <Form.TextArea />
-      <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+      <Button content="Add Comment" primary />
     </Form>
 
     <Comment>
@@ -35,7 +35,7 @@ const CommentList = () => (
         </Comment.Actions>
       </Comment.Content>
 
-      <Comment.Group size="massive">
+      <Comment.Group size="large">
         <Comment>
           <Comment.Content>
             <Comment.Author as="a">Jenny Hess</Comment.Author>
