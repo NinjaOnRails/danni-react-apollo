@@ -13,29 +13,32 @@ import Error from './ErrorMessage';
 import YoutubeViews from './YoutubeViews';
 
 const VIDEO_QUERY = gql`
-  query VIDEO_QUERY($id: ID!) {
+  query VIDEO_QUERY($id: ID!, $audioId: ID) {
     video(where: { id: $id }) {
       id
       originId
-      titleVi
-      descriptionVi
       originPlatform
       originLanguage
       originTitle
+      originDescription
       originAuthor
       originThumbnailUrl
       originThumbnailUrlSd
-      defaultVolume
-      startAt
-      addedBy
-      audio {
+      addedBy {
+        displayName
+      }
+      language
+      audio(where: { id: $audioId }) {
         id
         source
-        author
+        author {
+          displayName
+        }
         language
-      }
-      tags {
-        text
+        title
+        description
+        defaultVolume
+        startAt
       }
     }
   }
@@ -114,6 +117,7 @@ class Watch extends Component {
   }
 
   // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
+  // to allow for synchronised seeking
   onProgressYoutube = ({ playedSeconds }) => {
     const { playedYoutube, playedFilePlayer } = this.state;
     if (
@@ -133,13 +137,15 @@ class Watch extends Component {
   };
 
   render() {
-    const { id } = this.props;
+    const { id, audioId } = this.props;
     const { playingFilePlayer } = this.state;
+    const audioQueryParam = audioId ? `&audioId=${audioId}` : '';
     return (
       <Query
         query={VIDEO_QUERY}
         variables={{
           id,
+          audioId,
         }}
       >
         {({ error, loading, data }) => {
@@ -149,35 +155,40 @@ class Watch extends Component {
           const {
             video: {
               originTitle,
+              originDescription,
               originPlatform,
               originLanguage,
-              titleVi,
-              descriptionVi,
               audio,
               originAuthor,
-              defaultVolume,
               originId,
               originThumbnailUrlSd,
               originThumbnailUrl,
-              addedBy,
+              addedBy: { displayName },
+              language,
             },
           } = data;
 
           return (
             <>
               <Head>
-                <title>Danni | {titleVi}</title>
+                <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
                 <meta
                   property="og:url"
-                  content={`http://danni.tv/watch?id=${id}`}
+                  content={`http://danni.tv/watch?id=${id}${audioQueryParam}`}
                 />
-                <meta property="og:title" content={titleVi} />
+                <meta
+                  property="og:title"
+                  content={audio[0] ? audio[0].title : originTitle}
+                />
                 <meta
                   property="og:image"
                   content={originThumbnailUrl || originThumbnailUrlSd}
                 />
-                <meta property="og:locale" content="vi_VN" />
-                <meta property="og:description" content={descriptionVi} />
+                <meta property="og:locale" content={originLanguage || ''} />
+                <meta
+                  property="og:description"
+                  content={audio[0] ? audio[0].description : originDescription}
+                />
                 <meta property="fb:app_id" content="444940199652956" />
               </Head>
               <div>
@@ -193,26 +204,44 @@ class Watch extends Component {
                     url={`https://www.youtube.com/embed/${originId}`}
                     width="100%"
                     height="100%"
-                    muted={isMobile && audio.length !== 0}
-                    volume={defaultVolume / 100}
+                    muted={isMobile && audio[0]}
+                    volume={audio[0] ? audio[0].defaultVolume / 100 : 1}
                     playing={playingFilePlayer}
                     controls
                     onPause={() => this.setState({ playingFilePlayer: false })}
                     onPlay={() => this.setState({ playingFilePlayer: true })}
-                    onProgress={this.onProgressYoutube}
+                    onProgress={e => audio[0] && this.onProgressYoutube(e)}
+                    onStart={() =>
+                      // Send stats to Mixpanel on play start
+                      mixpanel.track('Audio Play', {
+                        'Audio ID': audio[0] ? audio[0].id : 'no-audio',
+                        'Audio Language': audio[0]
+                          ? audio[0].language
+                          : language,
+                        'Audio Author': audio[0]
+                          ? audio[0].displayName
+                          : 'no-audio',
+                        'Video ID': id,
+                        'Video Title': originTitle,
+                        'Video Platform': originPlatform,
+                        'Video Language': originLanguage,
+                        'Video Author': originAuthor,
+                        'Video AddedBy': displayName,
+                      })
+                    }
                   />
                 </YoutubeStyle>
                 <VideoInfoStyle>
                   <div className="basic-info">
                     <Header>
-                      <h1>{titleVi}</h1>
+                      <h1>{audio[0] ? audio[0].title : originTitle}</h1>
                     </Header>
                     <div className="views-social">
                       <YoutubeViews originId={originId} />
                       <div>
                         <FacebookShareButton
                           className="fb-share-button"
-                          url={`http://danni.tv/watch?id=${id}`}
+                          url={`http://danni.tv/watch?id=${id}&${audioQueryParam}`}
                         >
                           <FacebookIcon size={32} round />
                         </FacebookShareButton>
@@ -223,17 +252,24 @@ class Watch extends Component {
                     <Header>
                       <h2>Kênh: {originAuthor}</h2>
                     </Header>
-                    {audio.length > 0 && audio[audio.length - 1].author && (
+                    {(audio[0] && (
                       <Header>
-                        <h3>Người đọc: {audio[audio.length - 1].author}</h3>
+                        <h3>Người đọc: {audio[0].author.displayName}</h3>
+                      </Header>
+                    )) || (
+                      <Header>
+                        <h3>Người đọc: {displayName}</h3>
                       </Header>
                     )}
-                    {descriptionVi && (
-                      <div className="description">{descriptionVi}</div>
-                    )}
+                    {(audio[0] && audio[0].description && (
+                      <div className="description">{audio[0].description}</div>
+                    )) ||
+                      (originDescription && (
+                        <div className="description">{originDescription}</div>
+                      ))}
                   </Segment>
                 </VideoInfoStyle>
-                {audio.length !== 0 && (
+                {audio[0] && (
                   <FilePlayer
                     config={{
                       file: {
@@ -244,24 +280,11 @@ class Watch extends Component {
                       this.setState({ playedFilePlayer: playedSeconds })
                     }
                     ref={this.refFilePlayer}
-                    url={audio[audio.length - 1].source}
+                    url={audio[0].source}
                     playing={playingFilePlayer}
                     onPause={() => this.setState({ playingFilePlayer: false })}
                     height="100%"
                     width="100%"
-                    onStart={() =>
-                      mixpanel.track('Audio Play', {
-                        'Audio ID': audio[audio.length - 1].id,
-                        'Audio Language': audio[audio.length - 1].language,
-                        'Audio Author': audio[audio.length - 1].author,
-                        'Video ID': id,
-                        'Video Title': originTitle,
-                        'Video Platform': originPlatform,
-                        'Video Language': originLanguage,
-                        'Video Author': originAuthor,
-                        'Video AddedBy': addedBy,
-                      })
-                    }
                   />
                 )}
               </div>
@@ -275,6 +298,11 @@ class Watch extends Component {
 
 Watch.propTypes = {
   id: PropTypes.string.isRequired,
+  audioId: PropTypes.string,
+};
+
+Watch.defaultProps = {
+  audioId: '',
 };
 
 export default Watch;

@@ -7,12 +7,16 @@ import Link from 'next/link';
 import Error from './ErrorMessage';
 
 const ALL_VIDEOS_QUERY = gql`
-  query ALL_ITEMS_QUERY {
+  query ALL_VIDEOS_QUERY {
     videos(orderBy: createdAt_DESC) {
       id
-      titleVi
       originThumbnailUrl
       originThumbnailUrlSd
+      originTitle
+      audio {
+        id
+        title
+      }
     }
   }
 `;
@@ -51,41 +55,73 @@ class Videos extends Component {
             if (error) return <Error>Error: {error.message}</Error>;
             return (
               <VideosListStyled>
-                {data.videos.map(video => {
-                  const {
+                {data.videos.map(
+                  ({
                     originThumbnailUrl,
                     originThumbnailUrlSd,
+                    originTitle,
                     id,
-                    titleVi,
-                  } = video;
-                  return (
-                    <div key={id}>
-                      <Link
-                        href={{
-                          pathname: '/watch',
-                          query: { id },
-                        }}
-                      >
-                        <a>
-                          <img
-                            src={originThumbnailUrl || originThumbnailUrlSd}
-                            alt={titleVi}
-                          />
-                        </a>
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: '/watch',
-                          query: { id },
-                        }}
-                      >
-                        <a>
-                          <h2>{titleVi}</h2>
-                        </a>
-                      </Link>
-                    </div>
-                  );
-                })}
+                    audio,
+                  }) => {
+                    if (audio.length === 0) {
+                      return (
+                        <div key={id}>
+                          <Link
+                            href={{
+                              pathname: '/watch',
+                              query: { id },
+                            }}
+                          >
+                            <a>
+                              <img
+                                src={originThumbnailUrl || originThumbnailUrlSd}
+                                alt={originTitle}
+                              />
+                            </a>
+                          </Link>
+                          <Link
+                            href={{
+                              pathname: '/watch',
+                              query: { id },
+                            }}
+                          >
+                            <a>
+                              <h2>{originTitle}</h2>
+                            </a>
+                          </Link>
+                        </div>
+                      );
+                    }
+
+                    return audio.map(({ title, id: audioId }) => (
+                      <div key={id}>
+                        <Link
+                          href={{
+                            pathname: '/watch',
+                            query: { id, audioId },
+                          }}
+                        >
+                          <a>
+                            <img
+                              src={originThumbnailUrl || originThumbnailUrlSd}
+                              alt={title}
+                            />
+                          </a>
+                        </Link>
+                        <Link
+                          href={{
+                            pathname: '/watch',
+                            query: { id, audioId },
+                          }}
+                        >
+                          <a>
+                            <h2>{title}</h2>
+                          </a>
+                        </Link>
+                      </div>
+                    ));
+                  }
+                )}
               </VideosListStyled>
             );
           }}

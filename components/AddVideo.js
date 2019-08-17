@@ -6,22 +6,16 @@ import { Dropdown } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
+import CloudinaryUpload from './CloudinaryUpload';
 import { ALL_VIDEOS_QUERY } from './Videos';
 import youtube from '../lib/youtube';
-
-const youtubeIdLength = 11;
-
-const countryOptions = [
-  { key: 'vn', value: 'vn', flag: 'vn', text: 'Vietnamese' },
-  { key: 'gb', value: 'gb', flag: 'gb', text: 'English' },
-  { key: 'cz', value: 'cz', flag: 'cz', text: 'Czech' },
-];
-
-const languageOptions = {
-  vn: 'VIETNAMESE',
-  gb: 'ENGLISH',
-  cz: 'CZECH',
-};
+import {
+  flagOptions,
+  languageOptions,
+  defaultLanguage,
+} from '../lib/supportedLanguages';
+import isYouTubeSource, { youtubeIdLength } from '../lib/isYouTubeSource';
+import uploadToCloudinary from '../lib/uploadToCloudinary';
 
 const DropdownForm = styled.div`
   .semantic-dropdown.ui.fluid.selection.dropdown {
@@ -41,28 +35,10 @@ const DropdownForm = styled.div`
 `;
 
 const CREATE_VIDEO_MUTATION = gql`
-  mutation CREATE_VIDEO_MUTATION(
-    $source: String!
-    $titleVi: String!
-    $descriptionVi: String
-    $addedBy: String
-    $tags: String
-    $defaultVolume: Int
-  ) {
-    createVideo(
-      data: {
-        source: $source
-        titleVi: $titleVi
-        descriptionVi: $descriptionVi
-        addedBy: $addedBy
-        tags: $tags
-        defaultVolume: $defaultVolume
-      }
-    ) {
+  mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
+    createVideo(source: $source, language: $language) {
       id
       originId
-      titleVi
-      startAt
     }
   }
 `;
@@ -70,24 +46,28 @@ const CREATE_VIDEO_MUTATION = gql`
 const CREATE_AUDIO_MUTATION = gql`
   mutation CREATE_AUDIO_MUTATION(
     $source: String!
-    $author: String
-    $video: ID
-    $language: Language
+    $language: Language!
+    $title: String!
+    $description: String
+    $tags: String
+    $defaultVolume: Int
+    $video: ID!
   ) {
     createAudio(
       data: {
         source: $source
-        author: $author
-        video: $video
         language: $language
+        title: $title
+        description: $description
+        tags: $tags
+        defaultVolume: $defaultVolume
+        video: $video
       }
     ) {
       id
       source
       language
-      video {
-        id
-      }
+      title
     }
   }
 `;
@@ -95,26 +75,31 @@ const CREATE_AUDIO_MUTATION = gql`
 class AddVideo extends Component {
   state = {
     source: '',
-    titleVi: '',
-    descriptionVi: '',
-    isDescriptionVi: true,
+    title: '',
+    description: '',
+    isDescription: true,
     audioSource: '',
-    audioAuthor: '',
-    audioLanguage: '',
     tags: '',
     isAudioSource: true,
     isTags: true,
     defaultVolume: 20,
-    isDefaultVolume: true,
+    isDefaultVolume: false,
     youtubeIdStatus: '',
     image: '',
     channelTitle: '',
     originTitle: '',
     originTags: [],
+    youtubeId: '',
+    secureUrl: '',
+    showPlayer: false,
+    language: languageOptions[defaultLanguage],
   };
 
   handleChange = e => {
     const { name, type, value, checked } = e.target;
+    const { secureUrl } = this.state;
+
+    // Controlled logic
     const val =
       type === 'checkbox'
         ? checked
@@ -124,40 +109,34 @@ class AddVideo extends Component {
         ? parseInt(value, 10)
         : value;
 
-    if (name === 'source' && val.length >= 11) this.onSourceFill(val);
+    // Check video source input to refetch preview if necessary
+    if (name === 'source' && val.length >= 11) this.onSourceFill(val.trim());
+
+    // Check audio source input to show/hide audio player
+    if (name === 'audioSource' && val === secureUrl) {
+      this.setState({ showPlayer: true });
+    }
+    if (name === 'audioSource' && val !== secureUrl) {
+      this.setState({ showPlayer: false });
+    }
+
+    // Controlled set state
     this.setState({ [name]: val });
   };
 
   handleDropdown = (e, { value }) => {
-    this.setState({ audioLanguage: languageOptions[value] });
+    this.setState({ language: languageOptions[value] });
   };
 
   onSourceFill = async source => {
-    // Check if source is YouTube and extract ID from it
-    const youtubeId = source.trim();
-    const sourceYouTube = [
-      { domain: 'https://youtube.com/watch?v=', length: 28 },
-      { domain: 'http://youtube.com/watch?v=', length: 27 },
-      { domain: 'https://www.youtube.com/watch?v=', length: 32 },
-      { domain: 'http://www.youtube.com/watch?v=', length: 31 },
-      { domain: 'youtube.com/watch?v=', length: 20 },
-      { domain: 'www.youtube.com/watch?v=', length: 24 },
-      { domain: 'https://youtu.be/', length: 17 },
-      { domain: 'https://www.youtu.be/', length: 21 },
-      { domain: 'http://youtu.be/', length: 16 },
-      { domain: 'http://www.youtu.be/', length: 20 },
-      { domain: 'youtu.be/', length: 9 },
-      { domain: 'www.youtu.be/', length: 13 },
-    ];
-    const isYouTube = sourceYouTube.find(value =>
-      youtubeId.startsWith(value.domain)
-    );
+    // Check if source is YouTube, extract ID from it and fetch data
+    const isYouTube = isYouTubeSource(source);
     let originId;
     if (isYouTube) {
       const { length } = isYouTube;
-      originId = youtubeId.slice(length, length + youtubeIdLength);
-    } else if (youtubeId.length === youtubeIdLength) {
-      originId = youtubeId;
+      originId = source.slice(length, length + youtubeIdLength);
+    } else if (source.length === youtubeIdLength) {
+      originId = source;
     } else {
       this.setState({
         youtubeIdStatus: 'Invalid source',
@@ -172,7 +151,7 @@ class AddVideo extends Component {
   };
 
   fetchYoutube = async id => {
-    // Fetch info from Youtube
+    // Fetch data from Youtube for info preview
     try {
       const res = await youtube.get('/videos', {
         params: {
@@ -192,6 +171,7 @@ class AddVideo extends Component {
         throw new Error('Video not found on Youtube');
       }
 
+      // Destructure response
       const {
         thumbnails: {
           medium: { url },
@@ -203,6 +183,7 @@ class AddVideo extends Component {
 
       this.setState({
         youtubeIdStatus: '',
+        youtubeId: id,
         image: url,
         originTitle: title,
         channelTitle,
@@ -218,16 +199,32 @@ class AddVideo extends Component {
     }
   };
 
+  uploadFile = async (cloudinaryAuth, id, e) => {
+    //
+    const { secure_url } = await uploadToCloudinary(
+      e.target.files,
+      this.state.youtubeId,
+      id,
+      this.state.language,
+      cloudinaryAuth
+    );
+
+    this.setState({
+      audioSource: secure_url,
+      secureUrl: secure_url,
+      showPlayer: true,
+    });
+  };
+
   render() {
     const {
       source,
       audioSource,
-      audioAuthor,
-      audioLanguage,
+      language,
       tags,
-      titleVi,
-      descriptionVi,
-      isDescriptionVi,
+      title,
+      description,
+      isDescription,
       isAudioSource,
       isTags,
       defaultVolume,
@@ -237,6 +234,9 @@ class AddVideo extends Component {
       channelTitle,
       youtubeIdStatus,
       originTags,
+      youtubeId,
+      showPlayer,
+      secureUrl,
     } = this.state;
     return (
       <Mutation
@@ -251,10 +251,7 @@ class AddVideo extends Component {
             mutation={CREATE_VIDEO_MUTATION}
             variables={{
               source,
-              titleVi,
-              descriptionVi,
-              tags,
-              defaultVolume: isDefaultVolume ? defaultVolume : undefined,
+              language: isAudioSource ? null : language,
             }}
             refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
           >
@@ -262,184 +259,207 @@ class AddVideo extends Component {
               createVideo,
               { loading: loadingCreateVideo, error: errorCreateVideo }
             ) => (
-              <Form
-                data-test="form"
-                onSubmit={async e => {
-                  // Stop form from submitting
-                  e.preventDefault();
+              <>
+                <Form
+                  data-test="form"
+                  onSubmit={async e => {
+                    // Stop form from submitting
+                    e.preventDefault();
 
-                  // Call createVideo mutation
-                  const {
-                    data: {
-                      createVideo: { id },
-                    },
-                  } = await createVideo();
-
-                  // Call createAudio mutation
-                  if (audioSource && isAudioSource) {
-                    await createAudio({
-                      variables: {
-                        source: audioSource,
-                        author: audioAuthor,
-                        video: id,
-                        language: audioLanguage,
+                    // Call createVideo mutation
+                    const {
+                      data: {
+                        createVideo: { id },
                       },
-                    });
-                  }
+                    } = await createVideo();
 
-                  // Redirect to newly created Video watch page
-                  Router.push({
-                    pathname: '/watch',
-                    query: { id },
-                  });
+                    // Call createAudio mutation
+                    if (audioSource && isAudioSource) {
+                      const {
+                        data: {
+                          createAudio: { id: audioId },
+                        },
+                      } = await createAudio({
+                        variables: {
+                          source: audioSource,
+                          language,
+                          title,
+                          description,
+                          tags,
+                          defaultVolume: isDefaultVolume
+                            ? defaultVolume
+                            : undefined,
+                          video: id,
+                        },
+                      });
+                      // Redirect to newly created Video watch page
+                      Router.push({
+                        pathname: '/watch',
+                        query: { id, audioId },
+                      });
 
-                  mixpanel.track('New Video', {
-                    'Audio Language': isAudioSource
-                      ? audioLanguage
-                      : 'no-audio',
-                  });
-                }}
-              >
-                <Error error={errorCreateAudio} />
-                <Error error={errorCreateVideo} />
-                <fieldset
-                  disabled={loadingCreateVideo || loadingCreateAudio}
-                  aria-busy={loadingCreateVideo}
+                      mixpanel.track('New Video', {
+                        'Audio Language': language,
+                      });
+                    } else {
+                      Router.push({
+                        pathname: '/watch',
+                        query: { id },
+                      });
+
+                      mixpanel.track('New Video', {
+                        'Audio Language': 'no-audio',
+                      });
+                    }
+                  }}
                 >
-                  <label htmlFor="source">
-                    Nguồn (Link hoặc YouTube ID):
-                    <input
-                      type="text"
-                      id="source"
-                      name="source"
-                      required
-                      placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
-                      value={source}
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
-                  {originTitle && <div>{originTitle}</div>}
-                  {channelTitle && <div>{channelTitle}</div>}
-                  {image && <img width="200" src={image} alt="thumbnail" />}
-                  <label htmlFor="titleVi">
-                    Tiêu đề:
-                    <input
-                      type="text"
-                      id="titleVi"
-                      name="titleVi"
-                      required
-                      value={titleVi}
-                      onChange={this.handleChange}
-                    />
-                  </label>
-                  <label htmlFor="descriptionVi">
-                    <input
-                      id="descriptionVi"
-                      name="isDescriptionVi"
-                      type="checkbox"
-                      checked={isDescriptionVi}
-                      onChange={this.handleChange}
-                    />
-                    Nội dung:
-                  </label>
-                  {isDescriptionVi && (
-                    <label htmlFor="descriptionVi">
+                  <Error error={errorCreateAudio} />
+                  <Error error={errorCreateVideo} />
+                  <fieldset
+                    disabled={loadingCreateVideo || loadingCreateAudio}
+                    aria-busy={loadingCreateVideo}
+                  >
+                    Ngôn ngữ:
+                    <DropdownForm>
+                      <Dropdown
+                        fluid
+                        selection
+                        options={flagOptions}
+                        onChange={this.handleDropdown}
+                        defaultValue={defaultLanguage}
+                        name="language"
+                        className="semantic-dropdown"
+                      />
+                    </DropdownForm>
+                    <label htmlFor="source">
+                      Nguồn (Link hoặc YouTube ID):
                       <input
                         type="text"
-                        name="descriptionVi"
-                        value={descriptionVi}
+                        id="source"
+                        name="source"
+                        required
+                        placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
+                        value={source}
                         onChange={this.handleChange}
                       />
                     </label>
-                  )}
-                  <label htmlFor="defaultVolume">
-                    <input
-                      id="defaultVolume"
-                      name="isDefaultVolume"
-                      type="checkbox"
-                      checked={isDefaultVolume}
-                      onChange={this.handleChange}
-                    />
-                    Âm lượng (%):
-                  </label>
-                  {isDefaultVolume && (
-                    <input
-                      type="number"
-                      name="defaultVolume"
-                      min="0"
-                      max="100"
-                      value={defaultVolume}
-                      onChange={this.handleChange}
-                    />
-                  )}
-                  <label htmlFor="tags">
-                    <input
-                      id="tags"
-                      name="isTags"
-                      type="checkbox"
-                      checked={isTags}
-                      onChange={this.handleChange}
-                    />
-                    Tags:
-                  </label>
-
-                  {isTags && (
-                    <>
-                      <div>{originTags.join(' ')}</div>
-                      <input
-                        type="text"
-                        name="tags"
-                        placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                        value={tags}
-                        onChange={this.handleChange}
-                      />
-                    </>
-                  )}
-                  <label htmlFor="audioSource">
-                    <input
-                      id="audioSource"
-                      name="isAudioSource"
-                      type="checkbox"
-                      checked={isAudioSource}
-                      onChange={this.handleChange}
-                    />
-                    Nguồn Audio:
-                  </label>
-                  {isAudioSource && (
-                    <>
-                      <input
-                        type="text"
-                        name="audioSource"
-                        placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
-                        value={audioSource}
-                        onChange={this.handleChange}
-                      />
-                      Người đọc:
-                      <input
-                        type="text"
-                        name="audioAuthor"
-                        placeholder="ví dụ 'Paní'"
-                        value={audioAuthor}
-                        onChange={this.handleChange}
-                      />
-                      Language:
-                      <DropdownForm>
-                        <Dropdown
-                          fluid
-                          selection
-                          options={countryOptions}
-                          onChange={this.handleDropdown}
-                          defaultValue="gb"
-                          name="audioLanguage"
-                          className="semantic-dropdown"
-                        />
-                      </DropdownForm>
-                    </>
-                  )}
-                  <button type="submit">Submit</button>
-                </fieldset>
-              </Form>
+                    {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
+                    {originTitle && <div>{originTitle}</div>}
+                    {channelTitle && <div>{channelTitle}</div>}
+                    {image && <img width="200" src={image} alt="thumbnail" />}
+                    {youtubeId && (
+                      <>
+                        <label htmlFor="audioSource">
+                          <input
+                            id="audioSource"
+                            name="isAudioSource"
+                            type="checkbox"
+                            checked={isAudioSource}
+                            onChange={this.handleChange}
+                          />
+                          Nguồn Audio:
+                        </label>
+                        {isAudioSource && (
+                          <>
+                            <CloudinaryUpload
+                              uploadFile={this.uploadFile}
+                              source={youtubeId}
+                              language={language}
+                            />
+                            <label htmlFor="audioSource">
+                              Đường link
+                              <input
+                                type="text"
+                                name="audioSource"
+                                placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
+                                value={audioSource}
+                                onChange={this.handleChange}
+                              />
+                              {audioSource && secureUrl && showPlayer && (
+                                <audio controls src={audioSource} />
+                              )}
+                            </label>
+                            <label htmlFor="title">
+                              Tiêu đề:
+                              <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                required
+                                value={title}
+                                onChange={this.handleChange}
+                              />
+                            </label>
+                            <label htmlFor="description">
+                              <input
+                                id="description"
+                                name="isDescription"
+                                type="checkbox"
+                                checked={isDescription}
+                                onChange={this.handleChange}
+                              />
+                              Nội dung:
+                            </label>
+                            {isDescription && (
+                              <label htmlFor="description">
+                                <input
+                                  type="text"
+                                  name="description"
+                                  value={description}
+                                  onChange={this.handleChange}
+                                />
+                              </label>
+                            )}
+                            <label htmlFor="tags">
+                              <input
+                                id="tags"
+                                name="isTags"
+                                type="checkbox"
+                                checked={isTags}
+                                onChange={this.handleChange}
+                              />
+                              Tags:
+                            </label>
+                            {isTags && (
+                              <>
+                                <div>{originTags.join(' ')}</div>
+                                <input
+                                  type="text"
+                                  name="tags"
+                                  placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                                  value={tags}
+                                  onChange={this.handleChange}
+                                />
+                              </>
+                            )}
+                            <label htmlFor="defaultVolume">
+                              <input
+                                id="defaultVolume"
+                                name="isDefaultVolume"
+                                type="checkbox"
+                                checked={isDefaultVolume}
+                                onChange={this.handleChange}
+                              />
+                              Âm lượng mặc định cho video gốc (%):
+                            </label>
+                            {isDefaultVolume && (
+                              <input
+                                type="number"
+                                name="defaultVolume"
+                                min="0"
+                                max="100"
+                                value={defaultVolume}
+                                onChange={this.handleChange}
+                              />
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                    <button type="submit">Submit</button>
+                  </fieldset>
+                </Form>
+              </>
             )}
           </Mutation>
         )}
@@ -449,4 +469,4 @@ class AddVideo extends Component {
 }
 
 export default AddVideo;
-export { CREATE_AUDIO_MUTATION };
+export { CREATE_AUDIO_MUTATION, CREATE_VIDEO_MUTATION };

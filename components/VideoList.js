@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { withRouter } from 'next/router';
 import { Query } from 'react-apollo';
 import { List, Image, Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { ALL_VIDEOS_QUERY } from './Videos';
 import Error from './ErrorMessage';
@@ -32,11 +31,7 @@ class VideoList extends Component {
   }
 
   render() {
-    const {
-      router: {
-        query: { id },
-      },
-    } = this.props;
+    const { id, audioId } = this.props;
     return (
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
@@ -44,9 +39,9 @@ class VideoList extends Component {
           if (error) return <Error>Error: {error.message}</Error>;
           return (
             <List divided relaxed>
-              {data.videos.map(
-                video =>
-                  video.id !== id && (
+              {data.videos.map(video => {
+                if (video.audio.length === 0 && video.id !== id) {
+                  return (
                     <List.Item key={video.id}>
                       <Link
                         href={{
@@ -61,19 +56,51 @@ class VideoList extends Component {
                                 video.originThumbnailUrl ||
                                 video.originThumbnailUrlSd
                               }
-                              alt={video.titleVi}
+                              alt={video.originTitle}
                             />
                             <List.Content>
                               <ListHeaderStyled>
-                                {video.titleVi}
+                                {video.originTitle}
                               </ListHeaderStyled>
                             </List.Content>
                           </VideoItem>
                         </a>
                       </Link>
                     </List.Item>
-                  )
-              )}
+                  );
+                }
+
+                return video.audio.map(
+                  audio =>
+                    audioId !== audio.id && (
+                      <List.Item key={id}>
+                        <Link
+                          href={{
+                            pathname: '/watch',
+                            query: { id: video.id, audioId: audio.id },
+                          }}
+                        >
+                          <a>
+                            <VideoItem>
+                              <Image
+                                src={
+                                  video.originThumbnailUrl ||
+                                  video.originThumbnailUrlSd
+                                }
+                                alt={audio.title}
+                              />
+                              <List.Content>
+                                <ListHeaderStyled>
+                                  {audio.title}
+                                </ListHeaderStyled>
+                              </List.Content>
+                            </VideoItem>
+                          </a>
+                        </Link>
+                      </List.Item>
+                    )
+                );
+              })}
             </List>
           );
         }}
@@ -83,7 +110,12 @@ class VideoList extends Component {
 }
 
 VideoList.propTypes = {
-  router: propTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  audioId: PropTypes.string,
 };
 
-export default withRouter(VideoList);
+VideoList.defaultProps = {
+  audioId: '',
+};
+
+export default VideoList;

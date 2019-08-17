@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import youtube from '../lib/youtube';
 
 export default class YoutubeViews extends Component {
@@ -8,6 +9,11 @@ export default class YoutubeViews extends Component {
 
   componentDidMount() {
     this.fetchYoutubeViews(this.props.originId);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.originId !== this.props.originId)
+      this.fetchYoutubeViews(this.props.originId);
   }
 
   fetchYoutubeViews = async id => {
@@ -30,3 +36,7 @@ export default class YoutubeViews extends Component {
     return <div>{this.state.youtubeViews} lượt xem</div>;
   }
 }
+
+YoutubeViews.propTypes = {
+  originId: PropTypes.string.isRequired,
+};
