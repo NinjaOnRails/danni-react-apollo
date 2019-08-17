@@ -5,9 +5,12 @@ import styled from 'styled-components';
 import { CURRENT_USER_QUERY } from './User';
 import Signin from './Signin';
 
-const StyledMessage = styled(Message.Header)`
+const StyledMessage = styled.div`
   max-width: ${props => props.theme.maxWidth};
   margin: 0 auto;
+`;
+
+const StyledHeader = styled(Message.Header)`
   &&& {
     font-family: ${props => props.theme.font};
   }
@@ -20,9 +23,11 @@ const PleaseSignIn = props => (
       if (!data.currentUser) {
         return (
           <>
-            <Message warning>
-              <StyledMessage>Đăng Nhập Để Tiếp Tục</StyledMessage>
-            </Message>
+            <StyledMessage>
+              <Message warning>
+                <StyledHeader>Đăng Nhập Để Tiếp Tục</StyledHeader>
+              </Message>
+            </StyledMessage>
             <Signin />
           </>
         );

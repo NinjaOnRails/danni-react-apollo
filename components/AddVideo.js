@@ -80,7 +80,7 @@ class AddVideo extends Component {
     isDescription: true,
     audioSource: '',
     tags: '',
-    isAudioSource: true,
+    isAudioSource: false,
     isTags: true,
     defaultVolume: 20,
     isDefaultVolume: false,
@@ -319,7 +319,7 @@ class AddVideo extends Component {
                     disabled={loadingCreateVideo || loadingCreateAudio}
                     aria-busy={loadingCreateVideo}
                   >
-                    Ngôn ngữ:
+                    Ngôn ngữ đọc:
                     <DropdownForm>
                       <Dropdown
                         fluid
@@ -332,7 +332,7 @@ class AddVideo extends Component {
                       />
                     </DropdownForm>
                     <label htmlFor="source">
-                      Nguồn (Link hoặc YouTube ID):
+                      Nguồn Video gốc (Link hoặc YouTube ID):
                       <input
                         type="text"
                         id="source"
@@ -357,7 +357,7 @@ class AddVideo extends Component {
                             checked={isAudioSource}
                             onChange={this.handleChange}
                           />
-                          Nguồn Audio:
+                          Nguồn Audio riêng:
                         </label>
                         {isAudioSource && (
                           <>
