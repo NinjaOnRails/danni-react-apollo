@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router from 'next/router';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Form from './styles/Form';
@@ -23,7 +23,7 @@ const DropdownForm = styled.div`
     padding: 0.5rem;
     font-size: 1rem;
     border: 1px solid black;
-    margin-bottom: 5px;
+    margin-bottom: 1rem;
     &:focus {
       outline: 0;
       border-color: ${props => props.theme.red};
@@ -95,11 +95,11 @@ class AddVideo extends Component {
     uploadProgress: 0,
     uploadError: false,
     deleteToken: '',
+    fetchingYoutube: false,
   };
 
   handleChange = e => {
     const { name, type, value, checked } = e.target;
-    const { secureUrl } = this.state;
 
     // Controlled logic
     const val =
@@ -153,6 +153,7 @@ class AddVideo extends Component {
   fetchYoutube = async id => {
     // Fetch data from Youtube for info preview
     try {
+      this.setState({ fetchingYoutube: true });
       const res = await youtube.get('/videos', {
         params: {
           id,
@@ -167,6 +168,7 @@ class AddVideo extends Component {
           image: '',
           originTitle: '',
           channelTitle: '',
+          fetchingYoutube: false,
         });
         throw new Error('Video not found on Youtube');
       }
@@ -188,6 +190,7 @@ class AddVideo extends Component {
         originTitle: title,
         channelTitle,
         originTags,
+        fetchingYoutube: false,
       });
     } catch (err) {
       this.setState({
@@ -195,6 +198,7 @@ class AddVideo extends Component {
         image: '',
         originTitle: '',
         channelTitle: '',
+        fetchingYoutube: false,
       });
     }
   };
@@ -206,7 +210,6 @@ class AddVideo extends Component {
     this.setState({
       uploadProgress: 0,
       deleteToken: '',
-      audioSource: '',
       secureUrl: '',
     });
     const { youtubeId, language } = this.state;
@@ -242,7 +245,6 @@ class AddVideo extends Component {
         },
       });
       this.setState({
-        audioSource: secure_url,
         secureUrl: secure_url,
         deleteToken: delete_token,
       });
@@ -268,7 +270,6 @@ class AddVideo extends Component {
           this.setState({
             uploadProgress: 0,
             deleteToken: '',
-            audioSource: '',
             secureUrl: '',
           });
         }
@@ -298,6 +299,7 @@ class AddVideo extends Component {
       uploadProgress,
       uploadError,
       deleteToken,
+      fetchingYoutube,
     } = this.state;
     return (
       <Mutation
@@ -335,14 +337,17 @@ class AddVideo extends Component {
                     } = await createVideo();
 
                     // Call createAudio mutation
-                    if (audioSource && isAudioSource) {
+                    if ((audioSource || secureUrl) && isAudioSource) {
+                      if (!secureUrl && deleteToken) {
+                        this.deleteFile();
+                      }
                       const {
                         data: {
                           createAudio: { id: audioId },
                         },
                       } = await createAudio({
                         variables: {
-                          source: audioSource,
+                          source: secureUrl || audioSource,
                           language,
                           title,
                           description,
@@ -405,15 +410,16 @@ class AddVideo extends Component {
                         onChange={this.handleChange}
                       />
                     </label>
+                    {fetchingYoutube && <Loader inline="centered" active />}
                     {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
                     {originTitle && <div>{originTitle}</div>}
                     {channelTitle && <div>{channelTitle}</div>}
                     {image && <img width="200" src={image} alt="thumbnail" />}
                     {youtubeId && (
                       <>
-                        <label htmlFor="audioSource">
+                        <label htmlFor="isAudioSource">
                           <input
-                            id="audioSource"
+                            id="isAudioSource"
                             name="isAudioSource"
                             type="checkbox"
                             checked={isAudioSource}
@@ -433,16 +439,18 @@ class AddVideo extends Component {
                               deleteFile={this.deleteFile}
                               secureUrl={secureUrl}
                             />
-                            <label htmlFor="audioSource">
-                              Đường link
-                              <input
-                                type="text"
-                                name="audioSource"
-                                placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
-                                value={audioSource}
-                                onChange={this.handleChange}
-                              />
-                            </label>
+                            {!secureUrl && (
+                              <label htmlFor="audioSource">
+                                Đường link
+                                <input
+                                  type="text"
+                                  name="audioSource"
+                                  placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
+                                  value={audioSource}
+                                  onChange={this.handleChange}
+                                />
+                              </label>
+                            )}
                             <label htmlFor="title">
                               Tiêu đề:
                               <input

@@ -22,7 +22,10 @@ const Form = styled.form`
   font-size: 1.5rem;
   line-height: 1.5;
   font-weight: 600;
+  word-break: break-all;
   label,
+  input[type='text'],
+  input[type='number'],
   a {
     display: block;
     margin-bottom: 1rem;
@@ -48,7 +51,6 @@ const Form = styled.form`
     font-size: 2rem;
     font-weight: 600;
     padding: 0.5rem 1.2rem;
-    margin-bottom: 1rem;
   }
   input[type='radio'],
   input[type='checkbox'] {

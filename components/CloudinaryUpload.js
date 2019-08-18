@@ -16,6 +16,10 @@ const CLOUDINARY_AUTH = gql`
 `;
 
 class CloudinaryUpload extends Component {
+  state = {
+    startingUpload: false,
+  };
+
   render() {
     const {
       source,
@@ -42,7 +46,7 @@ class CloudinaryUpload extends Component {
             }}
           >
             {({ loading, error, data }) => {
-              if (loading) return <Loader active />;
+              if (loading) return <Loader inline="centered" active />;
               if (error) return <Error>Error: {error.message}</Error>;
               return (
                 <>
@@ -53,7 +57,11 @@ class CloudinaryUpload extends Component {
                       id="file"
                       name="file"
                       accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
-                      onChange={e => uploadFile(data.cloudinaryAuth, id, e)}
+                      onChange={async e => {
+                        this.setState({ startingUpload: true });
+                        await uploadFile(data.cloudinaryAuth, id, e);
+                        this.setState({ startingUpload: false });
+                      }}
                     />
                   </label>
                   {(uploadError && (
@@ -61,15 +69,20 @@ class CloudinaryUpload extends Component {
                       Network Error. Try again later.
                     </Progress>
                   )) ||
-                    (uploadProgress > 0 && (
+                    (uploadProgress > 0 && uploadProgress < 100 && (
                       <Progress percent={uploadProgress} progress success />
+                    )) ||
+                    (deleteToken && (
+                      <>
+                        <audio controls src={secureUrl} />
+                        <Button negative onClick={deleteFile} type="button">
+                          Xoá
+                        </Button>
+                      </>
+                    )) ||
+                    (this.state.startingUpload && (
+                      <Loader inline="centered" active />
                     ))}
-                  {secureUrl && <audio controls src={secureUrl} />}
-                  {deleteToken && (
-                    <Button negative onClick={deleteFile} type="button">
-                      Xoá file
-                    </Button>
-                  )}
                 </>
               );
             }}
