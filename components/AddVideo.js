@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import Router from 'next/router';
 import { Dropdown } from 'semantic-ui-react';
 import styled from 'styled-components';
+import axios from 'axios';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import CloudinaryUpload from './CloudinaryUpload';
@@ -15,7 +16,6 @@ import {
   defaultLanguage,
 } from '../lib/supportedLanguages';
 import isYouTubeSource, { youtubeIdLength } from '../lib/isYouTubeSource';
-import uploadToCloudinary from '../lib/uploadToCloudinary';
 
 const DropdownForm = styled.div`
   .semantic-dropdown.ui.fluid.selection.dropdown {
@@ -91,8 +91,10 @@ class AddVideo extends Component {
     originTags: [],
     youtubeId: '',
     secureUrl: '',
-    showPlayer: false,
     language: languageOptions[defaultLanguage],
+    uploadProgress: 0,
+    uploadError: false,
+    deleteToken: '',
   };
 
   handleChange = e => {
@@ -112,19 +114,17 @@ class AddVideo extends Component {
     // Check video source input to refetch preview if necessary
     if (name === 'source' && val.length >= 11) this.onSourceFill(val.trim());
 
-    // Check audio source input to show/hide audio player
-    if (name === 'audioSource' && val === secureUrl) {
-      this.setState({ showPlayer: true });
-    }
-    if (name === 'audioSource' && val !== secureUrl) {
-      this.setState({ showPlayer: false });
-    }
-
     // Controlled set state
     this.setState({ [name]: val });
   };
 
   handleDropdown = (e, { value }) => {
+    if (
+      this.state.language !== languageOptions[value] &&
+      this.state.deleteToken
+    ) {
+      this.deleteFile();
+    }
     this.setState({ language: languageOptions[value] });
   };
 
@@ -199,21 +199,80 @@ class AddVideo extends Component {
     }
   };
 
-  uploadFile = async (cloudinaryAuth, id, e) => {
-    //
-    const { secure_url } = await uploadToCloudinary(
-      e.target.files,
-      this.state.youtubeId,
-      id,
-      this.state.language,
-      cloudinaryAuth
-    );
-
+  uploadFile = async ({ signature, timestamp }, id, { target: { files } }) => {
+    // Initial state reset
+    this.setState({ uploadError: false });
+    if (!files[0]) return; // Do nothing if no file selected
     this.setState({
-      audioSource: secure_url,
-      secureUrl: secure_url,
-      showPlayer: true,
+      uploadProgress: 0,
+      deleteToken: '',
+      audioSource: '',
+      secureUrl: '',
     });
+    const { youtubeId, language } = this.state;
+
+    // Cloudinary API direct upload endpoint
+    const url = `https://api.cloudinary.com/v1_1/${
+      process.env.CLOUDINARY_NAME
+    }/upload`;
+
+    // Cloudinary signed upload paramaters to send with upload file
+    const data = new FormData();
+    data.append('api_key', process.env.CLOUDINARY_API_KEY);
+    data.append('file', files[0]);
+    data.append('public_id', `${youtubeId}_${id}_${language}`);
+    data.append('signature', signature);
+    data.append('tags', `${id},${youtubeId},${timestamp},${language}`);
+    data.append('timestamp', timestamp);
+    data.append('upload_preset', process.env.CLOUDINARY_UPLOAD_PRESET_AUDIO);
+
+    // Upload file with post request
+    try {
+      const {
+        data: { secure_url, delete_token },
+      } = await axios({
+        method: 'post',
+        url,
+        data,
+        onUploadProgress: p => {
+          // Show upload progress
+          this.setState({
+            uploadProgress: Math.floor((p.loaded / p.total) * 100),
+          });
+        },
+      });
+      this.setState({
+        audioSource: secure_url,
+        secureUrl: secure_url,
+        deleteToken: delete_token,
+      });
+    } catch {
+      this.setState({
+        uploadError: true,
+      });
+    }
+  };
+
+  deleteFile = () => {
+    axios
+      .post(
+        `https://api.cloudinary.com/v1_1/${
+          process.env.CLOUDINARY_NAME
+        }/delete_by_token`,
+        {
+          token: this.state.deleteToken,
+        }
+      )
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({
+            uploadProgress: 0,
+            deleteToken: '',
+            audioSource: '',
+            secureUrl: '',
+          });
+        }
+      });
   };
 
   render() {
@@ -235,8 +294,10 @@ class AddVideo extends Component {
       youtubeIdStatus,
       originTags,
       youtubeId,
-      showPlayer,
       secureUrl,
+      uploadProgress,
+      uploadError,
+      deleteToken,
     } = this.state;
     return (
       <Mutation
@@ -302,6 +363,7 @@ class AddVideo extends Component {
                         'Audio Language': language,
                       });
                     } else {
+                      if (deleteToken) this.deleteFile();
                       Router.push({
                         pathname: '/watch',
                         query: { id },
@@ -365,6 +427,11 @@ class AddVideo extends Component {
                               uploadFile={this.uploadFile}
                               source={youtubeId}
                               language={language}
+                              uploadProgress={uploadProgress}
+                              uploadError={uploadError}
+                              deleteToken={deleteToken}
+                              deleteFile={this.deleteFile}
+                              secureUrl={secureUrl}
                             />
                             <label htmlFor="audioSource">
                               Đường link
@@ -375,9 +442,6 @@ class AddVideo extends Component {
                                 value={audioSource}
                                 onChange={this.handleChange}
                               />
-                              {audioSource && secureUrl && showPlayer && (
-                                <audio controls src={audioSource} />
-                              )}
                             </label>
                             <label htmlFor="title">
                               Tiêu đề:

@@ -254,11 +254,11 @@ class Watch extends Component {
                     </Header>
                     {(audio[0] && (
                       <Header>
-                        <h3>Người đăng: {audio[0].author.displayName}</h3>
+                        <h3>Người đọc: {audio[0].author.displayName}</h3>
                       </Header>
                     )) || (
                       <Header>
-                        <h3>Người đọc: {displayName}</h3>
+                        <h3>Người đăng: {displayName}</h3>
                       </Header>
                     )}
                     {(audio[0] && audio[0].description && (
