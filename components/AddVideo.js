@@ -232,7 +232,7 @@ class AddVideo extends Component {
     // Upload file with post request
     try {
       const {
-        data: { secure_url, delete_token },
+        data: { secure_url: secureUrl, delete_token: deleteToken },
       } = await axios({
         method: 'post',
         url,
@@ -245,8 +245,8 @@ class AddVideo extends Component {
         },
       });
       this.setState({
-        secureUrl: secure_url,
-        deleteToken: delete_token,
+        secureUrl,
+        deleteToken,
       });
     } catch {
       this.setState({
@@ -414,7 +414,10 @@ class AddVideo extends Component {
                     {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
                     {originTitle && <div>{originTitle}</div>}
                     {channelTitle && <div>{channelTitle}</div>}
-                    {image && <img width="200" src={image} alt="thumbnail" />}
+                    {image &&
+                      (<img width="200" src={image} alt="thumbnail" /> || (
+                        <Loader inline="centered" active />
+                      ))}
                     {youtubeId && (
                       <>
                         <label htmlFor="isAudioSource">
