@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Container } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import Header from './Header';
 import Meta from './Meta';
 
@@ -67,5 +68,16 @@ class Page extends Component {
     );
   }
 }
+
+Page.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+};
+
+Page.defaultProps = {
+  children: null,
+};
 
 export default Page;

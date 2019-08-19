@@ -3,6 +3,7 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
+import Link from 'next/link';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
@@ -92,6 +93,9 @@ class Reset extends Component {
                 </label>
                 <button type="submit">Đặt Mật Khẩu</button>
               </fieldset>
+              <Link href="/requestReset">
+                <a>Gửi yêu cầu mới vào email</a>
+              </Link>
             </Form>
           );
         }}

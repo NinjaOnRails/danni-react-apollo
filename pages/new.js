@@ -3,7 +3,7 @@ import PleaseSignIn from '../components/PleaseSignIn';
 
 const New = () => (
   <PleaseSignIn>
-    <AddVideo />;
+    <AddVideo />
   </PleaseSignIn>
 );
 
