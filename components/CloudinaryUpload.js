@@ -24,11 +24,11 @@ class CloudinaryUpload extends Component {
     const {
       source,
       language,
-      uploadFile,
+      onUploadFileSubmit,
       uploadProgress,
       uploadError,
       deleteToken,
-      deleteFile,
+      onDeleteFileSubmit,
       secureUrl,
     } = this.props;
     return (
@@ -59,7 +59,7 @@ class CloudinaryUpload extends Component {
                       accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
                       onChange={async e => {
                         this.setState({ startingUpload: true });
-                        await uploadFile(data.cloudinaryAuth, id, e);
+                        await onUploadFileSubmit(data.cloudinaryAuth, id, e);
                         this.setState({ startingUpload: false });
                       }}
                     />
@@ -75,7 +75,7 @@ class CloudinaryUpload extends Component {
                     (deleteToken && (
                       <>
                         <audio controls src={secureUrl} />
-                        <Button negative onClick={deleteFile} type="button">
+                        <Button negative onClick={onDeleteFileSubmit} type="button">
                           Xoá
                         </Button>
                       </>
@@ -99,8 +99,8 @@ CloudinaryUpload.propTypes = {
   deleteToken: PropTypes.string.isRequired,
   secureUrl: PropTypes.string.isRequired,
   uploadError: PropTypes.bool.isRequired,
-  uploadFile: PropTypes.func.isRequired,
-  deleteFile: PropTypes.func.isRequired,
+  onUploadFileSubmit: PropTypes.func.isRequired,
+  onDeleteFileSubmit: PropTypes.func.isRequired,
   uploadProgress: PropTypes.number.isRequired,
 };
 

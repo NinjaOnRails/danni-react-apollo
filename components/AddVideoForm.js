@@ -49,8 +49,8 @@ const AddVideoForm = ({
   loadingCreateVideo,
   handleDropdown,
   handleChange,
-  uploadFile,
-  deleteFile,
+  onUploadFileSubmit,
+  onDeleteFileSubmit,
 }) => {
   return (
     <fieldset
@@ -104,13 +104,13 @@ const AddVideoForm = ({
           {isAudioSource && (
             <>
               <CloudinaryUpload
-                uploadFile={uploadFile}
+                onUploadFileSubmit={onUploadFileSubmit}
                 source={youtubeId}
                 language={language}
                 uploadProgress={uploadProgress}
                 uploadError={uploadError}
                 deleteToken={deleteToken}
-                deleteFile={deleteFile}
+                onDeleteFileSubmit={onDeleteFileSubmit}
                 secureUrl={secureUrl}
               />
               {!secureUrl && (
@@ -234,8 +234,8 @@ AddVideoForm.propTypes = {
   loadingCreateVideo: PropTypes.bool.isRequired,
   handleDropdown: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  uploadFile: PropTypes.func.isRequired,
-  deleteFile: PropTypes.func.isRequired,
+  onUploadFileSubmit: PropTypes.func.isRequired,
+  onDeleteFileSubmit: PropTypes.func.isRequired,
 };
 
 export default AddVideoForm;

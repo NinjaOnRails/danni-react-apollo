@@ -11,7 +11,7 @@ import youtube from '../lib/youtube';
 import { languageOptions, defaultLanguage } from '../lib/supportedLanguages';
 import isYouTubeSource, { youtubeIdLength } from '../lib/isYouTubeSource';
 import uploadFileData from '../lib/cloudinaryUploadFileData';
-import cloudinaryDeleteFile from '../lib/cloudinaryDeleteFile';
+import deleteFile from '../lib/cloudinaryDeleteFile';
 
 const CREATE_VIDEO_MUTATION = gql`
   mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
@@ -102,7 +102,7 @@ class AddVideo extends Component {
       this.state.language !== languageOptions[value] &&
       this.state.deleteToken
     ) {
-      this.deleteFile();
+      this.onDeleteFileSubmit();
     }
     this.setState({ language: languageOptions[value] });
   };
@@ -182,7 +182,7 @@ class AddVideo extends Component {
     }
   };
 
-  uploadFile = async (cloudinaryAuth, id, { target: { files } }) => {
+  onUploadFileSubmit = async (cloudinaryAuth, id, { target: { files } }) => {
     // Initial state reset
     this.setState({ uploadError: false });
     if (!files[0]) return; // Do nothing if no file selected
@@ -226,18 +226,20 @@ class AddVideo extends Component {
     }
   };
 
-  deleteFile = async () => {
-    const res = await cloudinaryDeleteFile(this.state.deleteToken);
+  onDeleteFileSubmit = async () => {
+    this.setState({
+      uploadProgress: 0,
+      secureUrl: '',
+    });
+    const res = await deleteFile(this.state.deleteToken);
     if (res.status === 200) {
       this.setState({
-        uploadProgress: 0,
         deleteToken: '',
-        secureUrl: '',
       });
     }
   };
 
-  onSubmitForm = async (e, createAudio, createVideo) => {
+  onFormSubmit = async (e, createAudio, createVideo) => {
     const {
       audioSource,
       language,
@@ -264,7 +266,7 @@ class AddVideo extends Component {
     // Call createAudio mutation
     if ((audioSource || secureUrl) && isAudioSource) {
       if (!secureUrl && deleteToken) {
-        this.deleteFile();
+        this.onDeleteFileSubmit();
       }
       const {
         data: {
@@ -291,7 +293,7 @@ class AddVideo extends Component {
         'Audio Language': language,
       });
     } else {
-      if (deleteToken) this.deleteFile();
+      if (deleteToken) this.onDeleteFileSubmit();
       Router.push({
         pathname: '/watch',
         query: { id },
@@ -330,7 +332,7 @@ class AddVideo extends Component {
                 <Form
                   data-test="form"
                   onSubmit={async e =>
-                    this.onSubmitForm(e, createAudio, createVideo)
+                    this.onFormSubmit(e, createAudio, createVideo)
                   }
                 >
                   <Error error={errorCreateAudio} />
@@ -341,8 +343,8 @@ class AddVideo extends Component {
                     loadingCreateVideo={loadingCreateVideo}
                     handleDropdown={this.handleDropdown}
                     handleChange={this.handleChange}
-                    uploadFile={this.uploadFile}
-                    deleteFile={this.deleteFile}
+                    onUploadFileSubmit={this.onUploadFileSubmit}
+                    onDeleteFileSubmit={this.onDeleteFileSubmit}
                   />
                 </Form>
               </>
