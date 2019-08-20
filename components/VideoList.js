@@ -21,6 +21,7 @@ const VideoItem = styled.div`
 
 const ListHeaderStyled = styled(List.Header)`
   &&&& {
+    font-weight: 550;
     font-family: ${props => props.theme.font};
   }
 `;
@@ -60,7 +61,9 @@ class VideoList extends Component {
                             />
                             <List.Content>
                               <ListHeaderStyled>
-                                {video.originTitle}
+                                {video.originTitle.length > 53
+                                  ? `${video.originTitle.substring(0, 53)}...`
+                                  : video.originTitle}
                               </ListHeaderStyled>
                             </List.Content>
                           </VideoItem>
@@ -91,7 +94,9 @@ class VideoList extends Component {
                               />
                               <List.Content>
                                 <ListHeaderStyled>
-                                  {audio.title}
+                                  {audio.title.length > 53
+                                    ? `${audio.title.substring(0, 53)}...`
+                                    : audio.title}
                                 </ListHeaderStyled>
                               </List.Content>
                             </VideoItem>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Loader } from 'semantic-ui-react';
+import { Dropdown, Loader, Button, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import CloudinaryUpload from './CloudinaryUpload';
@@ -115,7 +115,11 @@ const AddVideoForm = ({
               />
               {!secureUrl && (
                 <label htmlFor="audioSource">
-                  Đường link
+                  Tải lên qua đường link
+                  <Button type="button" floated="right" primary>
+                    <Icon name="upload" />
+                    Tải lên
+                  </Button>
                   <input
                     type="text"
                     name="audioSource"

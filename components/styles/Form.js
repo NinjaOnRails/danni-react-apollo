@@ -22,7 +22,7 @@ const Form = styled.form`
   font-size: 1.5rem;
   line-height: 1.5;
   font-weight: 600;
-  word-break: break-all;
+  word-break: break-word;
   label,
   input[type='text'],
   input[type='number'],

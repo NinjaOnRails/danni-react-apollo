@@ -86,7 +86,11 @@ class Videos extends Component {
                             }}
                           >
                             <a>
-                              <h2>{originTitle}</h2>
+                              <h2>
+                                {video.originTitle.length > 53
+                                  ? `${video.originTitle.substring(0, 53)}...`
+                                  : video.originTitle}
+                              </h2>
                             </a>
                           </Link>
                         </div>
@@ -115,7 +119,11 @@ class Videos extends Component {
                           }}
                         >
                           <a>
-                            <h2>{title}</h2>
+                            <h2>
+                              {title.length > 53
+                                ? `${title.substring(0, 53)}...`
+                                : title}
+                            </h2>
                           </a>
                         </Link>
                       </div>

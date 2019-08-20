@@ -51,7 +51,7 @@ class CloudinaryUpload extends Component {
               return (
                 <>
                   <label htmlFor="file">
-                    Tải lên
+                    Chọn file để tải lên
                     <input
                       type="file"
                       id="file"
