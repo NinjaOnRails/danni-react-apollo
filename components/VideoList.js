@@ -21,7 +21,7 @@ const VideoItem = styled.div`
 
 const ListHeaderStyled = styled(List.Header)`
   &&&& {
-    font-weight: 550;
+    font-weight: 540;
     font-family: ${props => props.theme.font};
   }
 `;

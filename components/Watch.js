@@ -204,10 +204,9 @@ class Watch extends Component {
                     url={`https://www.youtube.com/embed/${originId}`}
                     width="100%"
                     height="100%"
-                    muted={isMobile && audio[0]}
-                    volume={audio[0] ? audio[0].defaultVolume / 100 : 1}
+                    muted
                     playing={playingFilePlayer}
-                    controls
+                    controls={false}
                     onPause={() => this.setState({ playingFilePlayer: false })}
                     onPlay={() => this.setState({ playingFilePlayer: true })}
                     onProgress={e => audio[0] && this.onProgressYoutube(e)}
