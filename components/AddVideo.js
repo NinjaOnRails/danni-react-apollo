@@ -77,9 +77,7 @@ class AddVideo extends Component {
     fetchingYoutube: false,
   };
 
-  handleChange = e => {
-    const { name, type, value, checked } = e.target;
-
+  handleChange = ({ target: { name, type, value, checked } }) => {
     // Controlled logic
     const val =
       type === 'checkbox'
@@ -182,20 +180,28 @@ class AddVideo extends Component {
     }
   };
 
-  onUploadFileSubmit = async (cloudinaryAuth, id, { target: { files } }) => {
-    // Initial state reset
+  onUploadFileSubmit = async (cloudinaryAuth, id, e) => {
+    // Reset uploadError display and assign appropriate value to file
     this.setState({ uploadError: false });
-    if (!files[0]) return; // Do nothing if no file selected
+    const { audioSource, youtubeId, language, deleteToken } = this.state;
+    const file = e ? e.target.files[0] : audioSource;
+
+    if (!file) return; // Do nothing if no file selected
+
+    if (deleteToken) await this.onDeleteFileSubmit();
+
+    // More initial state reset
     this.setState({
       uploadProgress: 0,
       deleteToken: '',
       secureUrl: '',
     });
 
+    // Prepare cloudinary upload params
     const { url, data } = uploadFileData(
-      files,
-      this.state.youtubeId,
-      this.state.language,
+      file,
+      youtubeId,
+      language,
       id,
       cloudinaryAuth
     );
@@ -218,6 +224,7 @@ class AddVideo extends Component {
       this.setState({
         secureUrl,
         deleteToken,
+        audioSource: '',
       });
     } catch {
       this.setState({
@@ -231,6 +238,7 @@ class AddVideo extends Component {
       uploadProgress: 0,
       secureUrl: '',
     });
+
     const res = await deleteFile(this.state.deleteToken);
     if (res.status === 200) {
       this.setState({
@@ -241,7 +249,6 @@ class AddVideo extends Component {
 
   onFormSubmit = async (e, createAudio, createVideo) => {
     const {
-      audioSource,
       language,
       tags,
       title,
@@ -250,7 +257,6 @@ class AddVideo extends Component {
       defaultVolume,
       isDefaultVolume,
       secureUrl,
-      deleteToken,
     } = this.state;
 
     // Stop form from submitting
@@ -264,17 +270,14 @@ class AddVideo extends Component {
     } = await createVideo();
 
     // Call createAudio mutation
-    if ((audioSource || secureUrl) && isAudioSource) {
-      if (!secureUrl && deleteToken) {
-        this.onDeleteFileSubmit();
-      }
+    if (secureUrl && isAudioSource) {
       const {
         data: {
           createAudio: { id: audioId },
         },
       } = await createAudio({
         variables: {
-          source: secureUrl || audioSource,
+          source: secureUrl,
           language,
           title,
           description,
@@ -283,6 +286,7 @@ class AddVideo extends Component {
           video: id,
         },
       });
+
       // Redirect to newly created Video watch page
       Router.push({
         pathname: '/watch',
@@ -293,7 +297,8 @@ class AddVideo extends Component {
         'Audio Language': language,
       });
     } else {
-      if (deleteToken) this.onDeleteFileSubmit();
+      this.onDeleteFileSubmit();
+
       Router.push({
         pathname: '/watch',
         query: { id },

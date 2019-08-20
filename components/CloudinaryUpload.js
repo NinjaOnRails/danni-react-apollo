@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Loader, Progress, Button } from 'semantic-ui-react';
+import { Loader, Progress, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
@@ -30,6 +30,8 @@ class CloudinaryUpload extends Component {
       deleteToken,
       onDeleteFileSubmit,
       secureUrl,
+      handleChange,
+      audioSource,
     } = this.props;
     return (
       <Query query={CURRENT_USER_QUERY}>
@@ -64,6 +66,29 @@ class CloudinaryUpload extends Component {
                       }}
                     />
                   </label>
+                  <label htmlFor="audioSource">
+                    Tải lên qua đường link
+                    <Button
+                      type="button"
+                      floated="right"
+                      primary
+                      onClick={async () => {
+                        this.setState({ startingUpload: true });
+                        await onUploadFileSubmit(data.cloudinaryAuth, id);
+                        this.setState({ startingUpload: false });
+                      }}
+                    >
+                      <Icon name="upload" />
+                      Tải lên
+                    </Button>
+                    <input
+                      type="text"
+                      name="audioSource"
+                      placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
+                      value={audioSource}
+                      onChange={handleChange}
+                    />
+                  </label>
                   {(uploadError && (
                     <Progress percent={100} error>
                       Network Error. Try again later.
@@ -75,7 +100,11 @@ class CloudinaryUpload extends Component {
                     (deleteToken && (
                       <>
                         <audio controls src={secureUrl} />
-                        <Button negative onClick={onDeleteFileSubmit} type="button">
+                        <Button
+                          negative
+                          onClick={onDeleteFileSubmit}
+                          type="button"
+                        >
                           Xoá
                         </Button>
                       </>
@@ -102,6 +131,8 @@ CloudinaryUpload.propTypes = {
   onUploadFileSubmit: PropTypes.func.isRequired,
   onDeleteFileSubmit: PropTypes.func.isRequired,
   uploadProgress: PropTypes.number.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  audioSource: PropTypes.string.isRequired,
 };
 
 export default CloudinaryUpload;

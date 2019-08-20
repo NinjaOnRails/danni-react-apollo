@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Loader, Button, Icon } from 'semantic-ui-react';
+import { Dropdown, Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import CloudinaryUpload from './CloudinaryUpload';
@@ -112,23 +112,9 @@ const AddVideoForm = ({
                 deleteToken={deleteToken}
                 onDeleteFileSubmit={onDeleteFileSubmit}
                 secureUrl={secureUrl}
+                handleChange={handleChange}
+                audioSource={audioSource}
               />
-              {!secureUrl && (
-                <label htmlFor="audioSource">
-                  Tải lên qua đường link
-                  <Button type="button" floated="right" primary>
-                    <Icon name="upload" />
-                    Tải lên
-                  </Button>
-                  <input
-                    type="text"
-                    name="audioSource"
-                    placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
-                    value={audioSource}
-                    onChange={handleChange}
-                  />
-                </label>
-              )}
               <label htmlFor="title">
                 Tiêu đề:
                 <input
