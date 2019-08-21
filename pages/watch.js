@@ -10,7 +10,7 @@ const WatchPage = props => {
       <Grid.Row>
         <Grid.Column mobile={16} tablet={16} computer={11}>
           <Watch {...props} />
-          <CommentList />
+          {/* <CommentList /> */}
         </Grid.Column>
         <Grid.Column mobile={16} tablet={16} computer={5}>
           <VideoList {...props} />

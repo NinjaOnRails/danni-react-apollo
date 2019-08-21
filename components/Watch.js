@@ -47,8 +47,6 @@ const VIDEO_QUERY = gql`
 const YoutubeStyle = styled.div`
   position: relative;
   padding-bottom: 56.25%;
-  padding-top: 25px;
-  height: 0;
   /* Create element on top of Youtube Player to limit interaction */
   :before {
     content: '';
@@ -63,18 +61,6 @@ const YoutubeStyle = styled.div`
       position: absolute;
       height: 85%;
     }
-    /* @media (min-width: 515px) {
-      position: absolute;
-      height: 85%;
-    } */
-    /* @media (min-width: 655px) {
-      position: absolute;
-      height: 88%;
-    }
-    @media (min-width: 1300px) {
-      position: absolute;
-      height: 91%;
-    } */
   }
   .youtube-player {
     position: absolute;
@@ -108,17 +94,27 @@ class Watch extends Component {
     playingFilePlayer: false,
     playedYoutube: 0,
     playedFilePlayer: 0,
+    readyYoutube: false,
+    playbackRates: [],
+    playbackRate: 1,
   };
 
   componentDidUpdate(prevProps) {
     const { id } = this.props;
     if (id !== prevProps.id && isMobile)
       this.setState({ playingFilePlayer: false });
+    if (id !== prevProps.id)
+      this.renderedYoutubePlayer.getInternalPlayer().unMute();
   }
 
-  // Synchronize FilePlayer progress with Youtube player progress within 2 seconds
-  // to allow for synchronised seeking
   onProgressYoutube = ({ playedSeconds }) => {
+    // Auto mute video
+    if (!this.renderedYoutubePlayer.getInternalPlayer().isMuted()) {
+      this.renderedYoutubePlayer.getInternalPlayer().mute();
+    }
+
+    // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
+    // to allow for synchronised seeking
     const { playedYoutube, playedFilePlayer } = this.state;
     if (
       playedFilePlayer > 0 &&
@@ -126,19 +122,197 @@ class Watch extends Component {
       playedSeconds !== playedYoutube
     ) {
       if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
-        this.playerFilePlayer.seekTo(playedSeconds);
+        this.renderedFilePlayer.seekTo(playedSeconds);
       }
     }
-    this.setState({ playedYoutube: playedSeconds });
+    this.setState({
+      playedYoutube: playedSeconds,
+    });
   };
 
-  refFilePlayer = playerFilePlayer => {
-    this.playerFilePlayer = playerFilePlayer;
+  onYoutubeStart = ({
+    audio,
+    language,
+    id,
+    originTitle,
+    originPlatform,
+    originLanguage,
+    originAuthor,
+    addedBy: { displayName },
+  }) => {
+    // Send stats to Mixpanel on play start
+    mixpanel.track('Audio Play', {
+      'Audio ID': audio[0] ? audio[0].id : 'no-audio',
+      'Audio Language': audio[0] ? audio[0].language : language,
+      'Audio Author': audio[0] ? audio[0].displayName : 'no-audio',
+      'Video ID': id,
+      'Video Title': originTitle,
+      'Video Platform': originPlatform,
+      'Video Language': originLanguage,
+      'Video Author': originAuthor,
+      'Video AddedBy': displayName,
+    });
+  };
+
+  refFilePlayer = renderedFilePlayer => {
+    this.renderedFilePlayer = renderedFilePlayer;
+  };
+
+  refYoutubePlayer = renderedYoutubePlayer => {
+    this.renderedYoutubePlayer = renderedYoutubePlayer;
+  };
+
+  renderHead = (
+    id,
+    {
+      audio,
+      originTitle,
+      originThumbnailUrl,
+      originThumbnailUrlSd,
+      originLanguage,
+      originDescription,
+    },
+    audioQueryParam
+  ) => (
+    <Head>
+      <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
+      <meta
+        property="og:url"
+        content={`http://danni.tv/watch?id=${id}${audioQueryParam}`}
+      />
+      <meta
+        property="og:title"
+        content={audio[0] ? audio[0].title : originTitle}
+      />
+      <meta
+        property="og:image"
+        content={originThumbnailUrl || originThumbnailUrlSd}
+      />
+      <meta property="og:locale" content={originLanguage || ''} />
+      <meta
+        property="og:description"
+        content={audio[0] ? audio[0].description : originDescription}
+      />
+      <meta property="fb:app_id" content="444940199652956" />
+    </Head>
+  );
+
+  renderVideoPlayer = video => {
+    const { playingFilePlayer, playbackRate } = this.state;
+    return (
+      <YoutubeStyle
+        onClick={() =>
+          this.setState({
+            playingFilePlayer: !playingFilePlayer,
+          })
+        }
+      >
+        <YouTubePlayer
+          className="youtube-player"
+          url={`https://www.youtube.com/embed/${video.originId}`}
+          width="100%"
+          height="100%"
+          onReady={() =>
+            this.setState({
+              readyYoutube: true,
+              playbackRates: this.renderedYoutubePlayer
+                .getInternalPlayer()
+                .getAvailablePlaybackRates(),
+            })
+          }
+          playing={playingFilePlayer}
+          controls
+          onPause={() => this.setState({ playingFilePlayer: false })}
+          onPlay={() => this.setState({ playingFilePlayer: true })}
+          onProgress={e => {
+            if (video.audio[0]) this.onProgressYoutube(e);
+          }}
+          onStart={() => this.onYoutubeStart(video)}
+          ref={this.refYoutubePlayer}
+          playbackRate={playbackRate}
+        />
+      </YoutubeStyle>
+    );
+  };
+
+  renderVideoInfo = (
+    id,
+    {
+      audio,
+      originTitle,
+      originId,
+      originAuthor,
+      addedBy: { displayName },
+      originDescription,
+    },
+    audioQueryParam
+  ) => (
+    <VideoInfoStyle>
+      <div className="basic-info">
+        <Header>
+          <h1>{audio[0] ? audio[0].title : originTitle}</h1>
+        </Header>
+        <div className="views-social">
+          <YoutubeViews originId={originId} />
+          <div>
+            <FacebookShareButton
+              className="fb-share-button"
+              url={`https://danni.tv/watch?id=${id}${audioQueryParam}`}
+            >
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+          </div>
+        </div>
+      </div>
+      <Segment>
+        <Header>
+          <h2>Kênh: {originAuthor}</h2>
+        </Header>
+        {(audio[0] && (
+          <Header>
+            <h3>Người đọc: {audio[0].author.displayName}</h3>
+          </Header>
+        )) || (
+          <Header>
+            <h3>Người đăng: {displayName}</h3>
+          </Header>
+        )}
+        {(audio[0] && audio[0].description && (
+          <div className="description">{audio[0].description}</div>
+        )) ||
+          (originDescription && (
+            <div className="description">{originDescription}</div>
+          ))}
+      </Segment>
+    </VideoInfoStyle>
+  );
+
+  renderFilePlayer = audio => {
+    return (
+      <FilePlayer
+        config={{
+          file: {
+            forceAudio: true,
+          },
+        }}
+        onProgress={e => {
+          this.setState({
+            playedFilePlayer: e.playedSeconds,
+          });
+        }}
+        ref={this.refFilePlayer}
+        url={audio[0].source}
+        playing={this.state.playingFilePlayer}
+        onPause={() => this.setState({ playingFilePlayer: false })}
+        height="100%"
+        width="100%"
+        playbackRate={this.state.playbackRate}
+      />
+    );
   };
 
   render() {
     const { id, audioId } = this.props;
-    const { playingFilePlayer } = this.state;
     const audioQueryParam = audioId ? `&audioId=${audioId}` : '';
     return (
       <Query
@@ -148,145 +322,18 @@ class Watch extends Component {
           audioId,
         }}
       >
-        {({ error, loading, data }) => {
+        {({ error, loading, data: { video } }) => {
           if (error) return <Error error={error} />;
           if (loading) return <Loader active inline="centered" />;
-          if (!data.video) return <p>No Video Found for {id}</p>;
-          const {
-            video: {
-              originTitle,
-              originDescription,
-              originPlatform,
-              originLanguage,
-              audio,
-              originAuthor,
-              originId,
-              originThumbnailUrlSd,
-              originThumbnailUrl,
-              addedBy: { displayName },
-              language,
-            },
-          } = data;
-
+          if (!video) return <p>No Video Found for {id}</p>;
           return (
             <>
-              <Head>
-                <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
-                <meta
-                  property="og:url"
-                  content={`http://danni.tv/watch?id=${id}${audioQueryParam}`}
-                />
-                <meta
-                  property="og:title"
-                  content={audio[0] ? audio[0].title : originTitle}
-                />
-                <meta
-                  property="og:image"
-                  content={originThumbnailUrl || originThumbnailUrlSd}
-                />
-                <meta property="og:locale" content={originLanguage || ''} />
-                <meta
-                  property="og:description"
-                  content={audio[0] ? audio[0].description : originDescription}
-                />
-                <meta property="fb:app_id" content="444940199652956" />
-              </Head>
-              <div>
-                <YoutubeStyle
-                  onClick={() =>
-                    this.setState({
-                      playingFilePlayer: !playingFilePlayer,
-                    })
-                  }
-                >
-                  <YouTubePlayer
-                    className="youtube-player"
-                    url={`https://www.youtube.com/embed/${originId}`}
-                    width="100%"
-                    height="100%"
-                    muted
-                    playing={playingFilePlayer}
-                    controls={false}
-                    onPause={() => this.setState({ playingFilePlayer: false })}
-                    onPlay={() => this.setState({ playingFilePlayer: true })}
-                    onProgress={e => audio[0] && this.onProgressYoutube(e)}
-                    onStart={() =>
-                      // Send stats to Mixpanel on play start
-                      mixpanel.track('Audio Play', {
-                        'Audio ID': audio[0] ? audio[0].id : 'no-audio',
-                        'Audio Language': audio[0]
-                          ? audio[0].language
-                          : language,
-                        'Audio Author': audio[0]
-                          ? audio[0].displayName
-                          : 'no-audio',
-                        'Video ID': id,
-                        'Video Title': originTitle,
-                        'Video Platform': originPlatform,
-                        'Video Language': originLanguage,
-                        'Video Author': originAuthor,
-                        'Video AddedBy': displayName,
-                      })
-                    }
-                  />
-                </YoutubeStyle>
-                <VideoInfoStyle>
-                  <div className="basic-info">
-                    <Header>
-                      <h1>{audio[0] ? audio[0].title : originTitle}</h1>
-                    </Header>
-                    <div className="views-social">
-                      <YoutubeViews originId={originId} />
-                      <div>
-                        <FacebookShareButton
-                          className="fb-share-button"
-                          url={`http://danni.tv/watch?id=${id}&${audioQueryParam}`}
-                        >
-                          <FacebookIcon size={32} round />
-                        </FacebookShareButton>
-                      </div>
-                    </div>
-                  </div>
-                  <Segment>
-                    <Header>
-                      <h2>Kênh: {originAuthor}</h2>
-                    </Header>
-                    {(audio[0] && (
-                      <Header>
-                        <h3>Người đọc: {audio[0].author.displayName}</h3>
-                      </Header>
-                    )) || (
-                      <Header>
-                        <h3>Người đăng: {displayName}</h3>
-                      </Header>
-                    )}
-                    {(audio[0] && audio[0].description && (
-                      <div className="description">{audio[0].description}</div>
-                    )) ||
-                      (originDescription && (
-                        <div className="description">{originDescription}</div>
-                      ))}
-                  </Segment>
-                </VideoInfoStyle>
-                {audio[0] && (
-                  <FilePlayer
-                    config={{
-                      file: {
-                        forceAudio: true,
-                      },
-                    }}
-                    onProgress={({ playedSeconds }) =>
-                      this.setState({ playedFilePlayer: playedSeconds })
-                    }
-                    ref={this.refFilePlayer}
-                    url={audio[0].source}
-                    playing={playingFilePlayer}
-                    onPause={() => this.setState({ playingFilePlayer: false })}
-                    height="100%"
-                    width="100%"
-                  />
-                )}
-              </div>
+              {this.renderHead(id, video, audioQueryParam)}
+              {this.renderVideoPlayer(video)}
+              {this.renderVideoInfo(id, video, audioQueryParam)}
+              {video.audio[0] &&
+                this.state.readyYoutube &&
+                this.renderFilePlayer(video.audio)}
             </>
           );
         }}
