@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import Nav from './Nav';
+import MobileNav from './MobileNav';
+import MobileSearch from './MobileSearch';
 import Search from './Search';
 
 Router.onRouteChangeStart = () => {
@@ -33,6 +35,13 @@ const Logo = styled.h1`
     margin: 0;
     text-align: center;
   }
+  @media (max-width: 499px) {
+    display: grid;
+    justify-content: start;
+    align-content: center;
+    font-size: 15px;
+    transform: none;
+  }
 `;
 
 const StyledHeader = styled.header`
@@ -42,11 +51,18 @@ const StyledHeader = styled.header`
     grid-template-columns: auto 1fr;
     justify-content: space-between;
     align-items: stretch;
+    background-color: white;
     @media (max-width: 1300px) {
       grid-template-columns: 1fr;
       justify-content: center;
     }
+    @media (max-width: 499px) {
+      grid-auto-flow: column;
+      
+      border-bottom: 4px solid ${props => props.theme.black};
+    }
   }
+
   .sub-bar {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -56,13 +72,14 @@ const StyledHeader = styled.header`
 
 const Header = () => (
   <StyledHeader>
-    <div className="bar">
+    <div className='bar'>
       <Logo>
-        <Link href="/">
+        <Link href='/'>
           <a>danni.tv</a>
         </Link>
       </Logo>
       <Nav />
+      <MobileNav />
     </div>
     <Search />
   </StyledHeader>
