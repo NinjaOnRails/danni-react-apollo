@@ -47,7 +47,7 @@ const SearchStyles = styled.div`
     }
   }
 
-  @media (min-width: 499px) {
+  @media (max-width: 499px) {
     display: none;
   }
 `;

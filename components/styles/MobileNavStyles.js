@@ -7,8 +7,12 @@ const MobileNavStyles = styled.ul`
   box-sizing: border-box;
   z-index: 90;
   margin: 0;
-  margin-right: 3rem;
-
+  padding: 0;
+  width: 100%;
+  i {
+    display: grid;
+    justify-content: end;
+  }
   li {
     float: left;
     list-style: none;
@@ -80,20 +84,11 @@ const MobileNavStyles = styled.ul`
   }
   .menu {
     border: 0;
-    font-size: 1em;
+    font-size: 0.75em;
+    padding: 0;
+    margin-right: 15px;
     &:after {
       content: none;
-    }
-    &:before {
-      content: '';
-      width: 2px;
-      background: ${props => props.theme.lightgrey};
-      height: 100%;
-      left: 0;
-      position: absolute;
-      transform: skew(-20deg);
-      top: 0;
-      bottom: 0;
     }
   }
   @media (min-width: 499px) {

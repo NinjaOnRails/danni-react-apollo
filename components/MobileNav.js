@@ -13,7 +13,7 @@ const MobileNav = () => (
         <MobileNavStyles data-test='nav'>
           <li>
             <button className='menu'>MENU</button>
-            <Icon name="caret down" size="small"Ï/>
+            {/* <Icon name="caret down" size="small"/> */}
             <ul>
               <li>
                 <Link href='/'>

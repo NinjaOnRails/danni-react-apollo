@@ -4,8 +4,9 @@ import NProgress from 'nprogress';
 import Router from 'next/router';
 import Nav from './Nav';
 import MobileNav from './MobileNav';
-import MobileSearch from './MobileSearch';
 import Search from './Search';
+import MobileSearch from './MobileSearch';
+
 
 Router.onRouteChangeStart = () => {
   NProgress.start();
@@ -24,6 +25,7 @@ const Logo = styled.h1`
   position: relative;
   z-index: 2;
   transform: skew(-7deg);
+
   a {
     padding: 0.5rem 1rem;
     background: ${props => props.theme.red};
@@ -41,6 +43,7 @@ const Logo = styled.h1`
     align-content: center;
     font-size: 15px;
     transform: none;
+    margin: 0;
   }
 `;
 
@@ -52,13 +55,13 @@ const StyledHeader = styled.header`
     justify-content: space-between;
     align-items: stretch;
     background-color: white;
+
     @media (max-width: 1300px) {
       grid-template-columns: 1fr;
       justify-content: center;
     }
     @media (max-width: 499px) {
       grid-auto-flow: column;
-      
       border-bottom: 4px solid ${props => props.theme.black};
     }
   }
@@ -70,6 +73,7 @@ const StyledHeader = styled.header`
   }
 `;
 
+
 const Header = () => (
   <StyledHeader>
     <div className='bar'>
@@ -79,6 +83,7 @@ const Header = () => (
         </Link>
       </Logo>
       <Nav />
+      <MobileSearch />
       <MobileNav />
     </div>
     <Search />

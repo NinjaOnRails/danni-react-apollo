@@ -6,7 +6,7 @@ import Downshift, { resetIdCounter } from 'downshift';
 import Router from 'next/router';
 import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
 
-const SEARCH_VIDEOS_QUERY = gql`
+export const SEARCH_VIDEOS_QUERY = gql`
   query SEARCH_VIDEOS_QUERY($searchTerm: String!) {
     videos(
       where: {
@@ -28,7 +28,7 @@ const SEARCH_VIDEOS_QUERY = gql`
   }
 `;
 
-function routetoItem(video) {
+export function routetoItem(video) {
   Router.push({
     pathname: '/watch',
     query: {
