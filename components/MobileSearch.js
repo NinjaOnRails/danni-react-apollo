@@ -1,43 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
-import debounce from 'lodash.debounce';
+import styled from 'styled-components';
 import Downshift, { resetIdCounter } from 'downshift';
-import Router from 'next/router';
-import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
+import debounce from 'lodash.debounce';
+import { Search as SemanticSearch } from 'semantic-ui-react';
 
-export const SEARCH_VIDEOS_QUERY = gql`
-  query SEARCH_VIDEOS_QUERY($searchTerm: String!) {
-    videos(
-      where: {
-        OR: [
-          { titleVi_contains: $searchTerm }
-          { descriptionVi_contains: $searchTerm }
-          { originId_contains: $searchTerm }
-          { originTitle_contains: $searchTerm }
-          { originAuthor_contains: $searchTerm }
-          { tags_some: { text_contains: $searchTerm } }
-        ]
-      }
-    ) {
-      id
-      titleVi
-      originTitle
-      originThumbnailUrl
+import { DropDown, DropDownItem } from './styles/DropDown';
+import { SEARCH_VIDEOS_QUERY, routetoItem } from './Search';
+
+const StyledMobileISearch = styled(SemanticSearch)`
+  && {
+    margin: auto 5px;
+    box-sizing: border-box;
+    height: 30px;
+    @media (min-width: 499px) {
+      display: none;
     }
   }
+  .ui.input > input {
+    padding: 0;
+    padding-left: 0.5em;
+    width: 100%;
+  }
 `;
-
-export function routetoItem(video) {
-  Router.push({
-    pathname: '/watch',
-    query: {
-      id: video.id,
-    },
-  });
-}
-
-class Autocomplete extends Component {
+class MobileSearch extends React.Component {
   state = {
     videos: [],
     loading: false,
@@ -62,9 +48,14 @@ class Autocomplete extends Component {
   }, 350);
 
   render() {
+    const { videos, loading } = this.state;
     resetIdCounter();
     return (
-      <SearchStyles>
+      <StyledMobileISearch
+        placeholder='Search...'
+        icon='search'
+        loading={loading}
+      >
         <Downshift
           onChange={routetoItem}
           itemToString={video => (video === null ? '' : video.titleVi)}
@@ -83,7 +74,7 @@ class Autocomplete extends Component {
                     {...getInputProps({
                       type: 'search',
                       placeholder: 'Search',
-                      className: this.state.loading ? 'loading' : '',
+                      className: loading ? 'loading' : '',
                       onChange: e => {
                         e.persist();
                         this.onChange(e, client);
@@ -94,7 +85,7 @@ class Autocomplete extends Component {
               </ApolloConsumer>
               {isOpen && (
                 <DropDown>
-                  {this.state.videos.map((item, index) => (
+                  {videos.map((item, index) => (
                     <DropDownItem
                       key={item.id}
                       {...getItemProps({ item })}
@@ -108,7 +99,7 @@ class Autocomplete extends Component {
                       {item.titleVi}
                     </DropDownItem>
                   ))}
-                  {!this.state.videos.length && !this.state.loading && (
+                  {!videos.length && !loading && (
                     <DropDownItem>
                       Nothing Found For "{inputValue}"
                     </DropDownItem>
@@ -118,9 +109,8 @@ class Autocomplete extends Component {
             </div>
           )}
         </Downshift>
-      </SearchStyles>
+      </StyledMobileISearch>
     );
   }
 }
-
-export default Autocomplete;
+export default MobileSearch;

@@ -61,6 +61,9 @@ const NavStyles = styled.ul`
     justify-content: center;
     font-size: 1.5rem;
   }
+  @media (max-width: 499px) {
+    display: none;
+  }
 `;
 
 export default NavStyles;
