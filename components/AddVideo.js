@@ -75,6 +75,7 @@ class AddVideo extends Component {
     uploadError: false,
     deleteToken: '',
     fetchingYoutube: false,
+    error: '',
   };
 
   handleChange = ({ target: { name, type, value, checked } }) => {
@@ -262,6 +263,9 @@ class AddVideo extends Component {
     // Stop form from submitting
     e.preventDefault();
 
+    if (isAudioSource && !secureUrl)
+      return this.setState({ error: 'Chưa tải file lên' });
+
     // Call createVideo mutation
     const {
       data: {
@@ -311,7 +315,7 @@ class AddVideo extends Component {
   };
 
   render() {
-    const { source, language, isAudioSource } = this.state;
+    const { source, language, isAudioSource, error } = this.state;
     return (
       <Mutation
         mutation={CREATE_AUDIO_MUTATION}
@@ -342,6 +346,7 @@ class AddVideo extends Component {
                 >
                   <Error error={errorCreateAudio} />
                   <Error error={errorCreateVideo} />
+                  <Error error={{ message: error }} />
                   <AddVideoForm
                     {...this.state}
                     loadingCreateAudio={loadingCreateAudio}

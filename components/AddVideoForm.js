@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Loader } from 'semantic-ui-react';
+import { Dropdown, Loader, Segment } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import CloudinaryUpload from './CloudinaryUpload';
@@ -83,12 +83,13 @@ const AddVideoForm = ({
       </label>
       {fetchingYoutube && <Loader inline="centered" active />}
       {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
-      {originTitle && <div>{originTitle}</div>}
-      {channelTitle && <div>{channelTitle}</div>}
-      {image &&
-        (<img width="200" src={image} alt="thumbnail" /> || (
-          <Loader inline="centered" active />
-        ))}
+      {originTitle && (
+        <Segment>
+          <p>{originTitle}</p>
+          <p>{channelTitle}</p>
+          {image && <img width="200" src={image} alt="thumbnail" />}
+        </Segment>
+      )}
       {youtubeId && (
         <>
           <label htmlFor="isAudioSource">

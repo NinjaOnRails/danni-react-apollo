@@ -75,6 +75,7 @@ const VideoInfoStyle = styled.div`
   h2,
   .description {
     font-family: ${props => props.theme.font};
+    word-break: break-word;
   }
   .fb-share-button {
     float: right;
@@ -186,12 +187,16 @@ class Watch extends Component {
       />
       <meta
         property="og:image"
-        content={originThumbnailUrl || originThumbnailUrlSd}
+        content={originThumbnailUrlSd || originThumbnailUrl}
       />
       <meta property="og:locale" content={originLanguage || ''} />
       <meta
         property="og:description"
-        content={audio[0] ? audio[0].description : originDescription}
+        content={
+          audio[0] && audio[0].description
+            ? audio[0].description
+            : originDescription
+        }
       />
       <meta property="fb:app_id" content="444940199652956" />
     </Head>
@@ -288,6 +293,7 @@ class Watch extends Component {
   );
 
   renderFilePlayer = audio => {
+    const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
         config={{
@@ -302,17 +308,18 @@ class Watch extends Component {
         }}
         ref={this.refFilePlayer}
         url={audio[0].source}
-        playing={this.state.playingFilePlayer}
+        playing={playingFilePlayer}
         onPause={() => this.setState({ playingFilePlayer: false })}
         height="100%"
         width="100%"
-        playbackRate={this.state.playbackRate}
+        playbackRate={playbackRate}
       />
     );
   };
 
   render() {
     const { id, audioId } = this.props;
+    const { readyYoutube } = this.state;
     const audioQueryParam = audioId ? `&audioId=${audioId}` : '';
     return (
       <Query
@@ -332,7 +339,7 @@ class Watch extends Component {
               {this.renderVideoPlayer(video)}
               {this.renderVideoInfo(id, video, audioQueryParam)}
               {video.audio[0] &&
-                this.state.readyYoutube &&
+                readyYoutube &&
                 this.renderFilePlayer(video.audio)}
             </>
           );

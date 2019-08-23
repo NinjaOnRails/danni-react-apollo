@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Placeholder } from 'semantic-ui-react';
 import Link from 'next/link';
 import Error from './ErrorMessage';
 
@@ -43,6 +43,10 @@ const VideosListStyled = styled.div`
   h2 {
     font-family: ${props => props.theme.font};
   }
+  .ui.placeholder .rectangular.image:not(.header) {
+    width: 320px;
+    height: 180px;
+  }
 `;
 
 class Videos extends Component {
@@ -51,8 +55,26 @@ class Videos extends Component {
       <Center>
         <Query query={ALL_VIDEOS_QUERY}>
           {({ loading, error, data }) => {
-            if (loading) return <Loader active />;
+            if (loading) {
+              return (
+                <VideosListStyled>
+                  {[...Array(12)].map((x, i) => (
+                    <span key={i}>
+                      <Placeholder>
+                        <Placeholder.Image rectangular />
+                        <Placeholder.Paragraph>
+                          <Placeholder.Line />
+                          <Placeholder.Line />
+                        </Placeholder.Paragraph>
+                      </Placeholder>
+                    </span>
+                  ))}
+                </VideosListStyled>
+              );
+            }
+
             if (error) return <Error>Error: {error.message}</Error>;
+
             return (
               <VideosListStyled>
                 {data.videos.map(
