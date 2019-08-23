@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import {Icon} from "semantic-ui-react"
 import MobileNavStyles from './styles/MobileNavStyles';
 import User from './User';
 import Signout from './Signout';
@@ -10,23 +9,25 @@ const MobileNav = () => (
     {({ data }) => {
       const currentUser = data ? data.currentUser : null;
       return (
-        <MobileNavStyles data-test='nav'>
+        <MobileNavStyles data-test="nav">
           <li>
-            <button className='menu'>MENU</button>
+            <button type="button" className="menu">
+              MENU
+            </button>
             {/* <Icon name="caret down" size="small"/> */}
             <ul>
               <li>
-                <Link href='/'>
-                  <a>HOME </a>
+                <Link href="/">
+                  <a>HOME</a>
                 </Link>
               </li>
               <li>
-                <Link href='/new'>
-                  <a>THÊM VIDEO</a>
+                <Link href="/new">
+                  <a>VIDEO+</a>
                 </Link>
               </li>
               <li>
-                <Link href='/about'>
+                <Link href="/about">
                   <a>About</a>
                 </Link>
               </li>
@@ -46,12 +47,12 @@ const MobileNav = () => (
               {!currentUser && (
                 <>
                   <li>
-                    <Link href='/signup'>
+                    <Link href="/signup">
                       <a>Đăng Ký</a>
                     </Link>
                   </li>
                   <li>
-                    <Link href='/signin'>
+                    <Link href="/signin">
                       <a>Đăng Nhập</a>
                     </Link>
                   </li>

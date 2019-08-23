@@ -11,8 +11,7 @@ export const SEARCH_VIDEOS_QUERY = gql`
     videos(
       where: {
         OR: [
-          { titleVi_contains: $searchTerm }
-          { descriptionVi_contains: $searchTerm }
+          { title_contains: $searchTerm }
           { originId_contains: $searchTerm }
           { originTitle_contains: $searchTerm }
           { originAuthor_contains: $searchTerm }
@@ -21,7 +20,7 @@ export const SEARCH_VIDEOS_QUERY = gql`
       }
     ) {
       id
-      titleVi
+      title
       originTitle
       originThumbnailUrl
     }

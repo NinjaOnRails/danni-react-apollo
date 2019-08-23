@@ -7,7 +7,6 @@ import MobileNav from './MobileNav';
 import Search from './Search';
 import MobileSearch from './MobileSearch';
 
-
 Router.onRouteChangeStart = () => {
   NProgress.start();
 };
@@ -37,13 +36,11 @@ const Logo = styled.h1`
     margin: 0;
     text-align: center;
   }
-  @media (max-width: 499px) {
+  @media (max-width: 673px) {
     display: grid;
     justify-content: start;
-    align-content: center;
     font-size: 15px;
     transform: none;
-    margin: 0;
   }
 `;
 
@@ -60,7 +57,7 @@ const StyledHeader = styled.header`
       grid-template-columns: 1fr;
       justify-content: center;
     }
-    @media (max-width: 499px) {
+    @media (max-width: 673px) {
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
     }
@@ -73,20 +70,19 @@ const StyledHeader = styled.header`
   }
 `;
 
-
 const Header = () => (
   <StyledHeader>
-    <div className='bar'>
+    <div className="bar">
       <Logo>
-        <Link href='/'>
+        <Link href="/">
           <a>danni.tv</a>
         </Link>
       </Logo>
       <Nav />
-      <MobileSearch />
+      {/* <MobileSearch /> */}
       <MobileNav />
     </div>
-    <Search />
+    {/* <Search /> */}
   </StyledHeader>
 );
 
