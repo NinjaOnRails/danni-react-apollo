@@ -36,15 +36,18 @@ const Logo = styled.h1`
     margin: 0;
     text-align: center;
   }
-  @media (max-width: 673px) {
+  /* @media (max-width: 673px) {
     display: grid;
     justify-content: start;
     font-size: 15px;
     transform: none;
-  }
+  } */
 `;
 
 const StyledHeader = styled.header`
+  /* z-index: 99; */
+  position: sticky;
+  top: 0;
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
     display: grid;
@@ -57,10 +60,10 @@ const StyledHeader = styled.header`
       grid-template-columns: 1fr;
       justify-content: center;
     }
-    @media (max-width: 673px) {
+    /* @media (max-width: 673px) {
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
-    }
+    } */
   }
 
   .sub-bar {

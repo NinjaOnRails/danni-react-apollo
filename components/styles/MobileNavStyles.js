@@ -91,9 +91,9 @@ const MobileNavStyles = styled.ul`
       content: none;
     }
   }
-  @media (min-width: 674px) {
+  /* @media (min-width: 674px) { */
     display: none;
-  }
+  /* } */
 `;
 
 export default MobileNavStyles;

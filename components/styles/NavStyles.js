@@ -62,7 +62,8 @@ const NavStyles = styled.ul`
     font-size: 1.5rem;
   }
   @media (max-width: 674px) {
-    display: none;
+    font-size: 0.8rem;
+    /* display: none; */
   }
 `;
 

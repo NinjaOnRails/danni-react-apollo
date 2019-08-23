@@ -17,7 +17,7 @@ const Nav = () => (
             </a>
           </Link>
           <Link href="/new">
-            <a>THÊM VIDEO</a>
+            <a>Thêm Video</a>
           </Link>
           <Link href="/about">
             <a>About</a>
