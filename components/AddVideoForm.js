@@ -157,17 +157,18 @@ const AddVideoForm = ({
                 />
                 Tags:
               </label>
+              <input
+                type="text"
+                name="tags"
+                placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                value={tags}
+                onChange={handleChange}
+              />
               {isTags && (
-                <>
-                  <div>{originTags.join(' ')}</div>
-                  <input
-                    type="text"
-                    name="tags"
-                    placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                    value={tags}
-                    onChange={handleChange}
-                  />
-                </>
+                <Segment>
+                  <p>Tags của video gốc:</p>
+                  {originTags.join(' ')}
+                </Segment>
               )}
               <label htmlFor="defaultVolume">
                 <input
