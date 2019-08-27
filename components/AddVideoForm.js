@@ -124,6 +124,7 @@ const AddVideoForm = ({
                   type="text"
                   id="title"
                   name="title"
+                  maxLength="100"
                   required
                   value={title}
                   onChange={handleChange}
@@ -144,6 +145,7 @@ const AddVideoForm = ({
                   <input
                     type="text"
                     name="description"
+                    maxLength="5000"
                     value={description}
                     onChange={handleChange}
                   />
@@ -162,6 +164,7 @@ const AddVideoForm = ({
               <input
                 type="text"
                 name="tags"
+                maxLength="500"
                 placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
                 value={tags}
                 onChange={handleChange}

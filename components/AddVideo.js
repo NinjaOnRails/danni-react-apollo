@@ -266,6 +266,8 @@ class AddVideo extends Component {
       isDefaultVolume,
       secureUrl,
       audioDuration,
+      isDescription,
+      isTags,
     } = this.state;
 
     // Stop form from submitting
@@ -287,7 +289,7 @@ class AddVideo extends Component {
       if (Math.abs(duration - audioDuration) > 30) {
         return this.setState({
           error:
-            'File audio của bạn không được chênh lệch quá 30 giây so với độ dài YouTube video',
+            'File audio của bạn không được chênh lệch quá 30 giây so với độ dài của YouTube video',
         });
       }
 
@@ -297,14 +299,14 @@ class AddVideo extends Component {
         },
       } = await createAudio({
         variables: {
+          video: id,
           source: secureUrl,
+          duration: audioDuration,
           language,
           title,
-          description,
-          tags,
+          description: isDescription ? description : undefined,
+          tags: isTags ? tags : undefined,
           defaultVolume: isDefaultVolume ? defaultVolume : undefined,
-          video: id,
-          duration: audioDuration,
         },
       });
 
