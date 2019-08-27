@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
 const MobileNavStyles = styled.ul`
-  display: grid;
-  justify-content: end;
-  align-content: center;
+
   box-sizing: border-box;
   z-index: 90;
   margin: 0;
@@ -22,7 +20,7 @@ const MobileNavStyles = styled.ul`
   }
 
   li ul {
-    display:  ${props => props.menuOpen ? "block" : "none"};
+    display: ${props => (props.menuOpen ? 'block' : 'none')};
     position: absolute;
     background-color: ${props => props.theme.lightgrey};
     opacity: 0.7;
@@ -87,7 +85,7 @@ const MobileNavStyles = styled.ul`
       content: none;
     }
   }
-  @media (min-width: 674px) {
+  @media (min-width: 568px) {
     display: none;
   }
 `;

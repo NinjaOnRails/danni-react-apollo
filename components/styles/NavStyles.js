@@ -20,9 +20,9 @@ const NavStyles = styled.ul`
     cursor: pointer;
     color: ${props => props.theme.black};
     font-weight: 800;
-    @media (max-width: 700px) {
+    @media (max-width: 667px) {
       font-size: 10px;
-      padding: 0 10px;
+      padding: 0 5px;
     }
     &:before {
       content: '';
@@ -61,7 +61,7 @@ const NavStyles = styled.ul`
     justify-content: center;
     font-size: 1.5rem;
   }
-  @media (max-width: 674px) {
+  @media (max-width: 567px) {
     font-size: 0.8rem;
     display: none;
   }

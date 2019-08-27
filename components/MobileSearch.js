@@ -13,7 +13,7 @@ const StyledMobileSearch = styled.div`
     margin: auto 5px;
     box-sizing: border-box;
     height: 30px;
-    @media (min-width: 499px) {
+    @media (min-width: 673px) {
       display: none;
     }
   }

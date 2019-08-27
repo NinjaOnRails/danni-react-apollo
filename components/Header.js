@@ -47,6 +47,7 @@ const Logo = styled.h1`
 const StyledHeader = styled.header`
   /* z-index: 99; */
   position: sticky;
+  width: 100%;
   top: 0;
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
@@ -55,7 +56,6 @@ const StyledHeader = styled.header`
     justify-content: space-between;
     align-items: stretch;
     background-color: white;
-
     @media (max-width: 1300px) {
       grid-template-columns: 1fr;
       justify-content: center;
@@ -75,9 +75,9 @@ const StyledHeader = styled.header`
 
 const Header = () => (
   <StyledHeader>
-    <div className="bar">
+    <div className='bar'>
       <Logo>
-        <Link href="/">
+        <Link href='/'>
           <a>danni.tv</a>
         </Link>
       </Logo>

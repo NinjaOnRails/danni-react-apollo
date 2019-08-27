@@ -5,22 +5,18 @@ import User from './User';
 import Signout from './Signout';
 
 const links = [
-  { name: 'HOME', href: '/', alwaysVisible: 0 },
-  { name: 'VIDEO+', href: '/new', alwaysVisible: 0 },
-  { name: 'ABOUT', href: '/about', alwaysVisible: 0 },
-  { name: 'Đăng Ký', href: '/signup', alwaysVisible: 1 },
-  { name: 'Đăng Nhập', href: '/signin', alwaysVisible: 1 },
-  { name: 'Thoat', href: '/signout', alwaysVisible: 2 },
+  { name: 'HOME', href: '/', alwaysVisible: true },
+  { name: 'VIDEO+', href: '/new', alwaysVisible: true },
+  { name: 'ABOUT', href: '/about', alwaysVisible: true },
+  { name: 'Đăng Ký', href: '/signup', isAuth: false },
+  { name: 'Đăng Nhập', href: '/signin', isAuth: false },
+  { name: 'Thoát', href: '/signout', isAuth: true },
 ];
 
 class MobileNav extends React.Component {
   state = {
     menuOpen: false,
   };
-
-  shouldComponentUpdate() {
-    return false;
-  }
 
   handleClick() {
     this.setState({ menuOpen: !this.state.menuOpen });
@@ -31,9 +27,11 @@ class MobileNav extends React.Component {
   }
 
   renderLinks(currentUser) {
-    console.log('render links');
-    return links.map(({ name, href, alwaysVisible }) => {
-      if (alwaysVisible === 0 || currentUser === alwaysVisible) {
+    return links.map(({ name, href, alwaysVisible, isAuth }) => {
+      if (
+        alwaysVisible ||
+        ((currentUser && isAuth) || (!currentUser && !isAuth))
+      ) {
         return (
           <li key={name} onClick={() => this.handleLinkClick()}>
             <Link href={href}>
@@ -51,12 +49,8 @@ class MobileNav extends React.Component {
         {({ data }) => {
           const currentUser = data ? data.currentUser : null;
           return (
-            <MobileNavStyles
-              data-test='nav'
-              menuOpen={this.state.menuOpen}
-              onClick={() => this.handleClick()}
-            >
-              <li>
+            <MobileNavStyles data-test='nav' menuOpen={this.state.menuOpen}>
+              <li onClick={() => this.handleClick()}>
                 <button type='button' className='menu'>
                   MENU
                 </button>
