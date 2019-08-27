@@ -97,7 +97,7 @@ class AddVideo extends Component {
     if (name === 'source' && val.length >= 11) this.onSourceFill(val.trim());
 
     // Controlled set state
-    this.setState({ [name]: val });
+    this.setState({ [name]: val, error: '' });
   };
 
   handleDropdown = (e, { value }) => {
@@ -105,7 +105,7 @@ class AddVideo extends Component {
     if (language !== languageOptions[value] && deleteToken) {
       this.onDeleteFileSubmit();
     }
-    this.setState({ language: languageOptions[value] });
+    this.setState({ language: languageOptions[value], error: '' });
   };
 
   onSourceFill = source => {
@@ -185,7 +185,7 @@ class AddVideo extends Component {
 
   onUploadFileSubmit = async (cloudinaryAuth, id, e) => {
     // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false });
+    this.setState({ uploadError: false, error: '' });
     const { audioSource, youtubeId, language, deleteToken } = this.state;
     const file = e ? e.target.files[0] : audioSource;
 
@@ -241,6 +241,7 @@ class AddVideo extends Component {
     this.setState({
       uploadProgress: 0,
       secureUrl: '',
+      error: '',
     });
 
     const res = await deleteFile(deleteToken);
@@ -272,6 +273,8 @@ class AddVideo extends Component {
 
     // Stop form from submitting
     e.preventDefault();
+
+    this.setState({ error: '' });
 
     if (isAudioSource && !secureUrl)
       return this.setState({ error: 'Chưa tải file lên' });
