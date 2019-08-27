@@ -34,7 +34,7 @@ const Nav = () => (
               </Link> */}
             </>
           )}
-          {!currentUser && (
+          {/* {!currentUser && (
             <>
               <Link href="/signup">
                 <a>Đăng Ký</a>
@@ -43,7 +43,7 @@ const Nav = () => (
                 <a>Đăng Nhập</a>
               </Link>
             </>
-          )}
+          )} */}
         </NavStyles>
       );
     }}

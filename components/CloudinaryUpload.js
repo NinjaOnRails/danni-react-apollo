@@ -32,6 +32,7 @@ class CloudinaryUpload extends Component {
       secureUrl,
       handleChange,
       audioSource,
+      onAudioLoadedMetadata,
     } = this.props;
     return (
       <Query query={CURRENT_USER_QUERY}>
@@ -108,7 +109,11 @@ class CloudinaryUpload extends Component {
                     (deleteToken && (
                       <>
                         <p>File audio đã được tải lên:</p>
-                        <audio controls src={secureUrl}>
+                        <audio
+                          controls
+                          src={secureUrl}
+                          onLoadedMetadata={e => onAudioLoadedMetadata(e)}
+                        >
                           <track kind="captions" />
                         </audio>
                         <Button
@@ -143,6 +148,7 @@ CloudinaryUpload.propTypes = {
   onDeleteFileSubmit: PropTypes.func.isRequired,
   uploadProgress: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
+  onAudioLoadedMetadata: PropTypes.func.isRequired,
   audioSource: PropTypes.string.isRequired,
 };
 

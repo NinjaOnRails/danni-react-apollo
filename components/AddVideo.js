@@ -18,6 +18,7 @@ const CREATE_VIDEO_MUTATION = gql`
     createVideo(source: $source, language: $language) {
       id
       originId
+      duration
     }
   }
 `;
@@ -29,6 +30,7 @@ const CREATE_AUDIO_MUTATION = gql`
     $title: String!
     $description: String
     $tags: String
+    $duration: Int
     $defaultVolume: Int
     $video: ID!
   ) {
@@ -39,6 +41,7 @@ const CREATE_AUDIO_MUTATION = gql`
         title: $title
         description: $description
         tags: $tags
+        duration: $duration
         defaultVolume: $defaultVolume
         video: $video
       }
@@ -76,6 +79,7 @@ class AddVideo extends Component {
     deleteToken: '',
     fetchingYoutube: false,
     error: '',
+    audioDuration: 0,
   };
 
   handleChange = ({ target: { name, type, value, checked } }) => {
@@ -97,10 +101,8 @@ class AddVideo extends Component {
   };
 
   handleDropdown = (e, { value }) => {
-    if (
-      this.state.language !== languageOptions[value] &&
-      this.state.deleteToken
-    ) {
+    const { language, deleteToken } = this.state;
+    if (language !== languageOptions[value] && deleteToken) {
       this.onDeleteFileSubmit();
     }
     this.setState({ language: languageOptions[value] });
@@ -210,7 +212,7 @@ class AddVideo extends Component {
     // Upload file with post request
     try {
       const {
-        data: { secure_url: secureUrl, delete_token: deleteToken },
+        data: { secure_url: secureUrl, delete_token: newDeleteToken },
       } = await axios({
         method: 'post',
         url,
@@ -224,7 +226,7 @@ class AddVideo extends Component {
       });
       this.setState({
         secureUrl,
-        deleteToken,
+        deleteToken: newDeleteToken,
         audioSource: '',
       });
     } catch {
@@ -235,17 +237,22 @@ class AddVideo extends Component {
   };
 
   onDeleteFileSubmit = async () => {
+    const { deleteToken } = this.state;
     this.setState({
       uploadProgress: 0,
       secureUrl: '',
     });
 
-    const res = await deleteFile(this.state.deleteToken);
+    const res = await deleteFile(deleteToken);
     if (res.status === 200) {
       this.setState({
         deleteToken: '',
       });
     }
+  };
+
+  onAudioLoadedMetadata = e => {
+    this.setState({ audioDuration: Math.round(e.target.duration) });
   };
 
   onFormSubmit = async (e, createAudio, createVideo) => {
@@ -258,6 +265,7 @@ class AddVideo extends Component {
       defaultVolume,
       isDefaultVolume,
       secureUrl,
+      audioDuration,
     } = this.state;
 
     // Stop form from submitting
@@ -269,12 +277,20 @@ class AddVideo extends Component {
     // Call createVideo mutation
     const {
       data: {
-        createVideo: { id },
+        createVideo: { id, duration },
       },
     } = await createVideo();
 
     // Call createAudio mutation
     if (secureUrl && isAudioSource) {
+      // Check if audio file's duration is within 30s of video's duration
+      if (Math.abs(duration - audioDuration) > 30) {
+        return this.setState({
+          error:
+            'File audio của bạn không được chênh lệch quá 30 giây so với độ dài YouTube video',
+        });
+      }
+
       const {
         data: {
           createAudio: { id: audioId },
@@ -288,30 +304,32 @@ class AddVideo extends Component {
           tags,
           defaultVolume: isDefaultVolume ? defaultVolume : undefined,
           video: id,
+          duration: audioDuration,
         },
       });
 
-      // Redirect to newly created Video watch page
-      Router.push({
-        pathname: '/watch',
-        query: { id, audioId },
-      });
-
+      // Mixpanel send stat
       mixpanel.track('New Video', {
         'Audio Language': language,
       });
-    } else {
-      this.onDeleteFileSubmit();
 
-      Router.push({
+      // Redirect to newly created Video watch page
+      return Router.push({
         pathname: '/watch',
-        query: { id },
-      });
-
-      mixpanel.track('New Video', {
-        'Audio Language': 'no-audio',
+        query: { id, audioId },
       });
     }
+    this.onDeleteFileSubmit();
+
+    // Mixpanel send stat
+    mixpanel.track('New Video', {
+      'Audio Language': 'no-audio',
+    });
+
+    return Router.push({
+      pathname: '/watch',
+      query: { id },
+    });
   };
 
   render() {
@@ -355,6 +373,7 @@ class AddVideo extends Component {
                     handleChange={this.handleChange}
                     onUploadFileSubmit={this.onUploadFileSubmit}
                     onDeleteFileSubmit={this.onDeleteFileSubmit}
+                    onAudioLoadedMetadata={this.onAudioLoadedMetadata}
                   />
                 </Form>
               </>

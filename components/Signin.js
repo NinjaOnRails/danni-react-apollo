@@ -68,7 +68,7 @@ class Signin extends Component {
                     onChange={this.saveToState}
                   />
                 </label>
-                <button type="submit">Đăng Nhập</button>
+                <button type="submit">{loading && 'Đang '}Đăng Nhập</button>
               </fieldset>
               <Link href="/requestReset">
                 <a>Quên mật khẩu</a>

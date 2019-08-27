@@ -8,6 +8,7 @@ const NavStyles = styled.ul`
   font-size: 2rem;
   a,
   button {
+    line-height: normal;
     padding: 1rem 3rem;
     display: flex;
     align-items: center;
@@ -61,8 +62,8 @@ const NavStyles = styled.ul`
     justify-content: center;
     font-size: 1.5rem;
   }
-  @media (max-width: 674px) {
-    font-size: 0.8rem;
+  @media (max-width: 675px) {
+    font-size: 1rem;
     /* display: none; */
   }
 `;

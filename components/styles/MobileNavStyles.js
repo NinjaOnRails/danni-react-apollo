@@ -91,7 +91,7 @@ const MobileNavStyles = styled.ul`
       content: none;
     }
   }
-  /* @media (min-width: 674px) { */
+  /* @media (min-width: 676px) { */
     display: none;
   /* } */
 `;

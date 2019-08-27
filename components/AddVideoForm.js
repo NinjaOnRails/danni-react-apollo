@@ -51,6 +51,7 @@ const AddVideoForm = ({
   handleChange,
   onUploadFileSubmit,
   onDeleteFileSubmit,
+  onAudioLoadedMetadata,
 }) => {
   return (
     <fieldset
@@ -115,6 +116,7 @@ const AddVideoForm = ({
                 secureUrl={secureUrl}
                 handleChange={handleChange}
                 audioSource={audioSource}
+                onAudioLoadedMetadata={onAudioLoadedMetadata}
               />
               <label htmlFor="title">
                 Tiêu đề:
@@ -194,7 +196,9 @@ const AddVideoForm = ({
           )}
         </>
       )}
-      <button type="submit">Submit</button>
+      <button type="submit">
+        Submit{(loadingCreateVideo || loadingCreateAudio) && 'ting'}
+      </button>
     </fieldset>
   );
 };
@@ -228,6 +232,7 @@ AddVideoForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   onUploadFileSubmit: PropTypes.func.isRequired,
   onDeleteFileSubmit: PropTypes.func.isRequired,
+  onAudioLoadedMetadata: PropTypes.func.isRequired,
 };
 
 export default AddVideoForm;
