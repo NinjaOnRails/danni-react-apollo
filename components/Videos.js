@@ -43,7 +43,23 @@ const VideosListStyled = styled.div`
     width: 320px;
     height: 180px;
   }
-  @media (max-width: 630px) {
+  .ui.large.label {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+  }
+  .ui.card {
+    box-shadow: none;
+  }
+  .ui.card > .content {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .ui.card > .content > .meta + .description {
+    margin-top: 0;
+  }
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
   }
   @media (min-width: 1000px) {
@@ -95,6 +111,9 @@ class Videos extends Component {
                   duration,
                   addedBy,
                 }) => {
+                  const displayDuration = `${Math.round(
+                    duration / 60
+                  )}:${duration % 60}`;
                   if (audio.length === 0) {
                     return (
                       <div key={id}>
@@ -111,10 +130,7 @@ class Videos extends Component {
                                 alt={originTitle}
                                 label={{
                                   color: 'black',
-                                  content: `${Math.round(
-                                    duration / 60
-                                  )}:${duration % 60}`,
-                                  corner: 'right',
+                                  content: displayDuration,
                                   size: 'large',
                                 }}
                               />
@@ -153,10 +169,7 @@ class Videos extends Component {
                                 alt={title}
                                 label={{
                                   color: 'black',
-                                  content: `${Math.round(
-                                    duration / 60
-                                  )}:${duration % 60}`,
-                                  corner: 'right',
+                                  content: displayDuration,
                                   size: 'large',
                                 }}
                               />
