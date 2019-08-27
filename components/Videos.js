@@ -39,9 +39,8 @@ const VideosListStyled = styled.div`
   image {
     cursor: pointer;
   }
-  .ui.placeholder .rectangular.image:not(.header) {
-    width: 320px;
-    height: 180px;
+  .ui.card {
+    box-shadow: none;
   }
   .ui.large.label {
     position: absolute;
@@ -49,15 +48,17 @@ const VideosListStyled = styled.div`
     bottom: 0;
     right: 0;
   }
-  .ui.card {
-    box-shadow: none;
-  }
   .ui.card > .content {
     padding-left: 0px;
     padding-right: 0px;
   }
   .ui.card > .content > .meta + .description {
     margin-top: 0;
+  }
+  .ui.placeholder .rectangular.image:not(.header) {
+    width: 290px;
+    height: 163.13px;
+    padding-top: 0;
   }
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
@@ -81,11 +82,13 @@ class Videos extends Component {
           if (loading) {
             return (
               <VideosListStyled>
-                {[...Array(12)].map((x, i) => (
+                {[...Array(15)].map((x, i) => (
                   <span key={i}>
                     <Placeholder>
                       <Placeholder.Image rectangular />
                       <Placeholder.Paragraph>
+                        <Placeholder.Line />
+                        <Placeholder.Line />
                         <Placeholder.Line />
                         <Placeholder.Line />
                       </Placeholder.Paragraph>
@@ -155,7 +158,7 @@ class Videos extends Component {
 
                   return audio.map(
                     ({ title, id: audioId, author: { displayName } }) => (
-                      <div key={id}>
+                      <div key={audioId}>
                         <Link
                           href={{
                             pathname: '/watch',

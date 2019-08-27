@@ -45,8 +45,7 @@
     "react-share": "^3.0.0",
     "semantic-ui-react": "^0.87.1",
     "sillyname": "^0.1.0",
-    "styled-components": "^4.2.0",
-    "xml2js": "^0.4.19"
+    "styled-components": "^4.2.0"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",

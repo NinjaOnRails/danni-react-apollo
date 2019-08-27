@@ -142,10 +142,10 @@ const AddVideoForm = ({
               </label>
               {isDescription && (
                 <label htmlFor="description">
-                  <input
-                    type="text"
+                  <textarea
                     name="description"
                     maxLength="5000"
+                    rows="10"
                     value={description}
                     onChange={handleChange}
                   />
@@ -161,19 +161,21 @@ const AddVideoForm = ({
                 />
                 Tags:
               </label>
-              <input
-                type="text"
-                name="tags"
-                maxLength="500"
-                placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                value={tags}
-                onChange={handleChange}
-              />
               {isTags && (
-                <Segment>
-                  <p>Tags của video gốc:</p>
-                  {originTags.join(' ')}
-                </Segment>
+                <>
+                  <input
+                    type="text"
+                    name="tags"
+                    maxLength="500"
+                    placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                    value={tags}
+                    onChange={handleChange}
+                  />
+                  <Segment>
+                    <p>Tags của video gốc:</p>
+                    {originTags.join(' ')}
+                  </Segment>
+                </>
               )}
               <label htmlFor="defaultVolume">
                 <input
