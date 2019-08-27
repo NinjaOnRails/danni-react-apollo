@@ -30,7 +30,7 @@ const CREATE_AUDIO_MUTATION = gql`
     $title: String!
     $description: String
     $tags: String
-    $duration: Int
+    $duration: Int!
     $defaultVolume: Int
     $video: ID!
   ) {
