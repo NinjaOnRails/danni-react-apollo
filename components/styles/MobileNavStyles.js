@@ -22,7 +22,7 @@ const MobileNavStyles = styled.ul`
   }
 
   li ul {
-    display: none;
+    display:  ${props => props.menuOpen ? "block" : "none"};
     position: absolute;
     background-color: ${props => props.theme.lightgrey};
     opacity: 0.7;
@@ -34,10 +34,6 @@ const MobileNavStyles = styled.ul`
     width: 150%;
     left: 20%;
     margin-left: -30px;
-  }
-
-  li:hover ul {
-    display: block;
   }
 
   li ul li:hover {
@@ -58,10 +54,10 @@ const MobileNavStyles = styled.ul`
     font-weight: 800;
     width: 80%;
     height: 100%;
-    /* @media (max-width: 700px) {
+    @media (max-width: 700px) {
       font-size: 10px;
       padding: 0 10px;
-    } */
+    }
     &:after {
       height: 2px;
       background: red;
@@ -91,9 +87,9 @@ const MobileNavStyles = styled.ul`
       content: none;
     }
   }
-  /* @media (min-width: 674px) { */
+  @media (min-width: 674px) {
     display: none;
-  /* } */
+  }
 `;
 
 export default MobileNavStyles;

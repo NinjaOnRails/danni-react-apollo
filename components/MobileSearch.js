@@ -8,7 +8,7 @@ import { Search as SemanticSearch } from 'semantic-ui-react';
 import { DropDown, DropDownItem } from './styles/DropDown';
 import { SEARCH_VIDEOS_QUERY, routetoItem } from './Search';
 
-const StyledMobileISearch = styled(SemanticSearch)`
+const StyledMobileSearch = styled.div`
   && {
     margin: auto 5px;
     box-sizing: border-box;
@@ -51,11 +51,7 @@ class MobileSearch extends React.Component {
     const { videos, loading } = this.state;
     resetIdCounter();
     return (
-      <StyledMobileISearch
-        placeholder='Search...'
-        icon='search'
-        loading={loading}
-      >
+      <StyledMobileSearch>
         <Downshift
           onChange={routetoItem}
           itemToString={video => (video === null ? '' : video.titleVi)}
@@ -70,16 +66,13 @@ class MobileSearch extends React.Component {
             <div>
               <ApolloConsumer>
                 {client => (
-                  <input
-                    {...getInputProps({
-                      type: 'search',
-                      placeholder: 'Search',
-                      className: loading ? 'loading' : '',
-                      onChange: e => {
-                        e.persist();
-                        this.onChange(e, client);
-                      },
-                    })}
+                  <SemanticSearch
+                    loading={loading}
+                    placeholder='Search...'
+                    onSearchChange={e => {
+                      e.persist();
+                      this.onChange(e, client);
+                    }}
                   />
                 )}
               </ApolloConsumer>
@@ -109,7 +102,7 @@ class MobileSearch extends React.Component {
             </div>
           )}
         </Downshift>
-      </StyledMobileISearch>
+      </StyledMobileSearch>
     );
   }
 }

@@ -20,10 +20,10 @@ const NavStyles = styled.ul`
     cursor: pointer;
     color: ${props => props.theme.black};
     font-weight: 800;
-    /* @media (max-width: 700px) {
+    @media (max-width: 700px) {
       font-size: 10px;
       padding: 0 10px;
-    } */
+    }
     &:before {
       content: '';
       width: 2px;
@@ -63,7 +63,7 @@ const NavStyles = styled.ul`
   }
   @media (max-width: 674px) {
     font-size: 0.8rem;
-    /* display: none; */
+    display: none;
   }
 `;
 
