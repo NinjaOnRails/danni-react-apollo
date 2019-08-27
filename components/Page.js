@@ -60,7 +60,7 @@ class Page extends Component {
           <GlobalStyle />
           <Meta />
           <Header />
-          <Container>
+          <Container fluid>
             <Inner>{children}</Inner>
           </Container>
         </StyledPage>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
-import { Placeholder, Card, Image } from 'semantic-ui-react';
+import { Placeholder, Card, Icon, Image } from 'semantic-ui-react';
 import Link from 'next/link';
 import Error from './ErrorMessage';
 
@@ -14,9 +14,16 @@ const ALL_VIDEOS_QUERY = gql`
       originThumbnailUrlSd
       originTitle
       duration
+      originAuthor
       audio {
         id
         title
+        author {
+          displayName
+        }
+      }
+      addedBy {
+        displayName
       }
     }
   }
@@ -26,24 +33,27 @@ const VideosListStyled = styled.div`
   font-size: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 60px;
-  max-width: ${props => props.theme.maxWidth};
+  grid-gap: 30px;
   margin: 0 auto;
+  justify-items: center;
   image {
     cursor: pointer;
-  }
-  @media (max-width: 719px) {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 1100px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  @media (min-width: 1700px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
   .ui.placeholder .rectangular.image:not(.header) {
     width: 320px;
     height: 180px;
+  }
+  @media (max-width: 630px) {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 1000px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (min-width: 1500px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @media (min-width: 1800px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   }
 `;
 
@@ -79,50 +89,57 @@ class Videos extends Component {
                   originThumbnailUrl,
                   originThumbnailUrlSd,
                   originTitle,
+                  originAuthor,
                   id,
                   audio,
+                  duration,
+                  addedBy,
                 }) => {
                   if (audio.length === 0) {
                     return (
                       <div key={id}>
-                        <Card>
-                          <Link
-                            href={{
-                              pathname: '/watch',
-                              query: { id },
-                            }}
-                          >
-                            <a>
+                        <Link
+                          href={{
+                            pathname: '/watch',
+                            query: { id },
+                          }}
+                        >
+                          <a>
+                            <Card>
                               <Image
                                 src={originThumbnailUrl || originThumbnailUrlSd}
                                 alt={originTitle}
-                              />
-                            </a>
-                          </Link>
-                          <Card.Content>
-                            <Card.Header>
-                              <Link
-                                href={{
-                                  pathname: '/watch',
-                                  query: { id },
+                                label={{
+                                  color: 'black',
+                                  content: `${Math.round(
+                                    duration / 60
+                                  )}:${duration % 60}`,
+                                  corner: 'right',
+                                  size: 'large',
                                 }}
-                              >
-                                <a>
-                                  {originTitle.length > 53
-                                    ? `${originTitle.substring(0, 53)}...`
+                              />
+                              <Card.Content>
+                                <Card.Header>
+                                  {originTitle.length > 70
+                                    ? `${originTitle.substring(0, 70)}...`
                                     : originTitle}
-                                </a>
-                              </Link>
-                            </Card.Header>
-                          </Card.Content>
-                        </Card>
+                                </Card.Header>
+                                <Card.Meta>{originAuthor}</Card.Meta>
+                                <Card.Description>
+                                  <Icon name="user" />
+                                  {addedBy.displayName}
+                                </Card.Description>
+                              </Card.Content>
+                            </Card>
+                          </a>
+                        </Link>
                       </div>
                     );
                   }
 
-                  return audio.map(({ title, id: audioId }) => (
-                    <div key={id}>
-                      <Card>
+                  return audio.map(
+                    ({ title, id: audioId, author: { displayName } }) => (
+                      <div key={id}>
                         <Link
                           href={{
                             pathname: '/watch',
@@ -130,31 +147,37 @@ class Videos extends Component {
                           }}
                         >
                           <a>
-                            <Image
-                              src={originThumbnailUrl || originThumbnailUrlSd}
-                              alt={title}
-                            />
+                            <Card>
+                              <Image
+                                src={originThumbnailUrl || originThumbnailUrlSd}
+                                alt={title}
+                                label={{
+                                  color: 'black',
+                                  content: `${Math.round(
+                                    duration / 60
+                                  )}:${duration % 60}`,
+                                  corner: 'right',
+                                  size: 'large',
+                                }}
+                              />
+                              <Card.Content>
+                                <Card.Header>
+                                  {title.length > 70
+                                    ? `${title.substring(0, 70)}...`
+                                    : title}
+                                </Card.Header>
+                                <Card.Meta>{originAuthor}</Card.Meta>
+                                <Card.Description>
+                                  <Icon name="user" />
+                                  {displayName}
+                                </Card.Description>
+                              </Card.Content>
+                            </Card>
                           </a>
                         </Link>
-                        <Card.Content>
-                          <Card.Header>
-                            <Link
-                              href={{
-                                pathname: '/watch',
-                                query: { id, audioId },
-                              }}
-                            >
-                              <a>
-                                {title.length > 53
-                                  ? `${title.substring(0, 53)}...`
-                                  : title}
-                              </a>
-                            </Link>
-                          </Card.Header>
-                        </Card.Content>
-                      </Card>
-                    </div>
-                  ));
+                      </div>
+                    )
+                  );
                 }
               )}
             </VideosListStyled>
