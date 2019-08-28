@@ -76,7 +76,7 @@ class VideoList extends Component {
                 return video.audio.map(
                   audio =>
                     audioId !== audio.id && (
-                      <List.Item key={id}>
+                      <List.Item key={audio.id}>
                         <Link
                           href={{
                             pathname: '/watch',

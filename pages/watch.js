@@ -1,12 +1,23 @@
-import { Container, Grid } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import Watch from '../components/Watch';
 import VideoList from '../components/VideoList';
 import CommentList from '../components/CommentList';
 
+const StyledContainer = styled.div`
+  padding: 0px 24px 0px 24px;
+  @media (max-width: 480px) {
+    padding: 0;
+    div.eleven.wide.computer.sixteen.wide.mobile.sixteen.wide.tablet.column {
+      padding: 0;
+    }
+  }
+`;
+
 const WatchPage = props => {
   return (
-    <Container>
+    <StyledContainer>
       <Grid>
         <Grid.Row>
           <Grid.Column mobile={16} tablet={16} computer={11}>
@@ -18,7 +29,7 @@ const WatchPage = props => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    </Container>
+    </StyledContainer>
   );
 };
 
