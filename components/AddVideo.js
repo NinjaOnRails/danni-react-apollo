@@ -289,12 +289,12 @@ class AddVideo extends Component {
     // Call createAudio mutation
     if (secureUrl && isAudioSource) {
       // Check if audio file's duration is within 30s of video's duration
-      if (Math.abs(duration - audioDuration) > 30) {
-        return this.setState({
-          error:
-            'File audio của bạn không được chênh lệch quá 30 giây so với độ dài của YouTube video',
-        });
-      }
+      // if (Math.abs(duration - audioDuration) > 30) {
+      //   return this.setState({
+      //     error:
+      //       'File audio của bạn không được chênh lệch quá 30 giây so với độ dài của YouTube video',
+      //   });
+      // }
 
       const {
         data: {

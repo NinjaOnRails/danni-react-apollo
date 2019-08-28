@@ -15,6 +15,7 @@ const ALL_VIDEOS_QUERY = gql`
       originTitle
       duration
       originAuthor
+      originViewCount
       audio {
         id
         title
@@ -45,8 +46,8 @@ const VideosListStyled = styled.div`
   .ui.large.label {
     position: absolute;
     z-index: 1;
-    bottom: 0;
-    right: 0;
+    bottom: 2px;
+    right: 2px;
   }
   .ui.card > .content {
     padding-left: 0px;
@@ -109,6 +110,7 @@ class Videos extends Component {
                   originThumbnailUrlSd,
                   originTitle,
                   originAuthor,
+                  originViewCount,
                   id,
                   audio,
                   duration,

@@ -47,8 +47,8 @@ const Logo = styled.h1`
 
 const StyledHeader = styled.header`
   z-index: 99;
-  position: sticky;
   top: 0;
+  position: sticky;
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
     display: grid;
