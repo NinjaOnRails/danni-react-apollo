@@ -6,9 +6,13 @@ import VideoList from '../components/VideoList';
 import CommentList from '../components/CommentList';
 
 const StyledContainer = styled.div`
+  margin: 0 auto;
+  max-width: 1366px;
   padding: 0px 24px 0px 24px;
-  @media (max-width: 480px) {
+  @media (max-width: 778px) {
     padding: 0;
+  }
+  @media (max-width: 480px) {
     div.eleven.wide.computer.sixteen.wide.mobile.sixteen.wide.tablet.column {
       padding: 0;
     }
