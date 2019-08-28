@@ -57,14 +57,14 @@ const NavStyles = styled.ul`
     }
   }
   @media (max-width: 1279px) {
-    border-top: 1px solid ${props => props.theme.lightgrey};
-    width: 100%;
-    justify-content: center;
     font-size: 1.5rem;
   }
+  @media (max-width: 772px) {
+    font-size: 1.2rem;
+  }
   @media (max-width: 639px) {
-    font-size: 1rem;
-    /* display: none; */
+    width: 100%;
+    justify-content: center;
   }
 `;
 

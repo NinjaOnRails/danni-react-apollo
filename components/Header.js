@@ -33,22 +33,20 @@ const Logo = styled.h1`
     text-decoration: none;
   }
   @media (max-width: 1279px) {
-    margin: 0;
-    text-align: center;
+    font-size: 3.5rem;
+  }
+  @media (max-width: 959px) {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
   @media (max-width: 639px) {
     display: none;
-    /* display: grid;
-    justify-content: start;
-    font-size: 15px;
-    transform: none; */
   }
 `;
 
 const StyledHeader = styled.header`
   z-index: 99;
   top: 0;
-  position: sticky;
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
     display: grid;
@@ -57,16 +55,12 @@ const StyledHeader = styled.header`
     align-items: stretch;
     background-color: white;
 
-    @media (max-width: 1279px) {
-      grid-template-columns: 1fr;
-      justify-content: center;
-    }
     @media (max-width: 639px) {
+      grid-template-columns: 1fr;
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
     }
   }
-
   .sub-bar {
     display: grid;
     grid-template-columns: 1fr auto;
