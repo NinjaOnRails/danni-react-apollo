@@ -27,6 +27,13 @@ const VideoItem = styled.div`
 
 const ListHeaderStyled = styled(List.Header)`
   &&&& {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-height: 1.3rem;
+    max-height: 3.9rem;
     font-size: 1.1rem;
     font-family: ${props => props.theme.font};
   }
@@ -90,9 +97,10 @@ class VideoList extends Component {
                               />
                               <List.Content>
                                 <ListHeaderStyled>
-                                  {originTitle.length > 34
+                                  {originTitle}
+                                  {/* {originTitle.length > 34
                                     ? `${originTitle.substring(0, 34)}...`
-                                    : originTitle}
+                                    : originTitle} */}
                                 </ListHeaderStyled>
                                 <ListDescriptionStyled>
                                   {originAuthor}
@@ -133,9 +141,10 @@ class VideoList extends Component {
                                 />
                                 <List.Content>
                                   <ListHeaderStyled>
-                                    {audio.title.length > 34
+                                    {audio.title}
+                                    {/* {audio.title.length > 34
                                       ? `${audio.title.substring(0, 34)}...`
-                                      : audio.title}
+                                      : audio.title} */}
                                   </ListHeaderStyled>
                                   <ListDescriptionStyled>
                                     {originAuthor}
