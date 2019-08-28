@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { Sidebar, Menu, Segment, Button } from 'semantic-ui-react';
 import MobileNavStyles from './styles/MobileNavStyles';
 import User from './User';
 import Signout from './Signout';
@@ -15,55 +16,89 @@ const links = [
 
 class MobileNav extends React.Component {
   state = {
-    menuOpen: false,
+    visible: false,
   };
 
-  handleClick() {
-    this.setState({ menuOpen: !this.state.menuOpen });
-  }
-
-  handleLinkClick() {
-    this.setState({ menuOpen: false });
-  }
-
-  renderLinks(currentUser) {
-    return links.map(({ name, href, alwaysVisible, isAuth }) => {
-      if (
-        alwaysVisible ||
-        ((currentUser && isAuth) || (!currentUser && !isAuth))
-      ) {
-        return (
-          <li key={name} onClick={() => this.handleLinkClick()}>
-            <Link href={href}>
-              <a>{name}</a>
-            </Link>
-          </li>
-        );
-      }
-    });
-  }
+  handleShowClick = () => this.setState({ visible: true });
+  
+  handleSidebarHide = () => this.setState({ visible: false });
 
   render() {
+    const { visible } = this.state;
     return (
-      <User>
-        {({ data }) => {
-          const currentUser = data ? data.currentUser : null;
-          return (
-            <MobileNavStyles data-test='nav' menuOpen={this.state.menuOpen}>
-              <li onClick={() => this.handleClick()}>
-                <button type='button' className='menu'>
-                  MENU
-                </button>
-                {/* <Icon name="caret down" size="small"/> */}
-                <ul>{this.renderLinks(currentUser)}</ul>
-              </li>
-            </MobileNavStyles>
-          );
-        }}
-      </User>
+      <div>
+        <Button onClick={this.handleShowClick}>MENU</Button>
+        <Sidebar
+          as={Menu}
+          animation='overlay'
+          direction='right'
+          icon='labeled'
+          inverted
+          onHide={this.handleSidebarHide}
+          vertical
+          visible={visible}
+          width='thin'
+        >
+          <Menu.Item as='a'>Home</Menu.Item>
+          <Menu.Item as='a'>Games</Menu.Item>
+          <Menu.Item as='a'>Channels</Menu.Item>
+        </Sidebar>
+      </div>
     );
   }
 }
+
+// class MobileNav extends React.Component {
+//   state = {
+//     menuOpen: false,
+//   };
+
+//   handleClick() {
+//     this.setState({ menuOpen: !this.state.menuOpen });
+//   }
+
+//   handleLinkClick() {
+//     this.setState({ menuOpen: false });
+//   }
+
+//   renderLinks(currentUser) {
+//     return links.map(({ name, href, alwaysVisible, isAuth }) => {
+//       if (
+//         alwaysVisible ||
+//         ((currentUser && isAuth) || (!currentUser && !isAuth))
+//       ) {
+//         return (
+//           <li key={name} onClick={() => this.handleLinkClick()}>
+//             <Link href={href}>
+//               <a>{name}</a>
+//             </Link>
+//           </li>
+//         );
+//       }
+//     });
+//   }
+
+//   render() {
+//     return (
+//       <User>
+//         {({ data }) => {
+//           const currentUser = data ? data.currentUser : null;
+//           return (
+//             <MobileNavStyles data-test='nav' menuOpen={this.state.menuOpen}>
+//               <li onClick={() => this.handleClick()}>
+//                 <button type='button' className='menu'>
+//                   MENU
+//                 </button>
+//                 {/* <Icon name="caret down" size="small"/> */}
+//                 <ul>{this.renderLinks(currentUser)}</ul>
+//               </li>
+//             </MobileNavStyles>
+//           );
+//         }}
+//       </User>
+//     );
+//   }
+// }
 
 export default MobileNav;
 

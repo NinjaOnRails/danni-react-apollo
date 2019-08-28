@@ -4,6 +4,7 @@ import { Container } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Header from './Header';
 import Meta from './Meta';
+import SideDrawer from './ui/SideDrawer';
 
 const theme = {
   red: '#FF0000',
@@ -41,7 +42,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-size: 1.5rem;
     line-height: 2;
-    font-family: ${props => props.theme.font}
+    font-family: ${props => props.theme.font};
+    overflow: hidden;
   }
   a {
     text-decoration: none;
@@ -52,6 +54,18 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 class Page extends Component {
+  state = {
+    showSide: false,
+  };
+
+  closeSideDrawer() {
+    this.setState({ showSide: false });
+  }
+
+  drawerToggleClick() {
+    this.setState({ showSide: !this.state.showSide });
+  }
+
   render() {
     const { children } = this.props;
     return (
@@ -59,7 +73,11 @@ class Page extends Component {
         <StyledPage>
           <GlobalStyle />
           <Meta />
-          <Header />
+          <Header drawerToggleClick={() => this.drawerToggleClick()} />
+          <SideDrawer
+            show={this.state.showSide}
+            closed={() => this.closeSideDrawer()}
+          />
           <Container>
             <Inner>{children}</Inner>
           </Container>

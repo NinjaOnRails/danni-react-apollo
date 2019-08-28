@@ -1,11 +1,12 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import Nav from './Nav';
-import MobileNav from './MobileNav';
+// import MobileNav from './MobileNav';
 import Search from './Search';
+import Logo from './Logo';
 import MobileSearch from './MobileSearch';
+import DrawerToggle from './ui/DrawerToggle';
 
 Router.onRouteChangeStart = () => {
   NProgress.start();
@@ -17,32 +18,6 @@ Router.onRouteChangeComplete = () => {
 Router.onRouteChangeError = () => {
   NProgress.done();
 };
-
-const Logo = styled.h1`
-  font-size: 4rem;
-  margin-left: 2rem;
-  position: relative;
-  z-index: 2;
-  transform: skew(-7deg);
-
-  a {
-    padding: 0.5rem 1rem;
-    background: ${props => props.theme.red};
-    color: white;
-    text-transform: uppercase;
-    text-decoration: none;
-  }
-  @media (max-width: 1300px) {
-    margin: 0;
-    text-align: center;
-  }
-  @media (max-width: 673px) {
-    display: grid;
-    justify-content: start;
-    font-size: 15px;
-    transform: none;
-  }
-`;
 
 const StyledHeader = styled.header`
   /* z-index: 99; */
@@ -57,7 +32,7 @@ const StyledHeader = styled.header`
     align-items: stretch;
     background-color: white;
     @media (max-width: 1300px) {
-      grid-template-columns: 1fr;
+      grid-template-columns: 8fr 2fr;
       justify-content: center;
     }
     @media (max-width: 673px) {
@@ -65,7 +40,6 @@ const StyledHeader = styled.header`
       border-bottom: 4px solid ${props => props.theme.black};
     }
   }
-
   .sub-bar {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -73,17 +47,15 @@ const StyledHeader = styled.header`
   }
 `;
 
-const Header = () => (
+const Header = ({ drawerToggleClick }) => (
   <StyledHeader>
     <div className='bar'>
-      <Logo>
-        <Link href='/'>
-          <a>danni.tv</a>
-        </Link>
-      </Logo>
+      <Logo />
       <Nav />
-      <MobileSearch />
-      <MobileNav />
+      {/* <MobileSearch /> */}
+      <DrawerToggle clicked={drawerToggleClick} />
+
+      {/* <MobileNav /> */}
     </div>
     <Search />
   </StyledHeader>

@@ -52,7 +52,7 @@ const MobileNavStyles = styled.ul`
     font-weight: 800;
     width: 80%;
     height: 100%;
-    @media (max-width: 700px) {
+    @media (max-width: 667px) {
       font-size: 10px;
       padding: 0 10px;
     }
