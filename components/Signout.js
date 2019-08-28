@@ -18,7 +18,7 @@ const Signout = () => (
   >
     {signout => (
       <button type="button" onClick={signout}>
-        Đăng Xuất
+        Thoát
       </button>
     )}
   </Mutation>

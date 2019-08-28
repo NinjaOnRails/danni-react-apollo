@@ -119,9 +119,12 @@ class Videos extends Component {
                   duration,
                   addedBy,
                 }) => {
-                  const displayDuration = `${Math.round(
-                    duration / 60
-                  )}:${duration % 60}`;
+                  // Convert and format duration
+                  const seconds = duration % 60;
+                  const displayDuration = `${Math.round(duration / 60)}:${
+                    seconds > 9 ? seconds : `0${seconds}`
+                  }`;
+
                   if (audio.length === 0) {
                     return (
                       <div key={id}>
