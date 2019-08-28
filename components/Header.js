@@ -32,11 +32,11 @@ const Logo = styled.h1`
     text-transform: uppercase;
     text-decoration: none;
   }
-  @media (max-width: 1300px) {
+  @media (max-width: 1279px) {
     margin: 0;
     text-align: center;
   }
-  @media (max-width: 675px) {
+  @media (max-width: 639px) {
     display: none;
     /* display: grid;
     justify-content: start;
@@ -57,11 +57,11 @@ const StyledHeader = styled.header`
     align-items: stretch;
     background-color: white;
 
-    @media (max-width: 1300px) {
+    @media (max-width: 1279px) {
       grid-template-columns: 1fr;
       justify-content: center;
     }
-    @media (max-width: 675px) {
+    @media (max-width: 639px) {
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
     }

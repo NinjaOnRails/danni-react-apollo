@@ -33,10 +33,10 @@ const ALL_VIDEOS_QUERY = gql`
 const VideosListStyled = styled.div`
   font-size: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 30px;
+  grid-template-columns: 290px 290px;
+  grid-gap: 15px;
   margin: 0 auto;
-  justify-items: center;
+  justify-content: center;
   image {
     cursor: pointer;
   }
@@ -61,17 +61,20 @@ const VideosListStyled = styled.div`
     height: 163.13px;
     padding-top: 0;
   }
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 639px) {
+    grid-template-columns: 290px;
   }
-  @media (min-width: 1000px) {
-    grid-template-columns: 1fr 1fr 1fr;
+  @media (min-width: 960px) {
+    grid-template-columns: 290px 290px 290px;
   }
-  @media (min-width: 1500px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+  @media (min-width: 1280px) {
+    grid-template-columns: 290px 290px 290px 290px;
   }
-  @media (min-width: 1800px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  @media (min-width: 1600px) {
+    grid-template-columns: 290px 290px 290px 290px 290px;
+  }
+  @media (min-width: 1920px) {
+    grid-template-columns: 290px 290px 290px 290px 290px 290px;
   }
 `;
 
