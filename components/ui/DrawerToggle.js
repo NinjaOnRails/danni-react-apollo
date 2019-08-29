@@ -7,14 +7,14 @@ const DrawerToggleStyles = styled.div`
   display: flex;
   justify-content: center;
   margin: auto 0;
-  @media (min-width: 500px) {
+  @media (min-width: 640px) {
     display: none;
   }
 `;
 
 const drawToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>
-    <Icon name='bars' size='large' />
+    <Icon name="bars" size="large" />
   </DrawerToggleStyles>
 );
 export default drawToggle;

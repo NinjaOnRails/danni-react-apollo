@@ -22,10 +22,6 @@ const NavStyles = styled.ul`
     cursor: pointer;
     color: ${props => props.theme.black};
     font-weight: 800;
-    @media (max-width: 667px) {
-      font-size: 10px;
-      padding: 0 5px;
-    }
     &:before {
       content: '';
       width: 2px;
@@ -64,9 +60,10 @@ const NavStyles = styled.ul`
     font-size: 1.2rem;
   }
   @media (max-width: 639px) {
-    font-size: 1rem;
+    display: none;
+    /* font-size: 1rem;
     width: 100%;
-    justify-content: center;
+    justify-content: center; */
   }
 `;
 

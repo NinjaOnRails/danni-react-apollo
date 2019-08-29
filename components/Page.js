@@ -43,7 +43,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.5rem;
     line-height: 2;
     font-family: ${props => props.theme.font};
-    overflow: hidden;
+    overflow: scroll;
   }
   a {
     text-decoration: none;

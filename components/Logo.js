@@ -18,21 +18,23 @@ const LogoStyles = styled.h1`
     text-transform: uppercase;
     text-decoration: none;
   }
-  @media (max-width: 1300px) {
-    margin: 0;
-    text-align: center;
+  @media (max-width: 1279px) {
+    font-size: 3.5rem;
   }
-  @media (max-width: 673px) {
+  @media (max-width: 959px) {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  @media (max-width: 639px) {
     display: ${props => (props.inDrawer ? '' : 'grid')};
-    justify-content: start;
-    font-size: 15px;
+    font-size: 2rem;
     transform: none;
   }
 `;
 
 const Logo = ({ inDrawer }) => (
   <LogoStyles inDrawer={inDrawer}>
-    <Link href='/'>
+    <Link href="/">
       <a>danni.tv</a>
     </Link>
   </LogoStyles>

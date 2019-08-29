@@ -7,7 +7,7 @@ import Logo from '../Logo';
 
 const links = [
   { name: 'home', href: '/', alwaysVisible: true, iconName: 'home' },
-  { name: 'add video', href: '/new', alwaysVisible: true, iconName: 'plus' },
+  { name: 'thêm video', href: '/new', alwaysVisible: true, iconName: 'plus' },
   { name: 'about', href: '/about', alwaysVisible: true, iconName: 'info' },
   { name: 'Đăng Nhập', href: '/signin', isAuth: false, iconName: 'user' },
   { name: 'Đăng Ký', href: '/signup', isAuth: false, iconName: 'user plus' },
@@ -29,7 +29,7 @@ const SideDrawerStyles = styled.div`
     transition: transform 0.3s ease-out;
   }
   .links {
-    border-top: solid 4px white;
+    /* border-top: solid 4px white; */
     .ui.vertical.icon.menu {
       width: 100%;
     }
@@ -56,7 +56,7 @@ const SideDrawerStyles = styled.div`
   .Close {
     transform: translateX(100%);
   }
-  @media (min-width: 500px) {
+  @media (min-width: 640px) {
     .SideDrawer {
       display: none;
     }
@@ -74,21 +74,21 @@ const SideDrawer = ({ show, closed }) => {
       <BackDrop show={show} clicked={closed} />
       <div className={attachedClasses.join(' ')}>
         {/* <Logo inDrawer /> */}
-        <div className='links'>
-          <Menu vertical icon='labeled' inverted>
+        <div className="links">
+          <Menu vertical icon="labeled" inverted>
             {links.map(({ name, href, iconName }) => (
-              <MenuItem as='a' key={name} onClick={closed}>
+              <MenuItem as="a" key={name} onClick={closed}>
                 <Link href={href}>
-                  <div className='link-container'>
+                  <div className="link-container">
                     {href === '/new' ? (
-                      <Icon name='icons' size='large'>
-                        <Icon name='video' />
-                        <Icon name='add black' size='tiny' />
+                      <Icon name="icons" size="large">
+                        <Icon name="video" />
+                        <Icon name="add black" size="tiny" />
                       </Icon>
                     ) : (
-                      <Icon name={iconName} size='large' />
+                      <Icon name={iconName} size="large" />
                     )}
-                    <span className='link-name'>{name}</span>
+                    <span className="link-name">{name}</span>
                   </div>
                 </Link>
               </MenuItem>
