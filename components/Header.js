@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
+import PropTypes from 'prop-types';
 import Nav from './Nav';
 // import MobileNav from './MobileNav';
 import Search from './Search';
@@ -49,13 +50,15 @@ const Header = ({ drawerToggleClick }) => (
     <div className="bar">
       <Logo />
       <Nav />
-      {/* <MobileSearch /> */}
       <DrawerToggle clicked={drawerToggleClick} />
-
-      {/* <MobileNav /> */}
+      {/* <MobileSearch /> */}
     </div>
     {/* <Search /> */}
   </StyledHeader>
 );
+
+Header.propTypes = {
+  drawerToggleClick: PropTypes.func.isRequired,
+};
 
 export default Header;

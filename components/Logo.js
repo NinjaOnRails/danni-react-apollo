@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const LogoStyles = styled.h1`
@@ -29,6 +30,7 @@ const LogoStyles = styled.h1`
     display: ${props => (props.inDrawer ? '' : 'grid')};
     font-size: 2rem;
     transform: none;
+    margin: 0;
   }
 `;
 
@@ -39,5 +41,13 @@ const Logo = ({ inDrawer }) => (
     </Link>
   </LogoStyles>
 );
+
+Logo.propTypes = {
+  inDrawer: PropTypes.bool,
+};
+
+Logo.defaultProps = {
+  inDrawer: false,
+};
 
 export default Logo;
