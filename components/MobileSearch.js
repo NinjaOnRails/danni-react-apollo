@@ -68,7 +68,7 @@ class MobileSearch extends React.Component {
                 {client => (
                   <SemanticSearch
                     loading={loading}
-                    placeholder='Search...'
+                    placeholder="Search..."
                     onSearchChange={e => {
                       e.persist();
                       this.onChange(e, client);

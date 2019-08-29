@@ -68,16 +68,14 @@ class Page extends Component {
 
   render() {
     const { children } = this.props;
+    const { showSide } = this.state;
     return (
       <ThemeProvider theme={theme}>
         <StyledPage>
           <GlobalStyle />
           <Meta />
           <Header drawerToggleClick={() => this.drawerToggleClick()} />
-          <SideDrawer
-            show={this.state.showSide}
-            closed={() => this.closeSideDrawer()}
-          />
+          <SideDrawer show={showSide} closed={() => this.closeSideDrawer()} />
           <Container fluid>
             <Inner>{children}</Inner>
           </Container>
