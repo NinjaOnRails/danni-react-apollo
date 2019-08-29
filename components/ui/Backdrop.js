@@ -12,7 +12,12 @@ const BackdropStyles = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 const Backdrop = ({ show, clicked }) =>
-  show ? <BackdropStyles onClick={clicked} /> : null;
+  show ? <BackdropStyles onClick={clicked} show /> : null;
+
+Backdrop.propTypes = {
+  show: PropTypes.bool.isRequired,
+  clicked: PropTypes.func.isRequired,
+};
 
 Backdrop.propTypes = {
   show: PropTypes.bool.isRequired,

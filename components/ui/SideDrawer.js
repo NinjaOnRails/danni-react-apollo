@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';

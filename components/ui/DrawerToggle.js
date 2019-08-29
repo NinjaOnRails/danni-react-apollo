@@ -15,7 +15,7 @@ const DrawerToggleStyles = styled.div`
 
 const DrawerToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>
-    <Icon name="bars" size="large" />
+    <Icon name='bars' size='large' />
   </DrawerToggleStyles>
 );
 

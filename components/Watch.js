@@ -113,6 +113,7 @@ class Watch extends Component {
     readyYoutube: false,
     playbackRates: [],
     playbackRate: 1,
+    showFullDescription: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -187,32 +188,32 @@ class Watch extends Component {
       originLanguage,
       originDescription,
     },
-    audioQueryParam
+    audioQueryParam,
   ) => (
     <Head>
       <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
       <meta
-        property="og:url"
+        property='og:url'
         content={`http://danni.tv/watch?id=${id}${audioQueryParam}`}
       />
       <meta
-        property="og:title"
+        property='og:title'
         content={audio[0] ? audio[0].title : originTitle}
       />
       <meta
-        property="og:image"
+        property='og:image'
         content={originThumbnailUrlSd || originThumbnailUrl}
       />
-      <meta property="og:locale" content={originLanguage || ''} />
+      <meta property='og:locale' content={originLanguage || ''} />
       <meta
-        property="og:description"
+        property='og:description'
         content={
           audio[0] && audio[0].description
             ? audio[0].description
             : originDescription
         }
       />
-      <meta property="fb:app_id" content="444940199652956" />
+      <meta property='fb:app_id' content='444940199652956' />
     </Head>
   );
 
@@ -227,10 +228,10 @@ class Watch extends Component {
         }
       >
         <YouTubePlayer
-          className="youtube-player"
+          className='youtube-player'
           url={`https://www.youtube.com/embed/${video.originId}`}
-          width="100%"
-          height="100%"
+          width='100%'
+          height='100%'
           onReady={() =>
             this.setState({
               readyYoutube: true,
@@ -254,6 +255,10 @@ class Watch extends Component {
     );
   };
 
+  toggleDescription() {
+    this.setState({ showFullDescription: !this.state.showFullDescription });
+  }
+
   renderVideoInfo = (
     id,
     {
@@ -264,47 +269,66 @@ class Watch extends Component {
       addedBy: { displayName },
       originDescription,
     },
-    audioQueryParam
-  ) => (
-    <VideoInfoStyle>
-      <div className="basic-info">
-        <Header>
-          <h1>{audio[0] ? audio[0].title : originTitle}</h1>
-        </Header>
-        <div className="views-social">
-          <YoutubeViews originId={originId} />
-          <div>
-            <FacebookShareButton
-              className="fb-share-button"
-              url={`https://danni.tv/watch?id=${id}${audioQueryParam}`}
-            >
-              <FacebookIcon size={32} round />
-            </FacebookShareButton>
+    audioQueryParam,
+  ) => {
+    let description;
+    const { showFullDescription } = this.state;
+    if (audio[0] && audio[0].description) {
+      description = audio[0].description;
+    } else if (originDescription) {
+      description = originDescription;
+    }
+    const wordsArray = description.split(' ');
+    // Take first 40 words
+    const firstHalf = wordsArray.slice(0, 40).join(' ');
+    const secondHalf = wordsArray.slice(40).join(' ');
+    return (
+      <VideoInfoStyle>
+        <div className='basic-info'>
+          <Header>
+            <h1>{audio[0] ? audio[0].title : originTitle}</h1>
+          </Header>
+          <div className='views-social'>
+            <YoutubeViews originId={originId} />
+            <div>
+              <FacebookShareButton
+                className='fb-share-button'
+                url={`https://danni.tv/watch?id=${id}${audioQueryParam}`}
+              >
+                <FacebookIcon size={32} round />
+              </FacebookShareButton>
+            </div>
           </div>
         </div>
-      </div>
-      <Segment>
-        <Header>
-          <h2>Kênh: {originAuthor}</h2>
-        </Header>
-        {(audio[0] && (
+        <Segment>
           <Header>
-            <h3>Người đọc: {audio[0].author.displayName}</h3>
+            <h2>Kênh: {originAuthor}</h2>
           </Header>
-        )) || (
-          <Header>
-            <h3>Người đăng: {displayName}</h3>
-          </Header>
-        )}
-        {(audio[0] && audio[0].description && (
-          <div className="description">{audio[0].description}</div>
-        )) ||
-          (originDescription && (
-            <div className="description">{originDescription}</div>
-          ))}
-      </Segment>
-    </VideoInfoStyle>
-  );
+          {(audio[0] && (
+            <Header>
+              <h3>Người đọc: {audio[0].author.displayName}</h3>
+            </Header>
+          )) || (
+            <Header>
+              <h3>Người đăng: {displayName}</h3>
+            </Header>
+          )}
+          <div className='description'>
+            {firstHalf}
+            {showFullDescription ? secondHalf : ' ...'}
+          </div>
+          {secondHalf.length > 20 && (
+            <button
+              onClick={() => this.toggleDescription()}
+              className='ui button'
+            >
+              {showFullDescription ? 'Read less' : 'Read more'}
+            </button>
+          )}
+        </Segment>
+      </VideoInfoStyle>
+    );
+  };
 
   renderFilePlayer = audio => {
     const { playingFilePlayer, playbackRate } = this.state;
@@ -324,8 +348,8 @@ class Watch extends Component {
         url={audio[0].source}
         playing={playingFilePlayer}
         onPause={() => this.setState({ playingFilePlayer: false })}
-        height="100%"
-        width="100%"
+        height='100%'
+        width='100%'
         playbackRate={playbackRate}
       />
     );
@@ -345,7 +369,7 @@ class Watch extends Component {
       >
         {({ error, loading, data: { video } }) => {
           if (error) return <Error error={error} />;
-          if (loading) return <Loader active inline="centered" />;
+          if (loading) return <Loader active inline='centered' />;
           if (!video) return <p>No Video Found for {id}</p>;
           return (
             <>
