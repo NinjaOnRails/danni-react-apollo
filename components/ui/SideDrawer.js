@@ -82,7 +82,7 @@ const SideDrawer = ({ show, closed }) => {
                     </Link>
                   </MenuItem>
                   <MenuItem as="a" onClick={closed}>
-                    <Link href="/">
+                    <Link href="/new">
                       <div className="link-container">
                         <Icon name="icons" size="large">
                           <Icon name="video" />
@@ -93,7 +93,7 @@ const SideDrawer = ({ show, closed }) => {
                     </Link>
                   </MenuItem>
                   <MenuItem as="a" onClick={closed}>
-                    <Link href="/">
+                    <Link href="/about">
                       <div className="link-container">
                         <Icon name="info" size="large" />
                         <span className="link-name">About</span>
@@ -103,7 +103,7 @@ const SideDrawer = ({ show, closed }) => {
                   {!currentUser && (
                     <>
                       <MenuItem as="a" onClick={closed}>
-                        <Link href="/">
+                        <Link href="/signin">
                           <div className="link-container">
                             <Icon name="user" size="large" />
                             <span className="link-name">Đăng Nhập</span>
@@ -111,7 +111,7 @@ const SideDrawer = ({ show, closed }) => {
                         </Link>
                       </MenuItem>
                       <MenuItem as="a" onClick={closed}>
-                        <Link href="/">
+                        <Link href="/signup">
                           <div className="link-container">
                             <Icon name="user plus" size="large" />
                             <span className="link-name">Đăng Ký</span>
