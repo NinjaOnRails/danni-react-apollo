@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 const DrawerToggleStyles = styled.div`
   width: 100%;
@@ -17,4 +18,9 @@ const DrawerToggle = ({ clicked }) => (
     <Icon name="bars" size="large" />
   </DrawerToggleStyles>
 );
+
+DrawerToggle.propTypes = {
+  clicked: PropTypes.func.isRequired,
+};
+
 export default DrawerToggle;

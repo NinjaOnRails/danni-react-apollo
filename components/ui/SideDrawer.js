@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
+import PropTypes from 'prop-types';
 import { SIGN_OUT_MUTATION } from '../Signout';
 import User, { CURRENT_USER_QUERY } from '../User';
 import BackDrop from './Backdrop';
@@ -153,6 +154,11 @@ const SideDrawer = ({ show, closed }) => {
       }}
     </User>
   );
+};
+
+SideDrawer.propTypes = {
+  show: PropTypes.bool.isRequired,
+  closed: PropTypes.func.isRequired,
 };
 
 export default SideDrawer;

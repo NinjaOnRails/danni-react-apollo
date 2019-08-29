@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const BackdropStyles = styled.div`
   width: 100%;
@@ -12,5 +13,10 @@ const BackdropStyles = styled.div`
 `;
 const Backdrop = ({ show, clicked }) =>
   show ? <BackdropStyles onClick={clicked} /> : null;
+
+Backdrop.propTypes = {
+  show: PropTypes.bool.isRequired,
+  clicked: PropTypes.func.isRequired,
+};
 
 export default Backdrop;
