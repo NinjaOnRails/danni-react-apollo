@@ -119,8 +119,10 @@ class Watch extends Component {
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
 
-    if (id !== prevProps.id || audioId !== prevProps.audioId)
+    if (id !== prevProps.id || audioId !== prevProps.audioId) {
+      this.setState({ showFullDescription: false });
       this.renderedYoutubePlayer.getInternalPlayer().unMute();
+    }
   }
 
   onProgressYoutube = ({ playedSeconds }) => {
