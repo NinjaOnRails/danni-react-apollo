@@ -29,6 +29,7 @@ const LogoStyles = styled.h1`
     display: ${props => (props.inDrawer ? '' : 'grid')};
     font-size: 2rem;
     transform: none;
+    margin: 0;
   }
 `;
 
