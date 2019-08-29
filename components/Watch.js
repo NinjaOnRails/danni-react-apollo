@@ -5,7 +5,6 @@ import Head from 'next/head';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import { Segment, Header, Loader } from 'semantic-ui-react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
@@ -101,10 +100,11 @@ class Watch extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { id } = this.props;
-    if (id !== prevProps.id && isMobile)
-      this.setState({ playingFilePlayer: false });
-    if (id !== prevProps.id)
+    const { id, audioId } = this.props;
+    // if ((id !== prevProps.id || audioId !== prevProps.audioId) && isMobile)
+    //   this.setState({ playingFilePlayer: false });
+
+    if (id !== prevProps.id || audioId !== prevProps.audioId)
       this.renderedYoutubePlayer.getInternalPlayer().unMute();
   }
 

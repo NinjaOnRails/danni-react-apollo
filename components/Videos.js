@@ -53,6 +53,15 @@ const VideosListStyled = styled.div`
     padding-left: 0px;
     padding-right: 0px;
   }
+  .ui.card > .content > .header {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.7rem;
+    max-height: 3.4rem;
+  }
   .ui.card > .content > .meta + .description {
     margin-top: 0;
   }
@@ -146,11 +155,7 @@ class Videos extends Component {
                                 }}
                               />
                               <Card.Content>
-                                <Card.Header>
-                                  {originTitle.length > 70
-                                    ? `${originTitle.substring(0, 70)}...`
-                                    : originTitle}
-                                </Card.Header>
+                                <Card.Header>{originTitle}</Card.Header>
                                 <Card.Meta>{originAuthor}</Card.Meta>
                                 <Card.Description>
                                   <Icon name="user" />
@@ -185,11 +190,7 @@ class Videos extends Component {
                                 }}
                               />
                               <Card.Content>
-                                <Card.Header>
-                                  {title.length > 70
-                                    ? `${title.substring(0, 70)}...`
-                                    : title}
-                                </Card.Header>
+                                <Card.Header>{title}</Card.Header>
                                 <Card.Meta>{originAuthor}</Card.Meta>
                                 <Card.Description>
                                   <Icon name="user" />

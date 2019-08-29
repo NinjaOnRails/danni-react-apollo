@@ -38,7 +38,6 @@
     "react": "^16.8.6",
     "react-adopt": "^0.6.0",
     "react-apollo": "^3.0.0",
-    "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
     "react-facebook-login": "^4.1.1",
     "react-player": "^1.11.0",
