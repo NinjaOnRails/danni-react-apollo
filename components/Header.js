@@ -1,11 +1,12 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import Nav from './Nav';
-import MobileNav from './MobileNav';
+// import MobileNav from './MobileNav';
 import Search from './Search';
+import Logo from './Logo';
 import MobileSearch from './MobileSearch';
+import DrawerToggle from './ui/DrawerToggle';
 
 Router.onRouteChangeStart = () => {
   NProgress.start();
@@ -46,6 +47,7 @@ const Logo = styled.h1`
 
 const StyledHeader = styled.header`
   z-index: 99;
+  position: sticky;
   top: 0;
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
@@ -68,19 +70,17 @@ const StyledHeader = styled.header`
   }
 `;
 
-const Header = () => (
+const Header = ({ drawerToggleClick }) => (
   <StyledHeader>
-    <div className="bar">
-      <Logo>
-        <Link href="/">
-          <a>danni.tv</a>
-        </Link>
-      </Logo>
+    <div className='bar'>
+      <Logo />
       <Nav />
       {/* <MobileSearch /> */}
-      <MobileNav />
+      <DrawerToggle clicked={drawerToggleClick} />
+
+      {/* <MobileNav /> */}
     </div>
-    {/* <Search /> */}
+    <Search />
   </StyledHeader>
 );
 
