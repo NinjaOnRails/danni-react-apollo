@@ -6,10 +6,12 @@ import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import styled from 'styled-components';
-import { Segment, Header, Loader } from 'semantic-ui-react';
+import { Grid, Segment, Header, Loader } from 'semantic-ui-react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import Error from './ErrorMessage';
 import YoutubeViews from './YoutubeViews';
+import VideoList from './VideoList';
+import CommentList from './CommentList';
 
 const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!, $audioId: ID) {
@@ -39,6 +41,20 @@ const VIDEO_QUERY = gql`
         defaultVolume
         startAt
       }
+    }
+  }
+`;
+
+const StyledContainer = styled.div`
+  margin: 0 auto;
+  max-width: 1366px;
+  padding: 0px 24px 0px 24px;
+  @media (max-width: 760px) {
+    padding: 0px;
+  }
+  @media (max-width: 480px) {
+    div.eleven.wide.computer.sixteen.wide.mobile.sixteen.wide.tablet.column {
+      padding: 0;
     }
   }
 `;
@@ -101,8 +117,6 @@ class Watch extends Component {
 
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
-    // if ((id !== prevProps.id || audioId !== prevProps.audioId) && isMobile)
-    //   this.setState({ playingFilePlayer: false });
 
     if (id !== prevProps.id || audioId !== prevProps.audioId)
       this.renderedYoutubePlayer.getInternalPlayer().unMute();
@@ -336,11 +350,23 @@ class Watch extends Component {
           return (
             <>
               {this.renderHead(id, video, audioQueryParam)}
-              {this.renderVideoPlayer(video)}
-              {this.renderVideoInfo(id, video, audioQueryParam)}
-              {video.audio[0] &&
-                readyYoutube &&
-                this.renderFilePlayer(video.audio)}
+              <StyledContainer>
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column mobile={16} tablet={16} computer={11}>
+                      {this.renderVideoPlayer(video)}
+                      {this.renderVideoInfo(id, video, audioQueryParam)}
+                      {video.audio[0] &&
+                        readyYoutube &&
+                        this.renderFilePlayer(video.audio)}
+                      {/* <CommentList /> */}
+                    </Grid.Column>
+                    <Grid.Column mobile={16} tablet={16} computer={5}>
+                      <VideoList {...this.props} />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </StyledContainer>
             </>
           );
         }}

@@ -47,8 +47,10 @@ const ListDescriptionStyled = styled(List.Description)`
 `;
 
 class VideoList extends Component {
-  componentDidUpdate() {
-    window.scrollTo(0, 0);
+  componentDidUpdate(prevProps) {
+    const { id, audioId } = this.props;
+    if (id !== prevProps.id || audioId !== prevProps.audioId)
+      window.scrollTo(0, 0);
   }
 
   render() {
