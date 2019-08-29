@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
-import User from '../User';
+import { Mutation } from 'react-apollo';
+import { SIGN_OUT_MUTATION } from '../Signout';
+import User, { CURRENT_USER_QUERY } from '../User';
 import BackDrop from './Backdrop';
 import Logo from '../Logo';
 
@@ -84,10 +86,10 @@ const SideDrawer = ({ show, closed }) => {
                   <MenuItem as="a" onClick={closed}>
                     <Link href="/new">
                       <div className="link-container">
-                        <Icon name="icons" size="large">
+                        <Icon.Group size="large">
                           <Icon name="video" />
-                          <Icon name="add black" size="tiny" />
-                        </Icon>
+                          <Icon color="black" name="plus" size="tiny" />
+                        </Icon.Group>
                         <span className="link-name">Thêm Video</span>
                       </div>
                     </Link>
@@ -121,14 +123,27 @@ const SideDrawer = ({ show, closed }) => {
                     </>
                   )}
                   {currentUser && (
-                    <MenuItem as="a" onClick={closed}>
-                      <Link href="/">
-                        <div className="link-container">
-                          <Icon name="sign-out" size="large" />
-                          <span className="link-name">Thoát</span>
-                        </div>
-                      </Link>
-                    </MenuItem>
+                    <Mutation
+                      mutation={SIGN_OUT_MUTATION}
+                      refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+                    >
+                      {signout => (
+                        <MenuItem
+                          as="a"
+                          onClick={() => {
+                            signout();
+                            closed();
+                          }}
+                        >
+                          <Link href="/">
+                            <div className="link-container">
+                              <Icon name="sign-out" size="large" />
+                              <span className="link-name">Thoát</span>
+                            </div>
+                          </Link>
+                        </MenuItem>
+                      )}
+                    </Mutation>
                   )}
                 </Menu>
               </div>

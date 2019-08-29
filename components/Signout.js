@@ -24,3 +24,4 @@ const Signout = () => (
   </Mutation>
 );
 export default Signout;
+export { SIGN_OUT_MUTATION };
