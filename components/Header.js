@@ -49,10 +49,8 @@ const Header = ({ drawerToggleClick }) => (
     <div className="bar">
       <Logo />
       <Nav />
-      {/* <MobileSearch /> */}
       <DrawerToggle clicked={drawerToggleClick} />
-
-      {/* <MobileNav /> */}
+      {/* <MobileSearch /> */}
     </div>
     {/* <Search /> */}
   </StyledHeader>

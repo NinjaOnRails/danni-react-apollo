@@ -12,9 +12,9 @@ const DrawerToggleStyles = styled.div`
   }
 `;
 
-const drawToggle = ({ clicked }) => (
+const DrawerToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>
     <Icon name="bars" size="large" />
   </DrawerToggleStyles>
 );
-export default drawToggle;
+export default DrawerToggle;
