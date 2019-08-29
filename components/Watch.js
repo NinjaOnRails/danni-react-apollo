@@ -280,8 +280,8 @@ class Watch extends Component {
     }
     const wordsArray = description.split(' ');
     // Take first 40 words
-    const firstHalf = wordsArray.slice(0, 40).join(' ');
-    const secondHalf = wordsArray.slice(40).join(' ');
+    const firstHalf = wordsArray.slice(0, 20).join(' ');
+    const secondHalf = wordsArray.slice(20).join(' ');
     return (
       <VideoInfoStyle>
         <div className='basic-info'>
@@ -322,7 +322,7 @@ class Watch extends Component {
               onClick={() => this.toggleDescription()}
               className='ui button'
             >
-              {showFullDescription ? 'Read less' : 'Read more'}
+              {showFullDescription ? 'Show less' : 'Show more'}
             </button>
           )}
         </Segment>
@@ -383,7 +383,7 @@ class Watch extends Component {
                       {video.audio[0] &&
                         readyYoutube &&
                         this.renderFilePlayer(video.audio)}
-                      {/* <CommentList /> */}
+                      <CommentList />
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
                       <VideoList {...this.props} />

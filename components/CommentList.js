@@ -1,69 +1,114 @@
 import React from 'react';
 import { Button, Comment, Form } from 'semantic-ui-react';
+import styled from 'styled-components';
 
-const CommentList = () => (
-  <Comment.Group threaded size="large">
-    <Form reply>
-      <Form.TextArea />
-      <Button content="Add Comment" primary />
-    </Form>
+import VideoComment from './Comment';
 
-    <Comment>
-      <Comment.Content>
-        <Comment.Author as="a">Matt</Comment.Author>
-        <Comment.Metadata>
-          <span>Today at 5:42PM</span>
-        </Comment.Metadata>
-        <Comment.Text>How artistic!</Comment.Text>
-        <Comment.Actions>
-          <a>Reply</a>
-        </Comment.Actions>
-      </Comment.Content>
-    </Comment>
+const CommentSectionStyles = styled.div`
+  .ui.large.comments {
+    margin: 16px 0;
+  }
+  .ui.comments .reply.form textarea {
+    height: auto;
+    width: 100%;
+  }
+  .ui.form textarea {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+`;
+const commentData = [
+  {
+    author: 'Matt',
+    date: 'Today at 5:42PM',
+    text: 'How artistic!',
+    avatar: '',
+    likes: 20,
+    reply: [],
+  },
+  {
+    author: 'Elliot Fu',
+    date: 'Yesterday at 12:30AM',
+    text: 'This has been very useful for my research. Thanks as well!',
+    avatar: '',
+    likes: 20,
+    reply: [
+      {
+        author: 'Jenny Hess',
+        date: 'Just now',
+        text: 'Elliot you are always so right :)',
+        avatar: '',
+        likes: 20,
+      },
+      {
+        author: 'Matt',
+        date: 'Today at 5:42PM',
+        text: 'How artistic!',
+        avatar: '',
+        likes: 20,
+        reply: [],
+      },
+      {
+        author: 'Matt',
+        date: 'Today at 5:42PM',
+        text: 'How artistic!',
+        avatar: '',
+        likes: 20,
+        reply: [],
+      },
+      {
+        author: 'Matt',
+        date: 'Today at 5:42PM',
+        text: 'How artistic!',
+        avatar: '',
+        likes: 20,
+        reply: [],
+      },
+      {
+        author: 'Matt',
+        date: 'Today at 5:42PM',
+        text: 'How artistic!',
+        avatar: '',
+        likes: 20,
+        reply: [],
+      },
+    ],
+  },
+  {
+    author: 'Joe Henderson',
+    date: '5 days ago',
+    text: 'Dude, this is awesome. Thanks so much',
+    avatar: '',
+    likes: 20,
+    reply: [],
+  },
+  {
+    author: 'Joe Henderson',
+    date: '5 days ago',
+    text:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, blanditiis. Voluptate laboriosam quidem quis perferendis consectetur minima, dolore voluptatem rerum, error magni veritatis quae. Officia incidunt iure soluta ad nostrum.',
+    avatar: '',
+    likes: 20,
+    reply: [],
+  },
+];
 
-    <Comment>
-      <Comment.Content>
-        <Comment.Author as="a">Elliot Fu</Comment.Author>
-        <Comment.Metadata>
-          <span>Yesterday at 12:30AM</span>
-        </Comment.Metadata>
-        <Comment.Text>
-          <p>This has been very useful for my research. Thanks as well!</p>
-        </Comment.Text>
-        <Comment.Actions>
-          <a>Reply</a>
-        </Comment.Actions>
-      </Comment.Content>
-
-      <Comment.Group size="large">
-        <Comment>
-          <Comment.Content>
-            <Comment.Author as="a">Jenny Hess</Comment.Author>
-            <Comment.Metadata>
-              <span>Just now</span>
-            </Comment.Metadata>
-            <Comment.Text>Elliot you are always so right :)</Comment.Text>
-            <Comment.Actions>
-              <a>Reply</a>
-            </Comment.Actions>
-          </Comment.Content>
-        </Comment>
-      </Comment.Group>
-    </Comment>
-
-    <Comment>
-      <Comment.Content>
-        <Comment.Author as="a">Joe Henderson</Comment.Author>
-        <Comment.Metadata>
-          <span>5 days ago</span>
-        </Comment.Metadata>
-        <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-        <Comment.Actions>
-          <a>Reply</a>
-        </Comment.Actions>
-      </Comment.Content>
-    </Comment>
-  </Comment.Group>
-);
-
+class CommentList extends React.Component {
+  renderComments() {
+    return commentData.map(({ ...allProps }) => <VideoComment {...allProps} />);
+  }
+  render() {
+    return (
+      <CommentSectionStyles>
+        <Comment.Group size='large'>
+          <Form reply>
+            <Form.TextArea placeholder="Viết bình luận..." />
+            <Button content='Add Comment' primary />
+          </Form>
+          {this.renderComments()}
+        </Comment.Group>
+      </CommentSectionStyles>
+    );
+  }
+}
 export default CommentList;
