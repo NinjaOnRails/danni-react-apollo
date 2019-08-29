@@ -58,9 +58,9 @@ const VideosListStyled = styled.div`
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-height: 1.7rem;
-    max-height: 3.4rem;
+    -webkit-line-clamp: 2; /* Show only first 2 lines */
+    line-height: 1.7rem; /* Implement for browsers with no support for webkit */
+    max-height: 3.4rem; /* This is line height X no. of lines to show */
   }
   .ui.card > .content > .meta + .description {
     margin-top: 0;
