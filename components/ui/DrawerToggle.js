@@ -13,13 +13,14 @@ const DrawerToggleStyles = styled.div`
   }
 `;
 
-const drawToggle = ({ clicked }) => (
+const DrawerToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>
     <Icon name='bars' size='large' />
   </DrawerToggleStyles>
 );
 
-drawToggle.propTypes = {
+DrawerToggle.propTypes = {
   clicked: PropTypes.func.isRequired,
 };
-export default drawToggle;
+
+export default DrawerToggle;

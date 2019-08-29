@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import styled from 'styled-components';
-
+import PropTypes from 'prop-types';
 import Backdrop from './Backdrop';
 
 const ModalStyles = styled.div`
@@ -28,10 +26,6 @@ const ModalStyles = styled.div`
   }
 `;
 const Modal = ({ show, closed, children }) => {
-  // shouldComponentUpdate(nextProps, nextState){
-  //   return nextProps.show !== props.show || nextProps.children !== props.children
-  // }
-
   return (
     <ModalStyles>
       <Backdrop show={show} clicked={closed} />
@@ -48,10 +42,6 @@ const Modal = ({ show, closed, children }) => {
   );
 };
 
-Modal.defaultProps = {
-  children: null,
-};
-
 Modal.propTypes = {
   show: PropTypes.bool.isRequired,
   closed: PropTypes.func.isRequired,
@@ -59,6 +49,10 @@ Modal.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+};
+
+Modal.defaultProps = {
+  children: null,
 };
 
 export default React.memo(
