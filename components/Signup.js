@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
+import Router from 'next/router';
 import generateName from 'sillyname';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
@@ -65,6 +66,7 @@ class Signup extends Component {
                   password: '',
                   displayName: '',
                 });
+                Router.push('/');
               }}
             >
               <fieldset disabled={loading} aria-busy={loading}>
@@ -107,7 +109,9 @@ class Signup extends Component {
                     onChange={this.saveToState}
                   />
                 </label>
-                <button type="submit">Tạo Tài Khoản Mới</button>
+                <button type="submit">
+                  {loading && 'Đang '}Tạo Tài Khoản Mới
+                </button>
               </fieldset>
               <Link href="/signin">
                 <a>Đã có tài khoản</a>

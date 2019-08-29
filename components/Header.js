@@ -19,10 +19,35 @@ Router.onRouteChangeError = () => {
   NProgress.done();
 };
 
+const Logo = styled.h1`
+  font-size: 4rem;
+  margin-left: 2rem;
+  position: relative;
+  z-index: 2;
+  transform: skew(-7deg);
+
+  a {
+    padding: 0.5rem 1rem;
+    background: ${props => props.theme.red};
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  @media (max-width: 1279px) {
+    font-size: 3.5rem;
+  }
+  @media (max-width: 959px) {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  @media (max-width: 639px) {
+    display: none;
+  }
+`;
+
 const StyledHeader = styled.header`
-  /* z-index: 99; */
+  z-index: 99;
   position: sticky;
-  width: 100%;
   top: 0;
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
@@ -31,11 +56,9 @@ const StyledHeader = styled.header`
     justify-content: space-between;
     align-items: stretch;
     background-color: white;
-    @media (max-width: 1300px) {
-      grid-template-columns: 8fr 2fr;
-      justify-content: center;
-    }
-    @media (max-width: 673px) {
+
+    @media (max-width: 639px) {
+      grid-template-columns: 1fr;
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
     }

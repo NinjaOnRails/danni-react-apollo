@@ -1,7 +1,6 @@
 import App, { Container } from 'next/app';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
-// import withApollo from '../lib/withApollo';
 import withApollo from '../lib/withApolloClient';
 import Page from '../components/Page';
 

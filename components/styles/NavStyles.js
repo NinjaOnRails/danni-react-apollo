@@ -8,9 +8,11 @@ const NavStyles = styled.ul`
   font-size: 2rem;
   a,
   button {
+    line-height: normal;
     padding: 1rem 3rem;
     display: flex;
     align-items: center;
+    text-align: center;
     position: relative;
     text-transform: uppercase;
     font-weight: 900;
@@ -55,15 +57,16 @@ const NavStyles = styled.ul`
       }
     }
   }
-  @media (max-width: 1300px) {
-    border-top: 1px solid ${props => props.theme.lightgrey};
-    width: 100%;
-    justify-content: center;
+  @media (max-width: 1279px) {
     font-size: 1.5rem;
   }
-  @media (max-width: 567px) {
-    display: none;
-    width: 0;
+  @media (max-width: 772px) {
+    font-size: 1.2rem;
+  }
+  @media (max-width: 639px) {
+    font-size: 1rem;
+    width: 100%;
+    justify-content: center;
   }
 `;
 

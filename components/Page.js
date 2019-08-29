@@ -78,7 +78,7 @@ class Page extends Component {
             show={this.state.showSide}
             closed={() => this.closeSideDrawer()}
           />
-          <Container>
+          <Container fluid>
             <Inner>{children}</Inner>
           </Container>
         </StyledPage>

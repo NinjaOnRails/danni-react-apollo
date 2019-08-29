@@ -38,15 +38,13 @@
     "react": "^16.8.6",
     "react-adopt": "^0.6.0",
     "react-apollo": "^3.0.0",
-    "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
     "react-facebook-login": "^4.1.1",
     "react-player": "^1.11.0",
     "react-share": "^3.0.0",
     "semantic-ui-react": "^0.87.1",
     "sillyname": "^0.1.0",
-    "styled-components": "^4.2.0",
-    "xml2js": "^0.4.19"
+    "styled-components": "^4.2.0"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",

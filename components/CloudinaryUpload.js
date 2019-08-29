@@ -32,6 +32,7 @@ class CloudinaryUpload extends Component {
       secureUrl,
       handleChange,
       audioSource,
+      onAudioLoadedMetadata,
     } = this.props;
     return (
       <Query query={CURRENT_USER_QUERY}>
@@ -52,51 +53,6 @@ class CloudinaryUpload extends Component {
               if (error) return <Error>Error: {error.message}</Error>;
               return (
                 <>
-                  {!deleteToken && !this.state.startingUpload && (
-                    <>
-                      <label htmlFor="file">
-                        Chọn file để tải lên
-                        <input
-                          type="file"
-                          id="file"
-                          name="file"
-                          accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
-                          onChange={async e => {
-                            this.setState({ startingUpload: true });
-                            await onUploadFileSubmit(
-                              data.cloudinaryAuth,
-                              id,
-                              e
-                            );
-                            this.setState({ startingUpload: false });
-                          }}
-                        />
-                      </label>
-                      <label htmlFor="audioSource">
-                        Tải lên qua đường link
-                        <Button
-                          type="button"
-                          floated="right"
-                          primary
-                          onClick={async () => {
-                            this.setState({ startingUpload: true });
-                            await onUploadFileSubmit(data.cloudinaryAuth, id);
-                            this.setState({ startingUpload: false });
-                          }}
-                        >
-                          <Icon name="upload" />
-                          Tải lên
-                        </Button>
-                        <input
-                          type="text"
-                          name="audioSource"
-                          placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
-                          value={audioSource}
-                          onChange={handleChange}
-                        />
-                      </label>
-                    </>
-                  )}
                   {(uploadError && (
                     <Progress percent={100} error>
                       Network Error. Try again later.
@@ -105,10 +61,14 @@ class CloudinaryUpload extends Component {
                     (uploadProgress > 0 && uploadProgress < 100 && (
                       <Progress percent={uploadProgress} progress success />
                     )) ||
-                    (deleteToken && (
+                    (secureUrl && (
                       <>
                         <p>File audio đã được tải lên:</p>
-                        <audio controls src={secureUrl}>
+                        <audio
+                          controls
+                          src={secureUrl}
+                          onLoadedMetadata={e => onAudioLoadedMetadata(e)}
+                        >
                           <track kind="captions" />
                         </audio>
                         <Button
@@ -120,9 +80,53 @@ class CloudinaryUpload extends Component {
                         </Button>
                       </>
                     )) ||
-                    (this.state.startingUpload && (
+                    ((this.state.startingUpload || deleteToken) && (
                       <Loader inline="centered" active />
-                    ))}
+                    )) || (
+                      <>
+                        <label htmlFor="file">
+                          Chọn file để tải lên
+                          <input
+                            type="file"
+                            id="file"
+                            name="file"
+                            accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
+                            onChange={async e => {
+                              this.setState({ startingUpload: true });
+                              await onUploadFileSubmit(
+                                data.cloudinaryAuth,
+                                id,
+                                e
+                              );
+                              this.setState({ startingUpload: false });
+                            }}
+                          />
+                        </label>
+                        <label htmlFor="audioSource">
+                          Tải lên qua đường link
+                          <Button
+                            type="button"
+                            floated="right"
+                            primary
+                            onClick={async () => {
+                              this.setState({ startingUpload: true });
+                              await onUploadFileSubmit(data.cloudinaryAuth, id);
+                              this.setState({ startingUpload: false });
+                            }}
+                          >
+                            <Icon name="upload" />
+                            Tải lên
+                          </Button>
+                          <input
+                            type="text"
+                            name="audioSource"
+                            placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
+                            value={audioSource}
+                            onChange={handleChange}
+                          />
+                        </label>
+                      </>
+                    )}
                 </>
               );
             }}
@@ -143,6 +147,7 @@ CloudinaryUpload.propTypes = {
   onDeleteFileSubmit: PropTypes.func.isRequired,
   uploadProgress: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
+  onAudioLoadedMetadata: PropTypes.func.isRequired,
   audioSource: PropTypes.string.isRequired,
 };
 

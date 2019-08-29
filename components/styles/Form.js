@@ -30,6 +30,9 @@ const Form = styled.form`
     display: block;
     margin-bottom: 1rem;
   }
+  textarea {
+    resize: none;
+  }
   input,
   textarea,
   select {

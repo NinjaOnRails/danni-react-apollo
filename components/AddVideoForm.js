@@ -51,6 +51,7 @@ const AddVideoForm = ({
   handleChange,
   onUploadFileSubmit,
   onDeleteFileSubmit,
+  onAudioLoadedMetadata,
 }) => {
   return (
     <fieldset
@@ -115,6 +116,7 @@ const AddVideoForm = ({
                 secureUrl={secureUrl}
                 handleChange={handleChange}
                 audioSource={audioSource}
+                onAudioLoadedMetadata={onAudioLoadedMetadata}
               />
               <label htmlFor="title">
                 Tiêu đề:
@@ -122,6 +124,7 @@ const AddVideoForm = ({
                   type="text"
                   id="title"
                   name="title"
+                  maxLength="100"
                   required
                   value={title}
                   onChange={handleChange}
@@ -139,9 +142,10 @@ const AddVideoForm = ({
               </label>
               {isDescription && (
                 <label htmlFor="description">
-                  <input
-                    type="text"
+                  <textarea
                     name="description"
+                    maxLength="5000"
+                    rows="10"
                     value={description}
                     onChange={handleChange}
                   />
@@ -157,18 +161,21 @@ const AddVideoForm = ({
                 />
                 Tags:
               </label>
-              <input
-                type="text"
-                name="tags"
-                placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-                value={tags}
-                onChange={handleChange}
-              />
               {isTags && (
-                <Segment>
-                  <p>Tags của video gốc:</p>
-                  {originTags.join(' ')}
-                </Segment>
+                <>
+                  <input
+                    type="text"
+                    name="tags"
+                    maxLength="500"
+                    placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
+                    value={tags}
+                    onChange={handleChange}
+                  />
+                  <Segment>
+                    <p>Tags của video gốc:</p>
+                    {originTags.join(' ')}
+                  </Segment>
+                </>
               )}
               <label htmlFor="defaultVolume">
                 <input
@@ -194,7 +201,9 @@ const AddVideoForm = ({
           )}
         </>
       )}
-      <button type="submit">Submit</button>
+      <button type="submit">
+        Submit{(loadingCreateVideo || loadingCreateAudio) && 'ting'}
+      </button>
     </fieldset>
   );
 };
@@ -228,6 +237,7 @@ AddVideoForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   onUploadFileSubmit: PropTypes.func.isRequired,
   onDeleteFileSubmit: PropTypes.func.isRequired,
+  onAudioLoadedMetadata: PropTypes.func.isRequired,
 };
 
 export default AddVideoForm;
