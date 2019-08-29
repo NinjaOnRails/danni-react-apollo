@@ -4,7 +4,6 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
-import PropTypes from 'prop-types';
 import { SIGN_OUT_MUTATION } from '../Signout';
 import User, { CURRENT_USER_QUERY } from '../User';
 import BackDrop from './Backdrop';

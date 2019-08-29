@@ -19,9 +19,4 @@ Backdrop.propTypes = {
   clicked: PropTypes.func.isRequired,
 };
 
-Backdrop.propTypes = {
-  show: PropTypes.bool.isRequired,
-  clicked: PropTypes.func.isRequired,
-};
-
 export default Backdrop;
