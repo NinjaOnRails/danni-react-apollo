@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
 
@@ -35,7 +36,7 @@ const Modal = ({ show, closed, children }) => {
     <ModalStyles>
       <Backdrop show={show} clicked={closed} />
       <div
-        className="Modal"
+        className='Modal'
         style={{
           transform: show ? 'translateY(0)' : 'translateY(-100vh)',
           opacity: show ? '1' : '0',
@@ -47,9 +48,22 @@ const Modal = ({ show, closed, children }) => {
   );
 };
 
+Modal.defaultProps = {
+  children: null,
+};
+
+Modal.propTypes = {
+  show: PropTypes.bool.isRequired,
+  closed: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+};
+
 export default React.memo(
   Modal,
   (prevProps, nextProps) =>
     nextProps.show === prevProps.show &&
-    nextProps.children === prevProps.children
+    nextProps.children === prevProps.children,
 );

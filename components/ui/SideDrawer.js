@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import BackDrop from './Backdrop';
 import Logo from '../Logo';
@@ -74,21 +75,21 @@ const SideDrawer = ({ show, closed }) => {
       <BackDrop show={show} clicked={closed} />
       <div className={attachedClasses.join(' ')}>
         {/* <Logo inDrawer /> */}
-        <div className="links">
-          <Menu vertical icon="labeled" inverted>
+        <div className='links'>
+          <Menu vertical icon='labeled' inverted>
             {links.map(({ name, href, iconName }) => (
-              <MenuItem as="a" key={name} onClick={closed}>
+              <MenuItem as='a' key={name} onClick={closed}>
                 <Link href={href}>
-                  <div className="link-container">
+                  <div className='link-container'>
                     {href === '/new' ? (
-                      <Icon name="icons" size="large">
-                        <Icon name="video" />
-                        <Icon name="add black" size="tiny" />
+                      <Icon name='icons' size='large'>
+                        <Icon name='video' />
+                        <Icon name='add black' size='tiny' />
                       </Icon>
                     ) : (
-                      <Icon name={iconName} size="large" />
+                      <Icon name={iconName} size='large' />
                     )}
-                    <span className="link-name">{name}</span>
+                    <span className='link-name'>{name}</span>
                   </div>
                 </Link>
               </MenuItem>
@@ -100,4 +101,8 @@ const SideDrawer = ({ show, closed }) => {
   );
 };
 
+SideDrawer.propTypes = {
+  show: PropTypes.bool.isRequired,
+  closed: PropTypes.func.isRequired,
+};
 export default SideDrawer;

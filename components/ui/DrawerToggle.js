@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 const DrawerToggleStyles = styled.div`
   width: 100%;
@@ -14,7 +15,11 @@ const DrawerToggleStyles = styled.div`
 
 const drawToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>
-    <Icon name="bars" size="large" />
+    <Icon name='bars' size='large' />
   </DrawerToggleStyles>
 );
+
+drawToggle.propTypes = {
+  clicked: PropTypes.func.isRequired,
+};
 export default drawToggle;
