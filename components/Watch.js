@@ -121,14 +121,14 @@ class Watch extends Component {
 
     if (id !== prevProps.id || audioId !== prevProps.audioId) {
       this.setState({ showFullDescription: false });
-      this.renderedYoutubePlayer.getInternalPlayer().unMute();
+      this.youtubePlayer.getInternalPlayer().unMute();
     }
   }
 
   onProgressYoutube = ({ playedSeconds }) => {
     // Auto mute video
-    if (!this.renderedYoutubePlayer.getInternalPlayer().isMuted()) {
-      this.renderedYoutubePlayer.getInternalPlayer().mute();
+    if (!this.youtubePlayer.getInternalPlayer().isMuted()) {
+      this.youtubePlayer.getInternalPlayer().mute();
     }
 
     // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
@@ -140,7 +140,7 @@ class Watch extends Component {
       playedSeconds !== playedYoutube
     ) {
       if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
-        this.renderedFilePlayer.seekTo(playedSeconds);
+        this.filePlayer.seekTo(playedSeconds);
       }
     }
     this.setState({
@@ -170,14 +170,6 @@ class Watch extends Component {
       'Video Author': originAuthor,
       'Video AddedBy': displayName,
     });
-  };
-
-  refFilePlayer = renderedFilePlayer => {
-    this.renderedFilePlayer = renderedFilePlayer;
-  };
-
-  refYoutubePlayer = renderedYoutubePlayer => {
-    this.renderedYoutubePlayer = renderedYoutubePlayer;
   };
 
   renderHead = (
@@ -237,7 +229,7 @@ class Watch extends Component {
           onReady={() =>
             this.setState({
               readyYoutube: true,
-              playbackRates: this.renderedYoutubePlayer
+              playbackRates: this.youtubePlayer
                 .getInternalPlayer()
                 .getAvailablePlaybackRates(),
             })
@@ -250,7 +242,9 @@ class Watch extends Component {
             if (video.audio[0]) this.onProgressYoutube(e);
           }}
           onStart={() => this.onYoutubeStart(video)}
-          ref={this.refYoutubePlayer}
+          ref={youtubePlayer => {
+            this.youtubePlayer = youtubePlayer;
+          }}
           playbackRate={playbackRate}
         />
       </YoutubeStyle>
@@ -321,6 +315,7 @@ class Watch extends Component {
           </div>
           {secondHalf.length > 20 && (
             <button
+              type="button"
               onClick={() => this.toggleDescription()}
               className="ui button"
             >
@@ -346,7 +341,9 @@ class Watch extends Component {
             playedFilePlayer: e.playedSeconds,
           });
         }}
-        ref={this.refFilePlayer}
+        ref={filePlayer => {
+          this.filePlayer = filePlayer;
+        }}
         url={audio[0].source}
         playing={playingFilePlayer}
         onPause={() => this.setState({ playingFilePlayer: false })}

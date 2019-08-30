@@ -6,7 +6,7 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
   <Comment>
     <Comment.Avatar src={avatar} />
     <Comment.Content>
-      <Comment.Author as='a'>{author}</Comment.Author>
+      <Comment.Author as="a">{author}</Comment.Author>
       <Comment.Metadata>
         <div>{date}</div>
       </Comment.Metadata>
@@ -14,9 +14,9 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
         <p>{text}</p>
       </Comment.Text>
       <Comment.Actions>
-        <Icon name='angle up large blue  link' />
+        <Icon name="angle up large blue  link" />
         <span>{likes} </span>
-        <Icon name='angle down large  link' />
+        <Icon name="angle down large  link" />
 
         <Comment.Action>Reply</Comment.Action>
       </Comment.Actions>
@@ -27,7 +27,7 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
           <Comment>
             <Comment.Avatar src={avatar} />
             <Comment.Content>
-              <Comment.Author as='a'>{author}</Comment.Author>
+              <Comment.Author as="a">{author}</Comment.Author>
               <Comment.Metadata>
                 <div>{date}</div>
               </Comment.Metadata>
@@ -36,9 +36,9 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
               </Comment.Text>
               <Comment.Actions>
                 <Comment.Action>Reply</Comment.Action>
-                <Icon name='angle up large  link' />
+                <Icon name="angle up large  link" />
                 <span>{likes} </span>
-                <Icon name='angle down large blue  link' />
+                <Icon name="angle down large blue  link" />
               </Comment.Actions>
             </Comment.Content>
           </Comment>

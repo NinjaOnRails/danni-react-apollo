@@ -85,7 +85,7 @@ class MobileSearch extends React.Component {
                       highlighted={index === highlightedIndex}
                     >
                       <img
-                        width='50'
+                        width="50"
                         src={item.originThumbnailUrl}
                         alt={item.titleVi}
                       />

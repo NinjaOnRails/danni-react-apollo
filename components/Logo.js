@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const LogoStyles = styled.h1`
@@ -36,18 +35,10 @@ const LogoStyles = styled.h1`
 
 const Logo = () => (
   <LogoStyles>
-    <Link href='/'>
+    <Link href="/">
       <a>danni.tv</a>
     </Link>
   </LogoStyles>
 );
-
-Logo.propTypes = {
-  inDrawer: PropTypes.bool,
-};
-
-Logo.defaultProps = {
-  inDrawer: false,
-};
 
 export default Logo;

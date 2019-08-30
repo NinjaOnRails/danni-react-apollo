@@ -94,16 +94,17 @@ const commentData = [
 ];
 
 class CommentList extends React.Component {
-  renderComments() {
+  renderComments = () => {
     return commentData.map(({ ...allProps }) => <VideoComment {...allProps} />);
-  }
+  };
+
   render() {
     return (
       <CommentSectionStyles>
-        <Comment.Group size='large'>
+        <Comment.Group size="large">
           <Form reply>
             <Form.TextArea placeholder="Viết bình luận..." />
-            <Button content='Add Comment' primary />
+            <Button content="Add Comment" primary />
           </Form>
           {this.renderComments()}
         </Comment.Group>
