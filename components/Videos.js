@@ -31,7 +31,7 @@ const ALL_VIDEOS_QUERY = gql`
 `;
 
 const VideosListStyled = styled.div`
-  font-size: 1rem;
+  font-size: 1.2rem;
   display: grid;
   grid-template-columns: 290px 290px;
   grid-gap: 15px;
@@ -59,8 +59,8 @@ const VideosListStyled = styled.div`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; /* Show only first 2 lines */
-    line-height: 1.7rem; /* Implement for browsers with no support for webkit */
-    max-height: 3.4rem; /* This is line height X no. of lines to show */
+    line-height: 2rem; /* Implement for browsers with no support for webkit */
+    max-height: 4rem; /* This is line height X no. of lines to show */
   }
   .ui.card > .content > .meta + .description {
     margin-top: 0;

@@ -27,6 +27,7 @@
     "babel-plugin-styled-components": "^1.10.0",
     "dotenv": "^8.0.0",
     "downshift": "^3.2.10",
+    "fontfaceobserver": "^2.1.0",
     "graphql": "^14.3.0",
     "graphql-tag": "^2.10.1",
     "isomorphic-unfetch": "^3.0.0",

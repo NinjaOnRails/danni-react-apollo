@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Icon } from 'semantic-ui-react';
 
-const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
+const VideoComment = ({
+  comment: { author, date, text, avatar, reply, likes },
+}) => (
   <Comment>
     <Comment.Avatar src={avatar} />
     <Comment.Content>
@@ -14,17 +16,17 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
         <p>{text}</p>
       </Comment.Text>
       <Comment.Actions>
-        <Icon name="angle up large blue  link" />
+        <Icon color="blue" name="angle up" size="large" link />
         <span>{likes} </span>
-        <Icon name="angle down large  link" />
+        <Icon name="angle down" size="large" link />
 
         <Comment.Action>Reply</Comment.Action>
       </Comment.Actions>
     </Comment.Content>
     {reply.length ? (
       <Comment.Group>
-        {reply.map(({ author, date, text, avatar, reply }) => (
-          <Comment>
+        {reply.map(({ id, author, date, text, avatar, reply }) => (
+          <Comment key={id}>
             <Comment.Avatar src={avatar} />
             <Comment.Content>
               <Comment.Author as="a">{author}</Comment.Author>
@@ -36,9 +38,9 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
               </Comment.Text>
               <Comment.Actions>
                 <Comment.Action>Reply</Comment.Action>
-                <Icon name="angle up large  link" />
+                <Icon name="angle up" size="large" link />
                 <span>{likes} </span>
-                <Icon name="angle down large blue  link" />
+                <Icon color="blue" name="angle down" size="large" link />
               </Comment.Actions>
             </Comment.Content>
           </Comment>
@@ -49,12 +51,7 @@ const VideoComment = ({ author, date, text, avatar, reply, likes }) => (
 );
 
 VideoComment.propTypes = {
-  author: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
-  reply: PropTypes.array.isRequired,
-  likes: PropTypes.number.isRequired,
+  comment: PropTypes.object.isRequired,
 };
 
 export default VideoComment;

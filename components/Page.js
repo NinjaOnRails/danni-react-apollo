@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Container } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import Fonts from './Fonts';
 import Header from './Header';
 import Meta from './Meta';
 import SideDrawer from './ui/SideDrawer';
@@ -14,7 +15,7 @@ const theme = {
   offWhite: '#EDEDED',
   maxWidth: '1000px',
   bs: '0 12px 24px 0 rgba(0, 0, 0, 0.09)',
-  font: 'Verdana',
+  font: 'Roboto',
 };
 
 const StyledPage = styled.div`
@@ -57,6 +58,10 @@ class Page extends Component {
   state = {
     showSide: false,
   };
+
+  componentDidMount() {
+    Fonts();
+  }
 
   closeSideDrawer() {
     this.setState({ showSide: false });

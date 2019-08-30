@@ -32,9 +32,9 @@ const ListHeaderStyled = styled(List.Header)`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
-    line-height: 1.6rem;
-    max-height: 4.8rem;
-    font-size: 1.4rem;
+    line-height: 1.8rem;
+    max-height: 5.4rem;
+    font-size: 1.6rem;
     font-family: ${props => props.theme.font};
   }
 `;

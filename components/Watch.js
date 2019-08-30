@@ -49,6 +49,9 @@ const StyledContainer = styled.div`
   margin: 0 auto;
   max-width: 1366px;
   padding: 0px 24px 0px 24px;
+  .filePlayer {
+    display: none;
+  }
   @media (max-width: 760px) {
     padding: 0px;
   }
@@ -331,6 +334,7 @@ class Watch extends Component {
     const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
+        className="filePlayer"
         config={{
           file: {
             forceAudio: true,
