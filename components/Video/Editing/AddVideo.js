@@ -3,15 +3,18 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 import axios from 'axios';
-import Form from '../styles/Form';
-import Error from '../UI/ErrorMessage';
-import { ALL_VIDEOS_QUERY } from './Videos';
+import Form from '../../styles/Form';
+import Error from '../../UI/ErrorMessage';
+import { ALL_VIDEOS_QUERY } from '../Videos';
 import AddVideoForm from './AddVideoForm';
-import youtube from '../../lib/youtube';
-import { languageOptions, defaultLanguage } from '../../lib/supportedLanguages';
-import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
-import uploadFileData from '../../lib/cloudinaryUploadFileData';
-import deleteFile from '../../lib/cloudinaryDeleteFile';
+import youtube from '../../../lib/youtube';
+import {
+  languageOptions,
+  defaultLanguage,
+} from '../../../lib/supportedLanguages';
+import isYouTubeSource, { youtubeIdLength } from '../../../lib/isYouTubeSource';
+import uploadFileData from '../../../lib/cloudinaryUploadFileData';
+import deleteFile from '../../../lib/cloudinaryDeleteFile';
 
 const CREATE_VIDEO_MUTATION = gql`
   mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
@@ -206,7 +209,7 @@ class AddVideo extends Component {
       youtubeId,
       language,
       id,
-      cloudinaryAuth
+      cloudinaryAuth,
     );
 
     // Upload file with post request
@@ -346,7 +349,7 @@ class AddVideo extends Component {
       >
         {(
           createAudio,
-          { loading: loadingCreateAudio, error: errorCreateAudio }
+          { loading: loadingCreateAudio, error: errorCreateAudio },
         ) => (
           <Mutation
             mutation={CREATE_VIDEO_MUTATION}
@@ -358,11 +361,11 @@ class AddVideo extends Component {
           >
             {(
               createVideo,
-              { loading: loadingCreateVideo, error: errorCreateVideo }
+              { loading: loadingCreateVideo, error: errorCreateVideo },
             ) => (
               <>
                 <Form
-                  data-test="form"
+                  data-test='form'
                   onSubmit={async e =>
                     this.onFormSubmit(e, createAudio, createVideo)
                   }

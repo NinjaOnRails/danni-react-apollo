@@ -1,26 +1,9 @@
 import React from 'react';
 import { Dropdown, Loader, Segment } from 'semantic-ui-react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import CloudinaryUpload from '../CloudinaryUpload';
-import { flagOptions, defaultLanguage } from '../../lib/supportedLanguages';
-
-const DropdownForm = styled.div`
-  .semantic-dropdown.ui.fluid.selection.dropdown {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid black;
-    margin-bottom: 1rem;
-    &:focus {
-      outline: 0;
-      border-color: ${props => props.theme.red};
-    }
-  }
-  .text {
-    margin: auto;
-  }
-`;
+import CloudinaryUpload from '../../CloudinaryUpload';
+import { flagOptions, defaultLanguage } from '../../../lib/supportedLanguages';
+import DropDownForm from '../../styles/VideoFormStyles';
 
 const AddVideoForm = ({
   source,
@@ -59,7 +42,7 @@ const AddVideoForm = ({
       aria-busy={loadingCreateVideo}
     >
       Ngôn ngữ đọc:
-      <DropdownForm>
+      <DropDownForm>
         <Dropdown
           fluid
           selection
@@ -69,7 +52,7 @@ const AddVideoForm = ({
           name='language'
           className='semantic-dropdown'
         />
-      </DropdownForm>
+      </DropDownForm>
       <label htmlFor='source'>
         Nguồn Video gốc (Link hoặc YouTube ID):
         <input

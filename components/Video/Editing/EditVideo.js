@@ -4,13 +4,13 @@ import gql from 'graphql-tag';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Loader, Dropdown } from 'semantic-ui-react';
-import styled from 'styled-components';
-import Form from '../styles/Form';
-import Error from '../ErrorMessage';
-import { VIDEO_QUERY } from './Watch';
+import Form from '../../styles/Form';
+import Error from '../../UI/ErrorMessage';
+import { VIDEO_QUERY } from '../Watch';
 import { CREATE_AUDIO_MUTATION } from './AddVideo';
-import { ALL_VIDEOS_QUERY } from './Videos';
-import youtube from '../../lib/youtube';
+import { ALL_VIDEOS_QUERY } from '../Videos';
+import youtube from '../../../lib/youtube';
+import DropdownForm from '../../styles/VideoFormStyles';
 
 const youtubeIdLength = 11;
 
@@ -28,23 +28,6 @@ const languageOptions = {
   CZECH: 'cz',
   ENGLISH: 'gb',
 };
-
-const DropdownForm = styled.div`
-  .semantic-dropdown.ui.fluid.selection.dropdown {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid black;
-    margin-bottom: 5px;
-    &:focus {
-      outline: 0;
-      border-color: ${props => props.theme.red};
-    }
-  }
-  .text {
-    margin: auto;
-  }
-`;
 
 const VIDEO_DELETE = gql`
   mutation VIDEO_DELETE($id: ID!, $password: String!) {
@@ -152,7 +135,7 @@ class EditVideo extends Component {
       { domain: 'www.youtu.be/', length: 13 },
     ];
     const isYouTube = sourceYouTube.find(value =>
-      youtubeId.startsWith(value.domain)
+      youtubeId.startsWith(value.domain),
     );
     let originId;
     if (isYouTube) {
@@ -273,7 +256,7 @@ class EditVideo extends Component {
                 >
                   {(
                     createAudio,
-                    { loading: loadingCreateAudio, error: errorCreateAudio }
+                    { loading: loadingCreateAudio, error: errorCreateAudio },
                   ) => (
                     <Mutation
                       mutation={UPDATE_AUDIO_MUTATION}
@@ -283,7 +266,10 @@ class EditVideo extends Component {
                     >
                       {(
                         updateAudio,
-                        { loading: loadingUpdateAudio, error: errorUpdateAudio }
+                        {
+                          loading: loadingUpdateAudio,
+                          error: errorUpdateAudio,
+                        },
                       ) => (
                         <Mutation
                           mutation={UPDATE_VIDEO_MUTATION}
@@ -305,11 +291,11 @@ class EditVideo extends Component {
                             {
                               loading: loadingUpdateVideo,
                               error: errorUpdateVideo,
-                            }
+                            },
                           ) => (
                             <>
                               <Form
-                                data-test="form"
+                                data-test='form'
                                 onSubmit={async e => {
                                   // Stop form from submitting
                                   e.preventDefault();
@@ -370,12 +356,12 @@ class EditVideo extends Component {
                                   }
                                   aria-busy={loadingUpdateVideo}
                                 >
-                                  <label htmlFor="source">
+                                  <label htmlFor='source'>
                                     Nguồn (Link hoặc YouTube ID):
                                     <input
-                                      type="text"
-                                      id="source"
-                                      name="source"
+                                      type='text'
+                                      id='source'
+                                      name='source'
                                       required
                                       placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
                                       defaultValue={oldOriginId}
@@ -389,48 +375,48 @@ class EditVideo extends Component {
                                   {channelTitle && <div>{channelTitle}</div>}
                                   {image && (
                                     <img
-                                      width="200"
+                                      width='200'
                                       src={image}
-                                      alt="thumbnail"
+                                      alt='thumbnail'
                                     />
                                   )}
-                                  <label htmlFor="titleVi">
+                                  <label htmlFor='titleVi'>
                                     Tiêu đề:
                                     <input
-                                      type="text"
-                                      id="titleVi"
-                                      name="titleVi"
+                                      type='text'
+                                      id='titleVi'
+                                      name='titleVi'
                                       required
                                       placeholder="ví dụ 'Sự sống trên mặt trăng xanh'"
                                       defaultValue={oldTitleVi}
                                       onChange={this.handleChange}
                                     />
                                   </label>
-                                  <label htmlFor="descriptionVi">
+                                  <label htmlFor='descriptionVi'>
                                     <input
-                                      id="descriptionVi"
-                                      name="isDescriptionVi"
-                                      type="checkbox"
+                                      id='descriptionVi'
+                                      name='isDescriptionVi'
+                                      type='checkbox'
                                       checked={isDescriptionVi}
                                       onChange={this.handleChange}
                                     />
                                     Nội dung:
                                   </label>
                                   {isDescriptionVi && (
-                                    <label htmlFor="descriptionVi">
+                                    <label htmlFor='descriptionVi'>
                                       <input
-                                        type="text"
-                                        name="descriptionVi"
+                                        type='text'
+                                        name='descriptionVi'
                                         defaultValue={oldDescriptionVi}
                                         onChange={this.handleChange}
                                       />
                                     </label>
                                   )}
-                                  <label htmlFor="defaultVolume">
+                                  <label htmlFor='defaultVolume'>
                                     <input
-                                      id="defaultVolume"
-                                      name="isDefaultVolume"
-                                      type="checkbox"
+                                      id='defaultVolume'
+                                      name='isDefaultVolume'
+                                      type='checkbox'
                                       checked={isDefaultVolume}
                                       onChange={this.handleChange}
                                     />
@@ -438,19 +424,19 @@ class EditVideo extends Component {
                                   </label>
                                   {isDefaultVolume && (
                                     <input
-                                      type="number"
-                                      name="defaultVolume"
-                                      min="0"
-                                      max="100"
+                                      type='number'
+                                      name='defaultVolume'
+                                      min='0'
+                                      max='100'
                                       defaultValue={oldDefaultVolume}
                                       onChange={this.handleChange}
                                     />
                                   )}
-                                  <label htmlFor="tags">
+                                  <label htmlFor='tags'>
                                     <input
-                                      id="tags"
-                                      name="isTags"
-                                      type="checkbox"
+                                      id='tags'
+                                      name='isTags'
+                                      type='checkbox'
                                       checked={isTags}
                                       onChange={this.handleChange}
                                     />
@@ -458,18 +444,18 @@ class EditVideo extends Component {
                                   </label>
                                   {isTags && (
                                     <input
-                                      type="text"
-                                      name="tags"
+                                      type='text'
+                                      name='tags'
                                       placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
                                       defaultValue={oldTags.trim()}
                                       onChange={this.handleChange}
                                     />
                                   )}
-                                  <label htmlFor="audioSource">
+                                  <label htmlFor='audioSource'>
                                     <input
-                                      id="audioSource"
-                                      name="isAudioSource"
-                                      type="checkbox"
+                                      id='audioSource'
+                                      name='isAudioSource'
+                                      type='checkbox'
                                       checked={isAudioSource}
                                       onChange={this.handleChange}
                                     />
@@ -478,8 +464,8 @@ class EditVideo extends Component {
                                   {isAudioSource && (
                                     <>
                                       <input
-                                        type="text"
-                                        name="audioSource"
+                                        type='text'
+                                        name='audioSource'
                                         placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
                                         defaultValue={
                                           data.video.audio.length
@@ -492,8 +478,8 @@ class EditVideo extends Component {
                                       />
                                       Người đọc:
                                       <input
-                                        type="text"
-                                        name="audioAuthor"
+                                        type='text'
+                                        name='audioAuthor'
                                         placeholder="ví dụ 'Paní'"
                                         defaultValue={
                                           data.video.audio.length &&
@@ -522,23 +508,23 @@ class EditVideo extends Component {
                                               ].language
                                             ]
                                           }
-                                          name="audioLanguage"
-                                          className="semantic-dropdown"
+                                          name='audioLanguage'
+                                          className='semantic-dropdown'
                                         />
                                       </DropdownForm>
                                     </>
                                   )}
-                                  <button type="submit">Save Changes</button>
+                                  <button type='submit'>Save Changes</button>
                                 </fieldset>
                               </Form>
                               <button
-                                type="submit"
+                                type='submit'
                                 onClick={async () => {
                                   if (password !== 'dracarys') {
                                     alert('Wrong password');
                                   } else if (
                                     confirm(
-                                      'Are you sure you want to delete this video?'
+                                      'Are you sure you want to delete this video?',
                                     )
                                   ) {
                                     const res = await deleteVideo({
