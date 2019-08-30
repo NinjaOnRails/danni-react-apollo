@@ -27,16 +27,16 @@ const LogoStyles = styled.h1`
     margin-right: 1rem;
   }
   @media (max-width: 639px) {
-    display: ${props => (props.inDrawer ? '' : 'grid')};
+    display: 'grid';
     font-size: 2rem;
     transform: none;
     margin: 0;
   }
 `;
 
-const Logo = ({ inDrawer }) => (
-  <LogoStyles inDrawer={inDrawer}>
-    <Link href="/">
+const Logo = () => (
+  <LogoStyles>
+    <Link href='/'>
       <a>danni.tv</a>
     </Link>
   </LogoStyles>

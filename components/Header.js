@@ -47,7 +47,7 @@ const StyledHeader = styled.header`
 
 const Header = ({ drawerToggleClick }) => (
   <StyledHeader>
-    <div className="bar">
+    <div className='bar'>
       <Logo />
       <Nav />
       <DrawerToggle clicked={drawerToggleClick} />
@@ -60,5 +60,8 @@ const Header = ({ drawerToggleClick }) => (
 Header.propTypes = {
   drawerToggleClick: PropTypes.func.isRequired,
 };
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9525fe2d103edd718100e0e88ce9a3681aea3afb
 export default Header;
