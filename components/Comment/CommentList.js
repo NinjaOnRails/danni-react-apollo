@@ -1,22 +1,8 @@
 import React from 'react';
 import { Button, Comment, Form } from 'semantic-ui-react';
-import styled from 'styled-components';
-
 import VideoComment from './Comment';
+import { CommentSectionStyles } from '../styles/Commentstyles';
 
-const CommentSectionStyles = styled.div`
-  .ui.large.comments {
-    margin: 16px 0;
-  }
-  .ui.comments .reply.form textarea {
-    height: auto;
-    width: 100%;
-  }
-  .ui.form textarea {
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  }
-`;
 const commentData = [
   {
     id: 415134,
@@ -112,10 +98,10 @@ class CommentList extends React.Component {
   render() {
     return (
       <CommentSectionStyles>
-        <Comment.Group size="large">
+        <Comment.Group size='large'>
           <Form reply>
-            <Form.TextArea placeholder="Viết bình luận..." />
-            <Button content="Add Comment" primary />
+            <Form.TextArea placeholder='Viết bình luận...' />
+            <Button content='Add Comment' primary />
           </Form>
           {this.renderComments()}
         </Comment.Group>

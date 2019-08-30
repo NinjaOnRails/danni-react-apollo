@@ -4,9 +4,11 @@ import gql from 'graphql-tag';
 import Link from 'next/link';
 import Router from 'next/router';
 import generateName from 'sillyname';
-import Form from './styles/Form';
-import Error from './ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
+import Form from '../styles/Form';
+import Error from '../UI/ErrorMessage';
+import { CURRENT_USER_QUERY } from '../User';
+import AuthForm from './AuthenticationForm';
+import { signupFields } from './fieldTypes';
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
@@ -46,7 +48,6 @@ class Signup extends Component {
   };
 
   render() {
-    const { name, email, password, displayName } = this.state;
     return (
       <Mutation
         mutation={SIGNUP_MUTATION}
@@ -56,7 +57,7 @@ class Signup extends Component {
         {(signup, { error, loading }) => {
           return (
             <Form
-              method="post"
+              method='post'
               onSubmit={async e => {
                 e.preventDefault();
                 await signup();
@@ -71,52 +72,22 @@ class Signup extends Component {
             >
               <fieldset disabled={loading} aria-busy={loading}>
                 <Error error={error} />
-                <label htmlFor="email">
-                  E-mail
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="bắt buộc"
-                    value={email}
-                    onChange={this.saveToState}
+                {signupFields.map(form => (
+                  <AuthForm
+                    key={form.name}
+                    form={form}
+                    saveToState={this.saveToState}
+                    value={this.state}
                   />
-                </label>
-                <label htmlFor="name">
-                  Họ và tên
-                  <input
-                    type="name"
-                    name="name"
-                    value={name}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <label htmlFor="displayName">
-                  Tên hiển thị
-                  <input
-                    type="displayName"
-                    name="displayName"
-                    value={displayName}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <label htmlFor="password">
-                  Mật khẩu
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="bắt buộc"
-                    value={password}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <button type="submit">
+                ))}
+                <button type='submit'>
                   {loading && 'Đang '}Tạo Tài Khoản Mới
                 </button>
               </fieldset>
-              <Link href="/signin">
+              <Link href='/signin'>
                 <a>Đã có tài khoản</a>
               </Link>
-              <Link href="/requestReset">
+              <Link href='/requestReset'>
                 <a>Quên mật khẩu</a>
               </Link>
             </Form>

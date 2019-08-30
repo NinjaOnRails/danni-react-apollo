@@ -1,28 +1,12 @@
 import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import styled from 'styled-components';
 import Downshift, { resetIdCounter } from 'downshift';
 import debounce from 'lodash.debounce';
 import { Search as SemanticSearch } from 'semantic-ui-react';
+import { DropDown, DropDownItem } from '../../styles/DropDown';
+import { SEARCH_VIDEOS_QUERY, routetoItem } from '../Search';
+import { StyledMobileSearch } from '../../styles/MobileUiStyles';
 
-import { DropDown, DropDownItem } from './styles/DropDown';
-import { SEARCH_VIDEOS_QUERY, routetoItem } from './Search';
-
-const StyledMobileSearch = styled.div`
-  && {
-    margin: auto 5px;
-    box-sizing: border-box;
-    height: 30px;
-    @media (min-width: 673px) {
-      display: none;
-    }
-  }
-  .ui.input > input {
-    padding: 0;
-    padding-left: 0.5em;
-    width: 100%;
-  }
-`;
 class MobileSearch extends React.Component {
   state = {
     videos: [],
@@ -68,7 +52,7 @@ class MobileSearch extends React.Component {
                 {client => (
                   <SemanticSearch
                     loading={loading}
-                    placeholder="Search..."
+                    placeholder='Search...'
                     onSearchChange={e => {
                       e.persist();
                       this.onChange(e, client);
@@ -85,7 +69,7 @@ class MobileSearch extends React.Component {
                       highlighted={index === highlightedIndex}
                     >
                       <img
-                        width="50"
+                        width='50'
                         src={item.originThumbnailUrl}
                         alt={item.titleVi}
                       />

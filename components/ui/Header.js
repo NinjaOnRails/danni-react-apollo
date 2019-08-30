@@ -6,8 +6,8 @@ import Nav from './Nav';
 // import MobileNav from './MobileNav';
 import Search from './Search';
 import Logo from './Logo';
-import MobileSearch from './MobileSearch';
-import DrawerToggle from './ui/DrawerToggle';
+import MobileSearch from './Mobile/MobileSearch';
+import DrawerToggle from './Mobile/DrawerToggle';
 
 Router.onRouteChangeStart = () => {
   NProgress.start();

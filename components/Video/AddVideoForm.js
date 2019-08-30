@@ -2,8 +2,8 @@ import React from 'react';
 import { Dropdown, Loader, Segment } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import CloudinaryUpload from './CloudinaryUpload';
-import { flagOptions, defaultLanguage } from '../lib/supportedLanguages';
+import CloudinaryUpload from '../CloudinaryUpload';
+import { flagOptions, defaultLanguage } from '../../lib/supportedLanguages';
 
 const DropdownForm = styled.div`
   .semantic-dropdown.ui.fluid.selection.dropdown {
@@ -66,38 +66,38 @@ const AddVideoForm = ({
           options={flagOptions}
           onChange={handleDropdown}
           defaultValue={defaultLanguage}
-          name="language"
-          className="semantic-dropdown"
+          name='language'
+          className='semantic-dropdown'
         />
       </DropdownForm>
-      <label htmlFor="source">
+      <label htmlFor='source'>
         Nguồn Video gốc (Link hoặc YouTube ID):
         <input
-          type="text"
-          id="source"
-          name="source"
+          type='text'
+          id='source'
+          name='source'
           required
           placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
           value={source}
           onChange={handleChange}
         />
       </label>
-      {fetchingYoutube && <Loader inline="centered" active />}
+      {fetchingYoutube && <Loader inline='centered' active />}
       {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
       {originTitle && (
         <Segment>
           <p>{originTitle}</p>
           <p>{channelTitle}</p>
-          {image && <img width="200" src={image} alt="thumbnail" />}
+          {image && <img width='200' src={image} alt='thumbnail' />}
         </Segment>
       )}
       {youtubeId && (
         <>
-          <label htmlFor="isAudioSource">
+          <label htmlFor='isAudioSource'>
             <input
-              id="isAudioSource"
-              name="isAudioSource"
-              type="checkbox"
+              id='isAudioSource'
+              name='isAudioSource'
+              type='checkbox'
               checked={isAudioSource}
               onChange={handleChange}
             />
@@ -118,44 +118,44 @@ const AddVideoForm = ({
                 audioSource={audioSource}
                 onAudioLoadedMetadata={onAudioLoadedMetadata}
               />
-              <label htmlFor="title">
+              <label htmlFor='title'>
                 Tiêu đề:
                 <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  maxLength="100"
+                  type='text'
+                  id='title'
+                  name='title'
+                  maxLength='100'
                   required
                   value={title}
                   onChange={handleChange}
                 />
               </label>
-              <label htmlFor="description">
+              <label htmlFor='description'>
                 <input
-                  id="description"
-                  name="isDescription"
-                  type="checkbox"
+                  id='description'
+                  name='isDescription'
+                  type='checkbox'
                   checked={isDescription}
                   onChange={handleChange}
                 />
                 Nội dung:
               </label>
               {isDescription && (
-                <label htmlFor="description">
+                <label htmlFor='description'>
                   <textarea
-                    name="description"
-                    maxLength="5000"
-                    rows="10"
+                    name='description'
+                    maxLength='5000'
+                    rows='10'
                     value={description}
                     onChange={handleChange}
                   />
                 </label>
               )}
-              <label htmlFor="tags">
+              <label htmlFor='tags'>
                 <input
-                  id="tags"
-                  name="isTags"
-                  type="checkbox"
+                  id='tags'
+                  name='isTags'
+                  type='checkbox'
                   checked={isTags}
                   onChange={handleChange}
                 />
@@ -164,9 +164,9 @@ const AddVideoForm = ({
               {isTags && (
                 <>
                   <input
-                    type="text"
-                    name="tags"
-                    maxLength="500"
+                    type='text'
+                    name='tags'
+                    maxLength='500'
                     placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
                     value={tags}
                     onChange={handleChange}
@@ -177,11 +177,11 @@ const AddVideoForm = ({
                   </Segment>
                 </>
               )}
-              <label htmlFor="defaultVolume">
+              <label htmlFor='defaultVolume'>
                 <input
-                  id="defaultVolume"
-                  name="isDefaultVolume"
-                  type="checkbox"
+                  id='defaultVolume'
+                  name='isDefaultVolume'
+                  type='checkbox'
                   checked={isDefaultVolume}
                   onChange={handleChange}
                 />
@@ -189,10 +189,10 @@ const AddVideoForm = ({
               </label>
               {isDefaultVolume && (
                 <input
-                  type="number"
-                  name="defaultVolume"
-                  min="0"
-                  max="100"
+                  type='number'
+                  name='defaultVolume'
+                  min='0'
+                  max='100'
                   value={defaultVolume}
                   onChange={handleChange}
                 />
@@ -201,7 +201,7 @@ const AddVideoForm = ({
           )}
         </>
       )}
-      <button type="submit">
+      <button type='submit'>
         Submit{(loadingCreateVideo || loadingCreateAudio) && 'ting'}
       </button>
     </fieldset>

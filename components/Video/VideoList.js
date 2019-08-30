@@ -1,50 +1,15 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import { List, Image, Loader, Icon } from 'semantic-ui-react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { ALL_VIDEOS_QUERY } from './Videos';
-import Error from './ErrorMessage';
-
-const VideoItem = styled.div`
-  display: flex !important;
-  align-items: center !important;
-  cursor: pointer;
-  .content {
-    padding-left: 0.5rem;
-  }
-  .ui.image img {
-    max-width: 168px;
-  }
-  .ui.label {
-    position: absolute;
-    z-index: 1;
-    bottom: 2px;
-    right: 2px;
-  }
-`;
-
-const ListHeaderStyled = styled(List.Header)`
-  &&&& {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-height: 1.8rem;
-    max-height: 5.4rem;
-    font-size: 1.6rem;
-    font-family: ${props => props.theme.font};
-  }
-`;
-
-const ListDescriptionStyled = styled(List.Description)`
-  padding-top: 0.4rem;
-  &&&& {
-    font-size: 1.3rem;
-  }
-`;
+import Error from '../ErrorMessage';
+import {
+  VideoItem,
+  ListDescriptionStyled,
+  ListHeaderStyled,
+} from '../styles/VideoListStyles';
 
 class VideoList extends Component {
   componentDidUpdate(prevProps) {
@@ -109,7 +74,7 @@ class VideoList extends Component {
                                   {originAuthor}
                                 </ListDescriptionStyled>
                                 <ListDescriptionStyled>
-                                  <Icon name="user" />
+                                  <Icon name='user' />
                                   {displayName}
                                 </ListDescriptionStyled>
                               </List.Content>
@@ -153,7 +118,7 @@ class VideoList extends Component {
                                     {originAuthor}
                                   </ListDescriptionStyled>
                                   <ListDescriptionStyled>
-                                    <Icon name="user" />
+                                    <Icon name='user' />
                                     {audio.author.displayName}
                                   </ListDescriptionStyled>
                                 </List.Content>
@@ -161,9 +126,9 @@ class VideoList extends Component {
                             </a>
                           </Link>
                         </List.Item>
-                      )
+                      ),
                   );
-                }
+                },
               )}
             </List>
           );

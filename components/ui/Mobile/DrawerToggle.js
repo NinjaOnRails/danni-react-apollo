@@ -2,16 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-
-const DrawerToggleStyles = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: auto 0;
-  @media (min-width: 640px) {
-    display: none;
-  }
-`;
+import { DrawerToggleStyles } from '../../styles/MobileUiStyles';
 
 const DrawerToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>

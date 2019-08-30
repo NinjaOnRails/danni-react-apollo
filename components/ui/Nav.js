@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Icon } from 'semantic-ui-react';
 // import { Mutation } from 'react-apollo';
-import NavStyles from './styles/NavStyles';
-import User from './User';
-import Signout from './Signout';
+import NavStyles from '../styles/NavStyles';
+import User from '../User';
+import Signout from '../Authentication/Signout';
 
 const Nav = () => (
   <User>

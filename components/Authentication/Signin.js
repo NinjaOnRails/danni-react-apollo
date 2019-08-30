@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
-import Form from './styles/Form';
-import Error from './ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
-
+import Form from '../styles/Form';
+import Error from '../UI/ErrorMessage';
+import { CURRENT_USER_QUERY } from '../User';
+import { signinFields } from './fieldTypes';
+import AuthForm from './AuthenticationForm';
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
@@ -26,7 +27,6 @@ class Signin extends Component {
   };
 
   render() {
-    const { email, password } = this.state;
     return (
       <Mutation
         mutation={SIGNIN_MUTATION}
@@ -36,7 +36,7 @@ class Signin extends Component {
         {(signin, { error, loading }) => {
           return (
             <Form
-              method="post"
+              method='post'
               onSubmit={async e => {
                 e.preventDefault();
                 await signin();
@@ -48,32 +48,20 @@ class Signin extends Component {
             >
               <fieldset disabled={loading} aria-busy={loading}>
                 <Error error={error} />
-                <label htmlFor="email">
-                  E-mail
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="bắt buộc"
-                    value={email}
-                    onChange={this.saveToState}
+                {signinFields.map(form => (
+                  <AuthForm
+                    key={form.name}
+                    form={form}
+                    saveToState={this.saveToState}
+                    value={this.state}
                   />
-                </label>
-                <label htmlFor="password">
-                  Mật khẩu
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="bắt buộc"
-                    value={password}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <button type="submit">{loading && 'Đang '}Đăng Nhập</button>
+                ))}
+                <button type='submit'>{loading && 'Đang '}Đăng Nhập</button>
               </fieldset>
-              <Link href="/requestReset">
+              <Link href='/requestReset'>
                 <a>Quên mật khẩu</a>
               </Link>
-              <Link href="/signup">
+              <Link href='/signup'>
                 <a>Tạo tài khoản mới</a>
               </Link>
             </Form>

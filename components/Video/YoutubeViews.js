@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import youtube from '../lib/youtube';
+import youtube from '../../lib/youtube';
 
 export default class YoutubeViews extends Component {
   state = {
@@ -12,8 +12,8 @@ export default class YoutubeViews extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.originId !== this.props.originId)
-      this.fetchYoutubeViews(this.props.originId);
+    const { originId } = this.props;
+    if (prevProps.originId !== originId) this.fetchYoutubeViews(originId);
   }
 
   fetchYoutubeViews = async id => {
@@ -27,7 +27,7 @@ export default class YoutubeViews extends Component {
     this.setState({
       youtubeViews: parseInt(
         res.data.items[0].statistics.viewCount,
-        10
+        10,
       ).toLocaleString(),
     });
   };

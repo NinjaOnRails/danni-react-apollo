@@ -1,4 +1,4 @@
-import RequestReset from '../components/RequestReset';
+import RequestReset from '../components/Authentication/RequestReset';
 
 const RequestResetPage = () => <RequestReset />;
 

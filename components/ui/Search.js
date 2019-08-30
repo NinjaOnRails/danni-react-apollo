@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import debounce from 'lodash.debounce';
 import Downshift, { resetIdCounter } from 'downshift';
 import Router from 'next/router';
-import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
+import { DropDown, DropDownItem, SearchStyles } from '../styles/DropDown';
 
 export const SEARCH_VIDEOS_QUERY = gql`
   query SEARCH_VIDEOS_QUERY($searchTerm: String!) {
