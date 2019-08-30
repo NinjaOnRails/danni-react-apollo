@@ -50,7 +50,7 @@ const StyledContainer = styled.div`
   max-width: 1366px;
   padding: 0px 24px 0px 24px;
   .filePlayer {
-    display: none;
+    display: none; /* Hide audio File Player */
   }
   @media (max-width: 760px) {
     padding: 0px;
@@ -106,6 +106,15 @@ const VideoInfoStyle = styled.div`
   .views-social {
     display: flex;
     justify-content: space-between;
+  }
+  .description-preview {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* Show only first 2 lines */
+    line-height: 2rem; /* Implement for browsers with no support for webkit */
+    max-height: 2rem; /* This is line height X no. of lines to show */
   }
 `;
 
@@ -255,10 +264,6 @@ class Watch extends Component {
     );
   };
 
-  toggleDescription() {
-    this.setState({ showFullDescription: !this.state.showFullDescription });
-  }
-
   renderVideoInfo = (
     id,
     {
@@ -271,17 +276,7 @@ class Watch extends Component {
     },
     audioQueryParam
   ) => {
-    let description;
     const { showFullDescription } = this.state;
-    if (audio[0] && audio[0].description) {
-      description = audio[0].description;
-    } else if (originDescription) {
-      description = originDescription;
-    }
-    const wordsArray = description.split(' ');
-    // Take first 40 words
-    const firstHalf = wordsArray.slice(0, 20).join(' ');
-    const secondHalf = wordsArray.slice(20).join(' ');
     return (
       <VideoInfoStyle>
         <div className="basic-info">
@@ -313,19 +308,30 @@ class Watch extends Component {
               <h3>Người đăng: {displayName}</h3>
             </Header>
           )}
-          <div className="description">
-            {firstHalf}
-            {showFullDescription ? secondHalf : ' ...'}
+          <div
+            className={
+              showFullDescription
+                ? 'description'
+                : `description description-preview`
+            }
+          >
+            {(audio[0] && audio[0].description && (
+              <>{audio[0].description}</>
+            )) ||
+              (originDescription && <>{originDescription}</>)}
           </div>
-          {secondHalf.length > 20 && (
-            <button
-              type="button"
-              onClick={() => this.toggleDescription()}
-              className="ui button"
-            >
-              {showFullDescription ? 'Show less' : 'Show more'}
-            </button>
-          )}
+
+          <button
+            type="button"
+            onClick={() =>
+              this.setState({
+                showFullDescription: !showFullDescription,
+              })
+            }
+            className="ui button"
+          >
+            {showFullDescription ? 'Show less' : 'Show more'}
+          </button>
         </Segment>
       </VideoInfoStyle>
     );
