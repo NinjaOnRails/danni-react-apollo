@@ -31,7 +31,7 @@ const ALL_VIDEOS_QUERY = gql`
 `;
 
 const VideosListStyled = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   display: grid;
   grid-template-columns: 290px 290px;
   grid-gap: 15px;
@@ -54,6 +54,7 @@ const VideosListStyled = styled.div`
     padding-right: 0px;
   }
   .ui.card > .content > .header {
+    font-family: ${props => props.theme.font};
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

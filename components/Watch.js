@@ -91,6 +91,7 @@ const VideoInfoStyle = styled.div`
   margin-bottom: 10px;
   h1,
   h2,
+  h3,
   .description {
     font-family: ${props => props.theme.font};
     word-break: break-word;
