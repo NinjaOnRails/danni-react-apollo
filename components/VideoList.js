@@ -8,8 +8,7 @@ import { ALL_VIDEOS_QUERY } from './Videos';
 import Error from './ErrorMessage';
 
 const VideoItem = styled.div`
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
   cursor: pointer;
   .content {
     padding-left: 0.5rem;
@@ -54,7 +53,7 @@ class VideoList extends Component {
   }
 
   render() {
-    const { id, audioId } = this.props;
+    const { id, audioId, hideFullDescription } = this.props;
     return (
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
@@ -81,7 +80,10 @@ class VideoList extends Component {
 
                   if (audios.length === 0 && videoId !== id) {
                     return (
-                      <List.Item key={videoId}>
+                      <List.Item
+                        key={videoId}
+                        onClick={() => hideFullDescription()}
+                      >
                         <Link
                           href={{
                             pathname: '/watch',
@@ -123,7 +125,10 @@ class VideoList extends Component {
                   return audios.map(
                     audio =>
                       audioId !== audio.id && (
-                        <List.Item key={audio.id}>
+                        <List.Item
+                          key={audio.id}
+                          onClick={() => hideFullDescription()}
+                        >
                           <Link
                             href={{
                               pathname: '/watch',
@@ -176,6 +181,7 @@ class VideoList extends Component {
 VideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
+  hideFullDescription: PropTypes.func.isRequired,
 };
 
 VideoList.defaultProps = {
