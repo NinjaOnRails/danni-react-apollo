@@ -31,7 +31,7 @@ const ALL_VIDEOS_QUERY = gql`
 `;
 
 const VideosListStyled = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   display: grid;
   grid-template-columns: 290px 290px;
   grid-gap: 15px;

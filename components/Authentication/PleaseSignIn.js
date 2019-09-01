@@ -1,7 +1,7 @@
 import { Query } from 'react-apollo';
 import { Loader, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { CURRENT_USER_QUERY } from '../User';
+import { CURRENT_USER_QUERY } from './User';
 import Signin from './Signin';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 

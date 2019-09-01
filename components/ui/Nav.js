@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Icon } from 'semantic-ui-react';
 // import { Mutation } from 'react-apollo';
 import NavStyles from '../styles/NavStyles';
-import User from '../User';
+import User from '../Authentication/User';
 import Signout from '../Authentication/Signout';
 
 const Nav = () => (

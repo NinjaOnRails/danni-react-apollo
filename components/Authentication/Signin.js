@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import Link from 'next/link';
 import Form from '../styles/Form';
 import Error from '../ui/ErrorMessage';
-import { CURRENT_USER_QUERY } from '../User';
+import { CURRENT_USER_QUERY } from './User';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 

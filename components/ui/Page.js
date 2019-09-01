@@ -4,7 +4,7 @@ import { Container } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Fonts from './Fonts';
 import Header from './Header';
-import Meta from '../Meta';
+import Meta from './Meta';
 import SideDrawer from './Mobile/SideDrawer';
 
 const theme = {

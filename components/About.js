@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Header } from 'semantic-ui-react';
 
-export class About extends Component {
+class About extends Component {
   render() {
     return (
       <Container text>

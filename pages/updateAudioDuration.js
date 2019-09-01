@@ -1,4 +1,4 @@
-import UpdateAudioDuration from '../components/Video/Editing/UpdateAudioDuration';
+import UpdateAudioDuration from '../components/Video/UpdateAudioDuration';
 
 const UpdateAudioDurationPage = () => <UpdateAudioDuration />;
 

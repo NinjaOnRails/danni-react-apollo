@@ -28,7 +28,7 @@ export const ListHeaderStyled = styled(List.Header)`
     -webkit-line-clamp: 3;
     line-height: 1.8rem;
     max-height: 5.4rem;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-family: ${props => props.theme.font};
   }
 `;

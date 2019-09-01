@@ -1,4 +1,4 @@
-import EditVideo from '../components/Video/Editing/EditVideo';
+import EditVideo from '../components/Video/EditVideo';
 
 const Edit = () => <EditVideo />;
 

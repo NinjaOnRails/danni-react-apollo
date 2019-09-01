@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Form from '../styles/Form';
 import Error from '../ui/ErrorMessage';
 import AuthForm from './AuthenticationForm';
-import { CURRENT_USER_QUERY } from '../User';
+import { CURRENT_USER_QUERY } from './User';
 
 import { resetFields } from './fieldTypes';
 

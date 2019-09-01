@@ -1,9 +1,9 @@
 import React from 'react';
 import { Dropdown, Loader, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import CloudinaryUpload from '../../CloudinaryUpload';
-import { flagOptions, defaultLanguage } from '../../../lib/supportedLanguages';
-import DropDownForm from '../../styles/VideoFormStyles';
+import CloudinaryUpload from './CloudinaryUpload';
+import { flagOptions, defaultLanguage } from '../../lib/supportedLanguages';
+import DropDownForm from '../styles/VideoFormStyles';
 
 const AddVideoForm = ({
   source,
