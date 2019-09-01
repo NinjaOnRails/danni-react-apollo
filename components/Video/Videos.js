@@ -33,7 +33,7 @@ const ALL_VIDEOS_QUERY = gql`
 const VideosListStyled = styled.div`
   font-size: 1.1rem;
   display: grid;
-  grid-template-columns: 210px;
+  grid-template-columns: 210px 210px 210px 210px 210px;
   grid-gap: 5px;
   margin: 0 auto;
   justify-content: center;
@@ -70,10 +70,13 @@ const VideosListStyled = styled.div`
     height: 118.13px;
     padding-top: 0;
   }
+  @media (max-width: 479px) {
+    grid-template-columns: auto;
+  }
   @media (min-width: 480px) {
     grid-template-columns: 210px 210px;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 720px) {
     grid-template-columns: 210px 210px 210px;
   }
   @media (min-width: 960px) {

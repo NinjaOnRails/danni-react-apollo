@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 const LogoStyles = styled.h1`
-  font-size: 4rem;
+  font-size: 3rem;
   margin-left: 2rem;
   position: relative;
   z-index: 2;
@@ -19,15 +19,16 @@ const LogoStyles = styled.h1`
     text-decoration: none;
   }
   @media (max-width: 1279px) {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
   }
   @media (max-width: 959px) {
     margin-left: 1rem;
     margin-right: 1rem;
+    font-size: 2rem;
   }
   @media (max-width: 639px) {
     display: 'grid';
-    font-size: 2rem;
+    font-size: 1.5rem;
     transform: none;
     margin: 0;
   }
