@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { Placeholder, Card, Icon, Image } from 'semantic-ui-react';
 import Link from 'next/link';
-import Error from '../UI/ErrorMessage';
+import Error from '../ui/ErrorMessage';
 
 const ALL_VIDEOS_QUERY = gql`
   query ALL_VIDEOS_QUERY {
@@ -31,7 +31,7 @@ const ALL_VIDEOS_QUERY = gql`
 `;
 
 const VideosListStyled = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   display: grid;
   grid-template-columns: 290px 290px;
   grid-gap: 15px;
@@ -54,6 +54,7 @@ const VideosListStyled = styled.div`
     padding-right: 0px;
   }
   .ui.card > .content > .header {
+    font-family: ${props => props.theme.font};
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

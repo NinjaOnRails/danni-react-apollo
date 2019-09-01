@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import Head from 'next/head';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import styled from 'styled-components';
-import { Grid, Segment, Header, Loader } from 'semantic-ui-react';
-import { FacebookShareButton, FacebookIcon } from 'react-share';
-import Error from '../ErrorMessage';
-import YoutubeViews from '../YoutubeViews';
+import { Grid, Loader } from 'semantic-ui-react';
 import VideoList from './VideoList';
-import CommentList from '../CommentList';
+import CommentList from '../Comment/CommentList';
+import VideoInfo from './VideoInfo';
+import VideoHeader from './VideoHeader';
+import Error from '../ui/ErrorMessage';
 
 const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!, $audioId: ID) {
@@ -50,7 +49,7 @@ const StyledContainer = styled.div`
   max-width: 1366px;
   padding: 0px 24px 0px 24px;
   .filePlayer {
-    display: none;
+    display: none; /* Hide audio File Player */
   }
   @media (max-width: 760px) {
     padding: 0px;
@@ -87,27 +86,6 @@ const YoutubeStyle = styled.div`
   }
 `;
 
-const VideoInfoStyle = styled.div`
-  margin-bottom: 10px;
-  h1,
-  h2,
-  .description {
-    font-family: ${props => props.theme.font};
-    word-break: break-word;
-  }
-  .fb-share-button {
-    float: right;
-    cursor: pointer;
-  }
-  .basic-info {
-    margin-top: 10px;
-  }
-  .views-social {
-    display: flex;
-    justify-content: space-between;
-  }
-`;
-
 class Watch extends Component {
   state = {
     playingFilePlayer: false,
@@ -122,10 +100,8 @@ class Watch extends Component {
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
 
-    if (id !== prevProps.id || audioId !== prevProps.audioId) {
-      this.setState({ showFullDescription: false });
+    if (id !== prevProps.id || audioId !== prevProps.audioId)
       this.youtubePlayer.getInternalPlayer().unMute();
-    }
   }
 
   onProgressYoutube = ({ playedSeconds }) => {
@@ -175,44 +151,13 @@ class Watch extends Component {
     });
   };
 
-  renderHead = (
-    id,
-    {
-      audio,
-      originTitle,
-      originThumbnailUrl,
-      originThumbnailUrlSd,
-      originLanguage,
-      originDescription,
-    },
-    audioQueryParam,
-  ) => (
-    <Head>
-      <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
-      <meta
-        property='og:url'
-        content={`http://danni.tv/watch?id=${id}${audioQueryParam}`}
-      />
-      <meta
-        property='og:title'
-        content={audio[0] ? audio[0].title : originTitle}
-      />
-      <meta
-        property='og:image'
-        content={originThumbnailUrlSd || originThumbnailUrl}
-      />
-      <meta property='og:locale' content={originLanguage || ''} />
-      <meta
-        property='og:description'
-        content={
-          audio[0] && audio[0].description
-            ? audio[0].description
-            : originDescription
-        }
-      />
-      <meta property='fb:app_id' content='444940199652956' />
-    </Head>
-  );
+  hideFullDescription = () => {
+    this.setState({ showFullDescription: false });
+  };
+
+  toggleFullDescription = () => {
+    this.setState({ showFullDescription: !this.state.showFullDescription });
+  };
 
   renderVideoPlayer = video => {
     const { playingFilePlayer, playbackRate } = this.state;
@@ -225,10 +170,10 @@ class Watch extends Component {
         }
       >
         <YouTubePlayer
-          className='youtube-player'
+          className="youtube-player"
           url={`https://www.youtube.com/embed/${video.originId}`}
-          width='100%'
-          height='100%'
+          width="100%"
+          height="100%"
           onReady={() =>
             this.setState({
               readyYoutube: true,
@@ -254,87 +199,11 @@ class Watch extends Component {
     );
   };
 
-  toggleDescription() {
-    this.setState({ showFullDescription: !this.state.showFullDescription });
-  }
-
-  renderVideoInfo = (
-    id,
-    {
-      audio,
-      originTitle,
-      originId,
-      originAuthor,
-      addedBy: { displayName },
-      originDescription,
-    },
-    audioQueryParam,
-  ) => {
-    let description;
-    const { showFullDescription } = this.state;
-    if (audio[0] && audio[0].description) {
-      description = audio[0].description;
-    } else if (originDescription) {
-      description = originDescription;
-    }
-    const wordsArray = description.split(' ');
-    // Take first 40 words
-    const firstHalf = wordsArray.slice(0, 20).join(' ');
-    const secondHalf = wordsArray.slice(20).join(' ');
-    return (
-      <VideoInfoStyle>
-        <div className='basic-info'>
-          <Header>
-            <h1>{audio[0] ? audio[0].title : originTitle}</h1>
-          </Header>
-          <div className='views-social'>
-            <YoutubeViews originId={originId} />
-            <div>
-              <FacebookShareButton
-                className='fb-share-button'
-                url={`https://danni.tv/watch?id=${id}${audioQueryParam}`}
-              >
-                <FacebookIcon size={32} round />
-              </FacebookShareButton>
-            </div>
-          </div>
-        </div>
-        <Segment>
-          <Header>
-            <h2>Kênh: {originAuthor}</h2>
-          </Header>
-          {(audio[0] && (
-            <Header>
-              <h3>Người đọc: {audio[0].author.displayName}</h3>
-            </Header>
-          )) || (
-            <Header>
-              <h3>Người đăng: {displayName}</h3>
-            </Header>
-          )}
-          <div className='description'>
-            {firstHalf}
-            {showFullDescription ? secondHalf : ' ...'}
-          </div>
-          {secondHalf.length > 20 && (
-            <button
-              type='button'
-              onClick={() => this.toggleDescription()}
-              className='ui button'
-            >
-              {showFullDescription ? 'Show less' : 'Show more'}
-            </button>
-          )}
-        </Segment>
-      </VideoInfoStyle>
-    );
-  };
-
   renderFilePlayer = audio => {
     const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
-        className='filePlayer'
+        className="filePlayer"
         config={{
           file: {
             forceAudio: true,
@@ -351,8 +220,8 @@ class Watch extends Component {
         url={audio[0].source}
         playing={playingFilePlayer}
         onPause={() => this.setState({ playingFilePlayer: false })}
-        height='100%'
-        width='100%'
+        height="100%"
+        width="100%"
         playbackRate={playbackRate}
       />
     );
@@ -360,8 +229,10 @@ class Watch extends Component {
 
   render() {
     const { id, audioId } = this.props;
-    const { readyYoutube } = this.state;
-    const audioQueryParam = audioId ? `&audioId=${audioId}` : '';
+    const { readyYoutube, showFullDescription } = this.state;
+    const url = `http://danni.tv/watch?id=${id}${
+      audioId ? `&audioId=${audioId}` : ''
+    }`;
     return (
       <Query
         query={VIDEO_QUERY}
@@ -372,24 +243,33 @@ class Watch extends Component {
       >
         {({ error, loading, data: { video } }) => {
           if (error) return <Error error={error} />;
-          if (loading) return <Loader active inline='centered' />;
+          if (loading) return <Loader active inline="centered" />;
           if (!video) return <p>No Video Found for {id}</p>;
           return (
             <>
-              {this.renderHead(id, video, audioQueryParam)}
+              <VideoHeader video={video} url={url} />
               <StyledContainer>
                 <Grid>
                   <Grid.Row>
                     <Grid.Column mobile={16} tablet={16} computer={11}>
                       {this.renderVideoPlayer(video)}
-                      {this.renderVideoInfo(id, video, audioQueryParam)}
+                      <VideoInfo
+                        {...this.props}
+                        video={video}
+                        url={url}
+                        showFullDescription={showFullDescription}
+                        toggleFullDescription={this.toggleFullDescription}
+                      />
                       {video.audio[0] &&
                         readyYoutube &&
                         this.renderFilePlayer(video.audio)}
                       <CommentList />
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
-                      <VideoList {...this.props} />
+                      <VideoList
+                        {...this.props}
+                        hideFullDescription={this.hideFullDescription}
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

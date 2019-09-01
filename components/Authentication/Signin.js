@@ -3,10 +3,11 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
 import Form from '../styles/Form';
-import Error from '../UI/ErrorMessage';
+import Error from '../ui/ErrorMessage';
 import { CURRENT_USER_QUERY } from '../User';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
+
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
@@ -36,7 +37,7 @@ class Signin extends Component {
         {(signin, { error, loading }) => {
           return (
             <Form
-              method='post'
+              method="post"
               onSubmit={async e => {
                 e.preventDefault();
                 await signin();
@@ -56,12 +57,12 @@ class Signin extends Component {
                     value={this.state}
                   />
                 ))}
-                <button type='submit'>{loading && 'Đang '}Đăng Nhập</button>
+                <button type="submit">{loading && 'Đang '}Đăng Nhập</button>
               </fieldset>
-              <Link href='/requestReset'>
+              <Link href="/requestReset">
                 <a>Quên mật khẩu</a>
               </Link>
-              <Link href='/signup'>
+              <Link href="/signup">
                 <a>Tạo tài khoản mới</a>
               </Link>
             </Form>

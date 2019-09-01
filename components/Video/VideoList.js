@@ -4,7 +4,7 @@ import { List, Image, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { ALL_VIDEOS_QUERY } from './Videos';
-import Error from '../ErrorMessage';
+import Error from '../ui/ErrorMessage';
 import {
   VideoItem,
   ListDescriptionStyled,
@@ -19,7 +19,7 @@ class VideoList extends Component {
   }
 
   render() {
-    const { id, audioId } = this.props;
+    const { id, audioId, hideFullDescription } = this.props;
     return (
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
@@ -46,7 +46,10 @@ class VideoList extends Component {
 
                   if (audios.length === 0 && videoId !== id) {
                     return (
-                      <List.Item key={videoId}>
+                      <List.Item
+                        key={videoId}
+                        onClick={() => hideFullDescription()}
+                      >
                         <Link
                           href={{
                             pathname: '/watch',
@@ -66,15 +69,12 @@ class VideoList extends Component {
                               <List.Content>
                                 <ListHeaderStyled>
                                   {originTitle}
-                                  {/* {originTitle.length > 34
-                                    ? `${originTitle.substring(0, 34)}...`
-                                    : originTitle} */}
                                 </ListHeaderStyled>
                                 <ListDescriptionStyled>
                                   {originAuthor}
                                 </ListDescriptionStyled>
                                 <ListDescriptionStyled>
-                                  <Icon name='user' />
+                                  <Icon name="user" />
                                   {displayName}
                                 </ListDescriptionStyled>
                               </List.Content>
@@ -88,7 +88,10 @@ class VideoList extends Component {
                   return audios.map(
                     audio =>
                       audioId !== audio.id && (
-                        <List.Item key={audio.id}>
+                        <List.Item
+                          key={audio.id}
+                          onClick={() => hideFullDescription()}
+                        >
                           <Link
                             href={{
                               pathname: '/watch',
@@ -110,15 +113,12 @@ class VideoList extends Component {
                                 <List.Content>
                                   <ListHeaderStyled>
                                     {audio.title}
-                                    {/* {audio.title.length > 34
-                                      ? `${audio.title.substring(0, 34)}...`
-                                      : audio.title} */}
                                   </ListHeaderStyled>
                                   <ListDescriptionStyled>
                                     {originAuthor}
                                   </ListDescriptionStyled>
                                   <ListDescriptionStyled>
-                                    <Icon name='user' />
+                                    <Icon name="user" />
                                     {audio.author.displayName}
                                   </ListDescriptionStyled>
                                 </List.Content>
@@ -126,9 +126,9 @@ class VideoList extends Component {
                             </a>
                           </Link>
                         </List.Item>
-                      ),
+                      )
                   );
-                },
+                }
               )}
             </List>
           );
@@ -141,6 +141,7 @@ class VideoList extends Component {
 VideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
+  hideFullDescription: PropTypes.func.isRequired,
 };
 
 VideoList.defaultProps = {

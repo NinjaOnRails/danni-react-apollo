@@ -28,7 +28,7 @@ class Signup extends Component {
         {(requestReset, { error, loading, called }) => {
           return (
             <Form
-              method='post'
+              method="post"
               onSubmit={async e => {
                 e.preventDefault();
                 await requestReset();
@@ -48,7 +48,7 @@ class Signup extends Component {
                   value={this.state}
                 />
 
-                <button type='submit'>Gửi vào email</button>
+                <button type="submit">Gửi vào email</button>
               </fieldset>
             </Form>
           );

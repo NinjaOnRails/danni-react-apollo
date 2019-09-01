@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Comment, Form } from 'semantic-ui-react';
 import VideoComment from './Comment';
-import { CommentSectionStyles } from '../styles/Commentstyles';
+import CommentSectionStyles from '../styles/Commentstyles';
 import commentSeedData from './commentSeedData';
 
 class CommentList extends React.Component {
@@ -14,10 +14,10 @@ class CommentList extends React.Component {
   render() {
     return (
       <CommentSectionStyles>
-        <Comment.Group size='large'>
+        <Comment.Group size="large">
           <Form reply>
-            <Form.TextArea placeholder='Viết bình luận...' />
-            <Button content='Add Comment' primary />
+            <Form.TextArea placeholder="Viết bình luận..." />
+            <Button content="Add Comment" primary />
           </Form>
           {this.renderComments()}
         </Comment.Group>

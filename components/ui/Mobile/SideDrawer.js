@@ -23,50 +23,50 @@ const SideDrawer = ({ show, closed }) => {
             <BackDrop show={show} clicked={closed} />
             <div className={attachedClasses.join(' ')}>
               {/* <Logo inDrawer /> */}
-              <div className='links'>
-                <Menu vertical icon='labeled' inverted>
-                  <MenuItem as='a' onClick={closed}>
-                    <Link href='/'>
-                      <div className='link-container'>
-                        <Icon name='home' size='large' />
-                        <span className='link-name'>Trang Chủ</span>
+              <div className="links">
+                <Menu vertical icon="labeled" inverted>
+                  <MenuItem as="a" onClick={closed}>
+                    <Link href="/">
+                      <div className="link-container">
+                        <Icon name="home" size="large" />
+                        <span className="link-name">Trang Chủ</span>
                       </div>
                     </Link>
                   </MenuItem>
-                  <MenuItem as='a' onClick={closed}>
-                    <Link href='/new'>
-                      <div className='link-container'>
-                        <Icon.Group size='large'>
-                          <Icon name='video' />
-                          <Icon color='black' name='plus' size='tiny' />
+                  <MenuItem as="a" onClick={closed}>
+                    <Link href="/new">
+                      <div className="link-container">
+                        <Icon.Group size="large">
+                          <Icon name="video" />
+                          <Icon color="black" name="plus" size="tiny" />
                         </Icon.Group>
-                        <span className='link-name'>Thêm Video</span>
+                        <span className="link-name">Thêm Video</span>
                       </div>
                     </Link>
                   </MenuItem>
-                  <MenuItem as='a' onClick={closed}>
-                    <Link href='/about'>
-                      <div className='link-container'>
-                        <Icon name='info' size='large' />
-                        <span className='link-name'>About</span>
+                  <MenuItem as="a" onClick={closed}>
+                    <Link href="/about">
+                      <div className="link-container">
+                        <Icon name="info" size="large" />
+                        <span className="link-name">About</span>
                       </div>
                     </Link>
                   </MenuItem>
                   {!currentUser && (
                     <>
-                      <MenuItem as='a' onClick={closed}>
-                        <Link href='/signin'>
-                          <div className='link-container'>
-                            <Icon name='user' size='large' />
-                            <span className='link-name'>Đăng Nhập</span>
+                      <MenuItem as="a" onClick={closed}>
+                        <Link href="/signin">
+                          <div className="link-container">
+                            <Icon name="user" size="large" />
+                            <span className="link-name">Đăng Nhập</span>
                           </div>
                         </Link>
                       </MenuItem>
-                      <MenuItem as='a' onClick={closed}>
-                        <Link href='/signup'>
-                          <div className='link-container'>
-                            <Icon name='user plus' size='large' />
-                            <span className='link-name'>Đăng Ký</span>
+                      <MenuItem as="a" onClick={closed}>
+                        <Link href="/signup">
+                          <div className="link-container">
+                            <Icon name="user plus" size="large" />
+                            <span className="link-name">Đăng Ký</span>
                           </div>
                         </Link>
                       </MenuItem>
@@ -79,16 +79,16 @@ const SideDrawer = ({ show, closed }) => {
                     >
                       {signout => (
                         <MenuItem
-                          as='a'
+                          as="a"
                           onClick={() => {
                             signout();
                             closed();
                           }}
                         >
-                          <Link href='/'>
-                            <div className='link-container'>
-                              <Icon name='sign-out' size='large' />
-                              <span className='link-name'>Thoát</span>
+                          <Link href="/">
+                            <div className="link-container">
+                              <Icon name="sign-out" size="large" />
+                              <span className="link-name">Thoát</span>
                             </div>
                           </Link>
                         </MenuItem>

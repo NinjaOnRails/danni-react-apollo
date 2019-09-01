@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const CommentSectionStyles = styled.div`
+export default styled.div`
   .ui.large.comments {
     margin: 16px 0;
   }

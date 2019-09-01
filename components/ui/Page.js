@@ -49,9 +49,9 @@ const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
     color: ${theme.black};
-    font-family: ${props => props.theme.font}
+    font-family: "Verdana";
   }
-  button {  font-family: ${props => props.theme.font} }
+  button {  font-family: "Verdana"; }
 `;
 
 class Page extends Component {

@@ -40,19 +40,13 @@ class MobileSearch extends React.Component {
           onChange={routetoItem}
           itemToString={video => (video === null ? '' : video.titleVi)}
         >
-          {({
-            getInputProps,
-            getItemProps,
-            isOpen,
-            inputValue,
-            highlightedIndex,
-          }) => (
+          {({ getItemProps, isOpen, inputValue, highlightedIndex }) => (
             <div>
               <ApolloConsumer>
                 {client => (
                   <SemanticSearch
                     loading={loading}
-                    placeholder='Search...'
+                    placeholder="Search..."
                     onSearchChange={e => {
                       e.persist();
                       this.onChange(e, client);
@@ -69,7 +63,7 @@ class MobileSearch extends React.Component {
                       highlighted={index === highlightedIndex}
                     >
                       <img
-                        width='50'
+                        width="50"
                         src={item.originThumbnailUrl}
                         alt={item.titleVi}
                       />

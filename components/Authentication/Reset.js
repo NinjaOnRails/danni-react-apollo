@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 import Form from '../styles/Form';
-import Error from '../UI/ErrorMessage';
+import Error from '../ui/ErrorMessage';
 import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from '../User';
 
@@ -61,7 +61,7 @@ class Reset extends Component {
         {(resetPassword, { error, loading }) => {
           return (
             <Form
-              method='post'
+              method="post"
               onSubmit={async e => {
                 e.preventDefault();
                 await resetPassword();
@@ -81,9 +81,9 @@ class Reset extends Component {
                     value={this.state}
                   />
                 ))}
-                <button type='submit'>Đặt Mật Khẩu</button>
+                <button type="submit">Đặt Mật Khẩu</button>
               </fieldset>
-              <Link href='/requestReset'>
+              <Link href="/requestReset">
                 <a>Gửi yêu cầu mới vào email</a>
               </Link>
             </Form>

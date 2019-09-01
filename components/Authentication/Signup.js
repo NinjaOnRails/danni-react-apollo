@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import generateName from 'sillyname';
 import Form from '../styles/Form';
-import Error from '../UI/ErrorMessage';
+import Error from '../ui/ErrorMessage';
 import { CURRENT_USER_QUERY } from '../User';
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
@@ -57,7 +57,7 @@ class Signup extends Component {
         {(signup, { error, loading }) => {
           return (
             <Form
-              method='post'
+              method="post"
               onSubmit={async e => {
                 e.preventDefault();
                 await signup();
@@ -80,14 +80,14 @@ class Signup extends Component {
                     value={this.state}
                   />
                 ))}
-                <button type='submit'>
+                <button type="submit">
                   {loading && 'Đang '}Tạo Tài Khoản Mới
                 </button>
               </fieldset>
-              <Link href='/signin'>
+              <Link href="/signin">
                 <a>Đã có tài khoản</a>
               </Link>
-              <Link href='/requestReset'>
+              <Link href="/requestReset">
                 <a>Quên mật khẩu</a>
               </Link>
             </Form>

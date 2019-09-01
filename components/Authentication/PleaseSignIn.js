@@ -3,12 +3,12 @@ import { Loader, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { CURRENT_USER_QUERY } from '../User';
 import Signin from './Signin';
-import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles.js';
+import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 
 const PleaseSignIn = props => (
   <Query query={CURRENT_USER_QUERY}>
     {({ data, loading }) => {
-      if (loading) return <Loader active inline='centered' />;
+      if (loading) return <Loader active inline="centered" />;
       if (!data.currentUser) {
         return (
           <>

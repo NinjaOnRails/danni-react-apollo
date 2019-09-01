@@ -1,12 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { DrawerToggleStyles } from '../../styles/MobileUiStyles';
 
 const DrawerToggle = ({ clicked }) => (
   <DrawerToggleStyles onClick={clicked}>
-    <Icon name='bars' size='large' />
+    <Icon name="bars" size="large" />
   </DrawerToggleStyles>
 );
 

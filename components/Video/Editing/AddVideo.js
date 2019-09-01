@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import Router from 'next/router';
 import axios from 'axios';
 import Form from '../../styles/Form';
-import Error from '../../UI/ErrorMessage';
+import Error from '../../ui/ErrorMessage';
 import { ALL_VIDEOS_QUERY } from '../Videos';
 import AddVideoForm from './AddVideoForm';
 import youtube from '../../../lib/youtube';
@@ -209,7 +209,7 @@ class AddVideo extends Component {
       youtubeId,
       language,
       id,
-      cloudinaryAuth,
+      cloudinaryAuth
     );
 
     // Upload file with post request
@@ -349,7 +349,7 @@ class AddVideo extends Component {
       >
         {(
           createAudio,
-          { loading: loadingCreateAudio, error: errorCreateAudio },
+          { loading: loadingCreateAudio, error: errorCreateAudio }
         ) => (
           <Mutation
             mutation={CREATE_VIDEO_MUTATION}
@@ -361,11 +361,11 @@ class AddVideo extends Component {
           >
             {(
               createVideo,
-              { loading: loadingCreateVideo, error: errorCreateVideo },
+              { loading: loadingCreateVideo, error: errorCreateVideo }
             ) => (
               <>
                 <Form
-                  data-test='form'
+                  data-test="form"
                   onSubmit={async e =>
                     this.onFormSubmit(e, createAudio, createVideo)
                   }
