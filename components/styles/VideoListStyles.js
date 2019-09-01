@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { List } from 'semantic-ui-react';
 
 export const VideoItem = styled.div`
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   .content {
     padding-left: 0.5rem;
@@ -13,9 +13,8 @@ export const VideoItem = styled.div`
   }
   .ui.label {
     position: absolute;
-    z-index: 1;
-    bottom: 2px;
-    right: 2px;
+    bottom: 0.3rem;
+    right: 0.3rem;
   }
 `;
 

@@ -31,10 +31,10 @@ const ALL_VIDEOS_QUERY = gql`
 `;
 
 const VideosListStyled = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   display: grid;
-  grid-template-columns: 290px 290px;
-  grid-gap: 15px;
+  grid-template-columns: 210px;
+  grid-gap: 5px;
   margin: 0 auto;
   justify-content: center;
   image {
@@ -45,9 +45,8 @@ const VideosListStyled = styled.div`
   }
   .ui.large.label {
     position: absolute;
-    z-index: 1;
-    bottom: 2px;
-    right: 2px;
+    bottom: 0.2rem;
+    right: 0.2rem;
   }
   .ui.card > .content {
     padding-left: 0px;
@@ -60,31 +59,34 @@ const VideosListStyled = styled.div`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; /* Show only first 2 lines */
-    line-height: 2rem; /* Implement for browsers with no support for webkit */
-    max-height: 4rem; /* This is line height X no. of lines to show */
+    line-height: 1.6rem; /* Implement for browsers with no support for webkit */
+    max-height: 3.2rem; /* This is line height X no. of lines to show */
   }
   .ui.card > .content > .meta + .description {
     margin-top: 0;
   }
   .ui.placeholder .rectangular.image:not(.header) {
-    width: 290px;
-    height: 163.13px;
+    width: 210px;
+    height: 118.13px;
     padding-top: 0;
   }
-  @media (max-width: 639px) {
-    grid-template-columns: 290px;
+  @media (min-width: 480px) {
+    grid-template-columns: 210px 210px;
+  }
+  @media (min-width: 640px) {
+    grid-template-columns: 210px 210px 210px;
   }
   @media (min-width: 960px) {
-    grid-template-columns: 290px 290px 290px;
+    grid-template-columns: 210px 210px 210px 210px;
   }
   @media (min-width: 1280px) {
-    grid-template-columns: 290px 290px 290px 290px;
+    grid-template-columns: 210px 210px 210px 210px 210px;
   }
   @media (min-width: 1600px) {
-    grid-template-columns: 290px 290px 290px 290px 290px;
+    grid-template-columns: 210px 210px 210px 210px 210px 210px;
   }
   @media (min-width: 1920px) {
-    grid-template-columns: 290px 290px 290px 290px 290px 290px;
+    grid-template-columns: 210px 210px 210px 210px 210px 210px 210px;
   }
 `;
 
@@ -101,7 +103,6 @@ class Videos extends Component {
                     <Placeholder>
                       <Placeholder.Image rectangular />
                       <Placeholder.Paragraph>
-                        <Placeholder.Line />
                         <Placeholder.Line />
                         <Placeholder.Line />
                         <Placeholder.Line />
