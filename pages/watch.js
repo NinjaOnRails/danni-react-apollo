@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Watch from '../components/Watch';
+import Watch from '../components/Video/Watch';
 
 const WatchPage = props => {
   return <Watch {...props} />;

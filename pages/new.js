@@ -1,5 +1,5 @@
-import AddVideo from '../components/AddVideo';
-import PleaseSignIn from '../components/PleaseSignIn';
+import AddVideo from '../components/Video/Editing/AddVideo';
+import PleaseSignIn from '../components/Authentication/PleaseSignIn';
 
 const New = () => (
   <PleaseSignIn>

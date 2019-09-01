@@ -6,11 +6,11 @@ import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import styled from 'styled-components';
 import { Grid, Loader } from 'semantic-ui-react';
-import Error from './ErrorMessage';
 import VideoList from './VideoList';
-import CommentList from './CommentList';
+import CommentList from '../Comment/CommentList';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
+import Error from '../ui/ErrorMessage';
 
 const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!, $audioId: ID) {

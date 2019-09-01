@@ -4,9 +4,12 @@ import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
-import Form from './styles/Form';
-import Error from './ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
+import Form from '../styles/Form';
+import Error from '../ui/ErrorMessage';
+import AuthForm from './AuthenticationForm';
+import { CURRENT_USER_QUERY } from '../User';
+
+import { resetFields } from './fieldTypes';
 
 const RESET_PASSWORD_MUTATION = gql`
   mutation RESET_PASSWORD_MUTATION(
@@ -41,7 +44,6 @@ class Reset extends Component {
   };
 
   render() {
-    const { confirmPassword, password } = this.state;
     const {
       router: {
         query: { resetToken },
@@ -71,26 +73,14 @@ class Reset extends Component {
             >
               <fieldset disabled={loading} aria-busy={loading}>
                 <Error error={error} />
-                <label htmlFor="password">
-                  Mật khẩu mới
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="bắt buộc"
-                    value={password}
-                    onChange={this.saveToState}
+                {resetFields.map(form => (
+                  <AuthForm
+                    key={form.name}
+                    form={form}
+                    saveToState={this.saveToState}
+                    value={this.state}
                   />
-                </label>
-                <label htmlFor="confirmPassword">
-                  Lặp lại mặt khẩu mới
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="bắt buộc"
-                    value={confirmPassword}
-                    onChange={this.saveToState}
-                  />
-                </label>
+                ))}
                 <button type="submit">Đặt Mật Khẩu</button>
               </fieldset>
               <Link href="/requestReset">

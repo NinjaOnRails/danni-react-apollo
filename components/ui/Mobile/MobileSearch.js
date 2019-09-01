@@ -1,42 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
-import debounce from 'lodash.debounce';
 import Downshift, { resetIdCounter } from 'downshift';
-import Router from 'next/router';
-import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
+import debounce from 'lodash.debounce';
+import { Search as SemanticSearch } from 'semantic-ui-react';
+import { DropDown, DropDownItem } from '../../styles/DropDown';
+import { SEARCH_VIDEOS_QUERY, routetoItem } from '../Search';
+import { StyledMobileSearch } from '../../styles/MobileUiStyles';
 
-export const SEARCH_VIDEOS_QUERY = gql`
-  query SEARCH_VIDEOS_QUERY($searchTerm: String!) {
-    videos(
-      where: {
-        OR: [
-          { title_contains: $searchTerm }
-          { originId_contains: $searchTerm }
-          { originTitle_contains: $searchTerm }
-          { originAuthor_contains: $searchTerm }
-          { tags_some: { text_contains: $searchTerm } }
-        ]
-      }
-    ) {
-      id
-      title
-      originTitle
-      originThumbnailUrl
-    }
-  }
-`;
-
-export function routetoItem(video) {
-  Router.push({
-    pathname: '/watch',
-    query: {
-      id: video.id,
-    },
-  });
-}
-
-class Autocomplete extends Component {
+class MobileSearch extends React.Component {
   state = {
     videos: [],
     loading: false,
@@ -61,53 +32,45 @@ class Autocomplete extends Component {
   }, 350);
 
   render() {
+    const { videos, loading } = this.state;
     resetIdCounter();
     return (
-      <SearchStyles>
+      <StyledMobileSearch>
         <Downshift
           onChange={routetoItem}
           itemToString={video => (video === null ? '' : video.titleVi)}
         >
-          {({
-            getInputProps,
-            getItemProps,
-            isOpen,
-            inputValue,
-            highlightedIndex,
-          }) => (
+          {({ getItemProps, isOpen, inputValue, highlightedIndex }) => (
             <div>
               <ApolloConsumer>
                 {client => (
-                  <input
-                    {...getInputProps({
-                      type: 'search',
-                      placeholder: 'Search',
-                      className: this.state.loading ? 'loading' : '',
-                      onChange: e => {
-                        e.persist();
-                        this.onChange(e, client);
-                      },
-                    })}
+                  <SemanticSearch
+                    loading={loading}
+                    placeholder="Search..."
+                    onSearchChange={e => {
+                      e.persist();
+                      this.onChange(e, client);
+                    }}
                   />
                 )}
               </ApolloConsumer>
               {isOpen && (
                 <DropDown>
-                  {this.state.videos.map((item, index) => (
+                  {videos.map((item, index) => (
                     <DropDownItem
                       key={item.id}
                       {...getItemProps({ item })}
                       highlighted={index === highlightedIndex}
                     >
                       <img
-                        width='50'
+                        width="50"
                         src={item.originThumbnailUrl}
                         alt={item.titleVi}
                       />
                       {item.titleVi}
                     </DropDownItem>
                   ))}
-                  {!this.state.videos.length && !this.state.loading && (
+                  {!videos.length && !loading && (
                     <DropDownItem>
                       Nothing Found For "{inputValue}"
                     </DropDownItem>
@@ -117,9 +80,8 @@ class Autocomplete extends Component {
             </div>
           )}
         </Downshift>
-      </SearchStyles>
+      </StyledMobileSearch>
     );
   }
 }
-
-export default Autocomplete;
+export default MobileSearch;

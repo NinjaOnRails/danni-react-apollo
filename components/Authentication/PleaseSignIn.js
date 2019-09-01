@@ -1,20 +1,9 @@
 import { Query } from 'react-apollo';
 import { Loader, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { CURRENT_USER_QUERY } from './User';
+import { CURRENT_USER_QUERY } from '../User';
 import Signin from './Signin';
-
-const StyledMessage = styled.div`
-  max-width: ${props => props.theme.maxWidth};
-  margin: 0 auto;
-`;
-
-const StyledHeader = styled(Message.Header)`
-  &&& {
-    font-family: ${props => props.theme.font};
-  }
-`;
+import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 
 const PleaseSignIn = props => (
   <Query query={CURRENT_USER_QUERY}>

@@ -19,13 +19,12 @@ const VideoComment = ({
         <Icon color="blue" name="angle up" size="large" link />
         <span>{likes} </span>
         <Icon name="angle down" size="large" link />
-
         <Comment.Action>Reply</Comment.Action>
       </Comment.Actions>
     </Comment.Content>
     {reply.length ? (
       <Comment.Group>
-        {reply.map(({ id, author, date, text, avatar, reply }) => (
+        {reply.map(({ id, author, date, text, avatar }) => (
           <Comment key={id}>
             <Comment.Avatar src={avatar} />
             <Comment.Content>
