@@ -37,9 +37,7 @@ const VideosListStyled = styled.div`
   grid-gap: 5px;
   margin: 0 auto;
   justify-content: center;
-  image {
-    cursor: pointer;
-  }
+  padding: 0;
   .ui.card {
     box-shadow: none;
   }
@@ -48,10 +46,7 @@ const VideosListStyled = styled.div`
     bottom: 0.2rem;
     right: 0.2rem;
   }
-  .ui.card > .content {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
+
   .ui.card > .content > .header {
     font-family: ${props => props.theme.font};
     overflow: hidden;
@@ -72,9 +67,17 @@ const VideosListStyled = styled.div`
   }
   @media (max-width: 479px) {
     grid-template-columns: auto;
+    .ui.placeholder .rectangular.image:not(.header) {
+      width: 320px;
+      height: 180px;
+    }
   }
   @media (min-width: 480px) {
     grid-template-columns: 210px 210px;
+    .ui.card > .content {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
   }
   @media (min-width: 720px) {
     grid-template-columns: 210px 210px 210px;
@@ -99,22 +102,22 @@ class Videos extends Component {
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
           if (loading) {
-            return (
-              <VideosListStyled>
-                {[...Array(15)].map((x, i) => (
-                  <span key={i}>
-                    <Placeholder>
-                      <Placeholder.Image rectangular />
-                      <Placeholder.Paragraph>
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                      </Placeholder.Paragraph>
-                    </Placeholder>
-                  </span>
-                ))}
-              </VideosListStyled>
-            );
+          return (
+            <VideosListStyled>
+              {[...Array(28)].map((x, i) => (
+                <span key={i}>
+                  <Placeholder>
+                    <Placeholder.Image rectangular />
+                    <Placeholder.Paragraph>
+                      <Placeholder.Line />
+                      <Placeholder.Line />
+                      <Placeholder.Line />
+                    </Placeholder.Paragraph>
+                  </Placeholder>
+                </span>
+              ))}
+            </VideosListStyled>
+          );
           }
 
           if (error) return <Error>Error: {error.message}</Error>;
@@ -149,7 +152,7 @@ class Videos extends Component {
                           }}
                         >
                           <a>
-                            <Card>
+                            <Card fluid>
                               <Image
                                 src={originThumbnailUrl || originThumbnailUrlSd}
                                 alt={originTitle}
@@ -184,7 +187,7 @@ class Videos extends Component {
                           }}
                         >
                           <a>
-                            <Card>
+                            <Card fluid>
                               <Image
                                 src={originThumbnailUrl || originThumbnailUrlSd}
                                 alt={title}

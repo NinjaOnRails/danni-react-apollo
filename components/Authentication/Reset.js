@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
+import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../ui/ErrorMessage';
 import AuthForm from './AuthenticationForm';
@@ -60,33 +61,35 @@ class Reset extends Component {
       >
         {(resetPassword, { error, loading }) => {
           return (
-            <Form
-              method="post"
-              onSubmit={async e => {
-                e.preventDefault();
-                await resetPassword();
-                this.setState({
-                  confirmPassword: '',
-                  password: '',
-                });
-              }}
-            >
-              <fieldset disabled={loading} aria-busy={loading}>
-                <Error error={error} />
-                {resetFields.map(form => (
-                  <AuthForm
-                    key={form.name}
-                    form={form}
-                    saveToState={this.saveToState}
-                    value={this.state}
-                  />
-                ))}
-                <button type="submit">Đặt Mật Khẩu</button>
-              </fieldset>
-              <Link href="/requestReset">
-                <a>Gửi yêu cầu mới vào email</a>
-              </Link>
-            </Form>
+            <Container>
+              <Form
+                method="post"
+                onSubmit={async e => {
+                  e.preventDefault();
+                  await resetPassword();
+                  this.setState({
+                    confirmPassword: '',
+                    password: '',
+                  });
+                }}
+              >
+                <fieldset disabled={loading} aria-busy={loading}>
+                  <Error error={error} />
+                  {resetFields.map(form => (
+                    <AuthForm
+                      key={form.name}
+                      form={form}
+                      saveToState={this.saveToState}
+                      value={this.state}
+                    />
+                  ))}
+                  <button type="submit">Đặt Mật Khẩu</button>
+                </fieldset>
+                <Link href="/requestReset">
+                  <a>Gửi yêu cầu mới vào email</a>
+                </Link>
+              </Form>
+            </Container>
           );
         }}
       </Mutation>

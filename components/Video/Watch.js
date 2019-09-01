@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import styled from 'styled-components';
-import { Grid, Loader } from 'semantic-ui-react';
+import { Container, Grid, Loader } from 'semantic-ui-react';
 import VideoList from './VideoList';
 import CommentList from '../Comment/CommentList';
 import VideoInfo from './VideoInfo';
@@ -253,17 +253,19 @@ class Watch extends Component {
                   <Grid.Row>
                     <Grid.Column mobile={16} tablet={16} computer={11}>
                       {this.renderVideoPlayer(video)}
-                      <VideoInfo
-                        {...this.props}
-                        video={video}
-                        url={url}
-                        showFullDescription={showFullDescription}
-                        toggleFullDescription={this.toggleFullDescription}
-                      />
-                      {video.audio[0] &&
-                        readyYoutube &&
-                        this.renderFilePlayer(video.audio)}
-                      <CommentList />
+                      <Container fluid>
+                        <VideoInfo
+                          {...this.props}
+                          video={video}
+                          url={url}
+                          showFullDescription={showFullDescription}
+                          toggleFullDescription={this.toggleFullDescription}
+                        />
+                        {video.audio[0] &&
+                          readyYoutube &&
+                          this.renderFilePlayer(video.audio)}
+                        <CommentList />
+                      </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
                       <VideoList

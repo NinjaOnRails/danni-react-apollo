@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import Link from 'next/link';
 import Router from 'next/router';
 import generateName from 'sillyname';
+import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../ui/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
@@ -56,41 +57,43 @@ class Signup extends Component {
       >
         {(signup, { error, loading }) => {
           return (
-            <Form
-              method="post"
-              onSubmit={async e => {
-                e.preventDefault();
-                await signup();
-                this.setState({
-                  name: '',
-                  email: '',
-                  password: '',
-                  displayName: '',
-                });
-                Router.push('/');
-              }}
-            >
-              <fieldset disabled={loading} aria-busy={loading}>
-                <Error error={error} />
-                {signupFields.map(form => (
-                  <AuthForm
-                    key={form.name}
-                    form={form}
-                    saveToState={this.saveToState}
-                    value={this.state}
-                  />
-                ))}
-                <button type="submit">
-                  {loading && 'Đang '}Tạo Tài Khoản Mới
-                </button>
-              </fieldset>
-              <Link href="/signin">
-                <a>Đã có tài khoản</a>
-              </Link>
-              <Link href="/requestReset">
-                <a>Quên mật khẩu</a>
-              </Link>
-            </Form>
+            <Container>
+              <Form
+                method="post"
+                onSubmit={async e => {
+                  e.preventDefault();
+                  await signup();
+                  this.setState({
+                    name: '',
+                    email: '',
+                    password: '',
+                    displayName: '',
+                  });
+                  Router.push('/');
+                }}
+              >
+                <fieldset disabled={loading} aria-busy={loading}>
+                  <Error error={error} />
+                  {signupFields.map(form => (
+                    <AuthForm
+                      key={form.name}
+                      form={form}
+                      saveToState={this.saveToState}
+                      value={this.state}
+                    />
+                  ))}
+                  <button type="submit">
+                    {loading && 'Đang '}Tạo Tài Khoản Mới
+                  </button>
+                </fieldset>
+                <Link href="/signin">
+                  <a>Đã có tài khoản</a>
+                </Link>
+                <Link href="/requestReset">
+                  <a>Quên mật khẩu</a>
+                </Link>
+              </Form>
+            </Container>
           );
         }}
       </Mutation>

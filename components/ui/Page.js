@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { Container } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Fonts from './Fonts';
 import Header from './Header';
@@ -81,9 +80,7 @@ class Page extends Component {
           <Meta />
           <Header drawerToggleClick={() => this.drawerToggleClick()} />
           <SideDrawer show={showSide} closed={() => this.closeSideDrawer()} />
-          <Container fluid>
-            <Inner>{children}</Inner>
-          </Container>
+          <Inner>{children}</Inner>
         </StyledPage>
       </ThemeProvider>
     );

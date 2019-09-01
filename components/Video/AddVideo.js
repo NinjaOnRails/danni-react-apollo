@@ -3,6 +3,7 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 import axios from 'axios';
+import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../ui/ErrorMessage';
 import { ALL_VIDEOS_QUERY } from './Videos';
@@ -360,7 +361,7 @@ class AddVideo extends Component {
               createVideo,
               { loading: loadingCreateVideo, error: errorCreateVideo }
             ) => (
-              <>
+              <Container>
                 <Form
                   data-test="form"
                   onSubmit={async e =>
@@ -381,7 +382,7 @@ class AddVideo extends Component {
                     onAudioLoadedMetadata={this.onAudioLoadedMetadata}
                   />
                 </Form>
-              </>
+              </Container>
             )}
           </Mutation>
         )}

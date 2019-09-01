@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
+import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../ui/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
@@ -36,36 +37,38 @@ class Signin extends Component {
       >
         {(signin, { error, loading }) => {
           return (
-            <Form
-              method="post"
-              onSubmit={async e => {
-                e.preventDefault();
-                await signin();
-                this.setState({
-                  email: '',
-                  password: '',
-                });
-              }}
-            >
-              <fieldset disabled={loading} aria-busy={loading}>
-                <Error error={error} />
-                {signinFields.map(form => (
-                  <AuthForm
-                    key={form.name}
-                    form={form}
-                    saveToState={this.saveToState}
-                    value={this.state}
-                  />
-                ))}
-                <button type="submit">{loading && 'Đang '}Đăng Nhập</button>
-              </fieldset>
-              <Link href="/requestReset">
-                <a>Quên mật khẩu</a>
-              </Link>
-              <Link href="/signup">
-                <a>Tạo tài khoản mới</a>
-              </Link>
-            </Form>
+            <Container>
+              <Form
+                method="post"
+                onSubmit={async e => {
+                  e.preventDefault();
+                  await signin();
+                  this.setState({
+                    email: '',
+                    password: '',
+                  });
+                }}
+              >
+                <fieldset disabled={loading} aria-busy={loading}>
+                  <Error error={error} />
+                  {signinFields.map(form => (
+                    <AuthForm
+                      key={form.name}
+                      form={form}
+                      saveToState={this.saveToState}
+                      value={this.state}
+                    />
+                  ))}
+                  <button type="submit">{loading && 'Đang '}Đăng Nhập</button>
+                </fieldset>
+                <Link href="/requestReset">
+                  <a>Quên mật khẩu</a>
+                </Link>
+                <Link href="/signup">
+                  <a>Tạo tài khoản mới</a>
+                </Link>
+              </Form>
+            </Container>
           );
         }}
       </Mutation>
