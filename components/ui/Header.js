@@ -21,9 +21,9 @@ Router.onRouteChangeError = () => {
 };
 
 const StyledHeader = styled.header`
-  z-index: 99;
+  /* z-index: 99;
   position: sticky;
-  top: 0;
+  top: 0; */
   .bar {
     border-bottom: 10px solid ${props => props.theme.black};
     display: grid;
