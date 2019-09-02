@@ -84,6 +84,12 @@ const YoutubeStyle = styled.div`
     top: 0;
     left: 0;
   }
+  /* @media (max-width: 479px) {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 33px;
+    z-index: 98;
+  } */
 `;
 
 class Watch extends Component {
