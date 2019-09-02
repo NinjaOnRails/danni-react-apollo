@@ -47,14 +47,14 @@ const VIDEO_QUERY = gql`
 const StyledContainer = styled.div`
   margin: 0 auto;
   max-width: 1366px;
-  padding: 0px 24px 0px 24px;
+  padding: 0px 24px;
   .filePlayer {
     display: none; /* Hide audio File Player */
   }
   @media (max-width: 760px) {
-    padding: 0px;
+    padding: 0 1rem;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 479px) {
     div.eleven.wide.computer.sixteen.wide.mobile.sixteen.wide.tablet.column {
       padding: 0;
     }
@@ -264,7 +264,7 @@ class Watch extends Component {
                         {video.audio[0] &&
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
-                        <CommentList />
+                        {/* <CommentList /> */}
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>

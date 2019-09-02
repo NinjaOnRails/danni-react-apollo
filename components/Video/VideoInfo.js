@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import YoutubeViews from './YoutubeViews';
 
 const VideoInfoStyle = styled.div`
+  margin-bottom: 2rem;
   line-height: 2rem;
   h1,
   h2,

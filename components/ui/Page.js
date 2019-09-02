@@ -27,6 +27,9 @@ const Inner = styled.div`
   margin: 0 auto; */
   padding-top: 2rem;
   padding-bottom: 2rem;
+  @media (max-width: 479px) {
+    padding: 0;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
