@@ -35,54 +35,50 @@ class CloudinaryUpload extends Component {
       onAudioLoadedMetadata,
     } = this.props;
     return (
-      <Query query={CURRENT_USER_QUERY}>
-        {({
-          data: {
-            currentUser: { id },
-          },
-        }) => (
-          <Query
-            query={CLOUDINARY_AUTH}
-            variables={{
-              source,
-              language,
-            }}
-          >
-            {({ loading, error, data }) => {
-              if (loading) return <Loader inline="centered" active />;
-              if (error) return <Error>Error: {error.message}</Error>;
-              return (
-                <>
-                  {(uploadError && (
-                    <Progress percent={100} error>
-                      Network Error. Try again later.
-                    </Progress>
-                  )) ||
-                    (uploadProgress > 0 && uploadProgress < 100 && (
-                      <Progress percent={uploadProgress} progress success />
-                    )) ||
-                    (secureUrl && (
-                      <>
-                        <p>Uploaded File:</p>
-                        <audio
-                          controls
-                          src={secureUrl}
-                          onLoadedMetadata={e => onAudioLoadedMetadata(e)}
-                        >
-                          <track kind="captions" />
-                        </audio>
-                        <Button
-                          negative
-                          onClick={onDeleteFileSubmit}
-                          type="button"
-                        >
-                          Remove
-                        </Button>
-                      </>
-                    )) ||
-                    ((this.state.startingUpload || deleteToken) && (
-                      <Loader inline="centered" active />
-                    )) || (
+      <Query
+        query={CLOUDINARY_AUTH}
+        variables={{
+          source,
+          language,
+        }}
+      >
+        {({ loading, error, data }) => {
+          if (loading) return <Loader inline="centered" active />;
+          if (error) return <Error>Error: {error.message}</Error>;
+          return (
+            <>
+              {(uploadError && (
+                <Progress percent={100} error>
+                  Network Error. Try again later.
+                </Progress>
+              )) ||
+                (uploadProgress > 0 && uploadProgress < 100 && (
+                  <Progress percent={uploadProgress} progress success />
+                )) ||
+                (secureUrl && (
+                  <>
+                    <p>Uploaded File:</p>
+                    <audio
+                      controls
+                      src={secureUrl}
+                      onLoadedMetadata={e => onAudioLoadedMetadata(e)}
+                    >
+                      <track kind="captions" />
+                    </audio>
+                    <Button negative onClick={onDeleteFileSubmit} type="button">
+                      Remove
+                    </Button>
+                  </>
+                )) ||
+                ((this.state.startingUpload || deleteToken) && (
+                  <Loader inline="centered" active />
+                )) || (
+                  <Query query={CURRENT_USER_QUERY}>
+                    {({
+                      data: {
+                        currentUser: { id },
+                      },
+                    }) => (
                       <>
                         <label htmlFor="file">
                           Local File:
@@ -127,11 +123,11 @@ class CloudinaryUpload extends Component {
                         </label>
                       </>
                     )}
-                </>
-              );
-            }}
-          </Query>
-        )}
+                  </Query>
+                )}
+            </>
+          );
+        }}
       </Query>
     );
   }
