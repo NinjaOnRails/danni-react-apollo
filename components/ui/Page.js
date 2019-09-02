@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
-import Fonts from './Fonts';
 import Header from './Header';
 import Meta from './Meta';
 import SideDrawer from './Mobile/SideDrawer';
@@ -60,10 +59,6 @@ class Page extends Component {
   state = {
     showSide: false,
   };
-
-  componentDidMount() {
-    Fonts();
-  }
 
   closeSideDrawer() {
     this.setState({ showSide: false });

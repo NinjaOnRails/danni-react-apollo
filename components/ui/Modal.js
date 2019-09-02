@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Backdrop from './Backdrop';
+import Backdrop from './Mobile/Backdrop';
 
 const ModalStyles = styled.div`
   .Modal {

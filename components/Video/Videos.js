@@ -102,22 +102,22 @@ class Videos extends Component {
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
           if (loading) {
-          return (
-            <VideosListStyled>
-              {[...Array(28)].map((x, i) => (
-                <span key={i}>
-                  <Placeholder>
-                    <Placeholder.Image rectangular />
-                    <Placeholder.Paragraph>
-                      <Placeholder.Line />
-                      <Placeholder.Line />
-                      <Placeholder.Line />
-                    </Placeholder.Paragraph>
-                  </Placeholder>
-                </span>
-              ))}
-            </VideosListStyled>
-          );
+            return (
+              <VideosListStyled>
+                {[...Array(28)].map((x, i) => (
+                  <span key={i}>
+                    <Placeholder fluid>
+                      <Placeholder.Image rectangular />
+                      <Placeholder.Paragraph>
+                        <Placeholder.Line length="very long" />
+                        <Placeholder.Line length="short" />
+                        <Placeholder.Line length="medium" />
+                      </Placeholder.Paragraph>
+                    </Placeholder>
+                  </span>
+                ))}
+              </VideosListStyled>
+            );
           }
 
           if (error) return <Error>Error: {error.message}</Error>;

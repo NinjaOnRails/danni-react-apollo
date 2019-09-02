@@ -41,7 +41,7 @@ const AddVideoForm = ({
       disabled={loadingCreateVideo || loadingCreateAudio}
       aria-busy={loadingCreateVideo}
     >
-      Ngôn ngữ đọc:
+      Language:
       <DropDownForm>
         <Dropdown
           fluid
@@ -54,13 +54,12 @@ const AddVideoForm = ({
         />
       </DropDownForm>
       <label htmlFor="source">
-        Nguồn Video gốc (Link hoặc YouTube ID):
+        YouTube Source (ID or Link):
         <input
           type="text"
           id="source"
           name="source"
           required
-          placeholder="ví dụ '0Y59Yf9lEP0' hoặc 'https://www.youtube.com/watch?v=h4Uu5eyN6VU'"
           value={source}
           onChange={handleChange}
         />
@@ -84,7 +83,7 @@ const AddVideoForm = ({
               checked={isAudioSource}
               onChange={handleChange}
             />
-            Nguồn Audio riêng:
+            Upload Audio File
           </label>
           {isAudioSource && (
             <>
@@ -102,7 +101,7 @@ const AddVideoForm = ({
                 onAudioLoadedMetadata={onAudioLoadedMetadata}
               />
               <label htmlFor="title">
-                Tiêu đề:
+                Title:
                 <input
                   type="text"
                   id="title"
@@ -121,7 +120,7 @@ const AddVideoForm = ({
                   checked={isDescription}
                   onChange={handleChange}
                 />
-                Nội dung:
+                Description:
               </label>
               {isDescription && (
                 <label htmlFor="description">
@@ -150,12 +149,11 @@ const AddVideoForm = ({
                     type="text"
                     name="tags"
                     maxLength="500"
-                    placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
                     value={tags}
                     onChange={handleChange}
                   />
                   <Segment>
-                    <p>Tags của video gốc:</p>
+                    <p>Current YouTube tags:</p>
                     {originTags.join(' ')}
                   </Segment>
                 </>
@@ -168,7 +166,7 @@ const AddVideoForm = ({
                   checked={isDefaultVolume}
                   onChange={handleChange}
                 />
-                Âm lượng mặc định cho video gốc (%):
+                Default YouTube Volume (%):
               </label>
               {isDefaultVolume && (
                 <input

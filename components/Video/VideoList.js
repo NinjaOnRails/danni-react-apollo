@@ -12,12 +12,6 @@ import {
 } from '../styles/VideoListStyles';
 
 class VideoList extends Component {
-  componentDidUpdate(prevProps) {
-    const { id, audioId } = this.props;
-    if (id !== prevProps.id || audioId !== prevProps.audioId)
-      window.scrollTo(0, 0);
-  }
-
   render() {
     const { id, audioId, hideFullDescription } = this.props;
     return (

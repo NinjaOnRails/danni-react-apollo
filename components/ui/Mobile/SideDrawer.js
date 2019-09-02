@@ -29,7 +29,7 @@ const SideDrawer = ({ show, closed }) => {
                     <Link href="/">
                       <div className="link-container">
                         <Icon name="home" size="large" />
-                        <span className="link-name">Trang Chủ</span>
+                        <span className="link-name">Home</span>
                       </div>
                     </Link>
                   </MenuItem>
@@ -40,7 +40,7 @@ const SideDrawer = ({ show, closed }) => {
                           <Icon name="video" />
                           <Icon color="black" name="plus" size="tiny" />
                         </Icon.Group>
-                        <span className="link-name">Thêm Video</span>
+                        <span className="link-name">Add Video</span>
                       </div>
                     </Link>
                   </MenuItem>
@@ -58,7 +58,7 @@ const SideDrawer = ({ show, closed }) => {
                         <Link href="/signin">
                           <div className="link-container">
                             <Icon name="user" size="large" />
-                            <span className="link-name">Đăng Nhập</span>
+                            <span className="link-name">Sign In</span>
                           </div>
                         </Link>
                       </MenuItem>
@@ -66,7 +66,7 @@ const SideDrawer = ({ show, closed }) => {
                         <Link href="/signup">
                           <div className="link-container">
                             <Icon name="user plus" size="large" />
-                            <span className="link-name">Đăng Ký</span>
+                            <span className="link-name">Sign Up</span>
                           </div>
                         </Link>
                       </MenuItem>
@@ -88,7 +88,7 @@ const SideDrawer = ({ show, closed }) => {
                           <Link href="/">
                             <div className="link-container">
                               <Icon name="sign-out" size="large" />
-                              <span className="link-name">Thoát</span>
+                              <span className="link-name">Sign Out</span>
                             </div>
                           </Link>
                         </MenuItem>

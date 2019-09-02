@@ -27,13 +27,13 @@ export default class YoutubeViews extends Component {
     this.setState({
       youtubeViews: parseInt(
         res.data.items[0].statistics.viewCount,
-        10,
+        10
       ).toLocaleString(),
     });
   };
 
   render() {
-    return <div>{this.state.youtubeViews} lượt xem</div>;
+    return <div>{this.state.youtubeViews} views</div>;
   }
 }
 

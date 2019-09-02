@@ -63,7 +63,7 @@ class CloudinaryUpload extends Component {
                     )) ||
                     (secureUrl && (
                       <>
-                        <p>File audio đã được tải lên:</p>
+                        <p>Uploaded File:</p>
                         <audio
                           controls
                           src={secureUrl}
@@ -76,7 +76,7 @@ class CloudinaryUpload extends Component {
                           onClick={onDeleteFileSubmit}
                           type="button"
                         >
-                          Xoá
+                          Remove
                         </Button>
                       </>
                     )) ||
@@ -85,7 +85,7 @@ class CloudinaryUpload extends Component {
                     )) || (
                       <>
                         <label htmlFor="file">
-                          Chọn file để tải lên
+                          Local File:
                           <input
                             type="file"
                             id="file"
@@ -102,8 +102,9 @@ class CloudinaryUpload extends Component {
                             }}
                           />
                         </label>
+                        OR
                         <label htmlFor="audioSource">
-                          Tải lên qua đường link
+                          Via Link:
                           <Button
                             type="button"
                             floated="right"
@@ -115,12 +116,11 @@ class CloudinaryUpload extends Component {
                             }}
                           >
                             <Icon name="upload" />
-                            Tải lên
+                            Upload
                           </Button>
                           <input
                             type="text"
                             name="audioSource"
-                            placeholder="ví dụ 'https://res.cloudinary.com/danni/video/upload/v1566037102/ENGLISH.mp3'"
                             value={audioSource}
                             onChange={handleChange}
                           />

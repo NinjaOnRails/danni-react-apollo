@@ -18,7 +18,7 @@ const Signout = () => (
   >
     {signout => (
       <button type="button" onClick={signout}>
-        Thoát
+        Sign Out
       </button>
     )}
   </Mutation>
