@@ -10,6 +10,7 @@ import Error from '../ui/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
+import { trackSignUp } from '../../lib/mixpanel';
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
@@ -27,7 +28,9 @@ const SIGNUP_MUTATION = gql`
       }
     ) {
       id
+      name
       email
+      displayName
     }
   }
 `;
@@ -62,13 +65,16 @@ class Signup extends Component {
                 method="post"
                 onSubmit={async e => {
                   e.preventDefault();
-                  await signup();
+                  const {
+                    data: { signup: signUpData },
+                  } = await signup();
                   this.setState({
                     name: '',
                     email: '',
                     password: '',
                     displayName: '',
                   });
+                  if (signUpData) trackSignUp(signUpData);
                   Router.push('/');
                 }}
               >

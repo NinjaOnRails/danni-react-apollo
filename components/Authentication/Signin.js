@@ -8,6 +8,7 @@ import Error from '../ui/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
+import { trackSignIn } from '../../lib/mixpanel';
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -42,11 +43,16 @@ class Signin extends Component {
                 method="post"
                 onSubmit={async e => {
                   e.preventDefault();
-                  await signin();
+                  const {
+                    data: {
+                      signin: { displayName },
+                    },
+                  } = await signin();
                   this.setState({
                     email: '',
                     password: '',
                   });
+                  if (displayName) trackSignIn(displayName);
                 }}
               >
                 <fieldset disabled={loading} aria-busy={loading}>
