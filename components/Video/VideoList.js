@@ -13,7 +13,7 @@ import {
 
 class VideoList extends Component {
   render() {
-    const { id, audioId, hideFullDescription } = this.props;
+    const { id, audioId, onVideoItemClick } = this.props;
     return (
       <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => {
@@ -42,7 +42,7 @@ class VideoList extends Component {
                     return (
                       <List.Item
                         key={videoId}
-                        onClick={() => hideFullDescription()}
+                        onClick={() => onVideoItemClick()}
                       >
                         <Link
                           href={{
@@ -84,7 +84,7 @@ class VideoList extends Component {
                       audioId !== audio.id && (
                         <List.Item
                           key={audio.id}
-                          onClick={() => hideFullDescription()}
+                          onClick={() => onVideoItemClick()}
                         >
                           <Link
                             href={{
@@ -135,7 +135,7 @@ class VideoList extends Component {
 VideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
-  hideFullDescription: PropTypes.func.isRequired,
+  onVideoItemClick: PropTypes.func.isRequired,
 };
 
 VideoList.defaultProps = {

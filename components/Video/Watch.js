@@ -11,6 +11,11 @@ import CommentList from '../Comment/CommentList';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
 import Error from '../ui/ErrorMessage';
+import {
+  trackPlayStart,
+  trackPlayFinish,
+  trackPlayedDuration,
+} from '../../lib/mixpanel';
 
 const VIDEO_QUERY = gql`
   query VIDEO_QUERY($id: ID!, $audioId: ID) {
@@ -24,6 +29,7 @@ const VIDEO_QUERY = gql`
       originAuthor
       originThumbnailUrl
       originThumbnailUrlSd
+      duration
       addedBy {
         displayName
       }
@@ -39,6 +45,7 @@ const VIDEO_QUERY = gql`
         description
         defaultVolume
         startAt
+        duration
       }
     }
   }
@@ -101,64 +108,62 @@ class Watch extends Component {
     playbackRates: [],
     playbackRate: 1,
     showFullDescription: false,
+    mixpanelEventsSent: [],
   };
 
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
 
     if (id !== prevProps.id || audioId !== prevProps.audioId)
-      this.youtubePlayer.getInternalPlayer().unMute();
+      this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
   }
 
-  onProgressYoutube = ({ playedSeconds }) => {
-    // Auto mute video
-    if (!this.youtubePlayer.getInternalPlayer().isMuted()) {
-      this.youtubePlayer.getInternalPlayer().mute();
-    }
+  onProgressYoutube = (e, video) => {
+    const { playedYoutube, playedFilePlayer, mixpanelEventsSent } = this.state;
+    const { playedSeconds } = e;
 
     // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
     // to allow for synchronised seeking
-    const { playedYoutube, playedFilePlayer } = this.state;
-    if (
-      playedFilePlayer > 0 &&
-      playedYoutube > 0 &&
-      playedSeconds !== playedYoutube
-    ) {
-      if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
-        this.filePlayer.seekTo(playedSeconds);
+    if (video.audio[0]) {
+      // Auto mute video
+      if (!this.youtubePlayer.getInternalPlayer().isMuted()) {
+        this.youtubePlayer.getInternalPlayer().mute();
       }
+      if (
+        playedFilePlayer > 0 &&
+        playedYoutube > 0 &&
+        playedSeconds !== playedYoutube
+      ) {
+        if (Math.abs(playedFilePlayer - playedYoutube) > 2) {
+          this.filePlayer.seekTo(playedSeconds);
+        }
+      }
+      this.setState({
+        playedYoutube: playedSeconds,
+      });
     }
+
+    // Video Play Mixpanel tracking
+    const eventSent = trackPlayedDuration(e, video, mixpanelEventsSent);
+    if (eventSent) {
+      this.setState({
+        mixpanelEventsSent: [...mixpanelEventsSent, eventSent],
+      });
+    }
+  };
+
+  onReadyYoutube = () => {
     this.setState({
-      playedYoutube: playedSeconds,
+      readyYoutube: true,
+      playbackRates: this.youtubePlayer
+        .getInternalPlayer()
+        .getAvailablePlaybackRates(),
     });
   };
 
-  onYoutubeStart = ({
-    audio,
-    language,
-    id,
-    originTitle,
-    originPlatform,
-    originLanguage,
-    originAuthor,
-    addedBy: { displayName },
-  }) => {
-    // Send stats to Mixpanel on play start
-    mixpanel.track('Audio Play', {
-      'Audio ID': audio[0] ? audio[0].id : 'no-audio',
-      'Audio Language': audio[0] ? audio[0].language : language,
-      'Audio Author': audio[0] ? audio[0].displayName : 'no-audio',
-      'Video ID': id,
-      'Video Title': originTitle,
-      'Video Platform': originPlatform,
-      'Video Language': originLanguage,
-      'Video Author': originAuthor,
-      'Video AddedBy': displayName,
-    });
-  };
-
-  hideFullDescription = () => {
-    this.setState({ showFullDescription: false });
+  onVideoItemClick = () => {
+    // Reset some states on different video click
+    this.setState({ showFullDescription: false, mixpanelEventsSent: [] });
   };
 
   toggleFullDescription = () => {
@@ -180,22 +185,14 @@ class Watch extends Component {
           url={`https://www.youtube.com/embed/${video.originId}`}
           width="100%"
           height="100%"
-          onReady={() =>
-            this.setState({
-              readyYoutube: true,
-              playbackRates: this.youtubePlayer
-                .getInternalPlayer()
-                .getAvailablePlaybackRates(),
-            })
-          }
+          onReady={() => this.onReadyYoutube()}
           playing={playingFilePlayer}
           controls
           onPause={() => this.setState({ playingFilePlayer: false })}
           onPlay={() => this.setState({ playingFilePlayer: true })}
-          onProgress={e => {
-            if (video.audio[0]) this.onProgressYoutube(e);
-          }}
-          onStart={() => this.onYoutubeStart(video)}
+          onProgress={e => this.onProgressYoutube(e, video)}
+          onStart={() => trackPlayStart(video)}
+          onEnded={() => trackPlayFinish(video)}
           ref={youtubePlayer => {
             this.youtubePlayer = youtubePlayer;
           }}
@@ -276,7 +273,7 @@ class Watch extends Component {
                     <Grid.Column mobile={16} tablet={16} computer={5}>
                       <VideoList
                         {...this.props}
-                        hideFullDescription={this.hideFullDescription}
+                        onVideoItemClick={this.onVideoItemClick}
                       />
                     </Grid.Column>
                   </Grid.Row>
