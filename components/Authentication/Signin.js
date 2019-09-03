@@ -14,7 +14,7 @@ const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
       id
-      email
+      displayName
     }
   }
 `;
@@ -45,14 +45,14 @@ class Signin extends Component {
                   e.preventDefault();
                   const {
                     data: {
-                      signin: { email },
+                      signin: { displayName },
                     },
                   } = await signin();
                   this.setState({
                     email: '',
                     password: '',
                   });
-                  if (email) trackSignIn(email);
+                  if (displayName) trackSignIn(displayName);
                 }}
               >
                 <fieldset disabled={loading} aria-busy={loading}>
