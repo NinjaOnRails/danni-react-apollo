@@ -83,7 +83,7 @@ const AddVideoForm = ({
               checked={isAudioSource}
               onChange={handleChange}
             />
-            Upload Audio File
+            Upload Separate Audio File
           </label>
           {isAudioSource && (
             <>

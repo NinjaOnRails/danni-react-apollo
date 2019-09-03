@@ -14,7 +14,7 @@ const PleaseSignIn = props => (
           <>
             <StyledMessage>
               <Message warning>
-                <StyledHeader>Đăng Nhập Để Tiếp Tục</StyledHeader>
+                <StyledHeader>Please Sign In to Continue</StyledHeader>
               </Message>
             </StyledMessage>
             <Signin />

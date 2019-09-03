@@ -82,15 +82,13 @@ class Signup extends Component {
                       value={this.state}
                     />
                   ))}
-                  <button type="submit">
-                    {loading && 'Đang '}Tạo Tài Khoản Mới
-                  </button>
+                  <button type="submit">Sign{loading && 'ing'} Up</button>
                 </fieldset>
                 <Link href="/signin">
-                  <a>Đã có tài khoản</a>
+                  <a>Already have an account?</a>
                 </Link>
                 <Link href="/requestReset">
-                  <a>Quên mật khẩu</a>
+                  <a>Forgot password?</a>
                 </Link>
               </Form>
             </Container>

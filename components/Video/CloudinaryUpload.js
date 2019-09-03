@@ -81,7 +81,7 @@ class CloudinaryUpload extends Component {
                     }) => (
                       <>
                         <label htmlFor="file">
-                          Local File:
+                          Choose a Local File:
                           <input
                             type="file"
                             id="file"
@@ -100,7 +100,7 @@ class CloudinaryUpload extends Component {
                         </label>
                         OR
                         <label htmlFor="audioSource">
-                          Via Link:
+                          Provide a Direct Link:
                           <Button
                             type="button"
                             floated="right"

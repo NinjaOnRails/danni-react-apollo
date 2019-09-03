@@ -83,10 +83,10 @@ class Reset extends Component {
                       value={this.state}
                     />
                   ))}
-                  <button type="submit">Đặt Mật Khẩu</button>
+                  <button type="submit">Set New Password</button>
                 </fieldset>
                 <Link href="/requestReset">
-                  <a>Gửi yêu cầu mới vào email</a>
+                  <a>Resend reset password link</a>
                 </Link>
               </Form>
             </Container>

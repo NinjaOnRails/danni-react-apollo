@@ -13,6 +13,7 @@ import { languageOptions, defaultLanguage } from '../../lib/supportedLanguages';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import uploadFileData from '../../lib/cloudinaryUploadFileData';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
+import { trackNewVideo } from '../../lib/mixpanel';
 
 const CREATE_VIDEO_MUTATION = gql`
   mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
@@ -278,7 +279,9 @@ class AddVideo extends Component {
     this.setState({ error: '' });
 
     if (isAudioSource && !secureUrl)
-      return this.setState({ error: 'Chưa tải file lên' });
+      return this.setState({
+        error: 'You have not uploaded an audio file yet',
+      });
 
     // Call createVideo mutation
     const {
@@ -315,9 +318,7 @@ class AddVideo extends Component {
       });
 
       // Mixpanel send stat
-      mixpanel.track('New Video', {
-        'Audio Language': language,
-      });
+      trackNewVideo(language);
 
       // Redirect to newly created Video watch page
       return Router.push({
@@ -328,9 +329,7 @@ class AddVideo extends Component {
     this.onDeleteFileSubmit();
 
     // Mixpanel send stat
-    mixpanel.track('New Video', {
-      'Audio Language': 'no-audio',
-    });
+    trackNewVideo();
 
     return Router.push({
       pathname: '/watch',

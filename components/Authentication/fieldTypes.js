@@ -3,35 +3,33 @@ export const signupFields = [
     label: 'E-mail',
     type: 'email',
     name: 'email',
-    placeholder: 'bắt buộc',
+    placeholder: 'required',
   },
   {
-    label: 'Họ và tên',
+    label: 'Name',
     type: 'name',
     name: 'name',
-    placeholder: 'bắt buộc',
   },
   {
-    label: 'Tên hiển thị',
+    label: 'Display Name',
     type: 'displayName',
     name: 'displayName',
-    placeholder: 'bắt buộc',
   },
   {
-    label: 'Mật khẩu',
+    label: 'Password',
     type: 'password',
     name: 'password',
-    placeholder: 'bắt buộc',
+    placeholder: 'required',
   },
 ];
 
 export const resetFields = [
   { ...signupFields[3] },
   {
-    label: 'Lặp lại mặt khẩu mới',
+    label: 'Confirm Password',
     type: 'password',
     name: 'confirmPassword',
-    placeholder: 'bắt buộc',
+    placeholder: 'required',
   },
 ];
 
