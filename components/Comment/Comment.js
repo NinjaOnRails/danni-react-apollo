@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Icon } from 'semantic-ui-react';
 
-const VideoComment = ({ comment: { text, author, reply, createdAt } }) => (
+const VideoComment = ({ text, author, reply, createdAt }) => (
   <Comment>
     <Comment.Avatar src={''} />
     <Comment.Content>
@@ -47,7 +47,7 @@ const VideoComment = ({ comment: { text, author, reply, createdAt } }) => (
                 </Comment.Actions>
               </Comment.Content>
             </Comment>
-          ),
+          )
         )}
       </Comment.Group>
     ) : null}
@@ -55,7 +55,10 @@ const VideoComment = ({ comment: { text, author, reply, createdAt } }) => (
 );
 
 VideoComment.propTypes = {
-  comment: PropTypes.object.isRequired,
+  text: PropTypes.string.isRequired,
+  author: PropTypes.object.isRequired,
+  reply: PropTypes.array.isRequired,
+  createdAt: PropTypes.string.isRequired,
 };
 
 export default VideoComment;

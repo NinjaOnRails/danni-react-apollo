@@ -5,6 +5,7 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import VideoComment from './Comment';
 import CommentSectionStyles from '../styles/Commentstyles';
+import Error from '../UI/ErrorMessage';
 // import commentSeedData from './commentSeedData';
 
 const CREATE_COMMENT_MUTATION = gql`
@@ -37,22 +38,31 @@ class CommentSection extends React.Component {
     return (
       <Mutation
         mutation={CREATE_COMMENT_MUTATION}
-        variables={{ id: videoId, text: commentText }}
+        variables={{ video: videoId, text: commentText }}
       >
-        {(createComment, { error, loading }) => (
-          <CommentSectionStyles>
-            <Comment.Group size='large'>
-              <Form reply onSubmit={createComment}>
-                <Form.TextArea
-                  placeholder='Viết bình luận...'
-                  onChange={this.onTextChange}
-                />
-                <Button content='Add Comment' primary />
-              </Form>
-              {/* {this.renderComments()} */}
-            </Comment.Group>
-          </CommentSectionStyles>
-        )}
+        {(createComment, { error, loading }) => {
+          if (error) return <Error error={error} />;
+          return (
+            <CommentSectionStyles>
+              <Comment.Group size='large'>
+                <Form
+                  reply
+                  onSubmit={() => {
+                    this.setState({ commentText: '' });
+                    createComment();
+                  }}
+                >
+                  <Form.TextArea
+                    placeholder='Viết bình luận...'
+                    onChange={this.onTextChange}
+                  />
+                  <Button content='Add Comment' primary />
+                </Form>
+                {this.renderComments()}
+              </Comment.Group>
+            </CommentSectionStyles>
+          );
+        }}
       </Mutation>
     );
   }
