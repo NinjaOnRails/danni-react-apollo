@@ -24,8 +24,7 @@ const SideDrawer = () => {
     <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>
       {closeSideDrawer => (
         <Query query={LOCAL_STATE_QUERY}>
-          {({ data: showSide }) => {
-            const show = showSide.showSide;
+          {({ data: {showSide: show} }) => {
             return (
               <User>
                 {({ data }) => {
