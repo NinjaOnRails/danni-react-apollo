@@ -45,14 +45,14 @@ class Signin extends Component {
                   e.preventDefault();
                   const {
                     data: {
-                      signin: { displayName },
+                      signin: { email },
                     },
                   } = await signin();
                   this.setState({
                     email: '',
                     password: '',
                   });
-                  if (displayName) trackSignIn(displayName);
+                  if (email) trackSignIn(email);
                 }}
               >
                 <fieldset disabled={loading} aria-busy={loading}>
