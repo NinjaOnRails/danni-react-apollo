@@ -267,7 +267,7 @@ class Watch extends Component {
                         {video.audio[0] &&
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
-                        {/* <CommentList /> */}
+                        <CommentList /> 
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>

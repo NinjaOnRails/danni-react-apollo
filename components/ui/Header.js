@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import Nav from './Nav';
 // import MobileNav from './MobileNav';
 import Search from './Search';
@@ -19,6 +21,12 @@ Router.onRouteChangeComplete = () => {
 Router.onRouteChangeError = () => {
   NProgress.done();
 };
+
+const TOGGLE_SIDEDRAWER_MUTATION = gql`
+  mutation {
+    toggleSideDrawer @client
+  }
+`;
 
 const StyledHeader = styled.header`
   /* z-index: 99;
@@ -45,20 +53,21 @@ const StyledHeader = styled.header`
   }
 `;
 
-const Header = ({ drawerToggleClick }) => (
+const Header = () => (
   <StyledHeader>
-    <div className="bar">
+    <div className='bar'>
       <Logo />
       <Nav />
-      <DrawerToggle clicked={drawerToggleClick} />
+      <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
+        {toggleSideDrawer => <DrawerToggle clicked={toggleSideDrawer} />}
+      </Mutation>
       {/* <MobileSearch /> */}
     </div>
     {/* <Search /> */}
   </StyledHeader>
 );
 
-Header.propTypes = {
-  drawerToggleClick: PropTypes.func.isRequired,
-};
+
 
 export default Header;
+export { TOGGLE_SIDEDRAWER_MUTATION };

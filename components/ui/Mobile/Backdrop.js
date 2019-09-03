@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { BackdropStyles } from '../../styles/MobileUiStyles';
 
 const Backdrop = ({ show, clicked }) =>
   show ? <BackdropStyles onClick={clicked} show /> : null;
 
+Backdrop.defaultProps = {
+  show: false,
+};
+
 Backdrop.propTypes = {
-  show: PropTypes.bool.isRequired,
+  show: PropTypes.bool,
   clicked: PropTypes.func.isRequired,
 };
 
