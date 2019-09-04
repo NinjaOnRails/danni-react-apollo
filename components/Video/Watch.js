@@ -34,26 +34,6 @@ const VIDEO_QUERY = gql`
         displayName
       }
       language
-      comment {
-        id
-        text
-        author {
-          id
-          name
-        }
-        text
-        createdAt
-        reply {
-          id
-          text
-          createdAt
-          author {
-            id
-            name
-          }
-          text
-        }
-      }
       audio(where: { id: $audioId }) {
         id
         source
@@ -240,10 +220,7 @@ class Watch extends Component {
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
 
-                        <CommentSection
-                          commentList={video.comment}
-                          videoId={video.id}
-                        />
+                        <CommentSection videoId={id} />
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
