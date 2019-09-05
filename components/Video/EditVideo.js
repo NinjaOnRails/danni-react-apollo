@@ -5,7 +5,7 @@ import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Loader, Dropdown } from 'semantic-ui-react';
 import Form from '../styles/Form';
-import Error from '../ui/ErrorMessage';
+import Error from '../UI/ErrorMessage';
 import { VIDEO_QUERY } from './Watch';
 import { CREATE_AUDIO_MUTATION } from './AddVideo';
 import { ALL_VIDEOS_QUERY } from './Videos';

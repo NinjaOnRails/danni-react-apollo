@@ -6,7 +6,7 @@ import Router from 'next/router';
 import generateName from 'sillyname';
 import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
-import Error from '../ui/ErrorMessage';
+import Error from '../UI/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';

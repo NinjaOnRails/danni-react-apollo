@@ -6,7 +6,7 @@ import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
-import Error from '../ui/ErrorMessage';
+import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from './User';
 
