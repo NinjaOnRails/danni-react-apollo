@@ -14,8 +14,10 @@ const QUERY_VIDEO_COMMENTS = gql`
       id
       text
       createdAt
+      upvoteCount
+      downvoteCount
 
-      video {
+      audio {
         id
       }
 
@@ -28,6 +30,8 @@ const QUERY_VIDEO_COMMENTS = gql`
         id
         text
         createdAt
+        upvoteCount
+        downvoteCount
         author {
           id
           name
@@ -50,10 +54,6 @@ class CommentSection extends React.Component {
     commentText: '',
   };
 
-  componentDidMount() {
-    console.log(this.props);
-  }
-
   onTextChange = e => {
     this.setState({ commentText: e.target.value });
   };
@@ -66,7 +66,10 @@ class CommentSection extends React.Component {
         {({ error, loading, data: { comments } }) => (
           <Mutation
             mutation={CREATE_COMMENT_MUTATION}
-            variables={{ video: videoId, text: commentText }}
+            variables={{
+              video: videoId,
+              text: commentText,
+            }}
             refetchQueries={[
               { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
             ]}

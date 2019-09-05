@@ -220,7 +220,7 @@ class Watch extends Component {
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
 
-                        <CommentSection videoId={id} />
+                        <CommentSection videoId={id} videoLanguage={video.language} />
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
