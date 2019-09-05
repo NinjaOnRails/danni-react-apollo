@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import Header from './Header';
@@ -56,28 +57,15 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 class Page extends Component {
-  state = {
-    showSide: false,
-  };
-
-  closeSideDrawer() {
-    this.setState({ showSide: false });
-  }
-
-  drawerToggleClick() {
-    this.setState({ showSide: !this.state.showSide });
-  }
-
   render() {
     const { children } = this.props;
-    const { showSide } = this.state;
     return (
       <ThemeProvider theme={theme}>
         <StyledPage>
           <GlobalStyle />
           <Meta />
-          <Header drawerToggleClick={() => this.drawerToggleClick()} />
-          <SideDrawer show={showSide} closed={() => this.closeSideDrawer()} />
+          <Header />
+          <SideDrawer />
           <Inner>{children}</Inner>
         </StyledPage>
       </ThemeProvider>

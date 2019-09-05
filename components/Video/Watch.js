@@ -4,13 +4,13 @@ import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import styled from 'styled-components';
 import { Container, Grid, Loader } from 'semantic-ui-react';
 import VideoList from './VideoList';
-import CommentList from '../Comment/CommentList';
+import CommentSection from '../Comment/CommentSection';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
 import Error from '../ui/ErrorMessage';
+import { StyledContainer, YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,
   trackPlayFinish,
@@ -49,54 +49,6 @@ const VIDEO_QUERY = gql`
       }
     }
   }
-`;
-
-const StyledContainer = styled.div`
-  margin: 0 auto;
-  max-width: 1366px;
-  padding: 0px 24px;
-  .filePlayer {
-    display: none; /* Hide audio File Player */
-  }
-  @media (max-width: 760px) {
-    padding: 0 1rem;
-  }
-  @media (max-width: 479px) {
-    div.eleven.wide.computer.sixteen.wide.mobile.sixteen.wide.tablet.column {
-      padding: 0;
-    }
-  }
-`;
-
-const YoutubeStyle = styled.div`
-  position: relative;
-  padding-bottom: 56.25%;
-  /* Create element on top of Youtube Player to limit interaction */
-  :before {
-    content: '';
-    position: absolute;
-    height: 78%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    /* background: red; */
-    @media (min-width: 793px) {
-      position: absolute;
-      height: 85%;
-    }
-  }
-  .youtube-player {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  /* @media (max-width: 479px) {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 33px;
-    z-index: 98;
-  } */
 `;
 
 class Watch extends Component {
@@ -181,10 +133,10 @@ class Watch extends Component {
         }
       >
         <YouTubePlayer
-          className="youtube-player"
+          className='youtube-player'
           url={`https://www.youtube.com/embed/${video.originId}`}
-          width="100%"
-          height="100%"
+          width='100%'
+          height='100%'
           onReady={() => this.onReadyYoutube()}
           playing={playingFilePlayer}
           controls
@@ -206,7 +158,7 @@ class Watch extends Component {
     const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
-        className="filePlayer"
+        className='filePlayer'
         config={{
           file: {
             forceAudio: true,
@@ -223,8 +175,8 @@ class Watch extends Component {
         url={audio[0].source}
         playing={playingFilePlayer}
         onPause={() => this.setState({ playingFilePlayer: false })}
-        height="100%"
-        width="100%"
+        height='100%'
+        width='100%'
         playbackRate={playbackRate}
       />
     );
@@ -246,7 +198,7 @@ class Watch extends Component {
       >
         {({ error, loading, data: { video } }) => {
           if (error) return <Error error={error} />;
-          if (loading) return <Loader active inline="centered" />;
+          if (loading) return <Loader active inline='centered' />;
           if (!video) return <p>No Video Found for {id}</p>;
           return (
             <>
@@ -267,7 +219,8 @@ class Watch extends Component {
                         {video.audio[0] &&
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
-                        {/* <CommentList /> */}
+
+                        <CommentSection videoId={id} videoLanguage={video.language} />
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
