@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { Placeholder, Card, Icon, Image } from 'semantic-ui-react';
 import Link from 'next/link';
-import Error from '../ui/ErrorMessage';
+import Error from '../UI/ErrorMessage';
 
 const ALL_VIDEOS_QUERY = gql`
   query ALL_VIDEOS_QUERY {

@@ -9,7 +9,7 @@ import VideoList from './VideoList';
 import CommentSection from '../Comment/CommentSection';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
-import Error from '../ui/ErrorMessage';
+import Error from '../UI/ErrorMessage';
 import { StyledContainer, YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,

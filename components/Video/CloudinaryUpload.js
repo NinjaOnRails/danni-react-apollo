@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Loader, Progress, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import Error from '../ui/ErrorMessage';
+import Error from '../UI/ErrorMessage';
 import { CURRENT_USER_QUERY } from '../Authentication/User';
 
 const CLOUDINARY_AUTH = gql`
