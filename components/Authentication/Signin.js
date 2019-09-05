@@ -43,16 +43,12 @@ class Signin extends Component {
                 method="post"
                 onSubmit={async e => {
                   e.preventDefault();
-                  const {
-                    data: {
-                      signin: { displayName },
-                    },
-                  } = await signin();
+                  const { data } = await signin();
                   this.setState({
                     email: '',
                     password: '',
                   });
-                  if (displayName) trackSignIn(displayName);
+                  if (data) trackSignIn(data.signin.displayName);
                 }}
               >
                 <fieldset disabled={loading} aria-busy={loading}>

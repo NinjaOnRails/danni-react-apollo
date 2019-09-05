@@ -65,16 +65,14 @@ class Signup extends Component {
                 method="post"
                 onSubmit={async e => {
                   e.preventDefault();
-                  const {
-                    data: { signup: signUpData },
-                  } = await signup();
+                  const { data } = await signup();
                   this.setState({
                     name: '',
                     email: '',
                     password: '',
                     displayName: '',
                   });
-                  if (signUpData) trackSignUp(signUpData);
+                  if (data) trackSignUp(data.signup);
                   Router.push('/');
                 }}
               >
