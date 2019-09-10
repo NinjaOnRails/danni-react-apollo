@@ -74,11 +74,11 @@ class CommentSection extends React.Component {
               { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
             ]}
           >
-            {(createComment, { error, loading }) => {
+            {(createComment, { error, loading: createCommentLoading }) => {
               if (error) return <Error error={error} />;
               return (
                 <CommentSectionStyles>
-                  <Comment.Group size='large'>
+                  <Comment.Group size="large">
                     <Form
                       reply
                       onSubmit={() => {
@@ -87,11 +87,11 @@ class CommentSection extends React.Component {
                       }}
                     >
                       <Form.TextArea
-                        placeholder='Viết bình luận...'
+                        placeholder="Viết bình luận..."
                         onChange={this.onTextChange}
                         value={commentText}
                       />
-                      <Button content='Add Comment' primary />
+                      <Button content="Add Comment" primary />
                     </Form>
                     {comments &&
                       comments.map(comment => (
