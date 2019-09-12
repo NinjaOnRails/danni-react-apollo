@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Header from './Header';
 import Meta from './Meta';
 import SideDrawer from './Mobile/SideDrawer';
-import ContentLanguage from './ContentLanguage';
 
 const theme = {
   red: '#FF0000',
@@ -66,7 +65,6 @@ class Page extends Component {
           <Meta />
           <Header />
           <SideDrawer />
-          <ContentLanguage />
           <Inner>{children}</Inner>
         </StyledPage>
       </ThemeProvider>
