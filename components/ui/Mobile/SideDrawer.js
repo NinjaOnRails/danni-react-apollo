@@ -24,7 +24,9 @@ const SideDrawer = () => {
     <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>
       {closeSideDrawer => (
         <Query query={LOCAL_STATE_QUERY}>
-          {({ data: {showSide: show} }) => {
+          {({ data, loading }) => {
+            if (loading) return <div />;
+            const { showSide: show } = data;
             return (
               <User>
                 {({ data }) => {
@@ -34,57 +36,57 @@ const SideDrawer = () => {
                       <BackDrop clicked={closeSideDrawer} show={show} />
                       <div className={`SideDrawer ${show ? 'Open' : 'Close'}`}>
                         {/* <Logo inDrawer /> */}
-                        <div className='links'>
-                          <Menu vertical icon='labeled' inverted>
-                            <MenuItem as='a' onClick={closeSideDrawer}>
-                              <Link href='/'>
-                                <div className='link-container'>
-                                  <Icon name='home' size='large' />
-                                  <span className='link-name'>Home</span>
+                        <div className="links">
+                          <Menu vertical icon="labeled" inverted>
+                            <Link href="/">
+                              <MenuItem as="a" onClick={closeSideDrawer}>
+                                <div className="link-container">
+                                  <Icon name="home" size="large" />
+                                  <span className="link-name">Home</span>
                                 </div>
-                              </Link>
-                            </MenuItem>
-                            <MenuItem as='a' onClick={closeSideDrawer}>
-                              <Link href='/new'>
-                                <div className='link-container'>
-                                  <Icon.Group size='large'>
-                                    <Icon name='video' />
+                              </MenuItem>
+                            </Link>
+                            <Link href="/new">
+                              <MenuItem as="a" onClick={closeSideDrawer}>
+                                <div className="link-container">
+                                  <Icon.Group size="large">
+                                    <Icon name="video" />
                                     <Icon
-                                      color='black'
-                                      name='plus'
-                                      size='tiny'
+                                      color="black"
+                                      name="plus"
+                                      size="tiny"
                                     />
                                   </Icon.Group>
-                                  <span className='link-name'>Add Video</span>
+                                  <span className="link-name">Add Video</span>
                                 </div>
-                              </Link>
-                            </MenuItem>
-                            <MenuItem as='a' onClick={closeSideDrawer}>
-                              <Link href='/about'>
-                                <div className='link-container'>
-                                  <Icon name='info' size='large' />
-                                  <span className='link-name'>About</span>
+                              </MenuItem>
+                            </Link>
+                            <Link href="/about">
+                              <MenuItem as="a" onClick={closeSideDrawer}>
+                                <div className="link-container">
+                                  <Icon name="info" size="large" />
+                                  <span className="link-name">About</span>
                                 </div>
-                              </Link>
-                            </MenuItem>
+                              </MenuItem>
+                            </Link>
                             {!currentUser && (
                               <>
-                                <MenuItem as='a' onClick={closeSideDrawer}>
-                                  <Link href='/signin'>
-                                    <div className='link-container'>
-                                      <Icon name='user' size='large' />
-                                      <span className='link-name'>Sign In</span>
+                                <Link href="/signin">
+                                  <MenuItem as="a" onClick={closeSideDrawer}>
+                                    <div className="link-container">
+                                      <Icon name="user" size="large" />
+                                      <span className="link-name">Sign In</span>
                                     </div>
-                                  </Link>
-                                </MenuItem>
-                                <MenuItem as='a' onClick={closeSideDrawer}>
-                                  <Link href='/signup'>
-                                    <div className='link-container'>
-                                      <Icon name='user plus' size='large' />
-                                      <span className='link-name'>Sign Up</span>
+                                  </MenuItem>
+                                </Link>
+                                <Link href="/signup">
+                                  <MenuItem as="a" onClick={closeSideDrawer}>
+                                    <div className="link-container">
+                                      <Icon name="user plus" size="large" />
+                                      <span className="link-name">Sign Up</span>
                                     </div>
-                                  </Link>
-                                </MenuItem>
+                                  </MenuItem>
+                                </Link>
                               </>
                             )}
                             {currentUser && (
@@ -93,22 +95,22 @@ const SideDrawer = () => {
                                 refetchQueries={[{ query: CURRENT_USER_QUERY }]}
                               >
                                 {signout => (
-                                  <MenuItem
-                                    as='a'
-                                    onClick={() => {
-                                      signout();
-                                      closeSideDrawer();
-                                    }}
-                                  >
-                                    <Link href='/'>
-                                      <div className='link-container'>
-                                        <Icon name='sign-out' size='large' />
-                                        <span className='link-name'>
+                                  <Link href="/">
+                                    <MenuItem
+                                      as="a"
+                                      onClick={() => {
+                                        signout();
+                                        closeSideDrawer();
+                                      }}
+                                    >
+                                      <div className="link-container">
+                                        <Icon name="sign-out" size="large" />
+                                        <span className="link-name">
                                           Sign Out
                                         </span>
                                       </div>
-                                    </Link>
-                                  </MenuItem>
+                                    </MenuItem>
+                                  </Link>
                                 )}
                               </Mutation>
                             )}

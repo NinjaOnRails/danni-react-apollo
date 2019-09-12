@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import { List, Image, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { ALL_VIDEOS_QUERY } from './Videos';
+import { ALL_VIDEOS_QUERY } from '../UI/ContentLanguage';
 import Error from '../UI/ErrorMessage';
 import {
   VideoItem,

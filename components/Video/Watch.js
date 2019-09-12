@@ -133,10 +133,10 @@ class Watch extends Component {
         }
       >
         <YouTubePlayer
-          className='youtube-player'
+          className="youtube-player"
           url={`https://www.youtube.com/embed/${video.originId}`}
-          width='100%'
-          height='100%'
+          width="100%"
+          height="100%"
           onReady={() => this.onReadyYoutube()}
           playing={playingFilePlayer}
           controls
@@ -158,7 +158,7 @@ class Watch extends Component {
     const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
-        className='filePlayer'
+        className="filePlayer"
         config={{
           file: {
             forceAudio: true,
@@ -175,8 +175,8 @@ class Watch extends Component {
         url={audio[0].source}
         playing={playingFilePlayer}
         onPause={() => this.setState({ playingFilePlayer: false })}
-        height='100%'
-        width='100%'
+        height="100%"
+        width="100%"
         playbackRate={playbackRate}
       />
     );
@@ -196,9 +196,10 @@ class Watch extends Component {
           audioId,
         }}
       >
-        {({ error, loading, data: { video } }) => {
+        {({ error, loading, data }) => {
           if (error) return <Error error={error} />;
-          if (loading) return <Loader active inline='centered' />;
+          if (loading) return <Loader active inline="centered" />;
+          const { video } = data;
           if (!video) return <p>No Video Found for {id}</p>;
           return (
             <>
@@ -220,7 +221,10 @@ class Watch extends Component {
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
 
-                        <CommentSection videoId={id} videoLanguage={video.language} />
+                        {/* <CommentSection
+                          videoId={id}
+                          videoLanguage={video.language}
+                        /> */}
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
