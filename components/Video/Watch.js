@@ -119,7 +119,8 @@ class Watch extends Component {
   };
 
   toggleFullDescription = () => {
-    this.setState({ showFullDescription: !this.state.showFullDescription });
+    const { showFullDescription } = this.state;
+    this.setState({ showFullDescription: !showFullDescription });
   };
 
   renderVideoPlayer = video => {
@@ -220,11 +221,11 @@ class Watch extends Component {
                         {video.audio[0] &&
                           readyYoutube &&
                           this.renderFilePlayer(video.audio)}
-
-                        {/* <CommentSection
+                        <CommentSection
                           videoId={id}
                           videoLanguage={video.language}
-                        /> */}
+                        />
+
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
