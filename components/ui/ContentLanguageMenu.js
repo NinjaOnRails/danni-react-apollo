@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   getSupportedLanguage,
   languageOptions,
+  languageOptionsLocal,
   flagOptions,
 } from '../../lib/supportedLanguages';
 
@@ -91,10 +92,19 @@ class LanguageMenu extends Component {
       toggleContentLanguage,
       contentLanguage,
       loadingUpdate,
+      sideDrawer,
     } = this.props;
+    const buttonWidth = sideDrawer ? 2 : 1;
     return (
       <>
-        <Button.Group basic icon toggle size="big">
+        <Button.Group
+          basic
+          icon
+          toggle
+          size="big"
+          vertical={sideDrawer}
+          widths={buttonWidth}
+        >
           {flagOptions.map(({ key, value, flag }) => (
             <Button
               key={key}
@@ -106,6 +116,7 @@ class LanguageMenu extends Component {
               disabled={loadingUpdate}
             >
               <Flag name={flag} id={languageOptions[value]} />
+              {sideDrawer && languageOptionsLocal[value]}
             </Button>
           ))}
         </Button.Group>
@@ -121,11 +132,13 @@ LanguageMenu.propTypes = {
   currentUser: PropTypes.object,
   contentLanguage: PropTypes.array.isRequired,
   loadingUpdate: PropTypes.bool,
+  sideDrawer: PropTypes.bool,
 };
 
 LanguageMenu.defaultProps = {
   currentUser: null,
   loadingUpdate: false,
+  sideDrawer: false,
 };
 
 export default LanguageMenu;

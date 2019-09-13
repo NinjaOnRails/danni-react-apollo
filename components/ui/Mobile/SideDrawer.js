@@ -3,10 +3,12 @@ import Link from 'next/link';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import styled from 'styled-components';
 import { SIGN_OUT_MUTATION } from '../../Authentication/Signout';
 import User, { CURRENT_USER_QUERY } from '../../Authentication/User';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
+import ContentLanguage from '../ContentLanguage';
 
 const CLOSE_SIDEDRAWER_MUTATION = gql`
   mutation {
@@ -19,6 +21,28 @@ const LOCAL_STATE_QUERY = gql`
     showSide @client
   }
 `;
+
+const LanguageMenuStyles = styled.div`
+  button.ui.button {
+    font-family: Verdana;
+    text-align: left;
+  }
+  .ui.basic.buttons .button {
+    font-size: 10px;
+    color: #fff !important;
+  }
+  /* Turn off default background color change on hover */
+  .ui.basic.buttons .button:hover {
+    background-color: transparent !important;
+  }
+  .ui.toggle.buttons .active.button:hover {
+    background-color: #21ba45 !important;
+  }
+  @media (min-width: 640px) {
+    display: none;
+  }
+`;
+
 const SideDrawer = () => {
   return (
     <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>
@@ -115,6 +139,9 @@ const SideDrawer = () => {
                               </Mutation>
                             )}
                           </Menu>
+                          <LanguageMenuStyles>
+                            <ContentLanguage sideDrawer />
+                          </LanguageMenuStyles>
                         </div>
                       </div>
                     </SideDrawerStyles>

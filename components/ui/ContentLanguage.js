@@ -75,7 +75,7 @@ const update = (cache, payload) => {
   // console.log(data);
 };
 
-const ContentLanguage = () => {
+const ContentLanguage = props => {
   return (
     <User>
       {({ data, loading }) => {
@@ -120,6 +120,7 @@ const ContentLanguage = () => {
                               currentUser={currentUser}
                               updateContentLanguage={updateContentLanguage}
                               loadingUpdate={loadingUpdate}
+                              {...props}
                             />
                           )}
                         </Mutation>
