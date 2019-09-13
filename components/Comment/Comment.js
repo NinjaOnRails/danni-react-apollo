@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Form, Button } from 'semantic-ui-react';
+import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import moment from 'moment';
 import { QUERY_VIDEO_COMMENTS } from './CommentSection';
+import CommentReply from './CommentReply';
+import Error from '../UI/ErrorMessage';
+import User from '../Authentication/User';
 
 const CREATE_COMMENT_REPLY = gql`
   mutation CREATE_COMMENT_REPLY($comment: ID!, $text: String!) {
@@ -15,26 +18,9 @@ const CREATE_COMMENT_REPLY = gql`
   }
 `;
 
-const UPDATE_COMMENT_REPLY = gql`
-  mutation UPDATE_COMMENT_REPLY($commentReply: ID!, $text: String!) {
-    updateCommentReply(commentReply: $commentReply, text: $text) {
-      id
-      text
-    }
-  }
-`;
-
-const DELETE_COMMENT_REPLY = gql`
-  mutation DELETE_COMMENT_REPLY($commentReply: ID!) {
-    deleteCommentReply(where: { id: $commentReply }) {
-      id
-    }
-  }
-`;
-
 const UPDATE_COMMENT = gql`
-  mutation UPDATE_COMMENT($comment: ID!, $text: String!) {
-    updateComment(id: $comment, text: $text) {
+  mutation UPDATE_COMMENT($comment: ID!, $text: String) {
+    updateComment(comment: $comment, text: $text) {
       id
       text
     }
@@ -43,7 +29,7 @@ const UPDATE_COMMENT = gql`
 
 const DELETE_COMMENT = gql`
   mutation DELETE_COMMENT($comment: ID!) {
-    deleteComment(where: { id: $comment }) {
+    deleteComment(comment: $comment) {
       id
     }
   }
@@ -51,29 +37,44 @@ const DELETE_COMMENT = gql`
 
 class VideoComment extends React.Component {
   state = {
-    replyInput: '',
     showReplyInput: false,
     showEditInput: false,
-  };
-
-  onTextChange = e => {
-    this.setState({ replyInput: e.target.value });
-  };
-
-  onReplyClick = () => {
-    this.setState({ showReplyInput: true });
   };
 
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
   };
 
+  onTextChange = e => {
+    const { value, name } = e.target;
+    this.setState({ [name]: value });
+  };
+
+  onReplyClick = () => {
+    this.setState({ showReplyInput: true });
+  };
+
   onEditClick = () => {
     this.setState({ showEditInput: true });
   };
 
+  onCommentUpdate = async callback => {
+    const { data } = await callback();
+    if (data) this.setState({ showEditInput: false, updateInput: '' });
+  };
+
+  onReplySubmit = async callback => {
+    const { data } = await callback();
+    if (data) this.setState({ replyInput: '', showReplyInput: false });
+  };
+
   render() {
-    const { replyInput, showReplyInput, showEditInput } = this.state;
+    const {
+      updateInput,
+      replyInput,
+      showReplyInput,
+      showEditInput,
+    } = this.state;
     const {
       comment: {
         id,
@@ -87,134 +88,168 @@ class VideoComment extends React.Component {
       videoId,
     } = this.props;
     return (
-      <Mutation
-        mutation={CREATE_COMMENT_REPLY}
-        variables={{ comment: id, text: replyInput }}
-        refetchQueries={[
-          { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
-        ]}
-      >
-        {(createCommentReply, { error, loading }) => (
-          <Mutation
-            mutation={DELETE_COMMENT}
-            variables={{ comment: id }}
-            refetchQueries={[
-              { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
-            ]}
-          >
-            {(deleteComment, { error, loading }) => (
-              <Comment>
-                <Comment.Avatar src={''} />
-                <Comment.Content>
-                  <Comment.Author as="a">{author.name}</Comment.Author>
-                  <Comment.Metadata>
-                    <div>{this.formatTime(createdAt)}</div>
-                  </Comment.Metadata>
-                  {showEditInput ? (
-                    <Form.Input />
-                  ) : (
-                    <Comment.Text>
-                      <p>{text}</p>
-                    </Comment.Text>
-                  )}
-                  <Comment.Actions>
-                    <Icon name="angle up" size="large" link />
-                    <span>{+upvoteCount - +downvoteCount}</span>
-                    <Icon name="angle down" size="large" link />
-                    <Comment.Action onClick={this.onReplyClick}>
-                      Reply
-                    </Comment.Action>
-                    {author.id ? (
-                      <>
-                        <Comment.Action>Edit</Comment.Action>
-                        <Comment.Action onClick={deleteComment}>
-                          Delete
-                        </Comment.Action>
-                      </>
-                    ) : null}
-                  </Comment.Actions>
-                </Comment.Content>
-                <Comment.Group>
-                  {reply.map(
-                    ({
-                      id: replyID,
-                      author: replyAuthor,
-                      text: replyText,
-                      createdAt: replyDate,
-                      upvoteCount: replyUpvoteCount,
-                      downvoteCount: replyDownvoteCount,
-                    }) => (
-                      <Mutation
-                        mutation={DELETE_COMMENT_REPLY}
-                        variables={{ commentReply: replyID }}
-                        refetchQueries={[
-                          {
-                            query: QUERY_VIDEO_COMMENTS,
-                            variables: { video: videoId },
-                          },
-                        ]}
-                      >
-                        {(deleteCommentReply, { error, loading }) => (
-                          <Comment key={replyID}>
-                            <Comment.Avatar src={''} />
-                            <Comment.Content>
-                              <Comment.Author as="a">
-                                {replyAuthor.name}
-                              </Comment.Author>
-                              <Comment.Metadata>
-                                <div>{this.formatTime(replyDate)}</div>
-                              </Comment.Metadata>
-                              <Comment.Text>
-                                <p>{replyText}</p>
-                              </Comment.Text>
-                              <Comment.Actions>
-                                <Icon name="angle up" size="large" link />
-                                <span>
-                                  {+replyUpvoteCount - +replyDownvoteCount}{' '}
-                                </span>
-                                <Icon name="angle down" size="large" link />
-                                <Comment.Action onClick={this.onReplyClick}>
-                                  Reply
-                                </Comment.Action>
-                                {replyAuthor.id ? (
-                                  <>
-                                    <Comment.Action>Edit</Comment.Action>
-                                    <Comment.Action
-                                      onClick={deleteCommentReply}
-                                    >
-                                      Delete
-                                    </Comment.Action>
-                                  </>
-                                ) : null}
-                              </Comment.Actions>
-                            </Comment.Content>
-                          </Comment>
-                        )}
-                      </Mutation>
-                    )
-                  )}
-                  {showReplyInput && (
-                    <Form
-                      reply
-                      onSubmit={() => {
-                        this.setState({ replyInput: '' });
-                        createCommentReply();
-                      }}
+      <User>
+        {({ data }) => {
+          const currentUser = data ? data.currentUser : null;
+          return (
+            <Mutation
+              mutation={CREATE_COMMENT_REPLY}
+              variables={{ comment: id, text: replyInput }}
+              refetchQueries={[
+                { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
+              ]}
+            >
+              {(
+                createCommentReply,
+                { error: createCommentReplyError, loading: createReplyLoading }
+              ) => (
+                <Mutation
+                  mutation={DELETE_COMMENT}
+                  variables={{ comment: id }}
+                  refetchQueries={[
+                    {
+                      query: QUERY_VIDEO_COMMENTS,
+                      variables: { video: videoId },
+                    },
+                  ]}
+                >
+                  {(
+                    deleteComment,
+                    { error: deleteCommentError, loading: deleteCommentLoading }
+                  ) => (
+                    <Mutation
+                      mutation={UPDATE_COMMENT}
+                      variables={{ comment: id, text: updateInput }}
+                      refetchQueries={[
+                        {
+                          query: QUERY_VIDEO_COMMENTS,
+                          variables: { video: videoId },
+                        },
+                      ]}
                     >
-                      <Form.Input
-                        placeholder="Viết phản hồi..."
-                        onChange={this.onTextChange}
-                        value={replyInput}
-                      />
-                      <Button content="Add Reply" primary />
-                    </Form>
+                      {(
+                        updateComment,
+                        {
+                          error: updateCommentError,
+                          loading: updateCommentLoading,
+                        }
+                      ) => (
+                        <Comment>
+                          <Error error={createCommentReplyError} />
+                          <Error error={deleteCommentError} />
+                          <Error error={updateCommentError} />
+                          {deleteCommentLoading ? (
+                            <Loader active small />
+                          ) : (
+                            <Fragment>
+                              <Comment.Avatar src={''} />
+                              <Comment.Content>
+                                <Comment.Author as="a">
+                                  {author.name}
+                                </Comment.Author>
+                                <Comment.Metadata>
+                                  <div>{this.formatTime(createdAt)}</div>
+                                </Comment.Metadata>
+                                {showEditInput ? (
+                                  <Form
+                                    loading={updateCommentLoading}
+                                    reply
+                                    onSubmit={() => {
+                                      this.onCommentUpdate(updateComment);
+                                    }}
+                                  >
+                                    <Form.Input
+                                      name="updateInput"
+                                      onChange={this.onTextChange}
+                                      defaultValue={text}
+                                    />
+                                    <Button content="Update Comment" primary />
+                                    <Button
+                                      content="Cancel"
+                                      primary
+                                      onClick={() =>
+                                        this.setState({ showEditInput: false })
+                                      }
+                                    />
+                                  </Form>
+                                ) : (
+                                  <Fragment>
+                                    <Comment.Text>
+                                      <p>{text}</p>
+                                    </Comment.Text>
+                                    <Comment.Actions>
+                                      <Icon name="angle up" size="large" link />
+                                      <span>
+                                        {+upvoteCount - +downvoteCount}
+                                      </span>
+                                      <Icon
+                                        name="angle down"
+                                        size="large"
+                                        link
+                                      />
+                                      <Comment.Action
+                                        onClick={this.onReplyClick}
+                                      >
+                                        Reply
+                                      </Comment.Action>
+                                      {author.id === currentUser.id ? (
+                                        <Fragment>
+                                          <Comment.Action
+                                            onClick={this.onEditClick}
+                                          >
+                                            Edit
+                                          </Comment.Action>
+                                          <Comment.Action
+                                            onClick={deleteComment}
+                                          >
+                                            Delete
+                                          </Comment.Action>
+                                        </Fragment>
+                                      ) : null}
+                                    </Comment.Actions>
+                                  </Fragment>
+                                )}
+                              </Comment.Content>
+                              {reply.length > 0 && (
+                                <Comment.Group>
+                                  {reply.map(commentReply => (
+                                    <CommentReply
+                                      key={commentReply.id}
+                                      commentReply={commentReply}
+                                      onReplyClick={this.onReplyClick}
+                                    />
+                                  ))}
+                                  {showReplyInput && (
+                                    <Form
+                                      loading={createReplyLoading}
+                                      reply
+                                      onSubmit={() => {
+                                        this.onReplySubmit(createCommentReply);
+                                      }}
+                                    >
+                                      <Form.Input
+                                        name="replyInput"
+                                        placeholder="Viết phản hồi..."
+                                        onChange={this.onTextChange}
+                                        value={replyInput}
+                                      />
+                                      <Button content="Add Reply" primary />
+                                    </Form>
+                                  )}
+                                </Comment.Group>
+                              )}
+                            </Fragment>
+                          )}
+                        </Comment>
+                      )}
+                    </Mutation>
                   )}
-                </Comment.Group>
-              </Comment>
-            )}
-          </Mutation>
-        )}
-      </Mutation>
+                </Mutation>
+              )}
+            </Mutation>
+          );
+        }}
+      </User>
     );
   }
 }
