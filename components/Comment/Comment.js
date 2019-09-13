@@ -4,10 +4,48 @@ import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import moment from 'moment';
-import { QUERY_VIDEO_COMMENTS } from './CommentSection';
 import CommentReply from './CommentReply';
 import Error from '../UI/ErrorMessage';
 import User from '../Authentication/User';
+
+const QUERY_VIDEO_COMMENTS = gql`
+  query QUERY_VIDEO_COMMENTS($video: ID!) {
+    comments(where: { video: { id: $video } }) {
+      id
+      text
+      createdAt
+      upvoteCount
+      downvoteCount
+
+      audio {
+        id
+      }
+
+      author {
+        id
+        name
+      }
+
+      reply {
+        id
+        text
+        createdAt
+        upvoteCount
+        downvoteCount
+        comment {
+          id
+          video {
+            id
+          }
+        }
+        author {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
 
 const CREATE_COMMENT_REPLY = gql`
   mutation CREATE_COMMENT_REPLY($comment: ID!, $text: String!) {
@@ -142,7 +180,7 @@ class VideoComment extends React.Component {
                             <Loader active small />
                           ) : (
                             <Fragment>
-                              <Comment.Avatar src={''} />
+                              <Comment.Avatar src="" />
                               <Comment.Content>
                                 <Comment.Author as="a">
                                   {author.name}
@@ -260,3 +298,4 @@ VideoComment.propTypes = {
 };
 
 export default VideoComment;
+export { QUERY_VIDEO_COMMENTS };
