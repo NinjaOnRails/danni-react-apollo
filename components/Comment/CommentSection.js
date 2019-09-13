@@ -73,7 +73,7 @@ class CommentSection extends React.Component {
                         />
                         <Button
                           content="Add Comment"
-                          primary={commentInput.length > 0}
+                          primary
                           disabled={commentInputValid}
                         />
                       </Form>
