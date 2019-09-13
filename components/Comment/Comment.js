@@ -39,6 +39,9 @@ class VideoComment extends React.Component {
   state = {
     showReplyInput: false,
     showEditInput: false,
+    updateCommentFormValid: true,
+    replyFormValid: false,
+    replyInput: '',
   };
 
   formatTime = time => {
@@ -47,7 +50,10 @@ class VideoComment extends React.Component {
 
   onTextChange = e => {
     const { value, name } = e.target;
-    this.setState({ [name]: value });
+    const form =
+      name === 'updateInput' ? 'updateCommentFormValid' : 'replyFormValid';
+
+    this.setState({ [name]: value, [form]: value.length > 0 });
   };
 
   onReplyClick = () => {
@@ -74,6 +80,8 @@ class VideoComment extends React.Component {
       replyInput,
       showReplyInput,
       showEditInput,
+      updateCommentFormValid,
+      replyFormValid,
     } = this.state;
     const {
       comment: {
@@ -139,7 +147,7 @@ class VideoComment extends React.Component {
                           <Error error={deleteCommentError} />
                           <Error error={updateCommentError} />
                           {deleteCommentLoading ? (
-                            <Loader active small />
+                            <Loader active />
                           ) : (
                             <Fragment>
                               <Comment.Avatar src={''} />
@@ -163,10 +171,13 @@ class VideoComment extends React.Component {
                                       onChange={this.onTextChange}
                                       defaultValue={text}
                                     />
-                                    <Button content="Update Comment" primary />
+                                    <Button
+                                      content="Update Comment"
+                                      primary
+                                      disabled={!updateCommentFormValid}
+                                    />
                                     <Button
                                       content="Cancel"
-                                      primary
                                       onClick={() =>
                                         this.setState({ showEditInput: false })
                                       }
@@ -192,7 +203,8 @@ class VideoComment extends React.Component {
                                       >
                                         Reply
                                       </Comment.Action>
-                                      {author.id === currentUser.id ? (
+                                      {currentUser &&
+                                      author.id === currentUser.id ? (
                                         <Fragment>
                                           <Comment.Action
                                             onClick={this.onEditClick}
@@ -219,24 +231,28 @@ class VideoComment extends React.Component {
                                       onReplyClick={this.onReplyClick}
                                     />
                                   ))}
-                                  {showReplyInput && (
-                                    <Form
-                                      loading={createReplyLoading}
-                                      reply
-                                      onSubmit={() => {
-                                        this.onReplySubmit(createCommentReply);
-                                      }}
-                                    >
-                                      <Form.Input
-                                        name="replyInput"
-                                        placeholder="Viết phản hồi..."
-                                        onChange={this.onTextChange}
-                                        value={replyInput}
-                                      />
-                                      <Button content="Add Reply" primary />
-                                    </Form>
-                                  )}
                                 </Comment.Group>
+                              )}
+                              {showReplyInput && (
+                                <Form
+                                  loading={createReplyLoading}
+                                  reply
+                                  onSubmit={() => {
+                                    this.onReplySubmit(createCommentReply);
+                                  }}
+                                >
+                                  <Form.Input
+                                    name="replyInput"
+                                    placeholder="Viết phản hồi..."
+                                    onChange={this.onTextChange}
+                                    value={replyInput}
+                                  />
+                                  <Button
+                                    content="Add Reply"
+                                    primary
+                                    disabled={!replyFormValid}
+                                  />
+                                </Form>
                               )}
                             </Fragment>
                           )}

@@ -28,6 +28,7 @@ const DELETE_COMMENT_REPLY = gql`
 class CommentReply extends React.Component {
   state = {
     showEditForm: false,
+    editFormValid: true,
   };
 
   formatTime = time => {
@@ -35,7 +36,8 @@ class CommentReply extends React.Component {
   };
 
   onTextChange = e => {
-    this.setState({ editInput: e.target.value });
+    const { value } = e.target;
+    this.setState({ editInput: value, editFormValid: value.length > 0 });
   };
 
   onClickEdit = () => {
@@ -62,11 +64,12 @@ class CommentReply extends React.Component {
         upvoteCount,
       },
     } = this.props;
-    const { showEditForm, editInput } = this.state;
+    const { showEditForm, editInput , editFormValid} = this.state;
     return (
       <User>
         {({ data }) => {
           const currentUser = data ? data.currentUser : null;
+          console.log(currentUser);
           return (
             <Mutation
               mutation={DELETE_COMMENT_REPLY}
@@ -129,10 +132,13 @@ class CommentReply extends React.Component {
                                   onChange={this.onTextChange}
                                   defaultValue={text}
                                 />
-                                <Button content="Update Comment" primary />
+                                <Button
+                                  content="Update Comment"
+                                  primary
+                                  disabled={!editFormValid}
+                                />
                                 <Button
                                   content="Cancel"
-                                  primary
                                   onClick={() =>
                                     this.setState({ showEditForm: false })
                                   }
@@ -151,7 +157,8 @@ class CommentReply extends React.Component {
                                   <Comment.Action onClick={onReplyClick}>
                                     Reply
                                   </Comment.Action>
-                                  {author.id === currentUser.id ? (
+                                  {currentUser &&
+                                  author.id === currentUser.id ? (
                                     <>
                                       <Comment.Action
                                         onClick={this.onClickEdit}
