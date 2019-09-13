@@ -3,9 +3,48 @@ import { Button, Comment, Form, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import VideoComment, { QUERY_VIDEO_COMMENTS } from './Comment';
+import VideoComment from './Comment';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
+
+const QUERY_VIDEO_COMMENTS = gql`
+  query QUERY_VIDEO_COMMENTS($video: ID!) {
+    comments(where: { video: { id: $video } }) {
+      id
+      text
+      createdAt
+      upvoteCount
+      downvoteCount
+
+      audio {
+        id
+      }
+
+      author {
+        id
+        name
+      }
+
+      reply {
+        id
+        text
+        createdAt
+        upvoteCount
+        downvoteCount
+        comment {
+          id
+          video {
+            id
+          }
+        }
+        author {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation CREATE_COMMENT_MUTATION($video: ID!, $text: String!) {
@@ -99,3 +138,4 @@ CommentSection.propTypes = {
   videoId: PropTypes.string.isRequired,
 };
 export default CommentSection;
+export { QUERY_VIDEO_COMMENTS };

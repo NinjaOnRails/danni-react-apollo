@@ -7,45 +7,7 @@ import moment from 'moment';
 import CommentReply from './CommentReply';
 import Error from '../UI/ErrorMessage';
 import User from '../Authentication/User';
-
-const QUERY_VIDEO_COMMENTS = gql`
-  query QUERY_VIDEO_COMMENTS($video: ID!) {
-    comments(where: { video: { id: $video } }) {
-      id
-      text
-      createdAt
-      upvoteCount
-      downvoteCount
-
-      audio {
-        id
-      }
-
-      author {
-        id
-        name
-      }
-
-      reply {
-        id
-        text
-        createdAt
-        upvoteCount
-        downvoteCount
-        comment {
-          id
-          video {
-            id
-          }
-        }
-        author {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
+import { QUERY_VIDEO_COMMENTS } from './CommentSection';
 
 const CREATE_COMMENT_REPLY = gql`
   mutation CREATE_COMMENT_REPLY($comment: ID!, $text: String!) {
@@ -177,7 +139,7 @@ class VideoComment extends React.Component {
                           <Error error={deleteCommentError} />
                           <Error error={updateCommentError} />
                           {deleteCommentLoading ? (
-                            <Loader active small />
+                            <Loader active />
                           ) : (
                             <Fragment>
                               <Comment.Avatar src="" />
@@ -298,4 +260,3 @@ VideoComment.propTypes = {
 };
 
 export default VideoComment;
-export { QUERY_VIDEO_COMMENTS };
