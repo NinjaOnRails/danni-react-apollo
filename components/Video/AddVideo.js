@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
-import { ALL_VIDEOS_QUERY } from './Videos';
+import { ALL_VIDEOS_QUERY } from '../UI/ContentLanguage';
 import AddVideoForm from './AddVideoForm';
 import youtube from '../../lib/youtube';
 import { languageOptions, defaultLanguage } from '../../lib/supportedLanguages';

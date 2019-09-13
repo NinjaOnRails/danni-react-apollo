@@ -8,6 +8,7 @@ const CURRENT_USER_QUERY = gql`
       id
       displayName
       permissions
+      contentLanguage
     }
   }
 `;
@@ -15,9 +16,7 @@ const CURRENT_USER_QUERY = gql`
 const User = props => {
   return (
     <Query {...props} query={CURRENT_USER_QUERY}>
-      {payload => {
-        return props.children(payload);
-      }}
+      {payload => props.children(payload)}
     </Query>
   );
 };

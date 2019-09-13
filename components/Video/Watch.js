@@ -197,9 +197,10 @@ class Watch extends Component {
           audioId,
         }}
       >
-        {({ error, loading, data: { video } }) => {
+        {({ error, loading, data }) => {
           if (error) return <Error error={error} />;
           if (loading) return <Loader active inline="centered" />;
+          const { video } = data;
           if (!video) return <p>No Video Found for {id}</p>;
           return (
             <>
@@ -224,6 +225,7 @@ class Watch extends Component {
                           videoId={id}
                           videoLanguage={video.language}
                         />
+
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>

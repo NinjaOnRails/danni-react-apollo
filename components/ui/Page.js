@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import Header from './Header';

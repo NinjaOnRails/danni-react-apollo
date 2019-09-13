@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mutation } from 'react-apollo';
+import { Mutation, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 import { CURRENT_USER_QUERY } from './User';
 
@@ -17,9 +17,20 @@ const Signout = () => (
     refetchQueries={[{ query: CURRENT_USER_QUERY }]}
   >
     {signout => (
-      <button type="button" onClick={signout}>
-        Sign Out
-      </button>
+      <ApolloConsumer>
+        {client => (
+          <button
+            type="button"
+            onClick={() => {
+              localStorage.clear();
+              client.resetStore();
+              signout();
+            }}
+          >
+            Sign Out
+          </button>
+        )}
+      </ApolloConsumer>
     )}
   </Mutation>
 );
