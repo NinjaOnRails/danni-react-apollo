@@ -2,38 +2,16 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import moment from 'moment';
-import { QUERY_VIDEO_COMMENTS } from './CommentSection';
 import CommentReply from './CommentReply';
 import Error from '../UI/ErrorMessage';
 import User from '../Authentication/User';
-
-const CREATE_COMMENT_REPLY = gql`
-  mutation CREATE_COMMENT_REPLY($comment: ID!, $text: String!) {
-    createCommentReply(comment: $comment, text: $text) {
-      id
-      text
-    }
-  }
-`;
-
-const UPDATE_COMMENT = gql`
-  mutation UPDATE_COMMENT($comment: ID!, $text: String) {
-    updateComment(comment: $comment, text: $text) {
-      id
-      text
-    }
-  }
-`;
-
-const DELETE_COMMENT = gql`
-  mutation DELETE_COMMENT($comment: ID!) {
-    deleteComment(comment: $comment) {
-      id
-    }
-  }
-`;
+import {
+  CREATE_COMMENTREPLY_MUTATION,
+  DELETE_COMMENT_MUTATION,
+  QUERY_VIDEO_COMMENTS,
+  UPDATE_COMMENT_MUTATION,
+} from './commentQueries';
 
 class VideoComment extends React.Component {
   state = {
@@ -101,7 +79,7 @@ class VideoComment extends React.Component {
           const currentUser = data ? data.currentUser : null;
           return (
             <Mutation
-              mutation={CREATE_COMMENT_REPLY}
+              mutation={CREATE_COMMENTREPLY_MUTATION}
               variables={{ comment: id, text: replyInput }}
               refetchQueries={[
                 { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
@@ -112,7 +90,7 @@ class VideoComment extends React.Component {
                 { error: createCommentReplyError, loading: createReplyLoading }
               ) => (
                 <Mutation
-                  mutation={DELETE_COMMENT}
+                  mutation={DELETE_COMMENT_MUTATION}
                   variables={{ comment: id }}
                   refetchQueries={[
                     {
@@ -126,7 +104,7 @@ class VideoComment extends React.Component {
                     { error: deleteCommentError, loading: deleteCommentLoading }
                   ) => (
                     <Mutation
-                      mutation={UPDATE_COMMENT}
+                      mutation={UPDATE_COMMENT_MUTATION}
                       variables={{ comment: id, text: updateInput }}
                       refetchQueries={[
                         {
@@ -150,7 +128,7 @@ class VideoComment extends React.Component {
                             <Loader active />
                           ) : (
                             <Fragment>
-                              <Comment.Avatar src={''} />
+                              <Comment.Avatar src="" />
                               <Comment.Content>
                                 <Comment.Author as="a">
                                   {author.name}

@@ -2,28 +2,14 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import moment from 'moment';
-import { QUERY_VIDEO_COMMENTS } from './CommentSection';
 import Error from '../UI/ErrorMessage';
 import User from '../Authentication/User';
-
-const UPDATE_COMMENT_REPLY = gql`
-  mutation UPDATE_COMMENT_REPLY($commentReply: ID!, $text: String) {
-    updateCommentReply(commentReply: $commentReply, text: $text) {
-      id
-      text
-    }
-  }
-`;
-
-const DELETE_COMMENT_REPLY = gql`
-  mutation DELETE_COMMENT_REPLY($commentReply: ID!) {
-    deleteCommentReply(commentReply: $commentReply) {
-      id
-    }
-  }
-`;
+import {
+  UPDATE_COMMENTREPLY_MUTATION,
+  DELETE_COMMENTREPLY_MUTATION,
+  QUERY_VIDEO_COMMENTS,
+} from './commentQueries';
 
 class CommentReply extends React.Component {
   state = {
@@ -64,15 +50,14 @@ class CommentReply extends React.Component {
         upvoteCount,
       },
     } = this.props;
-    const { showEditForm, editInput , editFormValid} = this.state;
+    const { showEditForm, editInput, editFormValid } = this.state;
     return (
       <User>
         {({ data }) => {
           const currentUser = data ? data.currentUser : null;
-          console.log(currentUser);
           return (
             <Mutation
-              mutation={DELETE_COMMENT_REPLY}
+              mutation={DELETE_COMMENTREPLY_MUTATION}
               variables={{ commentReply: id }}
               refetchQueries={[
                 {
@@ -89,7 +74,7 @@ class CommentReply extends React.Component {
                 }
               ) => (
                 <Mutation
-                  mutation={UPDATE_COMMENT_REPLY}
+                  mutation={UPDATE_COMMENTREPLY_MUTATION}
                   variables={{ commentReply: id, text: editInput }}
                   refetchQueries={[
                     {
@@ -112,7 +97,7 @@ class CommentReply extends React.Component {
                         <Loader active inline="centered" />
                       ) : (
                         <Fragment>
-                          <Comment.Avatar src={''} />
+                          <Comment.Avatar src="" />
                           <Comment.Content>
                             <Comment.Author as="a">
                               {author.name}
