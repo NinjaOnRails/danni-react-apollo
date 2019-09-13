@@ -4,10 +4,10 @@ import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import moment from 'moment';
+import { QUERY_VIDEO_COMMENTS } from './CommentSection';
 import CommentReply from './CommentReply';
 import Error from '../UI/ErrorMessage';
 import User from '../Authentication/User';
-import { QUERY_VIDEO_COMMENTS } from './CommentSection';
 
 const CREATE_COMMENT_REPLY = gql`
   mutation CREATE_COMMENT_REPLY($comment: ID!, $text: String!) {
@@ -139,10 +139,10 @@ class VideoComment extends React.Component {
                           <Error error={deleteCommentError} />
                           <Error error={updateCommentError} />
                           {deleteCommentLoading ? (
-                            <Loader active />
+                            <Loader active small />
                           ) : (
                             <Fragment>
-                              <Comment.Avatar src="" />
+                              <Comment.Avatar src={''} />
                               <Comment.Content>
                                 <Comment.Author as="a">
                                   {author.name}
