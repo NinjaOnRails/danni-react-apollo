@@ -96,7 +96,6 @@ const ContentLanguage = () => {
                     <Mutation
                       mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
                       refetchQueries={[
-                        { query: CONTENT_LANGUAGE_QUERY },
                         {
                           query: ALL_VIDEOS_QUERY,
                           variables: { contentLanguage },

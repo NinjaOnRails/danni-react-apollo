@@ -23,7 +23,7 @@ const Signout = () => (
             type="button"
             onClick={() => {
               localStorage.clear();
-              client.writeData({ data: { contentLanguage: [] } });
+              client.resetStore();
               signout();
             }}
           >

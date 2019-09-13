@@ -15,6 +15,9 @@ import VideosLoading from './VideosLoading';
 const LanguageMenuStyles = styled.div`
   padding-bottom: 2rem;
   text-align: center;
+  i.flag {
+    margin: 0;
+  }
   @media (max-width: 639px) {
     display: none;
   }

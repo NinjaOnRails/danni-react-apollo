@@ -8,7 +8,7 @@ import {
 } from '../../lib/supportedLanguages';
 
 class LanguageMenu extends Component {
-  // Determine and set content language
+  // Determine and set content language from one source
   componentDidMount() {
     // Get user's content languages if signed in
     const { currentUser } = this.props;
