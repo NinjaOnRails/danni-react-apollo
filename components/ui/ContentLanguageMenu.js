@@ -59,7 +59,7 @@ class LanguageMenu extends Component {
 
   initFromBrowser = () => {
     const { toggleContentLanguage } = this.props;
-    const language = getSupportedLanguage(navigator.language);
+    const language = getSupportedLanguage(navigator.language); // User browser's language
     return toggleContentLanguage({ variables: { language } });
   };
 

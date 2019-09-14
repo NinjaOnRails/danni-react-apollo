@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
-import { Mutation, Query } from 'react-apollo';
+import { Mutation, Query, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { SIGN_OUT_MUTATION } from '../../Authentication/Signout';
@@ -114,29 +114,38 @@ const SideDrawer = () => {
                               </>
                             )}
                             {currentUser && (
-                              <Mutation
-                                mutation={SIGN_OUT_MUTATION}
-                                refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-                              >
-                                {signout => (
-                                  <Link href="/">
-                                    <MenuItem
-                                      as="a"
-                                      onClick={() => {
-                                        signout();
-                                        closeSideDrawer();
-                                      }}
-                                    >
-                                      <div className="link-container">
-                                        <Icon name="sign-out" size="large" />
-                                        <span className="link-name">
-                                          Sign Out
-                                        </span>
-                                      </div>
-                                    </MenuItem>
-                                  </Link>
+                              <ApolloConsumer>
+                                {client => (
+                                  <Mutation mutation={SIGN_OUT_MUTATION}>
+                                    {signout => (
+                                      <Link href="/">
+                                        <MenuItem
+                                          as="a"
+                                          onClick={async () => {
+                                            await signout();
+                                            closeSideDrawer();
+                                            localStorage.clear();
+                                            await client.resetStore();
+                                            client.query({
+                                              query: CURRENT_USER_QUERY,
+                                            });
+                                          }}
+                                        >
+                                          <div className="link-container">
+                                            <Icon
+                                              name="sign-out"
+                                              size="large"
+                                            />
+                                            <span className="link-name">
+                                              Sign Out
+                                            </span>
+                                          </div>
+                                        </MenuItem>
+                                      </Link>
+                                    )}
+                                  </Mutation>
                                 )}
-                              </Mutation>
+                              </ApolloConsumer>
                             )}
                           </Menu>
                           <LanguageMenuStyles>

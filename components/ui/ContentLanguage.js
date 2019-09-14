@@ -68,13 +68,6 @@ const CONTENT_LANGUAGE_QUERY = gql`
   }
 `;
 
-const update = (cache, payload) => {
-  const data = cache.readQuery({
-    query: ALL_AUDIOS_QUERY,
-  });
-  // console.log(data);
-};
-
 const ContentLanguage = props => {
   return (
     <User>
@@ -97,15 +90,14 @@ const ContentLanguage = props => {
                       mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
                       refetchQueries={[
                         {
-                          query: ALL_VIDEOS_QUERY,
-                          variables: { contentLanguage },
-                        },
-                        {
                           query: ALL_AUDIOS_QUERY,
                           variables: { contentLanguage },
                         },
+                        {
+                          query: ALL_VIDEOS_QUERY,
+                          variables: { contentLanguage },
+                        },
                       ]}
-                      // update={update}
                     >
                       {toggleContentLanguage => (
                         <Mutation mutation={UPDATE_CONTENT_LANGUAGE_MUTATION}>

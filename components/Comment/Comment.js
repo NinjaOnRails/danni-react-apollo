@@ -42,13 +42,13 @@ class VideoComment extends React.Component {
     this.setState({ showEditInput: true });
   };
 
-  onCommentUpdate = async callback => {
-    const { data } = await callback();
+  onCommentUpdate = async updateComment => {
+    const { data } = await updateComment();
     if (data) this.setState({ showEditInput: false, updateInput: '' });
   };
 
-  onReplySubmit = async callback => {
-    const { data } = await callback();
+  onReplySubmit = async createCommentReply => {
+    const { data } = await createCommentReply();
     if (data) this.setState({ replyInput: '', showReplyInput: false });
   };
 
@@ -221,7 +221,7 @@ class VideoComment extends React.Component {
                                 >
                                   <Form.Input
                                     name="replyInput"
-                                    placeholder="Viết phản hồi..."
+                                    placeholder="Write a reply..."
                                     onChange={this.onTextChange}
                                     value={replyInput}
                                   />

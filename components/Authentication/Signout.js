@@ -12,19 +12,17 @@ const SIGN_OUT_MUTATION = gql`
 `;
 
 const Signout = () => (
-  <Mutation
-    mutation={SIGN_OUT_MUTATION}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
+  <Mutation mutation={SIGN_OUT_MUTATION}>
     {signout => (
       <ApolloConsumer>
         {client => (
           <button
             type="button"
-            onClick={() => {
+            onClick={async () => {
+              await signout();
               localStorage.clear();
-              client.resetStore();
-              signout();
+              await client.resetStore();
+              client.query({ query: CURRENT_USER_QUERY });
             }}
           >
             Sign Out

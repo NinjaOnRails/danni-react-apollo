@@ -16,13 +16,12 @@ class CommentSection extends React.Component {
     commentInputValid: false,
   };
 
-  onTextChange = e => {
-    const { value } = e.target;
+  onTextChange = ({ target: { value } }) => {
     this.setState({ commentInput: value, commentInputValid: value > 0 });
   };
 
-  onSubmitComment = async callback => {
-    const { data } = await callback();
+  onCommentSubmit = async createComment => {
+    const { data } = await createComment();
     if (data) this.setState({ commentInput: '' });
   };
 
@@ -31,11 +30,7 @@ class CommentSection extends React.Component {
     const { videoId } = this.props;
     return (
       <Query query={QUERY_VIDEO_COMMENTS} variables={{ video: videoId }}>
-        {({
-          error: commentsLoadingError,
-          loading: commentsLoading,
-          data: { comments },
-        }) => (
+        {({ error: commentsLoadingError, loading: commentsLoading, data }) => (
           <Mutation
             mutation={CREATE_COMMENT_MUTATION}
             variables={{
@@ -63,11 +58,11 @@ class CommentSection extends React.Component {
                         reply
                         onSubmit={() => {
                           if (commentInput.length > 0)
-                            this.onSubmitComment(createComment);
+                            this.onCommentSubmit(createComment);
                         }}
                       >
                         <Form.TextArea
-                          placeholder="Viết bình luận..."
+                          placeholder="Write a comment..."
                           onChange={this.onTextChange}
                           value={commentInput}
                         />
@@ -77,8 +72,8 @@ class CommentSection extends React.Component {
                           disabled={commentInputValid}
                         />
                       </Form>
-                      {comments &&
-                        comments.map(comment => (
+                      {data.comments &&
+                        data.comments.map(comment => (
                           <VideoComment
                             key={comment.id}
                             comment={comment}
