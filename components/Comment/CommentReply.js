@@ -97,10 +97,10 @@ class CommentReply extends React.Component {
                         <Loader active inline="centered" />
                       ) : (
                         <Fragment>
-                          <Comment.Avatar src="" />
+                          {/* <Comment.Avatar src="" /> */}
                           <Comment.Content>
                             <Comment.Author as="a">
-                              {author.name}
+                              {author.displayName}
                             </Comment.Author>
                             <Comment.Metadata>
                               <div>{this.formatTime(createdAt)}</div>

@@ -128,10 +128,10 @@ class VideoComment extends React.Component {
                             <Loader active />
                           ) : (
                             <Fragment>
-                              <Comment.Avatar src="" />
+                              {/* <Comment.Avatar src="" /> */}
                               <Comment.Content>
                                 <Comment.Author as="a">
-                                  {author.name}
+                                  {author.displayName}
                                 </Comment.Author>
                                 <Comment.Metadata>
                                   <div>{this.formatTime(createdAt)}</div>

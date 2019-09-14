@@ -13,7 +13,7 @@ export const QUERY_VIDEO_COMMENTS = gql`
       }
       author {
         id
-        name
+        displayName
       }
       reply {
         id
@@ -29,7 +29,7 @@ export const QUERY_VIDEO_COMMENTS = gql`
         }
         author {
           id
-          name
+          displayName
         }
       }
     }
