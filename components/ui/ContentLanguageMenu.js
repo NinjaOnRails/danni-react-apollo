@@ -33,18 +33,24 @@ class LanguageMenu extends Component {
         currentUser.id !== prevProps.currentUser.id)
     )
       this.initFromCurrentUser();
+
     // Update on sign out
-    else if (!currentUser && prevProps.currentUser) this.initFromBrowser();
+    if (!currentUser && prevProps.currentUser) this.initFromBrowser();
   }
 
   initFromCurrentUser = () => {
-    const { client, currentUser } = this.props;
-    localStorage.setItem('contentLanguage', currentUser.contentLanguage.join());
-    return client.writeData({
-      data: {
-        contentLanguage: currentUser.contentLanguage,
-      },
-    });
+    const {
+      client,
+      currentUser: { contentLanguage },
+    } = this.props;
+    if (contentLanguage.length) {
+      localStorage.setItem('contentLanguage', contentLanguage.join());
+      client.writeData({
+        data: {
+          contentLanguage,
+        },
+      });
+    }
   };
 
   initFromLocalStorage = languages => {
