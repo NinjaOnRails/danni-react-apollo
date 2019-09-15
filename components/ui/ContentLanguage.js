@@ -70,19 +70,47 @@ const CONTENT_LANGUAGE_QUERY = gql`
 `;
 
 /* eslint-disable */
+const localState = ({ render }) => (
+  <Query query={CONTENT_LANGUAGE_QUERY}>
+    {({ data: dataContentLanguage, loading: loadingLocalState }) => {
+      const { contentLanguage = [] } = dataContentLanguage;
+      return render({ contentLanguage, loadingLocalState });
+    }}
+  </Query>
+);
+
+const updateContentLanguageMutation = ({ render }) => (
+  <Mutation mutation={UPDATE_CONTENT_LANGUAGE_MUTATION}>
+    {(updateContentLanguage, { loading: loadingUpdate, error }) => {
+      return render({ updateContentLanguage, loadingUpdate, error });
+    }}
+  </Mutation>
+);
+
+const toggleContentLanguage = ({ localState: { contentLanguage }, render }) => (
+  <Mutation
+    mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
+    refetchQueries={[
+      {
+        query: ALL_AUDIOS_QUERY,
+        variables: { contentLanguage },
+      },
+      {
+        query: ALL_VIDEOS_QUERY,
+        variables: { contentLanguage },
+      },
+    ]}
+  >
+    {render}
+  </Mutation>
+);
+
 const Composed = adopt({
   user: ({ render }) => <User>{render}</User>,
   client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
-  localState: ({ render }) => (
-    <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
-  ),
-  updateContentLanguageMutation: ({ render }) => (
-    <Mutation mutation={UPDATE_CONTENT_LANGUAGE_MUTATION}>
-      {(updateContentLanguage, { loading: loadingUpdate, error }) => {
-        return render({ updateContentLanguage, loadingUpdate, error });
-      }}
-    </Mutation>
-  ),
+  localState,
+  updateContentLanguageMutation,
+  toggleContentLanguage,
 });
 /* eslint-enable */
 
@@ -92,43 +120,28 @@ const ContentLanguage = props => {
       {({
         user: { data, loading },
         client,
-        localState: { data: dataContentLanguage, loading: loadingLocalState },
+        localState: { contentLanguage, loadingLocalState },
         updateContentLanguageMutation: {
           updateContentLanguage,
           loading: loadingUpdate,
           error,
         },
+        toggleContentLanguage,
       }) => {
         if (loading) return <Loader active inline="centered" />;
         if (loadingLocalState) return <Loader active inline="centered" />;
         const currentUser = data ? data.currentUser : null;
-        const { contentLanguage = [] } = dataContentLanguage;
+
         return (
-          <Mutation
-            mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
-            refetchQueries={[
-              {
-                query: ALL_AUDIOS_QUERY,
-                variables: { contentLanguage },
-              },
-              {
-                query: ALL_VIDEOS_QUERY,
-                variables: { contentLanguage },
-              },
-            ]}
-          >
-            {toggleContentLanguage => (
-              <ContentLanguageMenu
-                toggleContentLanguage={toggleContentLanguage}
-                contentLanguage={contentLanguage}
-                client={client}
-                currentUser={currentUser}
-                updateContentLanguage={updateContentLanguage}
-                loadingUpdate={loadingUpdate}
-                {...props}
-              />
-            )}
-          </Mutation>
+          <ContentLanguageMenu
+            toggleContentLanguage={toggleContentLanguage}
+            contentLanguage={contentLanguage}
+            client={client}
+            currentUser={currentUser}
+            updateContentLanguage={updateContentLanguage}
+            loadingUpdate={loadingUpdate}
+            {...props}
+          />
         );
       }}
     </Composed>

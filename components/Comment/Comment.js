@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
@@ -127,7 +127,7 @@ class VideoComment extends React.Component {
                           {deleteCommentLoading ? (
                             <Loader active />
                           ) : (
-                            <Fragment>
+                            <>
                               {/* <Comment.Avatar src="" /> */}
                               <Comment.Content>
                                 <Comment.Author as="a">
@@ -162,7 +162,7 @@ class VideoComment extends React.Component {
                                     />
                                   </Form>
                                 ) : (
-                                  <Fragment>
+                                  <>
                                     <Comment.Text>
                                       <p>{text}</p>
                                     </Comment.Text>
@@ -183,7 +183,7 @@ class VideoComment extends React.Component {
                                       </Comment.Action>
                                       {currentUser &&
                                       author.id === currentUser.id ? (
-                                        <Fragment>
+                                        <>
                                           <Comment.Action
                                             onClick={this.onEditClick}
                                           >
@@ -194,10 +194,10 @@ class VideoComment extends React.Component {
                                           >
                                             Delete
                                           </Comment.Action>
-                                        </Fragment>
+                                        </>
                                       ) : null}
                                     </Comment.Actions>
-                                  </Fragment>
+                                  </>
                                 )}
                               </Comment.Content>
                               {reply.length > 0 && (
@@ -232,7 +232,7 @@ class VideoComment extends React.Component {
                                   />
                                 </Form>
                               )}
-                            </Fragment>
+                            </>
                           )}
                         </Comment>
                       )}

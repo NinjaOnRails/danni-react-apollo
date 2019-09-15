@@ -17,7 +17,7 @@ const PleaseSignIn = props => (
                 <StyledHeader>Please Sign In to Continue</StyledHeader>
               </Message>
             </StyledMessage>
-            <Signin />
+            <Signin noRedirectHome />
           </>
         );
       }
