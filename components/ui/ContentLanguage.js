@@ -70,10 +70,19 @@ const CONTENT_LANGUAGE_QUERY = gql`
 `;
 
 /* eslint-disable */
+const user = ({ render }) => (
+  <User>
+    {({ data, loading }) => {
+      const currentUser = data ? data.currentUser : null;
+      return render({ currentUser, loading });
+    }}
+  </User>
+);
+
 const localState = ({ render }) => (
   <Query query={CONTENT_LANGUAGE_QUERY}>
-    {({ data: dataContentLanguage, loading: loadingLocalState }) => {
-      const { contentLanguage = [] } = dataContentLanguage;
+    {({ data, loading: loadingLocalState }) => {
+      const contentLanguage = data ? data.contentLanguage : [];
       return render({ contentLanguage, loadingLocalState });
     }}
   </Query>
@@ -87,26 +96,28 @@ const updateContentLanguageMutation = ({ render }) => (
   </Mutation>
 );
 
-const toggleContentLanguage = ({ localState: { contentLanguage }, render }) => (
-  <Mutation
-    mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
-    refetchQueries={[
-      {
-        query: ALL_AUDIOS_QUERY,
-        variables: { contentLanguage },
-      },
-      {
-        query: ALL_VIDEOS_QUERY,
-        variables: { contentLanguage },
-      },
-    ]}
-  >
-    {render}
-  </Mutation>
-);
+const toggleContentLanguage = ({ localState: { contentLanguage }, render }) => {
+  return (
+    <Mutation
+      mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
+      refetchQueries={[
+        {
+          query: ALL_AUDIOS_QUERY,
+          variables: { contentLanguage },
+        },
+        {
+          query: ALL_VIDEOS_QUERY,
+          variables: { contentLanguage },
+        },
+      ]}
+    >
+      {render}
+    </Mutation>
+  );
+};
 
 const Composed = adopt({
-  user: ({ render }) => <User>{render}</User>,
+  user,
   client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
   localState,
   updateContentLanguageMutation,
@@ -118,7 +129,7 @@ const ContentLanguage = props => {
   return (
     <Composed>
       {({
-        user: { data, loading },
+        user: { currentUser, loading },
         client,
         localState: { contentLanguage, loadingLocalState },
         updateContentLanguageMutation: {
@@ -128,9 +139,8 @@ const ContentLanguage = props => {
         },
         toggleContentLanguage,
       }) => {
-        if (loading) return <Loader active inline="centered" />;
-        if (loadingLocalState) return <Loader active inline="centered" />;
-        const currentUser = data ? data.currentUser : null;
+        if (loading || loadingLocalState)
+          return <Loader active inline="centered" />;
 
         return (
           <ContentLanguageMenu
