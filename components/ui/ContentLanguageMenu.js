@@ -79,9 +79,9 @@ class LanguageMenu extends Component {
 
     // Update user in db
     if (currentUser) {
-      updateContentLanguage({
+      await updateContentLanguage({
         variables: {
-          contentLanguage: res.data.toggleContentLanguage.contentLanguage,
+          contentLanguage: res.data.toggleContentLanguage.data.contentLanguage,
         },
       });
     }

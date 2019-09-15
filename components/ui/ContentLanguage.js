@@ -1,6 +1,7 @@
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { Loader } from 'semantic-ui-react';
 import gql from 'graphql-tag';
+import { adopt } from 'react-adopt';
 import ContentLanguageMenu from './ContentLanguageMenu';
 import User from '../Authentication/User';
 
@@ -68,64 +69,69 @@ const CONTENT_LANGUAGE_QUERY = gql`
   }
 `;
 
+/* eslint-disable */
+const Composed = adopt({
+  user: ({ render }) => <User>{render}</User>,
+  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
+  localState: ({ render }) => (
+    <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
+  ),
+  updateContentLanguageMutation: ({ render }) => (
+    <Mutation mutation={UPDATE_CONTENT_LANGUAGE_MUTATION}>
+      {(updateContentLanguage, { loading: loadingUpdate, error }) => {
+        return render({ updateContentLanguage, loadingUpdate, error });
+      }}
+    </Mutation>
+  ),
+});
+/* eslint-enable */
+
 const ContentLanguage = props => {
   return (
-    <User>
-      {({ data, loading }) => {
+    <Composed>
+      {({
+        user: { data, loading },
+        client,
+        localState: { data: dataContentLanguage, loading: loadingLocalState },
+        updateContentLanguageMutation: {
+          updateContentLanguage,
+          loading: loadingUpdate,
+          error,
+        },
+      }) => {
         if (loading) return <Loader active inline="centered" />;
+        if (loadingLocalState) return <Loader active inline="centered" />;
         const currentUser = data ? data.currentUser : null;
+        const { contentLanguage = [] } = dataContentLanguage;
         return (
-          <ApolloConsumer>
-            {client => (
-              <Query query={CONTENT_LANGUAGE_QUERY}>
-                {({
-                  data: dataContentLanguage,
-                  loading: loadingLocalState,
-                }) => {
-                  if (loadingLocalState)
-                    return <Loader active inline="centered" />;
-                  const { contentLanguage = [] } = dataContentLanguage;
-                  return (
-                    <Mutation
-                      mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
-                      refetchQueries={[
-                        {
-                          query: ALL_AUDIOS_QUERY,
-                          variables: { contentLanguage },
-                        },
-                        {
-                          query: ALL_VIDEOS_QUERY,
-                          variables: { contentLanguage },
-                        },
-                      ]}
-                    >
-                      {toggleContentLanguage => (
-                        <Mutation mutation={UPDATE_CONTENT_LANGUAGE_MUTATION}>
-                          {(
-                            updateContentLanguage,
-                            { loading: loadingUpdate, error }
-                          ) => (
-                            <ContentLanguageMenu
-                              toggleContentLanguage={toggleContentLanguage}
-                              contentLanguage={contentLanguage}
-                              client={client}
-                              currentUser={currentUser}
-                              updateContentLanguage={updateContentLanguage}
-                              loadingUpdate={loadingUpdate}
-                              {...props}
-                            />
-                          )}
-                        </Mutation>
-                      )}
-                    </Mutation>
-                  );
-                }}
-              </Query>
+          <Mutation
+            mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
+            refetchQueries={[
+              {
+                query: ALL_AUDIOS_QUERY,
+                variables: { contentLanguage },
+              },
+              {
+                query: ALL_VIDEOS_QUERY,
+                variables: { contentLanguage },
+              },
+            ]}
+          >
+            {toggleContentLanguage => (
+              <ContentLanguageMenu
+                toggleContentLanguage={toggleContentLanguage}
+                contentLanguage={contentLanguage}
+                client={client}
+                currentUser={currentUser}
+                updateContentLanguage={updateContentLanguage}
+                loadingUpdate={loadingUpdate}
+                {...props}
+              />
             )}
-          </ApolloConsumer>
+          </Mutation>
         );
       }}
-    </User>
+    </Composed>
   );
 };
 
