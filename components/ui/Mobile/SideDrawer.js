@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation, Query, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -67,7 +68,18 @@ const Composed = adopt({
 });
 /* eslint-enable */
 
+const onAuthClick = (router, client) => {
+  if (router) {
+    const currentPath = router.asPath;
+    localStorage.setItem('previousPage', currentPath);
+    client.writeData({
+      data: { previousPage: currentPath },
+    });
+  }
+};
+
 const SideDrawer = () => {
+  const router = useRouter();
   return (
     <Composed>
       {({
@@ -115,7 +127,13 @@ const SideDrawer = () => {
                 {!currentUser && (
                   <>
                     <Link href="/signin">
-                      <MenuItem as="a" onClick={closeSideDrawer}>
+                      <MenuItem
+                        as="a"
+                        onClick={() => {
+                          onAuthClick(router, client);
+                          closeSideDrawer();
+                        }}
+                      >
                         <div className="link-container">
                           <Icon name="user" size="large" />
                           <span className="link-name">Sign In</span>
@@ -123,7 +141,13 @@ const SideDrawer = () => {
                       </MenuItem>
                     </Link>
                     <Link href="/signup">
-                      <MenuItem as="a" onClick={closeSideDrawer}>
+                      <MenuItem
+                        as="a"
+                        onClick={() => {
+                          onAuthClick(router, client);
+                          closeSideDrawer();
+                        }}
+                      >
                         <div className="link-container">
                           <Icon name="user plus" size="large" />
                           <span className="link-name">Sign Up</span>

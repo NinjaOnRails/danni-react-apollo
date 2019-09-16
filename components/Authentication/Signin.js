@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Container } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { adopt } from 'react-adopt';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { trackSignIn } from '../../lib/mixpanel';
+import { CONTENT_LANGUAGE_QUERY } from '../UI/ContentLanguage';
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -20,6 +22,28 @@ const SIGNIN_MUTATION = gql`
     }
   }
 `;
+
+/* eslint-disable */
+const signinMutation = ({ variables, render }) => (
+  <Mutation
+    mutation={SIGNIN_MUTATION}
+    variables={variables}
+    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+  >
+    {(signin, signinResult) => {
+      return render({ signin, signinResult });
+    }}
+  </Mutation>
+);
+
+const Composed = adopt({
+  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
+  localState: ({ render }) => (
+    <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
+  ),
+  signinMutation,
+});
+/* eslint-enable */
 
 class Signin extends Component {
   state = {
@@ -31,28 +55,45 @@ class Signin extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onSubmit = async (e, signin, previousPage, client, noRedirect) => {
+    e.preventDefault();
+    const { data } = await signin();
+    this.setState({
+      email: '',
+      password: '',
+    });
+    if (data) {
+      trackSignIn(data.signin.displayName);
+      if (!noRedirect) {
+        Router.push(
+          localStorage.getItem('previousPage') || previousPage || '/'
+        );
+        localStorage.removeItem('previousPage');
+        client.writeData({ data: { previousPage: null } });
+      }
+    }
+  };
+
   render() {
-    const { noRedirectHome } = this.props;
+    const { noRedirect } = this.props;
     return (
-      <Mutation
-        mutation={SIGNIN_MUTATION}
-        variables={this.state}
-        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-      >
-        {(signin, { error, loading }) => (
+      <Composed variables={this.state}>
+        {({
+          client,
+          localState: {
+            data: { previousPage },
+          },
+          signinMutation: {
+            signin,
+            signinResult: { error, loading },
+          },
+        }) => (
           <Container>
             <Form
               method="post"
-              onSubmit={async e => {
-                e.preventDefault();
-                const { data } = await signin();
-                this.setState({
-                  email: '',
-                  password: '',
-                });
-                if (!noRedirectHome) Router.push('/');
-                if (data) trackSignIn(data.signin.displayName);
-              }}
+              onSubmit={e =>
+                this.onSubmit(e, signin, previousPage, client, noRedirect)
+              }
             >
               <fieldset disabled={loading} aria-busy={loading}>
                 <Error error={error} />
@@ -75,17 +116,17 @@ class Signin extends Component {
             </Form>
           </Container>
         )}
-      </Mutation>
+      </Composed>
     );
   }
 }
 
 Signin.propTypes = {
-  noRedirectHome: PropTypes.bool,
+  noRedirect: PropTypes.bool,
 };
 
 Signin.defaultProps = {
-  noRedirectHome: false,
+  noRedirect: false,
 };
 
 export default Signin;

@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Link from 'next/link';
-import Router from 'next/router';
 import { Form, Segment } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Error from '../UI/ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
@@ -31,7 +29,6 @@ class Signin extends Component {
   };
 
   render() {
-    const { noRedirectHome } = this.props;
     return (
       <Mutation
         mutation={SIGNIN_MUTATION}
@@ -51,7 +48,6 @@ class Signin extends Component {
                       email: '',
                       password: '',
                     });
-                  if (!noRedirectHome) Router.push('/');
                   if (data) trackSignIn(data.signin.displayName);
                 }}
               >
@@ -91,14 +87,6 @@ class Signin extends Component {
     );
   }
 }
-
-Signin.propTypes = {
-  noRedirectHome: PropTypes.bool,
-};
-
-Signin.defaultProps = {
-  noRedirectHome: false,
-};
 
 export default Signin;
 export { SIGNIN_MUTATION };

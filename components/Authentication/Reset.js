@@ -45,18 +45,11 @@ class Reset extends Component {
   };
 
   render() {
-    const {
-      router: {
-        query: { resetToken },
-      },
-    } = this.props;
+    const { router } = this.props;
     return (
       <Mutation
         mutation={RESET_PASSWORD_MUTATION}
-        variables={{
-          resetToken,
-          ...this.state,
-        }}
+        variables={{ resetToken: router.query.resetToken, ...this.state }}
         refetchQueries={[{ query: CURRENT_USER_QUERY }]}
       >
         {(resetPassword, { error, loading }) => {
@@ -66,11 +59,14 @@ class Reset extends Component {
                 method="post"
                 onSubmit={async e => {
                   e.preventDefault();
-                  await resetPassword();
-                  this.setState({
-                    confirmPassword: '',
-                    password: '',
-                  });
+                  const { data } = await resetPassword();
+                  if (data) {
+                    this.setState({
+                      confirmPassword: '',
+                      password: '',
+                    });
+                    router.push('/');
+                  }
                 }}
               >
                 <fieldset disabled={loading} aria-busy={loading}>
