@@ -6,7 +6,6 @@ import moment from 'moment';
 import { adopt } from 'react-adopt';
 import CommentReply from './CommentReply';
 import Error from '../UI/ErrorMessage';
-import User from '../Authentication/User';
 import {
   CREATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENT_MUTATION,
@@ -15,15 +14,6 @@ import {
 } from './commentQueries';
 
 /* eslint-disable */
-const user = ({ render }) => (
-  <User>
-    {({ data, loading }) => {
-      const currentUser = data ? data.currentUser : null;
-      return render({ currentUser, loading });
-    }}
-  </User>
-);
-
 const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
   <Mutation
     mutation={CREATE_COMMENTREPLY_MUTATION}
@@ -74,7 +64,6 @@ const updateCommentMutation = ({ id, updateInput, videoId, render }) => (
 /* eslint-enable */
 
 const Composed = adopt({
-  user,
   createCommentReplyMutation,
   deleteCommentMutation,
   updateCommentMutation,
@@ -120,7 +109,6 @@ class VideoComment extends React.Component {
   };
 
   renderComment(
-    currentUser,
     {
       createCommentReply,
       createCommentReplyResult: {
@@ -152,6 +140,7 @@ class VideoComment extends React.Component {
     } = this.state;
 
     const {
+      currentUser,
       comment: { text, author, reply, createdAt, upvoteCount, downvoteCount },
     } = this.props;
 
@@ -271,13 +260,11 @@ class VideoComment extends React.Component {
         videoId={videoId}
       >
         {({
-          user: { currentUser },
           createCommentReplyMutation,
           deleteCommentMutation,
           updateCommentMutation,
         }) => {
           return this.renderComment(
-            currentUser,
             createCommentReplyMutation,
             deleteCommentMutation,
             updateCommentMutation
@@ -290,7 +277,12 @@ class VideoComment extends React.Component {
 
 VideoComment.propTypes = {
   comment: PropTypes.object.isRequired,
+  currentUser: PropTypes.object,
   videoId: PropTypes.string.isRequired,
+};
+
+VideoComment.defaultProps = {
+  currentUser: null,
 };
 
 export default VideoComment;

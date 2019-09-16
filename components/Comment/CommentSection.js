@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button, Comment, Form, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Mutation, Query } from 'react-apollo';
+import { Mutation, Query, ApolloConsumer } from 'react-apollo';
+import { adopt } from 'react-adopt';
+import User from '../Authentication/User';
 import VideoComment from './Comment';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
@@ -9,6 +11,51 @@ import {
   QUERY_VIDEO_COMMENTS,
   CREATE_COMMENT_MUTATION,
 } from './commentQueries';
+import PleaseSignIn from '../Authentication/PleaseSignIn';
+
+/* eslint-disable */
+const user = ({ render }) => (
+  <User>
+    {({ data, loading }) => {
+      const currentUser = data ? data.currentUser : null;
+      return render({ currentUser, loading });
+    }}
+  </User>
+);
+
+const createCommentMutation = ({ commentInput, videoId, render }) => (
+  <Mutation
+    mutation={CREATE_COMMENT_MUTATION}
+    variables={{
+      video: videoId,
+      text: commentInput,
+    }}
+    refetchQueries={[
+      {
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+      },
+    ]}
+  >
+    {(createComment, createCommentResult) => {
+      return render({ createComment, createCommentResult });
+    }}
+  </Mutation>
+);
+
+const videoComments = ({ videoId, render }) => (
+  <Query query={QUERY_VIDEO_COMMENTS} variables={{ video: videoId }}>
+    {render}
+  </Query>
+);
+
+const Composed = adopt({
+  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
+  user,
+  createCommentMutation,
+  videoComments,
+});
+/* eslint-enable */
 
 class CommentSection extends React.Component {
   state = {
@@ -29,65 +76,68 @@ class CommentSection extends React.Component {
     const { commentInput, commentInputValid } = this.state;
     const { videoId } = this.props;
     return (
-      <Query query={QUERY_VIDEO_COMMENTS} variables={{ video: videoId }}>
-        {({ error: commentsLoadingError, loading: commentsLoading, data }) => (
-          <Mutation
-            mutation={CREATE_COMMENT_MUTATION}
-            variables={{
-              video: videoId,
-              text: commentInput,
-            }}
-            refetchQueries={[
-              { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
-            ]}
-          >
-            {(
-              createComment,
-              { error: createCommentError, loading: createCommentLoading }
-            ) => {
-              return (
-                <CommentSectionStyles>
-                  <Error error={commentsLoadingError} />
-                  <Error error={createCommentError} />
-                  {commentsLoading ? (
-                    <Loader active inline="centered" />
-                  ) : (
-                    <Comment.Group size="large">
-                      <Form
-                        loading={createCommentLoading}
-                        reply
-                        onSubmit={() => {
-                          if (commentInput.length > 0)
-                            this.onCommentSubmit(createComment);
-                        }}
-                      >
-                        <Form.TextArea
-                          placeholder="Write a comment..."
-                          onChange={this.onTextChange}
-                          value={commentInput}
-                        />
-                        <Button
-                          content="Add Comment"
-                          primary
-                          disabled={commentInputValid}
-                        />
-                      </Form>
-                      {data.comments &&
-                        data.comments.map(comment => (
-                          <VideoComment
-                            key={comment.id}
-                            comment={comment}
-                            videoId={videoId}
-                          />
-                        ))}
-                    </Comment.Group>
-                  )}
-                </CommentSectionStyles>
-              );
-            }}
-          </Mutation>
+      <Composed videoId={videoId} commentInput={commentInput}>
+        {({
+          client,
+          user: { currentUser },
+          createCommentMutation: {
+            createComment,
+            createCommentResult: {
+              error: createCommentError,
+              loading: createCommentLoading,
+            },
+          },
+          videoComments: {
+            error: commentsLoadingError,
+            loading: commentsLoading,
+            data: { hideSignin, comments },
+          },
+        }) => (
+          <CommentSectionStyles>
+            <Error error={commentsLoadingError} />
+            <Error error={createCommentError} />
+            {commentsLoading ? (
+              <Loader active inline="centered" />
+            ) : (
+              <Comment.Group size="large">
+                <PleaseSignIn action="Comment" minimalistic hidden={hideSignin}>
+                  <Form
+                    loading={createCommentLoading}
+                    reply
+                    onSubmit={() => {
+                      if (commentInput.length > 0)
+                        this.onCommentSubmit(createComment);
+                    }}
+                  >
+                    <Form.TextArea
+                      placeholder="Write a comment..."
+                      onChange={this.onTextChange}
+                      value={commentInput}
+                      onClick={() =>
+                        client.writeData({ data: { hideSignin: false } })
+                      }
+                    />
+                    <Button
+                      content="Add Comment"
+                      primary
+                      disabled={commentInputValid}
+                    />
+                  </Form>
+                </PleaseSignIn>
+                {comments &&
+                  comments.map(comment => (
+                    <VideoComment
+                      key={comment.id}
+                      comment={comment}
+                      videoId={videoId}
+                      currentUser={currentUser}
+                    />
+                  ))}
+              </Comment.Group>
+            )}
+          </CommentSectionStyles>
         )}
-      </Query>
+      </Composed>
     );
   }
 }

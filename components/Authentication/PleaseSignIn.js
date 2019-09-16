@@ -3,25 +3,30 @@ import { Loader, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { CURRENT_USER_QUERY } from './User';
 import Signin from './Signin';
+import SigninMinimalistic from './SigninMinimalistic';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 
-const PleaseSignIn = props => (
+const PleaseSignIn = ({ action, minimalistic, hidden, children }) => (
   <Query query={CURRENT_USER_QUERY}>
     {({ data, loading }) => {
       if (loading) return <Loader active inline="centered" />;
-      if (!data.currentUser) {
+      if (!data.currentUser && !hidden) {
         return (
           <>
             <StyledMessage>
               <Message warning>
-                <StyledHeader>Please Sign In to Continue</StyledHeader>
+                <StyledHeader>{`Please Sign In to ${action}`}</StyledHeader>
               </Message>
             </StyledMessage>
-            <Signin noRedirectHome />
+            {minimalistic ? (
+              <SigninMinimalistic noRedirectHome />
+            ) : (
+              <Signin noRedirectHome />
+            )}
           </>
         );
       }
-      return props.children;
+      return children;
     }}
   </Query>
 );
@@ -31,10 +36,16 @@ PleaseSignIn.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  action: PropTypes.string,
+  minimalistic: PropTypes.bool,
+  hidden: PropTypes.bool,
 };
 
 PleaseSignIn.defaultProps = {
   children: null,
+  action: 'Continue',
+  minimalistic: false,
+  hidden: false,
 };
 
 export default PleaseSignIn;
