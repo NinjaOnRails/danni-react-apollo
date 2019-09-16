@@ -42,32 +42,6 @@ export const CREATE_COMMENT_MUTATION = gql`
     createComment(video: $video, text: $text) {
       id
       text
-      createdAt
-      upvoteCount
-      downvoteCount
-      audio {
-        id
-      }
-      author {
-        displayName
-      }
-      reply {
-        id
-        text
-        createdAt
-        upvoteCount
-        downvoteCount
-        comment {
-          id
-          video {
-            id
-          }
-        }
-        author {
-          id
-          displayName
-        }
-      }
     }
   }
 `;

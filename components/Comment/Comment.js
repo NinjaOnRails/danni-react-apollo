@@ -38,8 +38,7 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
         query: QUERY_VIDEO_COMMENTS,
         variables: { video: videoId },
       });
-      const commentId = deleteComment.id;
-      data.comments = data.comments.filter(comment => comment.id !== commentId);
+      data.comments = data.comments.filter(comment => comment.id !== id);
       // Write our data back to the cache with the new comment in it
       proxy.writeQuery({
         query: QUERY_VIDEO_COMMENTS,
@@ -118,6 +117,11 @@ class VideoComment extends React.Component {
     if (data) this.setState({ showEditInput: false, updateInput: '' });
   };
 
+  onDeleteComment = async deleteComment => {
+    if (confirm('Are you sure you want to delete this comment?'))
+      deleteComment();
+  };
+
   onReplySubmit = async createCommentReply => {
     const { data } = await createCommentReply();
     if (data) this.setState({ replyInput: '', showReplyInput: false });
@@ -164,98 +168,92 @@ class VideoComment extends React.Component {
         <Error error={createCommentReplyError} />
         <Error error={deleteCommentError} />
         <Error error={updateCommentError} />
-        {deleteCommentLoading ? (
-          <Loader active />
-        ) : (
-          <>
-            {/* <Comment.Avatar src="" /> */}
-            <Comment.Content>
-              <Comment.Author as="a">{author.displayName}</Comment.Author>
-              <Comment.Metadata>
-                <div>{this.formatTime(createdAt)}</div>
-              </Comment.Metadata>
-              {showEditInput ? (
-                <Form
-                  loading={updateCommentLoading}
-                  reply
-                  onSubmit={() => {
-                    this.onCommentUpdate(updateComment);
-                  }}
-                >
-                  <Form.Input
-                    name="updateInput"
-                    onChange={this.onTextChange}
-                    defaultValue={text}
-                  />
-                  <Button
-                    content="Update Comment"
-                    primary
-                    disabled={!updateCommentFormValid}
-                  />
-                  <Button
-                    content="Cancel"
-                    onClick={() => this.setState({ showEditInput: false })}
-                  />
-                </Form>
-              ) : (
-                <>
-                  <Comment.Text>
-                    <p>{text}</p>
-                  </Comment.Text>
-                  <Comment.Actions>
-                    <Icon name="angle up" size="large" link />
-                    <span>{+upvoteCount - +downvoteCount}</span>
-                    <Icon name="angle down" size="large" link />
-                    <Comment.Action onClick={this.onReplyClick}>
-                      Reply
+        {/* <Comment.Avatar src="" /> */}
+        <Comment.Content>
+          <Comment.Author as="a">{author.displayName}</Comment.Author>
+          <Comment.Metadata>
+            <div>{this.formatTime(createdAt)}</div>
+          </Comment.Metadata>
+          {showEditInput ? (
+            <Form
+              loading={updateCommentLoading}
+              reply
+              onSubmit={() => {
+                this.onCommentUpdate(updateComment);
+              }}
+            >
+              <Form.Input
+                name="updateInput"
+                onChange={this.onTextChange}
+                defaultValue={text}
+              />
+              <Button
+                content="Update Comment"
+                primary
+                disabled={!updateCommentFormValid}
+              />
+              <Button
+                content="Cancel"
+                onClick={() => this.setState({ showEditInput: false })}
+              />
+            </Form>
+          ) : (
+            <>
+              <Comment.Text>
+                <p>{text}</p>
+              </Comment.Text>
+              <Comment.Actions>
+                <Icon name="angle up" size="large" link />
+                <span>{+upvoteCount - +downvoteCount}</span>
+                <Icon name="angle down" size="large" link />
+                <Comment.Action onClick={this.onReplyClick}>
+                  Reply
+                </Comment.Action>
+                {currentUser && author.id === currentUser.id ? (
+                  <>
+                    <Comment.Action onClick={this.onEditClick}>
+                      Edit
                     </Comment.Action>
-                    {currentUser && author.id === currentUser.id ? (
-                      <>
-                        <Comment.Action onClick={this.onEditClick}>
-                          Edit
-                        </Comment.Action>
-                        <Comment.Action onClick={deleteComment}>
-                          Delete
-                        </Comment.Action>
-                      </>
-                    ) : null}
-                  </Comment.Actions>
-                </>
-              )}
-            </Comment.Content>
-            {reply.length > 0 && (
-              <Comment.Group>
-                {reply.map(commentReply => (
-                  <CommentReply
-                    key={commentReply.id}
-                    commentReply={commentReply}
-                    onReplyClick={this.onReplyClick}
-                  />
-                ))}
-              </Comment.Group>
-            )}
-            {showReplyInput && (
-              <Form
-                loading={createReplyLoading}
-                reply
-                onSubmit={() => {
-                  this.onReplySubmit(createCommentReply);
-                }}
-              >
-                <Form.Input
-                  name="replyInput"
-                  placeholder="Write a reply..."
-                  onChange={this.onTextChange}
-                  value={replyInput}
-                />
-                <Button
-                  content="Add Reply"
-                  primary
-                  disabled={!replyFormValid}
-                />
-              </Form>
-            )}
-          </>
+                    <Comment.Action
+                      onClick={() => this.onDeleteComment(deleteComment)}
+                    >
+                      Delete
+                    </Comment.Action>
+                  </>
+                ) : null}
+              </Comment.Actions>
+            </>
+          )}
+        </Comment.Content>
+
+        {reply.length > 0 && (
+          <Comment.Group>
+            {reply.map(commentReply => (
+              <CommentReply
+                key={commentReply.id}
+                commentReply={commentReply}
+                onReplyClick={this.onReplyClick}
+                currentUser={currentUser}
+              />
+            ))}
+          </Comment.Group>
+        )}
+        {showReplyInput && (
+          <Form
+            loading={createReplyLoading}
+            reply
+            onSubmit={() => {
+              this.onReplySubmit(createCommentReply);
+            }}
+          >
+            <Form.Input
+              name="replyInput"
+              placeholder="Write a reply..."
+              onChange={this.onTextChange}
+              value={replyInput}
+            />
+            <Button content="Add Reply" primary disabled={!replyFormValid} />
+          </Form>
         )}
       </Comment>
     );
