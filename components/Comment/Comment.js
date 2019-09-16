@@ -49,6 +49,7 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
     optimisticResponse={{
       __typename: 'Mutation',
       deleteComment: {
+        id,
         __typename: 'Comment',
       },
     }}
@@ -112,7 +113,7 @@ class VideoComment extends React.Component {
     this.setState({ showEditInput: true });
   };
 
-  onCommentUpdate = async updateComment => {
+  onUpdateComment = async updateComment => {
     const { data } = await updateComment();
     if (data) this.setState({ showEditInput: false, updateInput: '' });
   };
@@ -179,7 +180,7 @@ class VideoComment extends React.Component {
               loading={updateCommentLoading}
               reply
               onSubmit={() => {
-                this.onCommentUpdate(updateComment);
+                this.onUpdateComment(updateComment);
               }}
             >
               <Form.Input
