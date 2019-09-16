@@ -66,7 +66,10 @@ class Watch extends Component {
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
 
-    if (id !== prevProps.id || audioId !== prevProps.audioId)
+    if (
+      this.youtubePlayer &&
+      (id !== prevProps.id || audioId !== prevProps.audioId)
+    )
       this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
   }
 
@@ -225,7 +228,6 @@ class Watch extends Component {
                           videoId={id}
                           videoLanguage={video.language}
                         />
-
                       </Container>
                     </Grid.Column>
                     <Grid.Column mobile={16} tablet={16} computer={5}>
