@@ -1,15 +1,18 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import Error from '../UI/ErrorMessage';
-import User from '../Authentication/User';
 import {
   UPDATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENTREPLY_MUTATION,
   QUERY_VIDEO_COMMENTS,
 } from './commentQueries';
+
+const deleteCommentMutation = () => {
+  console.log(1);
+};
 
 class CommentReply extends React.Component {
   state = {
@@ -63,14 +66,12 @@ class CommentReply extends React.Component {
             query: QUERY_VIDEO_COMMENTS,
             variables: { video: videoId },
           });
-          console.log(deleteCommentReply);
           data.comments = data.comments.map(comment => {
             const filteredComment = { ...comment };
             if (filteredComment.id === parentCommentId) {
               filteredComment.reply = filteredComment.reply.filter(reply => {
                 return reply.id !== id;
               });
-              console.log(filteredComment.reply);
             }
             return filteredComment;
           });
@@ -112,71 +113,61 @@ class CommentReply extends React.Component {
               <Comment>
                 <Error error={deleteCommentReplyError} />
                 <Error error={updateCommentReplyError} />
-                {deleteCommentReplyLoading ? (
-                  <Loader active inline="centered" />
-                ) : (
-                  <Fragment>
-                    {/* <Comment.Avatar src="" /> */}
-                    <Comment.Content>
-                      <Comment.Author as="a">
-                        {author.displayName}
-                      </Comment.Author>
-                      <Comment.Metadata>
-                        <div>{this.formatTime(createdAt)}</div>
-                      </Comment.Metadata>
-                      {showEditForm && (
-                        <Form
-                          loading={updateCommentReplyLoading}
-                          reply
-                          onSubmit={() => {
-                            this.onUpdateSubmit(updateCommentReply);
-                          }}
-                        >
-                          <Form.Input
-                            onChange={this.onTextChange}
-                            defaultValue={text}
-                          />
-                          <Button
-                            content="Update Comment"
-                            primary
-                            disabled={!editFormValid}
-                          />
-                          <Button
-                            content="Cancel"
-                            onClick={() =>
-                              this.setState({ showEditForm: false })
-                            }
-                          />
-                        </Form>
-                      )}
-                      {!showEditForm && (
-                        <Fragment>
-                          <Comment.Text>
-                            <p>{text}</p>
-                          </Comment.Text>
-                          <Comment.Actions>
-                            <Icon name="angle up" size="large" link />
-                            <span>{+upvoteCount - +downvoteCount} </span>
-                            <Icon name="angle down" size="large" link />
-                            <Comment.Action onClick={onReplyClick}>
-                              Reply
+                {/* <Comment.Avatar src="" /> */}
+                <Comment.Content>
+                  <Comment.Author as="a">{author.displayName}</Comment.Author>
+                  <Comment.Metadata>
+                    <div>{this.formatTime(createdAt)}</div>
+                  </Comment.Metadata>
+                  {showEditForm && (
+                    <Form
+                      loading={updateCommentReplyLoading}
+                      reply
+                      onSubmit={() => {
+                        this.onUpdateSubmit(updateCommentReply);
+                      }}
+                    >
+                      <Form.Input
+                        onChange={this.onTextChange}
+                        defaultValue={text}
+                      />
+                      <Button
+                        content="Update Comment"
+                        primary
+                        disabled={!editFormValid}
+                      />
+                      <Button
+                        content="Cancel"
+                        onClick={() => this.setState({ showEditForm: false })}
+                      />
+                    </Form>
+                  )}
+                  {!showEditForm && (
+                    <>
+                      <Comment.Text>
+                        <p>{text}</p>
+                      </Comment.Text>
+                      <Comment.Actions>
+                        <Icon name="angle up" size="large" link />
+                        <span>{+upvoteCount - +downvoteCount} </span>
+                        <Icon name="angle down" size="large" link />
+                        <Comment.Action onClick={onReplyClick}>
+                          Reply
+                        </Comment.Action>
+                        {currentUser && author.id === currentUser.id ? (
+                          <>
+                            <Comment.Action onClick={this.onClickEdit}>
+                              Edit
                             </Comment.Action>
-                            {currentUser && author.id === currentUser.id ? (
-                              <>
-                                <Comment.Action onClick={this.onClickEdit}>
-                                  Edit
-                                </Comment.Action>
-                                <Comment.Action onClick={deleteCommentReply}>
-                                  Delete
-                                </Comment.Action>
-                              </>
-                            ) : null}
-                          </Comment.Actions>
-                        </Fragment>
-                      )}
-                    </Comment.Content>
-                  </Fragment>
-                )}
+                            <Comment.Action onClick={deleteCommentReply}>
+                              Delete
+                            </Comment.Action>
+                          </>
+                        ) : null}
+                      </Comment.Actions>
+                    </>
+                  )}
+                </Comment.Content>
               </Comment>
             )}
           </Mutation>
