@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
+import { ApolloConsumer } from 'react-apollo';
 import Watch from '../components/Video/Watch';
 
-const WatchPage = props => {
-  return <Watch {...props} />;
-};
+const WatchPage = props => (
+  <ApolloConsumer>
+    {client => <Watch {...props} client={client} />}
+  </ApolloConsumer>
+);
 
 // Get and pass query params as props
 WatchPage.getInitialProps = ({ query: { id, audioId } }) => {

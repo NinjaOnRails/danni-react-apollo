@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Comment, Form, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Mutation, Query, ApolloConsumer } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import { adopt } from 'react-adopt';
 import User from '../Authentication/User';
 import VideoComment from './Comment';
@@ -50,7 +50,6 @@ const videoComments = ({ videoId, render }) => (
 );
 
 const Composed = adopt({
-  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
   user,
   createCommentMutation,
   videoComments,
@@ -74,11 +73,10 @@ class CommentSection extends React.Component {
 
   render() {
     const { commentInput, commentInputValid } = this.state;
-    const { videoId } = this.props;
+    const { videoId, client } = this.props;
     return (
       <Composed videoId={videoId} commentInput={commentInput}>
         {({
-          client,
           user: { currentUser },
           createCommentMutation: {
             createComment,
@@ -144,5 +142,6 @@ class CommentSection extends React.Component {
 
 CommentSection.propTypes = {
   videoId: PropTypes.string.isRequired,
+  client: PropTypes.object.isRequired,
 };
 export default CommentSection;

@@ -63,6 +63,10 @@ class Watch extends Component {
     mixpanelEventsSent: [],
   };
 
+  componentDidMount() {
+    this.props.client.writeData({ data: { hideSignin: true } });
+  }
+
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
 
@@ -188,74 +192,70 @@ class Watch extends Component {
   };
 
   render() {
-    const { id, audioId } = this.props;
+    const { id, audioId, client } = this.props;
     const { readyYoutube, showFullDescription } = this.state;
     const url = `http://danni.tv/watch?id=${id}${
       audioId ? `&audioId=${audioId}` : ''
     }`;
     return (
-      <ApolloConsumer>
-        {client => (
-          <Query
-            query={VIDEO_QUERY}
-            variables={{
-              id,
-              audioId,
-            }}
-          >
-            {({ error, loading, data }) => {
-              if (error) return <Error error={error} />;
-              if (loading) return <Loader active inline="centered" />;
-              const { video } = data;
-              if (!video) return <p>No Video Found for {id}</p>;
-              return (
-                <>
-                  <VideoHeader video={video} url={url} />
-                  <StyledContainer>
-                    <Grid>
-                      <Grid.Row>
-                        <Grid.Column mobile={16} tablet={16} computer={11}>
-                          {this.renderVideoPlayer(video)}
-                          <Container fluid>
-                            <VideoInfo
-                              {...this.props}
-                              video={video}
-                              url={url}
-                              showFullDescription={showFullDescription}
-                              toggleFullDescription={this.toggleFullDescription}
-                            />
-                            {video.audio[0] &&
-                              readyYoutube &&
-                              this.renderFilePlayer(video.audio)}
-                            <CommentSection
-                              videoId={id}
-                              videoLanguage={video.language}
-                            />
-                          </Container>
-                        </Grid.Column>
-                        <Grid.Column mobile={16} tablet={16} computer={5}>
-                          <VideoList
-                            {...this.props}
-                            onVideoItemClick={() =>
-                              this.onVideoItemClick(client)
-                            }
-                          />
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
-                  </StyledContainer>
-                </>
-              );
-            }}
-          </Query>
-        )}
-      </ApolloConsumer>
+      <Query
+        query={VIDEO_QUERY}
+        variables={{
+          id,
+          audioId,
+        }}
+      >
+        {({ error, loading, data }) => {
+          if (error) return <Error error={error} />;
+          if (loading) return <Loader active inline="centered" />;
+          const { video } = data;
+          if (!video) return <p>No Video Found for {id}</p>;
+          return (
+            <>
+              <VideoHeader video={video} url={url} />
+              <StyledContainer>
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column mobile={16} tablet={16} computer={11}>
+                      {this.renderVideoPlayer(video)}
+                      <Container fluid>
+                        <VideoInfo
+                          {...this.props}
+                          video={video}
+                          url={url}
+                          showFullDescription={showFullDescription}
+                          toggleFullDescription={this.toggleFullDescription}
+                        />
+                        {video.audio[0] &&
+                          readyYoutube &&
+                          this.renderFilePlayer(video.audio)}
+                        <CommentSection
+                          videoId={id}
+                          videoLanguage={video.language}
+                          client={client}
+                        />
+                      </Container>
+                    </Grid.Column>
+                    <Grid.Column mobile={16} tablet={16} computer={5}>
+                      <VideoList
+                        {...this.props}
+                        onVideoItemClick={() => this.onVideoItemClick(client)}
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </StyledContainer>
+            </>
+          );
+        }}
+      </Query>
     );
   }
 }
 
 Watch.propTypes = {
   id: PropTypes.string.isRequired,
+  client: PropTypes.object.isRequired,
   audioId: PropTypes.string,
 };
 
