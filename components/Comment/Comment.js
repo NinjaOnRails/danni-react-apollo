@@ -32,12 +32,27 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
   <Mutation
     mutation={DELETE_COMMENT_MUTATION}
     variables={{ comment: id }}
-    refetchQueries={[
-      {
+    update={(proxy, { data: { deleteComment } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
         query: QUERY_VIDEO_COMMENTS,
         variables: { video: videoId },
+      });
+      const commentId = deleteComment.id;
+      data.comments = data.comments.filter(comment => comment.id !== commentId);
+      // Write our data back to the cache with the new comment in it
+      proxy.writeQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+        data,
+      });
+    }}
+    optimisticResponse={{
+      __typename: 'Mutation',
+      deleteComment: {
+        __typename: 'Comment',
       },
-    ]}
+    }}
   >
     {(deleteComment, deleteCommentResult) => {
       return render({ deleteComment, deleteCommentResult });
