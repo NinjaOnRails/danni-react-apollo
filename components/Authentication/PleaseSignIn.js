@@ -16,7 +16,7 @@ const PleaseSignIn = ({ action, minimalistic, hidden, children }) => {
           {({ data, loading }) => {
             if (loading) return <Loader active inline="centered" />;
             if (!data.currentUser && !hidden) {
-              if (router) {
+              if (typeof window !== 'undefined' && router) {
                 const currentPath = router.asPath;
                 localStorage.setItem('previousPage', currentPath);
                 client.writeData({
