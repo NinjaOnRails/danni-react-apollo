@@ -63,7 +63,7 @@ class CommentSection extends React.Component {
   };
 
   onTextChange = ({ target: { value } }) => {
-    this.setState({ commentInput: value, commentInputValid: value > 0 });
+    this.setState({ commentInput: value, commentInputValid: value.length > 0 });
   };
 
   onCommentSubmit = async createComment => {
@@ -124,7 +124,7 @@ class CommentSection extends React.Component {
                     <Button
                       content="Add Comment"
                       primary
-                      disabled={commentInputValid}
+                      disabled={!commentInputValid}
                     />
                   </Form>
                 </PleaseSignIn>
