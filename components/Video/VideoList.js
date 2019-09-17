@@ -72,7 +72,9 @@ class VideoList extends Component {
                         </ListDescriptionStyled>
                         <ListDescriptionStyled>
                           <Icon name="user" />
-                          {audio.author.displayName}
+                          {audio.author
+                            ? audio.author.displayName
+                            : 'deleted user'}
                         </ListDescriptionStyled>
                       </List.Content>
                     </VideoItem>
@@ -87,7 +89,7 @@ class VideoList extends Component {
           ({
             audio,
             originTitle,
-            addedBy: { displayName },
+            addedBy,
             id: videoId,
             originThumbnailUrl,
             originThumbnailUrlSd,
@@ -126,7 +128,7 @@ class VideoList extends Component {
                           </ListDescriptionStyled>
                           <ListDescriptionStyled>
                             <Icon name="user" />
-                            {displayName}
+                            {addedBy ? addedBy.displayName : 'deleted user'}
                           </ListDescriptionStyled>
                         </List.Content>
                       </VideoItem>

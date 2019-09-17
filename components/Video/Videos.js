@@ -30,7 +30,7 @@ class Videos extends Component {
         ({
           title,
           id: audioId,
-          author: { displayName },
+          author,
           video: {
             id,
             originThumbnailUrl,
@@ -69,7 +69,7 @@ class Videos extends Component {
                       <Card.Meta>{originAuthor}</Card.Meta>
                       <Card.Description>
                         <Icon name="user" />
-                        {displayName}
+                        {author ? author.displayName : 'deleted user'}
                       </Card.Description>
                     </Card.Content>
                   </Card>
@@ -122,7 +122,7 @@ class Videos extends Component {
                         <Card.Meta>{originAuthor}</Card.Meta>
                         <Card.Description>
                           <Icon name="user" />
-                          {addedBy.displayName}
+                          {addedBy ? addedBy.displayName : 'deleted user'}
                         </Card.Description>
                       </Card.Content>
                     </Card>

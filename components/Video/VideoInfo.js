@@ -68,7 +68,7 @@ export default class VideoInfo extends Component {
         originTitle,
         originId,
         originAuthor,
-        addedBy: { displayName },
+        addedBy,
         originDescription,
       },
       url,
@@ -99,11 +99,16 @@ export default class VideoInfo extends Component {
           </Header>
           {(audio[0] && (
             <Header>
-              <h3>Read by: {audio[0].author.displayName}</h3>
+              <h3>
+                Read by:{' '}
+                {audio[0].author ? audio[0].author.displayName : 'deleted user'}
+              </h3>
             </Header>
           )) || (
             <Header>
-              <h3>Added by: {displayName}</h3>
+              <h3>
+                Added by: {addedBy ? addedBy.displayName : 'deleted user'}
+              </h3>
             </Header>
           )}
           <div

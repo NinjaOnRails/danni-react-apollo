@@ -120,7 +120,9 @@ class CommentReply extends React.Component {
               <>
                 {/* <Comment.Avatar src="" /> */}
                 <Comment.Content>
-                  <Comment.Author as="a">{author.displayName}</Comment.Author>
+                  <Comment.Author as="a">
+                    {author ? author.displayName : 'deleted user'}
+                  </Comment.Author>
                   <Comment.Metadata>
                     <div>{this.formatTime(createdAt)}</div>
                   </Comment.Metadata>
