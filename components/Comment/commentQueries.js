@@ -33,6 +33,13 @@ export const QUERY_VIDEO_COMMENTS = gql`
           displayName
         }
       }
+      vote {
+        id
+        user {
+          id
+        }
+        type
+      }
     }
   }
 `;
@@ -83,6 +90,14 @@ export const UPDATE_COMMENT_MUTATION = gql`
 export const DELETE_COMMENT_MUTATION = gql`
   mutation DELETE_COMMENT($comment: ID!) {
     deleteComment(comment: $comment) {
+      id
+    }
+  }
+`;
+
+export const CREATE_COMMENTVOTE_MUTATION = gql`
+  mutation CREATE_COMMENTVOTE_MUTATION($comment: ID!, $type: VoteType!) {
+    createCommentVote(comment: $comment, type: $type) {
       id
     }
   }

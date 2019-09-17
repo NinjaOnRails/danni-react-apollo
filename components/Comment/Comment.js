@@ -12,6 +12,7 @@ import {
   DELETE_COMMENT_MUTATION,
   QUERY_VIDEO_COMMENTS,
   UPDATE_COMMENT_MUTATION,
+  CREATE_COMMENTVOTE_MUTATION,
 } from './commentQueries';
 
 /* eslint-disable */
@@ -62,12 +63,29 @@ const updateCommentMutation = ({ id, updateInput, videoId, render }) => (
     }}
   </Mutation>
 );
+
+const createCommentVoteMutation = ({ videoId, render }) => (
+  <Mutation
+    mutation={CREATE_COMMENTVOTE_MUTATION}
+    refetchQueries={[
+      {
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+      },
+    ]}
+  >
+    {(createCommentVote, createCommentVoteResult) => {
+      return render({ createCommentVote, createCommentVoteResult });
+    }}
+  </Mutation>
+);
 /* eslint-enable */
 
 const Composed = adopt({
   createCommentReplyMutation,
   deleteCommentMutation,
   updateCommentMutation,
+  createCommentVoteMutation,
 });
 
 class VideoComment extends React.Component {
@@ -130,6 +148,13 @@ class VideoComment extends React.Component {
         error: updateCommentError,
         loading: updateCommentLoading,
       },
+    },
+    {
+      createCommentVote,
+      createCommentVoteResult: {
+        error: createCommentVoteError,
+        loading: createCommentVoteLoading,
+      },
     }
   ) {
     const {
@@ -142,8 +167,25 @@ class VideoComment extends React.Component {
 
     const {
       currentUser,
-      comment: { text, author, reply, createdAt, upvoteCount, downvoteCount },
+      comment: {
+        id,
+        text,
+        author,
+        reply,
+        createdAt,
+        upvoteCount,
+        downvoteCount,
+        vote,
+      },
     } = this.props;
+
+    const voteType =
+      vote.length > 0 && currentUser
+        ? vote.filter(commentVote => {
+            console.log(commentVote, currentUser);
+            return commentVote.user.id === currentUser.id;
+          })
+        : null;
 
     return (
       <Comment>
@@ -188,9 +230,37 @@ class VideoComment extends React.Component {
                     <p>{text}</p>
                   </Comment.Text>
                   <Comment.Actions>
-                    <Icon name="angle up" size="large" link />
+                    <Icon
+                      name="angle up"
+                      color={
+                        voteType && voteType[0].type === 'UPVOTE'
+                          ? 'orange'
+                          : 'grey'
+                      }
+                      size="large"
+                      link
+                      onClick={() =>
+                        createCommentVote({
+                          variables: { comment: id, type: 'UPVOTE' },
+                        })
+                      }
+                    />
                     <span>{+upvoteCount - +downvoteCount}</span>
-                    <Icon name="angle down" size="large" link />
+                    <Icon
+                      name="angle down"
+                      color={
+                        voteType && voteType[0].type === 'DOWNVOTE'
+                          ? 'purple'
+                          : 'grey'
+                      }
+                      size="large"
+                      link
+                      onClick={() =>
+                        createCommentVote({
+                          variables: { comment: id, type: 'DOWNVOTE' },
+                        })
+                      }
+                    />
                     <Comment.Action onClick={this.onReplyClick}>
                       Reply
                     </Comment.Action>
@@ -271,11 +341,13 @@ class VideoComment extends React.Component {
           createCommentReplyMutation,
           deleteCommentMutation,
           updateCommentMutation,
+          createCommentVoteMutation,
         }) => {
           return this.renderComment(
             createCommentReplyMutation,
             deleteCommentMutation,
-            updateCommentMutation
+            updateCommentMutation,
+            createCommentVoteMutation
           );
         }}
       </Composed>
