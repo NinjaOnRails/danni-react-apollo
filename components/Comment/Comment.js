@@ -4,6 +4,7 @@ import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
+import PleaseSignIn from '../Authentication/PleaseSignIn';
 import CommentReply from './CommentReply';
 import Error from '../UI/ErrorMessage';
 import {
@@ -146,7 +147,6 @@ class VideoComment extends React.Component {
 
     return (
       <Comment>
-        <Error error={createCommentReplyError} />
         <Error error={deleteCommentError} />
         <Error error={updateCommentError} />
         {deleteCommentLoading ? (
@@ -215,30 +215,38 @@ class VideoComment extends React.Component {
                     key={commentReply.id}
                     commentReply={commentReply}
                     onReplyClick={this.onReplyClick}
+                    currentUser={currentUser}
                   />
                 ))}
               </Comment.Group>
             )}
             {showReplyInput && (
-              <Form
-                loading={createReplyLoading}
-                reply
-                onSubmit={() => {
-                  this.onReplySubmit(createCommentReply);
-                }}
+              <PleaseSignIn
+                action="Reply"
+                minimalistic
+                hidden={!showReplyInput}
               >
-                <Form.Input
-                  name="replyInput"
-                  placeholder="Write a reply..."
-                  onChange={this.onTextChange}
-                  value={replyInput}
-                />
-                <Button
-                  content="Add Reply"
-                  primary
-                  disabled={!replyFormValid}
-                />
-              </Form>
+                <Form
+                  loading={createReplyLoading}
+                  reply
+                  onSubmit={() => {
+                    this.onReplySubmit(createCommentReply);
+                  }}
+                >
+                  <Form.Input
+                    name="replyInput"
+                    placeholder="Write a reply..."
+                    onChange={this.onTextChange}
+                    value={replyInput}
+                  />
+                  <Error error={createCommentReplyError} />
+                  <Button
+                    content="Add Reply"
+                    primary
+                    disabled={!replyFormValid}
+                  />
+                </Form>
+              </PleaseSignIn>
             )}
           </>
         )}
@@ -277,8 +285,8 @@ class VideoComment extends React.Component {
 
 VideoComment.propTypes = {
   comment: PropTypes.object.isRequired,
-  currentUser: PropTypes.object,
   videoId: PropTypes.string.isRequired,
+  currentUser: PropTypes.object,
 };
 
 VideoComment.defaultProps = {

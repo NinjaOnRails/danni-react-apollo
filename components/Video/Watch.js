@@ -122,7 +122,7 @@ class Watch extends Component {
 
   onVideoItemClick = client => {
     // Reset some states on different video click
-    client.writeData({ data: { hideSignin: true } });
+    client.writeData({ data: { hideSigninToComment: true } });
     this.setState({ showFullDescription: false, mixpanelEventsSent: [] });
   };
 

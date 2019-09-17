@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const QUERY_VIDEO_COMMENTS = gql`
   query QUERY_VIDEO_COMMENTS($video: ID!) {
-    hideSignin @client
+    hideSigninToComment @client
     comments(where: { video: { id: $video } }) {
       id
       text

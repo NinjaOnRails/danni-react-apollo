@@ -88,7 +88,7 @@ class CommentSection extends React.Component {
           videoComments: {
             error: commentsLoadingError,
             loading: commentsLoading,
-            data: { hideSignin, comments },
+            data: { hideSigninToComment, comments },
           },
         }) => (
           <CommentSectionStyles>
@@ -98,7 +98,11 @@ class CommentSection extends React.Component {
               <Loader active inline="centered" />
             ) : (
               <Comment.Group size="large">
-                <PleaseSignIn action="Comment" minimalistic hidden={hideSignin}>
+                <PleaseSignIn
+                  action="Comment"
+                  minimalistic
+                  hidden={hideSigninToComment}
+                >
                   <Form
                     loading={createCommentLoading}
                     reply
@@ -112,7 +116,9 @@ class CommentSection extends React.Component {
                       onChange={this.onTextChange}
                       value={commentInput}
                       onClick={() =>
-                        client.writeData({ data: { hideSignin: false } })
+                        client.writeData({
+                          data: { hideSigninToComment: false },
+                        })
                       }
                     />
                     <Button
@@ -129,6 +135,7 @@ class CommentSection extends React.Component {
                       comment={comment}
                       videoId={videoId}
                       currentUser={currentUser}
+                      client={client}
                     />
                   ))}
               </Comment.Group>
