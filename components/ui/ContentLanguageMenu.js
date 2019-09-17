@@ -11,16 +11,23 @@ import {
 class LanguageMenu extends Component {
   // Determine and set content language from one source
   componentDidMount() {
-    // Get user's content languages if signed in
-    const { currentUser } = this.props;
-    if (currentUser) return this.initFromCurrentUser();
-
-    // Get content languages from local storage if present
+    const { currentWatchingLanguage, currentUser } = this.props;
     const languages = localStorage.getItem('contentLanguage');
-    if (languages) return this.initFromLocalStorage(languages);
 
-    // Make browser's language default content language
-    return this.initFromBrowser();
+    if (currentUser) {
+      // Get user's content languages if signed in
+      this.initFromCurrentUser();
+    } else if (languages) {
+      // Get content languages from local storage if present
+      this.initFromLocalStorage(languages);
+    } else {
+      // Make browser's language default content language
+      this.initFromBrowser();
+    }
+    // If currently watching video of new language, add it
+    if (currentWatchingLanguage) {
+      this.onCurrentWatchingLanguage(currentWatchingLanguage);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -37,6 +44,25 @@ class LanguageMenu extends Component {
     // Update on sign out
     if (!currentUser && prevProps.currentUser) this.initFromBrowser();
   }
+
+  onCurrentWatchingLanguage = async currentWatchingLanguage => {
+    const {
+      addContentLanguage,
+      currentUser,
+      updateContentLanguage,
+    } = this.props;
+    const { data } = await addContentLanguage({
+      variables: { language: currentWatchingLanguage },
+    });
+    // If signed in update db too
+    if (currentUser && data.addContentLanguage) {
+      await updateContentLanguage({
+        variables: {
+          contentLanguage: data.addContentLanguage.data.contentLanguage,
+        },
+      });
+    }
+  };
 
   initFromCurrentUser = () => {
     const {
@@ -133,18 +159,21 @@ class LanguageMenu extends Component {
 
 LanguageMenu.propTypes = {
   toggleContentLanguage: PropTypes.func.isRequired,
+  addContentLanguage: PropTypes.func.isRequired,
   updateContentLanguage: PropTypes.func.isRequired,
   client: PropTypes.object.isRequired,
   currentUser: PropTypes.object,
   contentLanguage: PropTypes.array.isRequired,
   loadingUpdate: PropTypes.bool,
   sideDrawer: PropTypes.bool,
+  currentWatchingLanguage: PropTypes.string,
 };
 
 LanguageMenu.defaultProps = {
   currentUser: null,
   loadingUpdate: false,
   sideDrawer: false,
+  currentWatchingLanguage: null,
 };
 
 export default LanguageMenu;

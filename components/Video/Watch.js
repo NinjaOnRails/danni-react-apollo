@@ -210,6 +210,9 @@ class Watch extends Component {
           if (loading) return <Loader active inline="centered" />;
           const { video } = data;
           if (!video) return <p>No Video Found for {id}</p>;
+          const currentWatchingLanguage = video.audio[0]
+            ? video.audio[0].language
+            : video.language;
           return (
             <>
               <VideoHeader video={video} url={url} />
@@ -239,6 +242,7 @@ class Watch extends Component {
                     <Grid.Column mobile={16} tablet={16} computer={5}>
                       <VideoList
                         {...this.props}
+                        currentWatchingLanguage={currentWatchingLanguage}
                         onVideoItemClick={() => this.onVideoItemClick(client)}
                       />
                     </Grid.Column>

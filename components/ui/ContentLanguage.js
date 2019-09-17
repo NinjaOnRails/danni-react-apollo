@@ -11,6 +11,12 @@ const TOGGLE_CONTENT_LANGUAGE_MUTATION = gql`
   }
 `;
 
+const ADD_CONTENT_LANGUAGE_MUTATION = gql`
+  mutation addContentLanguage($language: String!) {
+    addContentLanguage(language: $language) @client
+  }
+`;
+
 const UPDATE_CONTENT_LANGUAGE_MUTATION = gql`
   mutation updateContentLanguage($contentLanguage: [Language]) {
     updateContentLanguage(contentLanguage: $contentLanguage) {
@@ -117,12 +123,33 @@ const toggleContentLanguage = ({ localState: { contentLanguage }, render }) => {
   );
 };
 
+const addContentLanguage = ({ localState: { contentLanguage }, render }) => {
+  return (
+    <Mutation
+      mutation={ADD_CONTENT_LANGUAGE_MUTATION}
+      refetchQueries={[
+        {
+          query: ALL_AUDIOS_QUERY,
+          variables: { contentLanguage },
+        },
+        {
+          query: ALL_VIDEOS_QUERY,
+          variables: { contentLanguage },
+        },
+      ]}
+    >
+      {render}
+    </Mutation>
+  );
+};
+
 const Composed = adopt({
   user,
   client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
   localState,
   updateContentLanguageMutation,
   toggleContentLanguage,
+  addContentLanguage,
 });
 /* eslint-enable */
 
@@ -139,6 +166,7 @@ const ContentLanguage = props => {
           error,
         },
         toggleContentLanguage,
+        addContentLanguage,
       }) => {
         if (loading || loadingLocalState)
           return <Loader active inline="centered" />;
@@ -146,6 +174,7 @@ const ContentLanguage = props => {
         return (
           <ContentLanguageMenu
             toggleContentLanguage={toggleContentLanguage}
+            addContentLanguage={addContentLanguage}
             contentLanguage={contentLanguage}
             client={client}
             currentUser={currentUser}

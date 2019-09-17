@@ -146,7 +146,9 @@ class VideoList extends Component {
     return (
       <>
         <LanguageMenuStyles>
-          <ContentLanguage />
+          <ContentLanguage
+            currentWatchingLanguage={this.props.currentWatchingLanguage}
+          />
         </LanguageMenuStyles>
         <Query query={CONTENT_LANGUAGE_QUERY}>
           {({ data, loading }) => {
@@ -202,11 +204,13 @@ class VideoList extends Component {
 VideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
+  currentWatchingLanguage: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
 };
 
 VideoList.defaultProps = {
   audioId: '',
+  currentWatchingLanguage: undefined,
 };
 
 export default VideoList;
