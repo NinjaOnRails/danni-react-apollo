@@ -88,7 +88,7 @@ class CommentSection extends React.Component {
           videoComments: {
             error: commentsLoadingError,
             loading: commentsLoading,
-            data: { hideSigninToComment, comments },
+            data,
           },
         }) => (
           <CommentSectionStyles>
@@ -101,7 +101,7 @@ class CommentSection extends React.Component {
                 <PleaseSignIn
                   action="Comment"
                   minimalistic
-                  hidden={hideSigninToComment}
+                  hidden={data.hideSigninToComment}
                 >
                   <Form
                     loading={createCommentLoading}
@@ -128,8 +128,8 @@ class CommentSection extends React.Component {
                     />
                   </Form>
                 </PleaseSignIn>
-                {comments &&
-                  comments.map(comment => (
+                {data.comments &&
+                  data.comments.map(comment => (
                     <VideoComment
                       key={comment.id}
                       comment={comment}

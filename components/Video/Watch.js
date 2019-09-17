@@ -64,7 +64,7 @@ class Watch extends Component {
   };
 
   componentDidMount() {
-    this.props.client.writeData({ data: { hideSignin: true } });
+    this.props.client.writeData({ data: { hideSigninToComment: true } });
   }
 
   componentDidUpdate(prevProps) {
@@ -122,7 +122,7 @@ class Watch extends Component {
 
   onVideoItemClick = client => {
     // Reset some states on different video click
-    client.writeData({ data: { hideSigninToComment: true } });
+    client.writeData({ data: { ToCommentToComment: true } });
     this.setState({ showFullDescription: false, mixpanelEventsSent: [] });
   };
 
