@@ -196,7 +196,7 @@ class VideoComment extends React.Component {
                     <Comment.Action onClick={this.onReplyClick}>
                       Reply
                     </Comment.Action>
-                    {currentUser && author.id === currentUser.id ? (
+                    {currentUser && author && author.id === currentUser.id ? (
                       <>
                         <Comment.Action onClick={this.onEditClick}>
                           Edit

@@ -84,105 +84,107 @@ const SideDrawer = () => {
     <Composed>
       {({
         closeSideDrawer,
-        localData: {
-          data: { showSide: show },
-        },
+        localData: { data, loading },
         user: { currentUser },
         client,
         signout,
-      }) => (
-        <SideDrawerStyles>
-          <BackDrop clicked={closeSideDrawer} show={show} />
-          <div className={`SideDrawer ${show ? 'Open' : 'Close'}`}>
-            {/* <Logo inDrawer /> */}
-            <div className="links">
-              <Menu vertical icon="labeled" inverted>
-                <Link href="/">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="home" size="large" />
-                      <span className="link-name">Home</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/new">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon.Group size="large">
-                        <Icon name="video" />
-                        <Icon color="black" name="plus" size="tiny" />
-                      </Icon.Group>
-                      <span className="link-name">Add Video</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/about">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="info" size="large" />
-                      <span className="link-name">About</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                {!currentUser && (
-                  <>
-                    <Link href="/signin">
-                      <MenuItem
-                        as="a"
-                        onClick={() => {
-                          onAuthClick(router, client);
-                          closeSideDrawer();
-                        }}
-                      >
-                        <div className="link-container">
-                          <Icon name="user" size="large" />
-                          <span className="link-name">Sign In</span>
-                        </div>
-                      </MenuItem>
-                    </Link>
-                    <Link href="/signup">
-                      <MenuItem
-                        as="a"
-                        onClick={() => {
-                          onAuthClick(router, client);
-                          closeSideDrawer();
-                        }}
-                      >
-                        <div className="link-container">
-                          <Icon name="user plus" size="large" />
-                          <span className="link-name">Sign Up</span>
-                        </div>
-                      </MenuItem>
-                    </Link>
-                  </>
-                )}
-                {currentUser && (
-                  <MenuItem
-                    as="a"
-                    onClick={async () => {
-                      await signout();
-                      closeSideDrawer();
-                      localStorage.clear();
-                      await client.resetStore();
-                      client.query({
-                        query: CURRENT_USER_QUERY,
-                      });
-                    }}
-                  >
-                    <div className="link-container">
-                      <Icon name="sign-out" size="large" />
-                      <span className="link-name">Sign Out</span>
-                    </div>
-                  </MenuItem>
-                )}
-              </Menu>
-              <LanguageMenuStyles>
-                <ContentLanguage sideDrawer />
-              </LanguageMenuStyles>
+      }) => {
+        if (loading) return <div>loading...</div>;
+        const { showSide: show } = data;
+        return (
+          <SideDrawerStyles>
+            <BackDrop clicked={closeSideDrawer} show={show} />
+            <div className={`SideDrawer ${show ? 'Open' : 'Close'}`}>
+              {/* <Logo inDrawer /> */}
+              <div className="links">
+                <Menu vertical icon="labeled" inverted>
+                  <Link href="/">
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon name="home" size="large" />
+                        <span className="link-name">Home</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                  <Link href="/new">
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon.Group size="large">
+                          <Icon name="video" />
+                          <Icon color="black" name="plus" size="tiny" />
+                        </Icon.Group>
+                        <span className="link-name">Add Video</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                  <Link href="/about">
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon name="info" size="large" />
+                        <span className="link-name">About</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                  {!currentUser && (
+                    <>
+                      <Link href="/signin">
+                        <MenuItem
+                          as="a"
+                          onClick={() => {
+                            onAuthClick(router, client);
+                            closeSideDrawer();
+                          }}
+                        >
+                          <div className="link-container">
+                            <Icon name="user" size="large" />
+                            <span className="link-name">Sign In</span>
+                          </div>
+                        </MenuItem>
+                      </Link>
+                      <Link href="/signup">
+                        <MenuItem
+                          as="a"
+                          onClick={() => {
+                            onAuthClick(router, client);
+                            closeSideDrawer();
+                          }}
+                        >
+                          <div className="link-container">
+                            <Icon name="user plus" size="large" />
+                            <span className="link-name">Sign Up</span>
+                          </div>
+                        </MenuItem>
+                      </Link>
+                    </>
+                  )}
+                  {currentUser && (
+                    <MenuItem
+                      as="a"
+                      onClick={async () => {
+                        await signout();
+                        closeSideDrawer();
+                        localStorage.clear();
+                        await client.resetStore();
+                        client.query({
+                          query: CURRENT_USER_QUERY,
+                        });
+                      }}
+                    >
+                      <div className="link-container">
+                        <Icon name="sign-out" size="large" />
+                        <span className="link-name">Sign Out</span>
+                      </div>
+                    </MenuItem>
+                  )}
+                </Menu>
+                <LanguageMenuStyles>
+                  <ContentLanguage sideDrawer />
+                </LanguageMenuStyles>
+              </div>
             </div>
-          </div>
-        </SideDrawerStyles>
-      )}
+          </SideDrawerStyles>
+        );
+      }}
     </Composed>
   );
 };

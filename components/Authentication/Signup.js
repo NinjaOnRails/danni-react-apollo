@@ -45,7 +45,7 @@ const signupMutation = ({ localState: { data }, variables, render }) => (
     mutation={SIGNUP_MUTATION}
     variables={{
       ...variables,
-      contentLanguage: data.contentLanguage,
+      contentLanguage: data ? data.contentLanguage : [],
     }}
     refetchQueries={[{ query: CURRENT_USER_QUERY }]}
   >
@@ -102,9 +102,7 @@ class Signup extends Component {
       <Composed variables={this.state}>
         {({
           client,
-          localState: {
-            data: { previousPage },
-          },
+          localState: { data },
           signupMutation: {
             signup,
             signupResult: { error, loading },
@@ -115,7 +113,7 @@ class Signup extends Component {
               <Form
                 method="post"
                 onSubmit={async e =>
-                  this.onSubmit(e, signup, previousPage, client)
+                  this.onSubmit(e, signup, data.previousPage, client)
                 }
               >
                 <fieldset disabled={loading} aria-busy={loading}>

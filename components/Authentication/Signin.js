@@ -55,7 +55,7 @@ class Signin extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = async (e, signin, previousPage, client, noRedirect) => {
+  onSubmit = async (e, signin, { previousPage }, client, noRedirect) => {
     e.preventDefault();
     const { data } = await signin();
     this.setState({
@@ -80,9 +80,7 @@ class Signin extends Component {
       <Composed variables={this.state}>
         {({
           client,
-          localState: {
-            data: { previousPage },
-          },
+          localState: { data },
           signinMutation: {
             signin,
             signinResult: { error, loading },
@@ -91,9 +89,7 @@ class Signin extends Component {
           <Container>
             <Form
               method="post"
-              onSubmit={e =>
-                this.onSubmit(e, signin, previousPage, client, noRedirect)
-              }
+              onSubmit={e => this.onSubmit(e, signin, data, client, noRedirect)}
             >
               <fieldset disabled={loading} aria-busy={loading}>
                 <Error error={error} />
