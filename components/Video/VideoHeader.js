@@ -16,12 +16,19 @@ export default class VideoHeader extends Component {
       },
       url,
     } = this.props;
-    console.log(audio)
     return (
       <Head>
-        <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
+        <title>{audio[0] ? audio[0].title : originTitle} | Danni TV</title>
         <meta name="author" content={originAuthor} />
         <meta name="title" content={audio[0] ? audio[0].title : originTitle} />
+        <meta
+          name="description"
+          content={
+            audio[0] && audio[0].description
+              ? audio[0].description
+              : originDescription
+          }
+        />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
         <meta
