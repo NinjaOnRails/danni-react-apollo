@@ -20,7 +20,6 @@ export default class VideoHeader extends Component {
     return (
       <Head>
         <title>Danni | {audio[0] ? audio[0].title : originTitle}</title>
-        <meta name="application-name" content="Danni TV" />
         <meta name="author" content={originAuthor} />
         <meta name="title" content={audio[0] ? audio[0].title : originTitle} />
         <meta property="og:type" content="article" />
