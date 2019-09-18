@@ -167,6 +167,7 @@ class VideoComment extends React.Component {
 
     const {
       currentUser,
+      videoId,
       comment: {
         id,
         text,
@@ -178,11 +179,9 @@ class VideoComment extends React.Component {
         vote,
       },
     } = this.props;
-
     const voteType =
       vote.length > 0 && currentUser
         ? vote.filter(commentVote => {
-            console.log(commentVote, currentUser);
             return commentVote.user.id === currentUser.id;
           })
         : null;
@@ -242,6 +241,29 @@ class VideoComment extends React.Component {
                       onClick={() =>
                         createCommentVote({
                           variables: { comment: id, type: 'UPVOTE' },
+                          // update: (proxy, { data: { createCommentVote } }) => {
+                          //   // Read the data from our cache for this query.
+                          //   const data = proxy.readQuery({
+                          //     query: QUERY_VIDEO_COMMENTS,
+                          //     variables: { video: videoId },
+                          //   });
+                          //   data.comments = data.comments.filter(
+                          //     comment => comment.id !== id
+                          //   );
+                          //   // Write our data back to the cache with the new comment in it
+                          //   proxy.writeQuery({
+                          //     query: QUERY_VIDEO_COMMENTS,
+                          //     variables: { video: videoId },
+                          //     data,
+                          //   });
+                          // },
+                          // optimisticResponse: {
+                          //   __typename: 'Mutation',
+                          //   createCommentVote: {
+                          //     id,
+                          //     __typename: 'CommentVote',
+                          //   },
+                          // },
                         })
                       }
                     />
