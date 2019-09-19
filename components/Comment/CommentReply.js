@@ -17,12 +17,12 @@ const deleteCommentReplyMutation = ({ id, videoId, render }) => (
   <Mutation
     mutation={DELETE_COMMENTREPLY_MUTATION}
     variables={{ commentReply: id }}
-    refetchQueries={[
-      {
-        query: QUERY_VIDEO_COMMENTS,
-        variables: { video: videoId },
-      },
-    ]}
+    // refetchQueries={[
+    //   {
+    //     query: QUERY_VIDEO_COMMENTS,
+    //     variables: { video: videoId },
+    //   },
+    // ]}
   >
     {(deleteCommentReply, deleteCommentReplyResult) => {
       return render({ deleteCommentReply, deleteCommentReplyResult });
@@ -78,6 +78,61 @@ class CommentReply extends React.Component {
 
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
+  };
+
+  update = (proxy, { data: { createCommentReplyVote: createVote } }) => {
+    const {
+      commentReply: {
+        id,
+        comment: {
+          id: parentId,
+          video: { id: videoId },
+        },
+      },
+      currentUser,
+    } = this.props;
+    // Read the data from our cache for this query.
+    const data = proxy.readQuery({
+      query: QUERY_VIDEO_COMMENTS,
+      variables: { video: videoId },
+    });
+    const votingComment = data.comments.find(
+      comment => comment.id === parentId
+    );
+    const votingReply = votingComment.reply.find(reply => reply.id === id);
+    const existingVote =
+      votingReply.vote.length > 0
+        ? votingReply.vote.find(vote => vote.user.id === currentUser.id)
+        : null;
+    data.comments = data.comments.map(comment => {
+      if (comment.id === votingComment.id) {
+        comment.reply.map(reply => {
+          if (reply.id === votingReply.id) {
+            if (!existingVote) {
+              reply.vote = reply.vote.concat([createVote]);
+            } else if (existingVote && existingVote.type !== createVote.type) {
+              reply.vote = reply.vote.map(commentReplyVote => {
+                if (commentReplyVote.user.id === currentUser.id) {
+                  commentReplyVote.type = createVote.type;
+                }
+                return commentReplyVote;
+              });
+            } else if (existingVote && existingVote.type === createVote.type) {
+              reply.vote = reply.vote.filter(
+                commentReplyVote => commentReplyVote.user.id !== currentUser.id
+              );
+            }
+          }
+          return reply;
+        });
+      }
+      return comment;
+    });
+    proxy.writeQuery({
+      query: QUERY_VIDEO_COMMENTS,
+      variables: { video: videoId },
+      data,
+    });
   };
 
   onTextChange = e => {
@@ -193,6 +248,10 @@ class CommentReply extends React.Component {
                           name="angle up"
                           size="large"
                           link
+                          disabled={
+                            createCommentReplyVoteError ||
+                            createCommentReplyVoteLoading
+                          }
                           color={
                             voteType && voteType.type === 'UPVOTE'
                               ? 'orange'
@@ -201,6 +260,19 @@ class CommentReply extends React.Component {
                           onClick={() =>
                             createCommentReplyVote({
                               variables: { commentReply: id, type: 'UPVOTE' },
+                              optimisticResponse: {
+                                __typename: 'Mutation',
+                                createCommentReplyVote: {
+                                  id: Math.round(Math.random() * -100000000),
+                                  type: 'UPVOTE',
+                                  user: {
+                                    id: currentUser.id,
+                                    __typename: 'User',
+                                  },
+                                  __typename: 'CommentReplyVote',
+                                },
+                              },
+                              update: this.update,
                             })
                           }
                         />
@@ -209,6 +281,10 @@ class CommentReply extends React.Component {
                           name="angle down"
                           size="large"
                           link
+                          disabled={
+                            createCommentReplyVoteError ||
+                            createCommentReplyVoteLoading
+                          }
                           color={
                             voteType && voteType.type === 'DOWNVOTE'
                               ? 'purple'
@@ -217,6 +293,19 @@ class CommentReply extends React.Component {
                           onClick={() =>
                             createCommentReplyVote({
                               variables: { commentReply: id, type: 'DOWNVOTE' },
+                              optimisticResponse: {
+                                __typename: 'Mutation',
+                                createCommentReplyVote: {
+                                  id: Math.round(Math.random() * -100000000),
+                                  type: 'DOWNVOTE',
+                                  user: {
+                                    id: currentUser.id,
+                                    __typename: 'User',
+                                  },
+                                  __typename: 'CommentReplyVote',
+                                },
+                              },
+                              update: this.update,
                             })
                           }
                         />

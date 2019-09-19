@@ -139,31 +139,19 @@ class VideoComment extends React.Component {
       query: QUERY_VIDEO_COMMENTS,
       variables: { video: videoId },
     });
-
     const votingComment = data.comments.find(comment => comment.id === id);
-
     const existingVote =
       votingComment.vote.length > 0
         ? votingComment.vote.find(vote => vote.user.id === currentUser.id)
         : null;
-    console.log('existingVote', existingVote);
-    console.log('createVote', createVote);
     data.comments = data.comments.map(comment => {
-      if (comment.id === id) {
-        console.log('votes array before', comment.vote);
-
+      if (comment.id === votingComment.id) {
         if (!existingVote) {
           comment.vote = comment.vote.concat([createVote]);
         } else if (existingVote && existingVote.type !== createVote.type) {
           comment.vote = comment.vote.map(commentVote => {
             if (commentVote.user.id === currentUser.id) {
               commentVote.type = createVote.type;
-              // commentVote = {
-              //   ...commentVote,
-              //   type: createVote.type,
-              //   id: createVote.id,
-              // };
-              // commentVote.id = createVote.id;
             }
             return commentVote;
           });
@@ -172,11 +160,9 @@ class VideoComment extends React.Component {
             commentVote => commentVote.user.id !== currentUser.id
           );
         }
-        console.log('votes array after', comment.vote);
       }
       return comment;
     });
-console.log("--------------")
     proxy.writeQuery({
       query: QUERY_VIDEO_COMMENTS,
       variables: { video: videoId },
@@ -211,7 +197,6 @@ console.log("--------------")
       createCommentVoteResult: {
         error: createCommentVoteError,
         loading: createCommentVoteLoading,
-        networkStatus: createCommentVoteNetwork,
       },
     }
   ) {
@@ -291,7 +276,9 @@ console.log("--------------")
                       }
                       size="large"
                       link
-                      disabled={createCommentVoteLoading}
+                      disabled={
+                        createCommentVoteLoading || createCommentVoteError
+                      }
                       onClick={() => {
                         createCommentVote({
                           variables: { comment: id, type: 'UPVOTE' },
@@ -311,7 +298,9 @@ console.log("--------------")
                     <span>{voteCount}</span>
                     <Icon
                       name="angle down"
-                      disabled={createCommentVoteLoading}
+                      disabled={
+                        createCommentVoteLoading || createCommentVoteError
+                      }
                       color={
                         voteType && voteType.type === 'DOWNVOTE'
                           ? 'purple'
