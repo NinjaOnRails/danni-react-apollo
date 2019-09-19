@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
@@ -8,27 +7,9 @@ import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
-import { CURRENT_USER_QUERY } from './User';
-
+import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
-
-const RESET_PASSWORD_MUTATION = gql`
-  mutation RESET_PASSWORD_MUTATION(
-    $confirmPassword: String!
-    $password: String!
-    $resetToken: String!
-  ) {
-    resetPassword(
-      confirmPassword: $confirmPassword
-      password: $password
-      resetToken: $resetToken
-    ) {
-      id
-      email
-      displayName
-    }
-  }
-`;
+import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
 
 class Reset extends Component {
   static propTypes = {
@@ -94,4 +75,3 @@ class Reset extends Component {
 }
 
 export default withRouter(Reset);
-export { RESET_PASSWORD_MUTATION };

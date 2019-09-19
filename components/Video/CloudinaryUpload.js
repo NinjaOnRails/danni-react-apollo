@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import { Loader, Progress, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
-import { CURRENT_USER_QUERY } from '../Authentication/User';
+import { CLOUDINARY_AUTH } from '../../graphql/query';
+import { user } from '../UI/ContentLanguage';
 
-const CLOUDINARY_AUTH = gql`
-  query CLOUDINARY_AUTH($source: String!, $language: Language) {
-    cloudinaryAuth(source: $source, language: $language) {
-      signature
-      timestamp
-    }
-  }
-`;
+const cloudinaryAuth = ({ source, language, render }) => (
+  <Query
+    query={CLOUDINARY_AUTH}
+    variables={{
+      source,
+      language,
+    }}
+  >
+    {render}
+  </Query>
+);
+
+const Composed = adopt({
+  cloudinaryAuth,
+  user,
+});
 
 class CloudinaryUpload extends Component {
   state = {
@@ -35,16 +44,16 @@ class CloudinaryUpload extends Component {
       onAudioLoadedMetadata,
     } = this.props;
     return (
-      <Query
-        query={CLOUDINARY_AUTH}
-        variables={{
-          source,
-          language,
-        }}
-      >
-        {({ loading, error, data }) => {
-          if (loading) return <Loader inline="centered" active />;
+      <Composed source={source} language={language}>
+        {({
+          cloudinaryAuth: { loading, error, data },
+          user: { currentUser, loading: loadingUser },
+        }) => {
+          if (loading || loadingUser)
+            return <Loader inline="centered" active />;
           if (error) return <Error>Error: {error.message}</Error>;
+          const { id } = currentUser;
+
           return (
             <>
               {(uploadError && (
@@ -73,62 +82,50 @@ class CloudinaryUpload extends Component {
                 ((this.state.startingUpload || deleteToken) && (
                   <Loader inline="centered" active />
                 )) || (
-                  <Query query={CURRENT_USER_QUERY}>
-                    {({
-                      data: {
-                        currentUser: { id },
-                      },
-                    }) => (
-                      <>
-                        <label htmlFor="file">
-                          Choose a Local File:
-                          <input
-                            type="file"
-                            id="file"
-                            name="file"
-                            accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
-                            onChange={async e => {
-                              this.setState({ startingUpload: true });
-                              await onUploadFileSubmit(
-                                data.cloudinaryAuth,
-                                id,
-                                e
-                              );
-                              this.setState({ startingUpload: false });
-                            }}
-                          />
-                        </label>
-                        OR
-                        <label htmlFor="audioSource">
-                          Provide a Direct Link:
-                          <Button
-                            type="button"
-                            floated="right"
-                            primary
-                            onClick={async () => {
-                              this.setState({ startingUpload: true });
-                              await onUploadFileSubmit(data.cloudinaryAuth, id);
-                              this.setState({ startingUpload: false });
-                            }}
-                          >
-                            <Icon name="upload" />
-                            Upload
-                          </Button>
-                          <input
-                            type="text"
-                            name="audioSource"
-                            value={audioSource}
-                            onChange={handleChange}
-                          />
-                        </label>
-                      </>
-                    )}
-                  </Query>
+                  <>
+                    <label htmlFor="file">
+                      Choose a Local File:
+                      <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
+                        onChange={async e => {
+                          this.setState({ startingUpload: true });
+                          await onUploadFileSubmit(data.cloudinaryAuth, id, e);
+                          this.setState({ startingUpload: false });
+                        }}
+                      />
+                    </label>
+                    OR
+                    <label htmlFor="audioSource">
+                      Provide a Direct Link:
+                      <Button
+                        type="button"
+                        floated="right"
+                        primary
+                        onClick={async () => {
+                          this.setState({ startingUpload: true });
+                          await onUploadFileSubmit(data.cloudinaryAuth, id);
+                          this.setState({ startingUpload: false });
+                        }}
+                      >
+                        <Icon name="upload" />
+                        Upload
+                      </Button>
+                      <input
+                        type="text"
+                        name="audioSource"
+                        value={audioSource}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </>
                 )}
             </>
           );
         }}
-      </Query>
+      </Composed>
     );
   }
 }

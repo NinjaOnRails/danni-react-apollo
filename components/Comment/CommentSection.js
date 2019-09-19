@@ -3,26 +3,15 @@ import { Button, Comment, Form, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Mutation, Query } from 'react-apollo';
 import { adopt } from 'react-adopt';
-import User from '../Authentication/User';
 import VideoComment from './Comment';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
-import {
-  QUERY_VIDEO_COMMENTS,
-  CREATE_COMMENT_MUTATION,
-} from './commentQueries';
+import { CREATE_COMMENT_MUTATION } from '../../graphql/mutation';
+import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import PleaseSignIn from '../Authentication/PleaseSignIn';
+import { user } from '../UI/ContentLanguage';
 
 /* eslint-disable */
-const user = ({ render }) => (
-  <User>
-    {({ data, loading }) => {
-      const currentUser = data ? data.currentUser : null;
-      return render({ currentUser, loading });
-    }}
-  </User>
-);
-
 const createCommentMutation = ({ commentInput, videoId, render }) => (
   <Mutation
     mutation={CREATE_COMMENT_MUTATION}
@@ -32,7 +21,7 @@ const createCommentMutation = ({ commentInput, videoId, render }) => (
     }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}
@@ -44,17 +33,17 @@ const createCommentMutation = ({ commentInput, videoId, render }) => (
 );
 
 const videoComments = ({ videoId, render }) => (
-  <Query query={QUERY_VIDEO_COMMENTS} variables={{ video: videoId }}>
+  <Query query={VIDEO_COMMENTS_QUERY} variables={{ video: videoId }}>
     {render}
   </Query>
 );
+/* eslint-enable */
 
 const Composed = adopt({
   user,
   createCommentMutation,
   videoComments,
 });
-/* eslint-enable */
 
 class CommentSection extends React.Component {
   state = {
@@ -71,9 +60,61 @@ class CommentSection extends React.Component {
     if (data) this.setState({ commentInput: '' });
   };
 
-  render() {
-    const { commentInput, commentInputValid } = this.state;
+  renderComments = (data, createCommentLoading, createComment, currentUser) => {
     const { videoId, client } = this.props;
+    const { commentInput, commentInputValid } = this.state;
+
+    return (
+      <CommentSectionStyles>
+        <Comment.Group size="large">
+          <PleaseSignIn
+            action="Comment"
+            minimalistic
+            hidden={data.hideSigninToComment}
+          >
+            <Form
+              loading={createCommentLoading}
+              reply
+              onSubmit={() => {
+                if (commentInput.length > 0)
+                  this.onCommentSubmit(createComment);
+              }}
+            >
+              <Form.TextArea
+                placeholder="Write a comment..."
+                onChange={this.onTextChange}
+                value={commentInput}
+                onClick={() =>
+                  client.writeData({
+                    data: { hideSigninToComment: false },
+                  })
+                }
+              />
+              <Button
+                content="Add Comment"
+                primary
+                disabled={commentInputValid}
+              />
+            </Form>
+          </PleaseSignIn>
+          {data.comments &&
+            data.comments.map(comment => (
+              <VideoComment
+                key={comment.id}
+                comment={comment}
+                videoId={videoId}
+                currentUser={currentUser}
+                client={client}
+              />
+            ))}
+        </Comment.Group>
+      </CommentSectionStyles>
+    );
+  };
+
+  render() {
+    const { commentInput } = this.state;
+    const { videoId } = this.props;
     return (
       <Composed videoId={videoId} commentInput={commentInput}>
         {({
@@ -91,56 +132,20 @@ class CommentSection extends React.Component {
             data,
           },
         }) => (
-          <CommentSectionStyles>
+          <>
             <Error error={commentsLoadingError} />
             <Error error={createCommentError} />
             {commentsLoading ? (
               <Loader active inline="centered" />
             ) : (
-              <Comment.Group size="large">
-                <PleaseSignIn
-                  action="Comment"
-                  minimalistic
-                  hidden={data.hideSigninToComment}
-                >
-                  <Form
-                    loading={createCommentLoading}
-                    reply
-                    onSubmit={() => {
-                      if (commentInput.length > 0)
-                        this.onCommentSubmit(createComment);
-                    }}
-                  >
-                    <Form.TextArea
-                      placeholder="Write a comment..."
-                      onChange={this.onTextChange}
-                      value={commentInput}
-                      onClick={() =>
-                        client.writeData({
-                          data: { hideSigninToComment: false },
-                        })
-                      }
-                    />
-                    <Button
-                      content="Add Comment"
-                      primary
-                      disabled={commentInputValid}
-                    />
-                  </Form>
-                </PleaseSignIn>
-                {data.comments &&
-                  data.comments.map(comment => (
-                    <VideoComment
-                      key={comment.id}
-                      comment={comment}
-                      videoId={videoId}
-                      currentUser={currentUser}
-                      client={client}
-                    />
-                  ))}
-              </Comment.Group>
+              this.renderComments(
+                data,
+                createCommentLoading,
+                createComment,
+                currentUser
+              )
             )}
-          </CommentSectionStyles>
+          </>
         )}
       </Composed>
     );

@@ -3,26 +3,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation, Query, ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
-import { SIGN_OUT_MUTATION } from '../../Authentication/Signout';
-import User, { CURRENT_USER_QUERY } from '../../Authentication/User';
+import { onSignout } from '../../Authentication/Signout';
+import User from '../../Authentication/User';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
 import ContentLanguage from '../ContentLanguage';
-
-const CLOSE_SIDEDRAWER_MUTATION = gql`
-  mutation {
-    closeSideDrawer @client
-  }
-`;
-
-const LOCAL_STATE_QUERY = gql`
-  query {
-    showSide @client
-  }
-`;
+import {
+  SIGN_OUT_MUTATION,
+  CLOSE_SIDEDRAWER_MUTATION,
+} from '../../../graphql/mutation';
+import { LOCAL_STATE_QUERY } from '../../../graphql/query';
 
 const LanguageMenuStyles = styled.div`
   button.ui.button {
@@ -158,18 +150,7 @@ const SideDrawer = () => {
                     </>
                   )}
                   {currentUser && (
-                    <MenuItem
-                      as="a"
-                      onClick={async () => {
-                        await signout();
-                        closeSideDrawer();
-                        localStorage.clear();
-                        await client.resetStore();
-                        client.query({
-                          query: CURRENT_USER_QUERY,
-                        });
-                      }}
-                    >
+                    <MenuItem as="a" onClick={() => onSignout(signout, client)}>
                       <div className="link-container">
                         <Icon name="sign-out" size="large" />
                         <span className="link-name">Sign Out</span>
@@ -190,4 +171,3 @@ const SideDrawer = () => {
 };
 
 export default SideDrawer;
-export { LOCAL_STATE_QUERY, CLOSE_SIDEDRAWER_MUTATION };

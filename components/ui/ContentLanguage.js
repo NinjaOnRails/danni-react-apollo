@@ -1,82 +1,21 @@
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
-import { Loader } from 'semantic-ui-react';
-import gql from 'graphql-tag';
 import { adopt } from 'react-adopt';
 import ContentLanguageMenu from './ContentLanguageMenu';
 import User from '../Authentication/User';
-
-const TOGGLE_CONTENT_LANGUAGE_MUTATION = gql`
-  mutation toggleContentLanguage($language: String!) {
-    toggleContentLanguage(language: $language) @client
-  }
-`;
-
-const ADD_CONTENT_LANGUAGE_MUTATION = gql`
-  mutation addContentLanguage($language: String!) {
-    addContentLanguage(language: $language) @client
-  }
-`;
-
-const UPDATE_CONTENT_LANGUAGE_MUTATION = gql`
-  mutation updateContentLanguage($contentLanguage: [Language]) {
-    updateContentLanguage(contentLanguage: $contentLanguage) {
-      id
-      contentLanguage
-    }
-  }
-`;
-
-const ALL_VIDEOS_QUERY = gql`
-  query ALL_VIDEOS_QUERY($contentLanguage: [Language!]) {
-    videos(where: { language_in: $contentLanguage }, orderBy: createdAt_DESC) {
-      id
-      originThumbnailUrl
-      originThumbnailUrlSd
-      originTitle
-      duration
-      originAuthor
-      originViewCount
-      addedBy {
-        displayName
-      }
-      audio {
-        id
-        title
-        author {
-          displayName
-        }
-      }
-    }
-  }
-`;
-
-const ALL_AUDIOS_QUERY = gql`
-  query ALL_AUDIOS_QUERY($contentLanguage: [Language!]) {
-    audios(where: { language_in: $contentLanguage }, orderBy: createdAt_DESC) {
-      id
-      title
-      author {
-        displayName
-      }
-      video {
-        id
-        originAuthor
-        originThumbnailUrl
-        originThumbnailUrlSd
-        duration
-      }
-    }
-  }
-`;
-
-const CONTENT_LANGUAGE_QUERY = gql`
-  query {
-    contentLanguage @client
-    previousPage @client
-  }
-`;
+import {
+  ALL_AUDIOS_QUERY,
+  ALL_VIDEOS_QUERY,
+  CONTENT_LANGUAGE_QUERY,
+} from '../../graphql/query';
+import {
+  TOGGLE_CONTENT_LANGUAGE_MUTATION,
+  ADD_CONTENT_LANGUAGE_MUTATION,
+  UPDATE_CONTENT_LANGUAGE_MUTATION,
+} from '../../graphql/mutation';
 
 /* eslint-disable */
+const client = ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>;
+
 const user = ({ render }) => (
   <User>
     {({ data, loading }) => {
@@ -86,11 +25,11 @@ const user = ({ render }) => (
   </User>
 );
 
-const localState = ({ render }) => (
+const contentLanguageQuery = ({ render }) => (
   <Query query={CONTENT_LANGUAGE_QUERY}>
-    {({ data, loading: loadingLocalState }) => {
+    {({ data }) => {
       const contentLanguage = data ? data.contentLanguage : [];
-      return render({ contentLanguage, loadingLocalState });
+      return render({ contentLanguage });
     }}
   </Query>
 );
@@ -103,7 +42,10 @@ const updateContentLanguageMutation = ({ render }) => (
   </Mutation>
 );
 
-const toggleContentLanguage = ({ localState: { contentLanguage }, render }) => {
+const toggleContentLanguage = ({
+  contentLanguageQuery: { contentLanguage },
+  render,
+}) => {
   return (
     <Mutation
       mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
@@ -123,7 +65,10 @@ const toggleContentLanguage = ({ localState: { contentLanguage }, render }) => {
   );
 };
 
-const addContentLanguage = ({ localState: { contentLanguage }, render }) => {
+const addContentLanguage = ({
+  contentLanguageQuery: { contentLanguage },
+  render,
+}) => {
   return (
     <Mutation
       mutation={ADD_CONTENT_LANGUAGE_MUTATION}
@@ -145,8 +90,8 @@ const addContentLanguage = ({ localState: { contentLanguage }, render }) => {
 
 const Composed = adopt({
   user,
-  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
-  localState,
+  client,
+  contentLanguageQuery,
   updateContentLanguageMutation,
   toggleContentLanguage,
   addContentLanguage,
@@ -158,8 +103,8 @@ const ContentLanguage = props => {
     <Composed>
       {({
         user: { currentUser, loading },
-        client,
-        localState: { contentLanguage, loadingLocalState },
+        client: apolloClient,
+        contentLanguageQuery: { contentLanguage },
         updateContentLanguageMutation: {
           updateContentLanguage,
           loading: loadingUpdate,
@@ -168,18 +113,16 @@ const ContentLanguage = props => {
         toggleContentLanguage,
         addContentLanguage,
       }) => {
-        if (loading || loadingLocalState)
-          return <Loader active inline="centered" />;
-
         return (
           <ContentLanguageMenu
             toggleContentLanguage={toggleContentLanguage}
             addContentLanguage={addContentLanguage}
             contentLanguage={contentLanguage}
-            client={client}
+            client={apolloClient}
             currentUser={currentUser}
             updateContentLanguage={updateContentLanguage}
             loadingUpdate={loadingUpdate}
+            loadingUser={loading}
             {...props}
           />
         );
@@ -189,4 +132,4 @@ const ContentLanguage = props => {
 };
 
 export default ContentLanguage;
-export { CONTENT_LANGUAGE_QUERY, ALL_AUDIOS_QUERY, ALL_VIDEOS_QUERY };
+export { client, contentLanguageQuery, user };

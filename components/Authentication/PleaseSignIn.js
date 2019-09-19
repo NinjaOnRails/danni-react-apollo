@@ -1,48 +1,49 @@
-import { Query, ApolloConsumer } from 'react-apollo';
 import { Loader, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { CURRENT_USER_QUERY } from './User';
+import { adopt } from 'react-adopt';
 import Signin from './Signin';
 import SigninMinimalistic from './SigninMinimalistic';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
+import { client, user } from '../UI/ContentLanguage';
+
+const Composed = adopt({
+  client,
+  user,
+});
 
 const PleaseSignIn = ({ action, minimalistic, hidden, children }) => {
   const router = useRouter();
   return (
-    <ApolloConsumer>
-      {client => (
-        <Query query={CURRENT_USER_QUERY}>
-          {({ data, loading }) => {
-            if (loading) return <Loader active inline="centered" />;
-            if (!data.currentUser && !hidden) {
-              if (typeof window !== 'undefined' && router) {
-                const currentPath = router.asPath;
-                localStorage.setItem('previousPage', currentPath);
-                client.writeData({
-                  data: { previousPage: currentPath },
-                });
-              }
-              return (
-                <>
-                  <StyledMessage>
-                    <Message warning>
-                      <StyledHeader>{`Please Sign In to ${action}`}</StyledHeader>
-                    </Message>
-                  </StyledMessage>
-                  {minimalistic ? (
-                    <SigninMinimalistic noRedirect />
-                  ) : (
-                    <Signin noRedirect />
-                  )}
-                </>
-              );
-            }
-            return children;
-          }}
-        </Query>
-      )}
-    </ApolloConsumer>
+    <Composed>
+      {({ user: { currentUser, loading }, client }) => {
+        if (loading) return <Loader active inline="centered" />;
+        if (!currentUser && !hidden) {
+          if (typeof window !== 'undefined' && router) {
+            const currentPath = router.asPath;
+            localStorage.setItem('previousPage', currentPath);
+            client.writeData({
+              data: { previousPage: currentPath },
+            });
+          }
+          return (
+            <>
+              <StyledMessage>
+                <Message warning>
+                  <StyledHeader>{`Please Sign In to ${action}`}</StyledHeader>
+                </Message>
+              </StyledMessage>
+              {minimalistic ? (
+                <SigninMinimalistic noRedirect />
+              ) : (
+                <Signin noRedirect />
+              )}
+            </>
+          );
+        }
+        return children;
+      }}
+    </Composed>
   );
 };
 

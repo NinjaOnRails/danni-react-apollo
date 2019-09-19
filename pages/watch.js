@@ -1,5 +1,6 @@
 import { ApolloConsumer } from 'react-apollo';
-import Watch, { VIDEO_QUERY } from '../components/Video/Watch';
+import Watch from '../components/Video/Watch';
+import { VIDEO_QUERY } from '../graphql/query';
 
 const WatchPage = props => (
   <ApolloConsumer>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Query, Mutation, ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
 import generateName from 'sillyname';
@@ -8,36 +7,15 @@ import { Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
+import {
+  CURRENT_USER_QUERY,
+  CONTENT_LANGUAGE_QUERY,
+} from '../../graphql/query';
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
-import { CONTENT_LANGUAGE_QUERY } from '../UI/ContentLanguage';
-
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
-    $name: String
-    $displayName: String
-    $email: String!
-    $password: String!
-    $contentLanguage: [Language]
-  ) {
-    signup(
-      data: {
-        name: $name
-        email: $email
-        password: $password
-        contentLanguage: $contentLanguage
-        displayName: $displayName
-      }
-    ) {
-      id
-      name
-      email
-      displayName
-    }
-  }
-`;
+import { SIGNUP_MUTATION } from '../../graphql/mutation';
+import { client } from '../UI/ContentLanguage';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -56,7 +34,7 @@ const signupMutation = ({ localState: { data }, variables, render }) => (
 );
 
 const Composed = adopt({
-  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
+  client,
   localState: ({ render }) => (
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
@@ -144,4 +122,3 @@ class Signup extends Component {
 }
 
 export default Signup;
-export { SIGNUP_MUTATION };

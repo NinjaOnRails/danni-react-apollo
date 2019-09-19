@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import Router from 'next/router';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
+import { adopt } from 'react-adopt';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
-import { ALL_VIDEOS_QUERY } from '../UI/ContentLanguage';
+import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import AddVideoForm from './AddVideoForm';
 import youtube from '../../lib/youtube';
 import { languageOptions, defaultLanguage } from '../../lib/supportedLanguages';
@@ -14,47 +14,43 @@ import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import uploadFileData from '../../lib/cloudinaryUploadFileData';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { trackNewVideo } from '../../lib/mixpanel';
+import {
+  CREATE_AUDIO_MUTATION,
+  CREATE_VIDEO_MUTATION,
+} from '../../graphql/mutation';
 
-const CREATE_VIDEO_MUTATION = gql`
-  mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
-    createVideo(source: $source, language: $language) {
-      id
-      originId
-      duration
+/* eslint-disable */
+const createAudioMutation = ({ render }) => (
+  <Mutation
+    mutation={CREATE_AUDIO_MUTATION}
+    refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+  >
+    {(createAudio, createAudioResult) =>
+      render({ createAudio, createAudioResult })
     }
-  }
-`;
+  </Mutation>
+);
 
-const CREATE_AUDIO_MUTATION = gql`
-  mutation CREATE_AUDIO_MUTATION(
-    $source: String!
-    $language: Language!
-    $title: String!
-    $description: String
-    $tags: String
-    $duration: Int!
-    $defaultVolume: Int
-    $video: ID!
-  ) {
-    createAudio(
-      data: {
-        source: $source
-        language: $language
-        title: $title
-        description: $description
-        tags: $tags
-        duration: $duration
-        defaultVolume: $defaultVolume
-        video: $video
-      }
-    ) {
-      id
-      source
-      language
-      title
+const createVideoMutation = ({ source, language, isAudioSource, render }) => (
+  <Mutation
+    mutation={CREATE_VIDEO_MUTATION}
+    variables={{
+      source,
+      language: isAudioSource ? null : language,
+    }}
+    refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+  >
+    {(createVideo, createVideoResult) =>
+      render({ createVideo, createVideoResult })
     }
-  }
-`;
+  </Mutation>
+);
+/* eslint-enable */
+
+const Composed = adopt({
+  createAudioMutation,
+  createVideoMutation,
+});
 
 class AddVideo extends Component {
   state = {
@@ -338,57 +334,51 @@ class AddVideo extends Component {
   };
 
   render() {
-    const { source, language, isAudioSource, error } = this.state;
+    const { error } = this.state;
     return (
-      <Mutation
-        mutation={CREATE_AUDIO_MUTATION}
-        refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
-      >
-        {(
-          createAudio,
-          { loading: loadingCreateAudio, error: errorCreateAudio }
-        ) => (
-          <Mutation
-            mutation={CREATE_VIDEO_MUTATION}
-            variables={{
-              source,
-              language: isAudioSource ? null : language,
-            }}
-            refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
-          >
-            {(
-              createVideo,
-              { loading: loadingCreateVideo, error: errorCreateVideo }
-            ) => (
-              <Container>
-                <Form
-                  data-test="form"
-                  onSubmit={async e =>
-                    this.onFormSubmit(e, createAudio, createVideo)
-                  }
-                >
-                  <Error error={errorCreateAudio} />
-                  <Error error={errorCreateVideo} />
-                  <Error error={{ message: error }} />
-                  <AddVideoForm
-                    {...this.state}
-                    loadingCreateAudio={loadingCreateAudio}
-                    loadingCreateVideo={loadingCreateVideo}
-                    handleDropdown={this.handleDropdown}
-                    handleChange={this.handleChange}
-                    onUploadFileSubmit={this.onUploadFileSubmit}
-                    onDeleteFileSubmit={this.onDeleteFileSubmit}
-                    onAudioLoadedMetadata={this.onAudioLoadedMetadata}
-                  />
-                </Form>
-              </Container>
-            )}
-          </Mutation>
+      <Composed {...this.state}>
+        {({
+          createAudioMutation: {
+            createAudio,
+            createAudioResult: {
+              loading: loadingCreateAudio,
+              error: errorCreateAudio,
+            },
+          },
+          createVideoMutation: {
+            createVideo,
+            createVideoResult: {
+              loading: loadingCreateVideo,
+              error: errorCreateVideo,
+            },
+          },
+        }) => (
+          <Container>
+            <Form
+              data-test="form"
+              onSubmit={async e =>
+                this.onFormSubmit(e, createAudio, createVideo)
+              }
+            >
+              <Error error={errorCreateAudio} />
+              <Error error={errorCreateVideo} />
+              <Error error={{ message: error }} />
+              <AddVideoForm
+                {...this.state}
+                loadingCreateAudio={loadingCreateAudio}
+                loadingCreateVideo={loadingCreateVideo}
+                handleDropdown={this.handleDropdown}
+                handleChange={this.handleChange}
+                onUploadFileSubmit={this.onUploadFileSubmit}
+                onDeleteFileSubmit={this.onDeleteFileSubmit}
+                onAudioLoadedMetadata={this.onAudioLoadedMetadata}
+              />
+            </Form>
+          </Container>
         )}
-      </Mutation>
+      </Composed>
     );
   }
 }
 
 export default AddVideo;
-export { CREATE_AUDIO_MUTATION, CREATE_VIDEO_MUTATION };

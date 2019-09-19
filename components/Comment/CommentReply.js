@@ -8,8 +8,8 @@ import Error from '../UI/ErrorMessage';
 import {
   UPDATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENTREPLY_MUTATION,
-  QUERY_VIDEO_COMMENTS,
-} from './commentQueries';
+} from '../../graphql/mutation';
+import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render }) => (
@@ -18,7 +18,7 @@ const deleteCommentReplyMutation = ({ id, videoId, render }) => (
     variables={{ commentReply: id }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}
@@ -35,7 +35,7 @@ const updateCommentReplyMutation = ({ id, videoId, editInput, render }) => (
     variables={{ commentReply: id, text: editInput }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}

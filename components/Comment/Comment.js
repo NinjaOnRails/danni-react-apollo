@@ -10,9 +10,9 @@ import Error from '../UI/ErrorMessage';
 import {
   CREATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENT_MUTATION,
-  QUERY_VIDEO_COMMENTS,
   UPDATE_COMMENT_MUTATION,
-} from './commentQueries';
+} from '../../graphql/mutation';
+import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 
 /* eslint-disable */
 const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
@@ -20,7 +20,7 @@ const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
     mutation={CREATE_COMMENTREPLY_MUTATION}
     variables={{ comment: id, text: replyInput }}
     refetchQueries={[
-      { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
+      { query: VIDEO_COMMENTS_QUERY, variables: { video: videoId } },
     ]}
   >
     {(createCommentReply, createCommentReplyResult) => {
@@ -35,7 +35,7 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
     variables={{ comment: id }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}
@@ -52,7 +52,7 @@ const updateCommentMutation = ({ id, updateInput, videoId, render }) => (
     variables={{ comment: id, text: updateInput }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}

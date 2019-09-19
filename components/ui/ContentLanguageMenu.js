@@ -125,6 +125,7 @@ class LanguageMenu extends Component {
       contentLanguage,
       loadingUpdate,
       sideDrawer,
+      loadingUser,
     } = this.props;
     const buttonWidth = sideDrawer ? 2 : 1;
     return (
@@ -145,7 +146,7 @@ class LanguageMenu extends Component {
               }
               id={languageOptions[value]}
               active={contentLanguage.includes(languageOptions[value])}
-              disabled={loadingUpdate}
+              disabled={loadingUser || loadingUpdate || !contentLanguage.length}
             >
               <Flag name={flag} id={languageOptions[value]} />
               {sideDrawer && languageOptionsLocal[value]}

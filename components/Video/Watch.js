@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { Container, Grid, Loader } from 'semantic-ui-react';
-import VideoList from './VideoList';
+import SmallVideoList from './SmallVideoList';
 import CommentSection from '../Comment/CommentSection';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
@@ -15,46 +14,6 @@ import {
   trackPlayFinish,
   trackPlayedDuration,
 } from '../../lib/mixpanel';
-
-const VIDEO_QUERY = gql`
-  query VIDEO_QUERY($id: ID!, $audioId: ID) {
-    video(where: { id: $id }) {
-      id
-      originId
-      originPlatform
-      originLanguage
-      originTitle
-      originDescription
-      originAuthor
-      originThumbnailUrl
-      originThumbnailUrlSd
-      duration
-      addedBy {
-        displayName
-      }
-      language
-      # originTags {
-      #   text
-      # }
-      audio(where: { id: $audioId }) {
-        id
-        source
-        author {
-          displayName
-        }
-        language
-        title
-        description
-        defaultVolume
-        startAt
-        duration
-        # tags {
-        #   text
-        # }
-      }
-    }
-  }
-`;
 
 class Watch extends Component {
   state = {
@@ -240,7 +199,7 @@ class Watch extends Component {
                 </Container>
               </Grid.Column>
               <Grid.Column mobile={16} tablet={16} computer={5}>
-                <VideoList
+                <SmallVideoList
                   {...this.props}
                   currentWatchingLanguage={currentWatchingLanguage}
                   onVideoItemClick={() => this.onVideoItemClick(client)}
@@ -267,4 +226,3 @@ Watch.defaultProps = {
 };
 
 export default Watch;
-export { VIDEO_QUERY };
