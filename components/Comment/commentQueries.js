@@ -7,8 +7,57 @@ export const QUERY_VIDEO_COMMENTS = gql`
       id
       text
       createdAt
-      upvoteCount
-      downvoteCount
+
+      audio {
+        id
+      }
+
+      author {
+        id
+        displayName
+      }
+
+      reply {
+        id
+        text
+        createdAt
+        vote {
+          id
+          type
+          user {
+            id
+          }
+        }
+
+        comment {
+          id
+          video {
+            id
+          }
+        }
+        author {
+          id
+          displayName
+        }
+      }
+      vote {
+        id
+        user {
+          id
+        }
+        type
+      }
+    }
+  }
+`;
+
+export const QUERY_COMMENT = gql`
+  query QUERY_COMMENT($id: ID!) {
+    comment(where: { id: $id }) {
+      id
+      text
+      createdAt
+
       audio {
         id
       }
@@ -20,8 +69,7 @@ export const QUERY_VIDEO_COMMENTS = gql`
         id
         text
         createdAt
-        upvoteCount
-        downvoteCount
+
         comment {
           id
           video {
@@ -95,10 +143,29 @@ export const DELETE_COMMENT_MUTATION = gql`
   }
 `;
 
-export const CREATE_COMMENTVOTE_MUTATION = gql`
+export const CREATE_COMMENT_VOTE_MUTATION = gql`
   mutation CREATE_COMMENTVOTE_MUTATION($comment: ID!, $type: VoteType!) {
     createCommentVote(comment: $comment, type: $type) {
       id
+      type
+      user {
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_COMMENTREPLY_VOTE_MUTATION = gql`
+  mutation CREATE_COMMENTREPLY_VOTE_MUTATION(
+    $commentReply: ID!
+    $type: VoteType!
+  ) {
+    createCommentReplyVote(commentReply: $commentReply, type: $type) {
+      id
+      type
+      user {
+        id
+      }
     }
   }
 `;

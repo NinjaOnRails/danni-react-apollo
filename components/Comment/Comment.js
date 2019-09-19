@@ -12,10 +12,11 @@ import {
   DELETE_COMMENT_MUTATION,
   QUERY_VIDEO_COMMENTS,
   UPDATE_COMMENT_MUTATION,
-  CREATE_COMMENTVOTE_MUTATION,
+  CREATE_COMMENT_VOTE_MUTATION,
 } from './commentQueries';
 
 /* eslint-disable */
+
 const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
   <Mutation
     mutation={CREATE_COMMENTREPLY_MUTATION}
@@ -66,13 +67,13 @@ const updateCommentMutation = ({ id, updateInput, videoId, render }) => (
 
 const createCommentVoteMutation = ({ videoId, render }) => (
   <Mutation
-    mutation={CREATE_COMMENTVOTE_MUTATION}
-    refetchQueries={[
-      {
-        query: QUERY_VIDEO_COMMENTS,
-        variables: { video: videoId },
-      },
-    ]}
+    mutation={CREATE_COMMENT_VOTE_MUTATION}
+    // refetchQueries={[
+    //   {
+    //     query: QUERY_VIDEO_COMMENTS,
+    //     variables: { video: videoId },
+    //   },
+    // ]}
   >
     {(createCommentVote, createCommentVoteResult) => {
       return render({ createCommentVote, createCommentVoteResult });
@@ -127,6 +128,62 @@ class VideoComment extends React.Component {
     if (data) this.setState({ replyInput: '', showReplyInput: false });
   };
 
+  update = (proxy, { data: { createCommentVote: createVote } }) => {
+    const {
+      videoId,
+      comment: { id },
+      currentUser,
+    } = this.props;
+    // Read the data from our cache for this query.
+    const data = proxy.readQuery({
+      query: QUERY_VIDEO_COMMENTS,
+      variables: { video: videoId },
+    });
+
+    const votingComment = data.comments.find(comment => comment.id === id);
+
+    const existingVote =
+      votingComment.vote.length > 0
+        ? votingComment.vote.find(vote => vote.user.id === currentUser.id)
+        : null;
+    console.log('existingVote', existingVote);
+    console.log('createVote', createVote);
+    data.comments = data.comments.map(comment => {
+      if (comment.id === id) {
+        console.log('votes array before', comment.vote);
+
+        if (!existingVote) {
+          comment.vote = comment.vote.concat([createVote]);
+        } else if (existingVote && existingVote.type !== createVote.type) {
+          comment.vote = comment.vote.map(commentVote => {
+            if (commentVote.user.id === currentUser.id) {
+              commentVote.type = createVote.type;
+              // commentVote = {
+              //   ...commentVote,
+              //   type: createVote.type,
+              //   id: createVote.id,
+              // };
+              // commentVote.id = createVote.id;
+            }
+            return commentVote;
+          });
+        } else if (existingVote && existingVote.type === createVote.type) {
+          comment.vote = comment.vote.filter(
+            commentVote => commentVote.user.id !== currentUser.id
+          );
+        }
+        console.log('votes array after', comment.vote);
+      }
+      return comment;
+    });
+console.log("--------------")
+    proxy.writeQuery({
+      query: QUERY_VIDEO_COMMENTS,
+      variables: { video: videoId },
+      data,
+    });
+  };
+
   renderComment(
     {
       createCommentReply,
@@ -154,6 +211,7 @@ class VideoComment extends React.Component {
       createCommentVoteResult: {
         error: createCommentVoteError,
         loading: createCommentVoteLoading,
+        networkStatus: createCommentVoteNetwork,
       },
     }
   ) {
@@ -167,25 +225,20 @@ class VideoComment extends React.Component {
 
     const {
       currentUser,
-      videoId,
-      comment: {
-        id,
-        text,
-        author,
-        reply,
-        createdAt,
-        upvoteCount,
-        downvoteCount,
-        vote,
-      },
+      comment: { id, text, author, reply, createdAt, vote },
     } = this.props;
-    const voteType =
-      vote.length > 0 && currentUser
-        ? vote.filter(commentVote => {
-            return commentVote.user.id === currentUser.id;
-          })
-        : null;
-
+    let voteType = null;
+    let voteCount = 0;
+    if (vote.length > 0) {
+      voteCount = vote.reduce((total, commentVote) => {
+        const i = commentVote.type === 'UPVOTE' ? 1 : -1;
+        return total + i;
+      }, 0);
+      if (currentUser)
+        voteType = vote.find(
+          commentVote => commentVote.user.id === currentUser.id
+        );
+    }
     return (
       <Comment>
         <Error error={deleteCommentError} />
@@ -232,46 +285,35 @@ class VideoComment extends React.Component {
                     <Icon
                       name="angle up"
                       color={
-                        voteType && voteType[0].type === 'UPVOTE'
+                        voteType && voteType.type === 'UPVOTE'
                           ? 'orange'
                           : 'grey'
                       }
                       size="large"
                       link
-                      onClick={() =>
+                      disabled={createCommentVoteLoading}
+                      onClick={() => {
                         createCommentVote({
                           variables: { comment: id, type: 'UPVOTE' },
-                          // update: (proxy, { data: { createCommentVote } }) => {
-                          //   // Read the data from our cache for this query.
-                          //   const data = proxy.readQuery({
-                          //     query: QUERY_VIDEO_COMMENTS,
-                          //     variables: { video: videoId },
-                          //   });
-                          //   data.comments = data.comments.filter(
-                          //     comment => comment.id !== id
-                          //   );
-                          //   // Write our data back to the cache with the new comment in it
-                          //   proxy.writeQuery({
-                          //     query: QUERY_VIDEO_COMMENTS,
-                          //     variables: { video: videoId },
-                          //     data,
-                          //   });
-                          // },
-                          // optimisticResponse: {
-                          //   __typename: 'Mutation',
-                          //   createCommentVote: {
-                          //     id,
-                          //     __typename: 'CommentVote',
-                          //   },
-                          // },
-                        })
-                      }
+                          optimisticResponse: {
+                            __typename: 'Mutation',
+                            createCommentVote: {
+                              id: Math.round(Math.random() * -100000000),
+                              type: 'UPVOTE',
+                              user: { id: currentUser.id, __typename: 'User' },
+                              __typename: 'CommentVote',
+                            },
+                          },
+                          update: this.update,
+                        });
+                      }}
                     />
-                    <span>{+upvoteCount - +downvoteCount}</span>
+                    <span>{voteCount}</span>
                     <Icon
                       name="angle down"
+                      disabled={createCommentVoteLoading}
                       color={
-                        voteType && voteType[0].type === 'DOWNVOTE'
+                        voteType && voteType.type === 'DOWNVOTE'
                           ? 'purple'
                           : 'grey'
                       }
@@ -280,6 +322,16 @@ class VideoComment extends React.Component {
                       onClick={() =>
                         createCommentVote({
                           variables: { comment: id, type: 'DOWNVOTE' },
+                          optimisticResponse: {
+                            __typename: 'Mutation',
+                            createCommentVote: {
+                              id: Math.round(Math.random() * -100000000),
+                              type: 'DOWNVOTE',
+                              user: { id: currentUser.id, __typename: 'User' },
+                              __typename: 'CommentVote',
+                            },
+                          },
+                          update: this.update,
                         })
                       }
                     />

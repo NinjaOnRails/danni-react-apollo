@@ -9,6 +9,7 @@ import {
   UPDATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENTREPLY_MUTATION,
   QUERY_VIDEO_COMMENTS,
+  CREATE_COMMENTREPLY_VOTE_MUTATION,
 } from './commentQueries';
 
 /* eslint-disable */
@@ -45,11 +46,28 @@ const updateCommentReplyMutation = ({ id, videoId, editInput, render }) => (
     }}
   </Mutation>
 );
+
+const createCommentReplyVoteMutation = ({ videoId, render }) => (
+  <Mutation
+    mutation={CREATE_COMMENTREPLY_VOTE_MUTATION}
+    refetchQueries={[
+      {
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+      },
+    ]}
+  >
+    {(createCommentReplyVote, createCommentReplyVoteResult) => {
+      return render({ createCommentReplyVote, createCommentReplyVoteResult });
+    }}
+  </Mutation>
+);
 /* eslint-enable */
 
 const Composed = adopt({
   deleteCommentReplyMutation,
   updateCommentReplyMutation,
+  createCommentReplyVoteMutation,
 });
 
 class CommentReply extends React.Component {
@@ -87,12 +105,23 @@ class CommentReply extends React.Component {
           video: { id: videoId },
         },
         createdAt,
-        downvoteCount,
-        upvoteCount,
+        vote,
       },
       currentUser,
     } = this.props;
     const { showEditForm, editInput, editFormValid } = this.state;
+    let voteType = null;
+    let voteCount = 0;
+    if (vote.length > 0) {
+      voteCount = vote.reduce((total, commentVote) => {
+        const i = commentVote.type === 'UPVOTE' ? 1 : -1;
+        return total + i;
+      }, 0);
+      if (currentUser)
+        voteType = vote.find(
+          commentVote => commentVote.user.id === currentUser.id
+        );
+    }
     return (
       <Composed editInput={editInput} videoId={videoId} id={id}>
         {({
@@ -108,6 +137,13 @@ class CommentReply extends React.Component {
             updateCommentReplyResult: {
               error: updateCommentReplyError,
               loading: updateCommentReplyLoading,
+            },
+          },
+          createCommentReplyVoteMutation: {
+            createCommentReplyVote,
+            createCommentReplyVoteResult: {
+              error: createCommentReplyVoteError,
+              loading: createCommentReplyVoteLoading,
             },
           },
         }) => (
@@ -153,9 +189,37 @@ class CommentReply extends React.Component {
                         <p>{text}</p>
                       </Comment.Text>
                       <Comment.Actions>
-                        <Icon name="angle up" size="large" link />
-                        <span>{+upvoteCount - +downvoteCount} </span>
-                        <Icon name="angle down" size="large" link />
+                        <Icon
+                          name="angle up"
+                          size="large"
+                          link
+                          color={
+                            voteType && voteType.type === 'UPVOTE'
+                              ? 'orange'
+                              : 'grey'
+                          }
+                          onClick={() =>
+                            createCommentReplyVote({
+                              variables: { commentReply: id, type: 'UPVOTE' },
+                            })
+                          }
+                        />
+                        <span>{voteCount} </span>
+                        <Icon
+                          name="angle down"
+                          size="large"
+                          link
+                          color={
+                            voteType && voteType.type === 'DOWNVOTE'
+                              ? 'purple'
+                              : 'grey'
+                          }
+                          onClick={() =>
+                            createCommentReplyVote({
+                              variables: { commentReply: id, type: 'DOWNVOTE' },
+                            })
+                          }
+                        />
                         <Comment.Action onClick={onReplyClick}>
                           Reply
                         </Comment.Action>

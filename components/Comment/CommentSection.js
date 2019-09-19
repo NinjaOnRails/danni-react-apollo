@@ -68,7 +68,7 @@ class CommentSection extends React.Component {
 
   onCommentSubmit = async createComment => {
     const { data } = await createComment();
-    if (data) this.setState({ commentInput: '' });
+    if (data) this.setState({ commentInput: '', commentInputValid: false });
   };
 
   render() {
