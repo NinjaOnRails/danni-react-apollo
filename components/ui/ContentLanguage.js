@@ -29,7 +29,8 @@ const contentLanguageQuery = ({ render }) => (
   <Query query={CONTENT_LANGUAGE_QUERY}>
     {({ data }) => {
       const contentLanguage = data ? data.contentLanguage : [];
-      return render({ contentLanguage });
+      const reloadingPage = data ? data.reloadingPage : false;
+      return render({ contentLanguage, reloadingPage });
     }}
   </Query>
 );
@@ -49,16 +50,16 @@ const toggleContentLanguage = ({
   return (
     <Mutation
       mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
-      refetchQueries={[
-        {
-          query: ALL_AUDIOS_QUERY,
-          variables: { contentLanguage },
-        },
-        {
-          query: ALL_VIDEOS_QUERY,
-          variables: { contentLanguage },
-        },
-      ]}
+      // refetchQueries={[
+      //   {
+      //     query: ALL_AUDIOS_QUERY,
+      //     variables: { contentLanguage },
+      //   },
+      //   {
+      //     query: ALL_VIDEOS_QUERY,
+      //     variables: { contentLanguage },
+      //   },
+      // ]}
     >
       {render}
     </Mutation>
@@ -72,16 +73,16 @@ const addContentLanguage = ({
   return (
     <Mutation
       mutation={ADD_CONTENT_LANGUAGE_MUTATION}
-      refetchQueries={[
-        {
-          query: ALL_AUDIOS_QUERY,
-          variables: { contentLanguage },
-        },
-        {
-          query: ALL_VIDEOS_QUERY,
-          variables: { contentLanguage },
-        },
-      ]}
+      // refetchQueries={[
+      //   {
+      //     query: ALL_AUDIOS_QUERY,
+      //     variables: { contentLanguage },
+      //   },
+      //   {
+      //     query: ALL_VIDEOS_QUERY,
+      //     variables: { contentLanguage },
+      //   },
+      // ]}
     >
       {render}
     </Mutation>
@@ -104,7 +105,7 @@ const ContentLanguage = props => {
       {({
         user: { currentUser, loading },
         client: apolloClient,
-        contentLanguageQuery: { contentLanguage },
+        contentLanguageQuery: { contentLanguage, reloadingPage },
         updateContentLanguageMutation: {
           updateContentLanguage,
           loading: loadingUpdate,
@@ -123,6 +124,7 @@ const ContentLanguage = props => {
             updateContentLanguage={updateContentLanguage}
             loadingUpdate={loadingUpdate}
             loadingUser={loading}
+            reloadingPage={reloadingPage}
             {...props}
           />
         );

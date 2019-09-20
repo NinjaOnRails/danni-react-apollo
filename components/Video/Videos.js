@@ -41,32 +41,38 @@ const Composed = adopt({
 
 const Videos = () => {
   return (
-    <>
-      <LanguageMenuStyles>
-        <ContentLanguage />
-      </LanguageMenuStyles>
-      <VideosListStyles>
-        <Composed>
-          {({
-            contentLanguageQuery: { contentLanguage },
-            audios: {
-              loading: loadingAudios,
-              error: errorAudios,
-              data: dataAudios,
-            },
-            videos: { loading: loadingVideos, errorVideos, data: dataVideos },
-          }) => {
-            if (!contentLanguage.length || loadingAudios || loadingVideos)
-              return <VideosLoading />;
-            if (errorAudios) return <Error>Error: {errorAudios.message}</Error>;
-            if (errorVideos) return <Error>Error: {errorVideos.message}</Error>;
-            return (
+    <Composed>
+      {({
+        contentLanguageQuery: { contentLanguage, reloadingPage },
+        audios: {
+          loading: loadingAudios,
+          error: errorAudios,
+          data: dataAudios,
+        },
+        videos: { loading: loadingVideos, errorVideos, data: dataVideos },
+      }) => (
+        <>
+          <LanguageMenuStyles>
+            <ContentLanguage loadingData={loadingAudios || loadingVideos} />
+          </LanguageMenuStyles>
+          <VideosListStyles>
+            {!contentLanguage.length ||
+            loadingAudios ||
+            loadingVideos ||
+            (!dataVideos && !dataAudios) ||
+            reloadingPage ? (
+              <VideosLoading />
+            ) : errorAudios ? (
+              <Error>Error: {errorAudios.message}</Error>
+            ) : errorVideos ? (
+              <Error>Error: {errorVideos.message}</Error>
+            ) : (
               <RenderVideos dataAudios={dataAudios} dataVideos={dataVideos} />
-            );
-          }}
-        </Composed>
-      </VideosListStyles>
-    </>
+            )}
+          </VideosListStyles>
+        </>
+      )}
+    </Composed>
   );
 };
 

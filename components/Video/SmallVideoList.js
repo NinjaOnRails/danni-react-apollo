@@ -25,36 +25,42 @@ const Composed = adopt({
 
 const SmallVideoList = props => {
   return (
-    <>
-      <LanguageMenuStyles>
-        <ContentLanguage
-          currentWatchingLanguage={props.currentWatchingLanguage}
-        />
-      </LanguageMenuStyles>
-      <Composed>
-        {({
-          contentLanguageQuery: { contentLanguage },
-          audios: {
-            loading: loadingAudios,
-            error: errorAudios,
-            data: dataAudios,
-          },
-          videos: { loading: loadingVideos, errorVideos, data: dataVideos },
-        }) => {
-          if (!contentLanguage.length || loadingAudios || loadingVideos)
-            return <Loader active />;
-          if (errorAudios) return <Error>Error: {errorAudios.message}</Error>;
-          if (errorVideos) return <Error>Error: {errorVideos.message}</Error>;
-          return (
+    <Composed>
+      {({
+        contentLanguageQuery: { contentLanguage },
+        audios: {
+          loading: loadingAudios,
+          error: errorAudios,
+          data: dataAudios,
+        },
+        videos: { loading: loadingVideos, errorVideos, data: dataVideos },
+      }) => (
+        <>
+          <LanguageMenuStyles>
+            <ContentLanguage
+              currentWatchingLanguage={props.currentWatchingLanguage}
+              loadingData={loadingVideos || loadingAudios}
+            />
+          </LanguageMenuStyles>
+          {!contentLanguage.length ||
+          loadingAudios ||
+          loadingVideos ||
+          (!dataVideos && !dataAudios) ? (
+            <Loader active />
+          ) : errorAudios ? (
+            <Error>Error: {errorAudios.message}</Error>
+          ) : errorVideos ? (
+            <Error>Error: {errorVideos.message}</Error>
+          ) : (
             <RenderSmallVideoList
               audios={dataAudios.audios}
               videos={dataVideos.videos}
               {...props}
             />
-          );
-        }}
-      </Composed>
-    </>
+          )}
+        </>
+      )}
+    </Composed>
   );
 };
 

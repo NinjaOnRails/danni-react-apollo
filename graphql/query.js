@@ -107,6 +107,7 @@ const CONTENT_LANGUAGE_QUERY = gql`
   query {
     contentLanguage @client
     previousPage @client
+    reloadingPage @client
   }
 `;
 
