@@ -10,10 +10,14 @@ import Error from '../UI/ErrorMessage';
 import {
   CREATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENT_MUTATION,
-  QUERY_VIDEO_COMMENTS,
   UPDATE_COMMENT_MUTATION,
+<<<<<<< HEAD
   CREATE_COMMENT_VOTE_MUTATION,
 } from './commentQueries';
+=======
+} from '../../graphql/mutation';
+import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
+>>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
 
 /* eslint-disable */
 
@@ -22,7 +26,7 @@ const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
     mutation={CREATE_COMMENTREPLY_MUTATION}
     variables={{ comment: id, text: replyInput }}
     refetchQueries={[
-      { query: QUERY_VIDEO_COMMENTS, variables: { video: videoId } },
+      { query: VIDEO_COMMENTS_QUERY, variables: { video: videoId } },
     ]}
   >
     {(createCommentReply, createCommentReplyResult) => {
@@ -35,6 +39,7 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
   <Mutation
     mutation={DELETE_COMMENT_MUTATION}
     variables={{ comment: id }}
+<<<<<<< HEAD
     // refetchQueries={[
     //   {
     //     query: QUERY_VIDEO_COMMENTS,
@@ -44,6 +49,11 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
     update={(proxy, { data: { deleteComment } }) => {
       const data = proxy.readQuery({
         query: QUERY_VIDEO_COMMENTS,
+=======
+    refetchQueries={[
+      {
+        query: VIDEO_COMMENTS_QUERY,
+>>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
         variables: { video: videoId },
       });
       data.comments = data.comments.filter(
@@ -75,7 +85,7 @@ const updateCommentMutation = ({ id, updateInput, videoId, render }) => (
     variables={{ comment: id, text: updateInput }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}
@@ -255,7 +265,9 @@ class VideoComment extends React.Component {
           <>
             {/* <Comment.Avatar src="" /> */}
             <Comment.Content>
-              <Comment.Author as="a">{author.displayName}</Comment.Author>
+              <Comment.Author as="a">
+                {author ? author.displayName : 'deleted user'}
+              </Comment.Author>
               <Comment.Metadata>
                 <div>{this.formatTime(createdAt)}</div>
               </Comment.Metadata>
@@ -353,7 +365,7 @@ class VideoComment extends React.Component {
                     <Comment.Action onClick={this.onReplyClick}>
                       Reply
                     </Comment.Action>
-                    {currentUser && author.id === currentUser.id ? (
+                    {currentUser && author && author.id === currentUser.id ? (
                       <>
                         <Comment.Action onClick={this.onEditClick}>
                           Edit

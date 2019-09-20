@@ -8,9 +8,14 @@ import Error from '../UI/ErrorMessage';
 import {
   UPDATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENTREPLY_MUTATION,
+<<<<<<< HEAD
   QUERY_VIDEO_COMMENTS,
   CREATE_COMMENTREPLY_VOTE_MUTATION,
 } from './commentQueries';
+=======
+} from '../../graphql/mutation';
+import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
+>>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -19,7 +24,7 @@ const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
     variables={{ commentReply: id }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}
@@ -63,7 +68,7 @@ const updateCommentReplyMutation = ({ id, videoId, editInput, render }) => (
     variables={{ commentReply: id, text: editInput }}
     refetchQueries={[
       {
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       },
     ]}
@@ -253,7 +258,9 @@ class CommentReply extends React.Component {
               <>
                 {/* <Comment.Avatar src="" /> */}
                 <Comment.Content>
-                  <Comment.Author as="a">{author.displayName}</Comment.Author>
+                  <Comment.Author as="a">
+                    {author ? author.displayName : 'deleted user'}
+                  </Comment.Author>
                   <Comment.Metadata>
                     <div>{this.formatTime(createdAt)}</div>
                   </Comment.Metadata>
@@ -361,7 +368,9 @@ class CommentReply extends React.Component {
                         <Comment.Action onClick={onReplyClick}>
                           Reply
                         </Comment.Action>
-                        {currentUser && author.id === currentUser.id ? (
+                        {currentUser &&
+                        author &&
+                        author.id === currentUser.id ? (
                           <>
                             <Comment.Action onClick={this.onClickEdit}>
                               Edit

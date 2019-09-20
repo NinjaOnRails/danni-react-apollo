@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import gql from 'graphql-tag';
-import { Query, ApolloConsumer } from 'react-apollo';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { Container, Grid, Loader } from 'semantic-ui-react';
-import VideoList from './VideoList';
+import SmallVideoList from './SmallVideoList';
 import CommentSection from '../Comment/CommentSection';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
@@ -16,40 +14,6 @@ import {
   trackPlayFinish,
   trackPlayedDuration,
 } from '../../lib/mixpanel';
-
-const VIDEO_QUERY = gql`
-  query VIDEO_QUERY($id: ID!, $audioId: ID) {
-    video(where: { id: $id }) {
-      id
-      originId
-      originPlatform
-      originLanguage
-      originTitle
-      originDescription
-      originAuthor
-      originThumbnailUrl
-      originThumbnailUrlSd
-      duration
-      addedBy {
-        displayName
-      }
-      language
-      audio(where: { id: $audioId }) {
-        id
-        source
-        author {
-          displayName
-        }
-        language
-        title
-        description
-        defaultVolume
-        startAt
-        duration
-      }
-    }
-  }
-`;
 
 class Watch extends Component {
   state = {
@@ -64,7 +28,7 @@ class Watch extends Component {
   };
 
   componentDidMount() {
-    this.props.client.writeData({ data: { hideSignin: true } });
+    this.props.client.writeData({ data: { hideSigninToComment: true } });
   }
 
   componentDidUpdate(prevProps) {
@@ -192,80 +156,73 @@ class Watch extends Component {
   };
 
   render() {
-    const { id, audioId, client } = this.props;
+    const {
+      id,
+      asPath,
+      payload: { error, loading, data },
+      client,
+    } = this.props;
     const { readyYoutube, showFullDescription } = this.state;
-    const url = `http://danni.tv/watch?id=${id}${
-      audioId ? `&audioId=${audioId}` : ''
-    }`;
+    const url = `https://danni.tv${asPath}
+    `;
+    if (error) return <Error error={error} />;
+    if (loading) return <Loader active inline="centered" />;
+    const { video } = data;
+    if (!video) return <p>No Video Found for ID: {id}</p>;
+    const currentWatchingLanguage = video.audio[0]
+      ? video.audio[0].language
+      : video.language;
     return (
-      <Query
-        query={VIDEO_QUERY}
-        variables={{
-          id,
-          audioId,
-        }}
-      >
-        {({ error, loading, data }) => {
-          if (error) return <Error error={error} />;
-          if (loading) return <Loader active inline="centered" />;
-          const { video } = data;
-          if (!video) return <p>No Video Found for {id}</p>;
-          const currentWatchingLanguage = video.audio[0]
-            ? video.audio[0].language
-            : video.language;
-          return (
-            <>
-              <VideoHeader video={video} url={url} />
-              <StyledContainer>
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column mobile={16} tablet={16} computer={11}>
-                      {this.renderVideoPlayer(video)}
-                      <Container fluid>
-                        <VideoInfo
-                          {...this.props}
-                          video={video}
-                          url={url}
-                          showFullDescription={showFullDescription}
-                          toggleFullDescription={this.toggleFullDescription}
-                        />
-                        {video.audio[0] &&
-                          readyYoutube &&
-                          this.renderFilePlayer(video.audio)}
-                        <CommentSection
-                          videoId={id}
-                          videoLanguage={video.language}
-                          client={client}
-                        />
-                      </Container>
-                    </Grid.Column>
-                    <Grid.Column mobile={16} tablet={16} computer={5}>
-                      <VideoList
-                        {...this.props}
-                        currentWatchingLanguage={currentWatchingLanguage}
-                        onVideoItemClick={() => this.onVideoItemClick(client)}
-                      />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </StyledContainer>
-            </>
-          );
-        }}
-      </Query>
+      <>
+        <VideoHeader video={video} url={url} />
+        <StyledContainer>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column mobile={16} tablet={16} computer={11}>
+                {this.renderVideoPlayer(video)}
+                <Container fluid>
+                  <VideoInfo
+                    {...this.props}
+                    video={video}
+                    url={url}
+                    showFullDescription={showFullDescription}
+                    toggleFullDescription={this.toggleFullDescription}
+                  />
+                  {video.audio[0] &&
+                    readyYoutube &&
+                    this.renderFilePlayer(video.audio)}
+                  <CommentSection
+                    videoId={id}
+                    videoLanguage={video.language}
+                    client={client}
+                  />
+                </Container>
+              </Grid.Column>
+              <Grid.Column mobile={16} tablet={16} computer={5}>
+                <SmallVideoList
+                  {...this.props}
+                  currentWatchingLanguage={currentWatchingLanguage}
+                  onVideoItemClick={() => this.onVideoItemClick(client)}
+                />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </StyledContainer>
+      </>
     );
   }
 }
 
 Watch.propTypes = {
   id: PropTypes.string.isRequired,
-  client: PropTypes.object.isRequired,
+  asPath: PropTypes.string.isRequired,
+  payload: PropTypes.object.isRequired,
   audioId: PropTypes.string,
+  client: PropTypes.object.isRequired,
 };
 
 Watch.defaultProps = {
-  audioId: '',
+  audioId: null,
 };
 
 export default Watch;
-export { VIDEO_QUERY };

@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import { Loader, Dropdown } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
-import { VIDEO_QUERY } from './Watch';
-import { CREATE_AUDIO_MUTATION } from './AddVideo';
-import { ALL_VIDEOS_QUERY } from '../UI/ContentLanguage';
+import { VIDEO_QUERY } from '../../graphql/query';
+import { CREATE_AUDIO_MUTATION } from '../../graphql/mutation';
+import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import youtube from '../../lib/youtube';
 import DropdownForm from '../styles/VideoFormStyles';
 

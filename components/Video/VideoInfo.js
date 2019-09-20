@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import YoutubeViews from './YoutubeViews';
 
-const VideoInfoStyle = styled.div`
+const VideoInfoStyles = styled.div`
   margin-bottom: 2rem;
   line-height: 2rem;
   h1,
@@ -68,7 +68,7 @@ export default class VideoInfo extends Component {
         originTitle,
         originId,
         originAuthor,
-        addedBy: { displayName },
+        addedBy,
         originDescription,
       },
       url,
@@ -79,7 +79,7 @@ export default class VideoInfo extends Component {
     const { descriptionOverflow } = this.state;
 
     return (
-      <VideoInfoStyle>
+      <VideoInfoStyles>
         <div className="basic-info">
           <Header>
             <h1>{audio[0] ? audio[0].title : originTitle}</h1>
@@ -99,11 +99,16 @@ export default class VideoInfo extends Component {
           </Header>
           {(audio[0] && (
             <Header>
-              <h3>Read by: {audio[0].author.displayName}</h3>
+              <h3>
+                Read by:{' '}
+                {audio[0].author ? audio[0].author.displayName : 'deleted user'}
+              </h3>
             </Header>
           )) || (
             <Header>
-              <h3>Added by: {displayName}</h3>
+              <h3>
+                Added by: {addedBy ? addedBy.displayName : 'deleted user'}
+              </h3>
             </Header>
           )}
           <div
@@ -131,16 +136,20 @@ export default class VideoInfo extends Component {
             </button>
           )}
         </Segment>
-      </VideoInfoStyle>
+      </VideoInfoStyles>
     );
   }
 }
 
 VideoInfo.propTypes = {
   id: PropTypes.string.isRequired,
-  audioId: PropTypes.string.isRequired,
+  audioId: PropTypes.string,
   video: PropTypes.object.isRequired,
   url: PropTypes.string.isRequired,
   showFullDescription: PropTypes.bool.isRequired,
   toggleFullDescription: PropTypes.func.isRequired,
+};
+
+VideoInfo.defaultProps = {
+  audioId: undefined,
 };

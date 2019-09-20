@@ -3,26 +3,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation, Query, ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
-import { SIGN_OUT_MUTATION } from '../../Authentication/Signout';
-import User, { CURRENT_USER_QUERY } from '../../Authentication/User';
+import { onSignout } from '../../Authentication/Signout';
+import User from '../../Authentication/User';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
 import ContentLanguage from '../ContentLanguage';
-
-const CLOSE_SIDEDRAWER_MUTATION = gql`
-  mutation {
-    closeSideDrawer @client
-  }
-`;
-
-const LOCAL_STATE_QUERY = gql`
-  query {
-    showSide @client
-  }
-`;
+import {
+  SIGN_OUT_MUTATION,
+  CLOSE_SIDEDRAWER_MUTATION,
+} from '../../../graphql/mutation';
+import { LOCAL_STATE_QUERY } from '../../../graphql/query';
 
 const LanguageMenuStyles = styled.div`
   button.ui.button {
@@ -84,108 +76,98 @@ const SideDrawer = () => {
     <Composed>
       {({
         closeSideDrawer,
-        localData: {
-          data: { showSide: show },
-        },
+        localData: { data, loading },
         user: { currentUser },
         client,
         signout,
-      }) => (
-        <SideDrawerStyles>
-          <BackDrop clicked={closeSideDrawer} show={show} />
-          <div className={`SideDrawer ${show ? 'Open' : 'Close'}`}>
-            {/* <Logo inDrawer /> */}
-            <div className="links">
-              <Menu vertical icon="labeled" inverted>
-                <Link href="/">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="home" size="large" />
-                      <span className="link-name">Home</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/new">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon.Group size="large">
-                        <Icon name="video" />
-                        <Icon color="black" name="plus" size="tiny" />
-                      </Icon.Group>
-                      <span className="link-name">Add Video</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/about">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="info" size="large" />
-                      <span className="link-name">About</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                {!currentUser && (
-                  <>
-                    <Link href="/signin">
-                      <MenuItem
-                        as="a"
-                        onClick={() => {
-                          onAuthClick(router, client);
-                          closeSideDrawer();
-                        }}
-                      >
-                        <div className="link-container">
-                          <Icon name="user" size="large" />
-                          <span className="link-name">Sign In</span>
-                        </div>
-                      </MenuItem>
-                    </Link>
-                    <Link href="/signup">
-                      <MenuItem
-                        as="a"
-                        onClick={() => {
-                          onAuthClick(router, client);
-                          closeSideDrawer();
-                        }}
-                      >
-                        <div className="link-container">
-                          <Icon name="user plus" size="large" />
-                          <span className="link-name">Sign Up</span>
-                        </div>
-                      </MenuItem>
-                    </Link>
-                  </>
-                )}
-                {currentUser && (
-                  <MenuItem
-                    as="a"
-                    onClick={async () => {
-                      await signout();
-                      closeSideDrawer();
-                      localStorage.clear();
-                      await client.resetStore();
-                      client.query({
-                        query: CURRENT_USER_QUERY,
-                      });
-                    }}
-                  >
-                    <div className="link-container">
-                      <Icon name="sign-out" size="large" />
-                      <span className="link-name">Sign Out</span>
-                    </div>
-                  </MenuItem>
-                )}
-              </Menu>
-              <LanguageMenuStyles>
-                <ContentLanguage sideDrawer />
-              </LanguageMenuStyles>
+      }) => {
+        if (loading) return <div>loading...</div>;
+        const { showSide: show } = data;
+        return (
+          <SideDrawerStyles>
+            <BackDrop clicked={closeSideDrawer} show={show} />
+            <div className={`SideDrawer ${show ? 'Open' : 'Close'}`}>
+              {/* <Logo inDrawer /> */}
+              <div className="links">
+                <Menu vertical icon="labeled" inverted>
+                  <Link href="/">
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon name="home" size="large" />
+                        <span className="link-name">Home</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                  <Link href="/new">
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon.Group size="large">
+                          <Icon name="video" />
+                          <Icon color="black" name="plus" size="tiny" />
+                        </Icon.Group>
+                        <span className="link-name">Add Video</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                  <Link href="/about">
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon name="info" size="large" />
+                        <span className="link-name">About</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                  {!currentUser && (
+                    <>
+                      <Link href="/signin">
+                        <MenuItem
+                          as="a"
+                          onClick={() => {
+                            onAuthClick(router, client);
+                            closeSideDrawer();
+                          }}
+                        >
+                          <div className="link-container">
+                            <Icon name="user" size="large" />
+                            <span className="link-name">Sign In</span>
+                          </div>
+                        </MenuItem>
+                      </Link>
+                      <Link href="/signup">
+                        <MenuItem
+                          as="a"
+                          onClick={() => {
+                            onAuthClick(router, client);
+                            closeSideDrawer();
+                          }}
+                        >
+                          <div className="link-container">
+                            <Icon name="user plus" size="large" />
+                            <span className="link-name">Sign Up</span>
+                          </div>
+                        </MenuItem>
+                      </Link>
+                    </>
+                  )}
+                  {currentUser && (
+                    <MenuItem as="a" onClick={() => onSignout(signout, client)}>
+                      <div className="link-container">
+                        <Icon name="sign-out" size="large" />
+                        <span className="link-name">Sign Out</span>
+                      </div>
+                    </MenuItem>
+                  )}
+                </Menu>
+                <LanguageMenuStyles>
+                  <ContentLanguage sideDrawer loadingData={false} />
+                </LanguageMenuStyles>
+              </div>
             </div>
-          </div>
-        </SideDrawerStyles>
-      )}
+          </SideDrawerStyles>
+        );
+      }}
     </Composed>
   );
 };
 
 export default SideDrawer;
-export { LOCAL_STATE_QUERY, CLOSE_SIDEDRAWER_MUTATION };

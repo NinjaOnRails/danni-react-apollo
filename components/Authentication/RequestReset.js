@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import { signupFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
-
-const REQUEST_RESET_MUTATION = gql`
-  mutation REQUEST_RESET_MUTATION($email: String!) {
-    requestReset(email: $email) {
-      message
-    }
-  }
-`;
+import { REQUEST_RESET_MUTATION } from '../../graphql/mutation';
 
 class Signup extends Component {
   state = {
@@ -62,4 +54,3 @@ class Signup extends Component {
 }
 
 export default Signup;
-export { REQUEST_RESET_MUTATION };

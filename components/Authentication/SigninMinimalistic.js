@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import Link from 'next/link';
 import { Form, Segment } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Error from '../UI/ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
+import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { trackSignIn } from '../../lib/mixpanel';
-
-const SIGNIN_MUTATION = gql`
-  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
-    signin(email: $email, password: $password) {
-      id
-      displayName
-    }
-  }
-`;
+import { SIGNIN_MUTATION } from '../../graphql/mutation';
 
 const FormStyles = styled.div`
   a {
@@ -89,4 +80,3 @@ class Signin extends Component {
 }
 
 export default Signin;
-export { SIGNIN_MUTATION };

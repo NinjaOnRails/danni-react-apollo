@@ -7,6 +7,7 @@ import {
   languageOptionsLocal,
   flagOptions,
 } from '../../lib/supportedLanguages';
+import { ALL_VIDEOS_QUERY, ALL_AUDIOS_QUERY } from '../../graphql/query';
 
 class LanguageMenu extends Component {
   // Determine and set content language from one source
@@ -95,15 +96,25 @@ class LanguageMenu extends Component {
     return toggleContentLanguage({ variables: { language } });
   };
 
-  onChange = async (e, toggleContentLanguage, contentLanguage) => {
-    const { currentUser, updateContentLanguage } = this.props;
+  onChange = async e => {
+    const {
+      currentUser,
+      updateContentLanguage,
+      toggleContentLanguage,
+      contentLanguage,
+      client,
+    } = this.props;
 
     // Require min 1 language active
     if (contentLanguage.length === 1 && contentLanguage.includes(e.target.id))
       return;
 
     // Update local state
-    const res = await toggleContentLanguage({
+    const {
+      data: {
+        toggleContentLanguage: { data },
+      },
+    } = await toggleContentLanguage({
       variables: {
         language: e.target.id,
       },
@@ -113,18 +124,36 @@ class LanguageMenu extends Component {
     if (currentUser) {
       await updateContentLanguage({
         variables: {
-          contentLanguage: res.data.toggleContentLanguage.data.contentLanguage,
+          contentLanguage: data.contentLanguage,
         },
+      });
+    }
+
+    // Reload page
+    if (data && location.pathname === '/') {
+      client.writeData({ data: { reloadingPage: true } });
+      location.reload();
+    } else {
+      // Refetch data
+      client.query({
+        query: ALL_AUDIOS_QUERY,
+        variables: { contentLanguage: data.contentLanguage },
+      });
+      client.query({
+        query: ALL_VIDEOS_QUERY,
+        variables: { contentLanguage: data.contentLanguage },
       });
     }
   };
 
   render() {
     const {
-      toggleContentLanguage,
       contentLanguage,
       loadingUpdate,
       sideDrawer,
+      loadingUser,
+      loadingData,
+      reloadingPage,
     } = this.props;
     const buttonWidth = sideDrawer ? 2 : 1;
     return (
@@ -140,12 +169,16 @@ class LanguageMenu extends Component {
           {flagOptions.map(({ key, value, flag }) => (
             <Button
               key={key}
-              onClick={e =>
-                this.onChange(e, toggleContentLanguage, contentLanguage)
-              }
+              onClick={this.onChange}
               id={languageOptions[value]}
               active={contentLanguage.includes(languageOptions[value])}
-              disabled={loadingUpdate}
+              disabled={
+                loadingUser ||
+                loadingUpdate ||
+                !contentLanguage.length ||
+                loadingData ||
+                reloadingPage
+              }
             >
               <Flag name={flag} id={languageOptions[value]} />
               {sideDrawer && languageOptionsLocal[value]}
@@ -165,6 +198,9 @@ LanguageMenu.propTypes = {
   currentUser: PropTypes.object,
   contentLanguage: PropTypes.array.isRequired,
   loadingUpdate: PropTypes.bool,
+  loadingUser: PropTypes.bool.isRequired,
+  reloadingPage: PropTypes.bool.isRequired,
+  loadingData: PropTypes.bool,
   sideDrawer: PropTypes.bool,
   currentWatchingLanguage: PropTypes.string,
 };
@@ -174,6 +210,7 @@ LanguageMenu.defaultProps = {
   loadingUpdate: false,
   sideDrawer: false,
   currentWatchingLanguage: null,
+  loadingData: true,
 };
 
 export default LanguageMenu;

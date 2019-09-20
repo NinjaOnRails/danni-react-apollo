@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import { ApolloConsumer } from 'react-apollo';
 import Watch from '../components/Video/Watch';
+import { VIDEO_QUERY } from '../graphql/query';
 
 const WatchPage = props => (
   <ApolloConsumer>
@@ -9,17 +9,19 @@ const WatchPage = props => (
 );
 
 // Get and pass query params as props
-WatchPage.getInitialProps = ({ query: { id, audioId } }) => {
-  return { id, audioId };
-};
-
-WatchPage.propTypes = {
-  id: PropTypes.string.isRequired,
-  audioId: PropTypes.string,
-};
-
-WatchPage.defaultProps = {
-  audioId: '',
+WatchPage.getInitialProps = async ({
+  query: { id, audioId },
+  asPath,
+  apolloClient,
+}) => {
+  const payload = await apolloClient.query({
+    query: VIDEO_QUERY,
+    variables: {
+      id,
+      audioId,
+    },
+  });
+  return { id, audioId, asPath, payload };
 };
 
 export default WatchPage;

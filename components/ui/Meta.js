@@ -41,7 +41,8 @@ const Meta = () => (
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;display=swap&amp;subset=vietnamese"
     />
-    <title>danni.tv</title>
+    <title>Danni TV</title>
+    <meta name="application-name" content="Danni TV" />
   </Head>
 );
 
