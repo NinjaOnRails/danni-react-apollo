@@ -159,7 +159,7 @@ const SideDrawer = () => {
                   )}
                 </Menu>
                 <LanguageMenuStyles>
-                  <ContentLanguage sideDrawer />
+                  <ContentLanguage sideDrawer loadingData={false} />
                 </LanguageMenuStyles>
               </div>
             </div>
