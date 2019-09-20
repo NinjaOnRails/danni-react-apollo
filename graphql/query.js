@@ -118,8 +118,13 @@ const VIDEO_COMMENTS_QUERY = gql`
       id
       text
       createdAt
-      upvoteCount
-      downvoteCount
+      vote {
+        id
+        type
+        user {
+          id
+        }
+      }
       audio {
         id
       }
@@ -131,8 +136,13 @@ const VIDEO_COMMENTS_QUERY = gql`
         id
         text
         createdAt
-        upvoteCount
-        downvoteCount
+        vote {
+          id
+          type
+          user {
+            id
+          }
+        }
         comment {
           id
           video {

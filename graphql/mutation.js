@@ -160,6 +160,34 @@ const DELETE_COMMENT_MUTATION = gql`
   }
 `;
 
+ const CREATE_COMMENT_VOTE_MUTATION = gql`
+  mutation CREATE_COMMENTVOTE_MUTATION($comment: ID!, $type: VoteType!) {
+    createCommentVote(comment: $comment, type: $type) {
+      id
+      type
+      user {
+        id
+      }
+    }
+  }
+`;
+
+ const CREATE_COMMENTREPLY_VOTE_MUTATION = gql`
+  mutation CREATE_COMMENTREPLY_VOTE_MUTATION(
+    $commentReply: ID!
+    $type: VoteType!
+  ) {
+    createCommentReplyVote(commentReply: $commentReply, type: $type) {
+      id
+      type
+      user {
+        id
+      }
+    }
+  }
+`;
+
+
 const TOGGLE_CONTENT_LANGUAGE_MUTATION = gql`
   mutation toggleContentLanguage($language: String!) {
     toggleContentLanguage(language: $language) @client
@@ -212,4 +240,6 @@ export {
   UPDATE_CONTENT_LANGUAGE_MUTATION,
   TOGGLE_SIDEDRAWER_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
+  CREATE_COMMENT_VOTE_MUTATION,
+  CREATE_COMMENTREPLY_VOTE_MUTATION
 };
