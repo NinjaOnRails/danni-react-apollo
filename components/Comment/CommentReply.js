@@ -13,16 +13,43 @@ import {
 } from './commentQueries';
 
 /* eslint-disable */
-const deleteCommentReplyMutation = ({ id, videoId, render }) => (
+const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
   <Mutation
     mutation={DELETE_COMMENTREPLY_MUTATION}
     variables={{ commentReply: id }}
-    // refetchQueries={[
-    //   {
-    //     query: QUERY_VIDEO_COMMENTS,
-    //     variables: { video: videoId },
-    //   },
-    // ]}
+    refetchQueries={[
+      {
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+      },
+    ]}
+    update={(proxy, { data: { deleteCommentReply } }) => {
+      const data = proxy.readQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+      });
+      const commentReplyId = deleteCommentReply.id;
+      data.comments = data.comments.map(comment => {
+        if (comment.id === parentId) {
+          comment.reply = comment.reply.filter(
+            reply => reply.id !== commentReplyId
+          );
+        }
+        return comment;
+      });
+      proxy.writeQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+        data,
+      });
+    }}
+    optimisticResponse={{
+      __typename: 'Mutation',
+      deleteCommentReply: {
+        id,
+        __typename: 'CommentReply',
+      },
+    }}
   >
     {(deleteCommentReply, deleteCommentReplyResult) => {
       return render({ deleteCommentReply, deleteCommentReplyResult });
@@ -47,15 +74,72 @@ const updateCommentReplyMutation = ({ id, videoId, editInput, render }) => (
   </Mutation>
 );
 
-const createCommentReplyVoteMutation = ({ videoId, render }) => (
+const createCommentReplyVoteMutation = ({
+  render,
+  id,
+  parentId,
+  videoId,
+  currentUser,
+}) => (
   <Mutation
     mutation={CREATE_COMMENTREPLY_VOTE_MUTATION}
-    refetchQueries={[
-      {
+    // refetchQueries={[
+    //   {
+    //     query: QUERY_VIDEO_COMMENTS,
+    //     variables: { video: videoId },
+    //   },
+    // ]}
+    update={(proxy, { data: { createCommentReplyVote: createVote } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
         query: QUERY_VIDEO_COMMENTS,
         variables: { video: videoId },
-      },
-    ]}
+      });
+      const votingComment = data.comments.find(
+        comment => comment.id === parentId
+      );
+      const votingReply = votingComment.reply.find(reply => reply.id === id);
+      const existingVote =
+        votingReply.vote.length > 0
+          ? votingReply.vote.find(vote => vote.user.id === currentUser.id)
+          : null;
+      data.comments = data.comments.map(comment => {
+        if (comment.id === votingComment.id) {
+          comment.reply.map(reply => {
+            if (reply.id === votingReply.id) {
+              if (!existingVote) {
+                reply.vote = reply.vote.concat([createVote]);
+              } else if (
+                existingVote &&
+                existingVote.type !== createVote.type
+              ) {
+                reply.vote = reply.vote.map(commentReplyVote => {
+                  if (commentReplyVote.user.id === currentUser.id) {
+                    commentReplyVote.type = createVote.type;
+                  }
+                  return commentReplyVote;
+                });
+              } else if (
+                existingVote &&
+                existingVote.type === createVote.type
+              ) {
+                reply.vote = reply.vote.filter(
+                  commentReplyVote =>
+                    commentReplyVote.user.id !== currentUser.id
+                );
+              }
+            }
+            return reply;
+          });
+        }
+        return comment;
+      });
+      proxy.writeQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+        data,
+      });
+    }}
   >
     {(createCommentReplyVote, createCommentReplyVoteResult) => {
       return render({ createCommentReplyVote, createCommentReplyVoteResult });
@@ -80,61 +164,6 @@ class CommentReply extends React.Component {
     return `${moment(time).fromNow('yy')} ago`;
   };
 
-  update = (proxy, { data: { createCommentReplyVote: createVote } }) => {
-    const {
-      commentReply: {
-        id,
-        comment: {
-          id: parentId,
-          video: { id: videoId },
-        },
-      },
-      currentUser,
-    } = this.props;
-    // Read the data from our cache for this query.
-    const data = proxy.readQuery({
-      query: QUERY_VIDEO_COMMENTS,
-      variables: { video: videoId },
-    });
-    const votingComment = data.comments.find(
-      comment => comment.id === parentId
-    );
-    const votingReply = votingComment.reply.find(reply => reply.id === id);
-    const existingVote =
-      votingReply.vote.length > 0
-        ? votingReply.vote.find(vote => vote.user.id === currentUser.id)
-        : null;
-    data.comments = data.comments.map(comment => {
-      if (comment.id === votingComment.id) {
-        comment.reply.map(reply => {
-          if (reply.id === votingReply.id) {
-            if (!existingVote) {
-              reply.vote = reply.vote.concat([createVote]);
-            } else if (existingVote && existingVote.type !== createVote.type) {
-              reply.vote = reply.vote.map(commentReplyVote => {
-                if (commentReplyVote.user.id === currentUser.id) {
-                  commentReplyVote.type = createVote.type;
-                }
-                return commentReplyVote;
-              });
-            } else if (existingVote && existingVote.type === createVote.type) {
-              reply.vote = reply.vote.filter(
-                commentReplyVote => commentReplyVote.user.id !== currentUser.id
-              );
-            }
-          }
-          return reply;
-        });
-      }
-      return comment;
-    });
-    proxy.writeQuery({
-      query: QUERY_VIDEO_COMMENTS,
-      variables: { video: videoId },
-      data,
-    });
-  };
-
   onTextChange = e => {
     const { value } = e.target;
     this.setState({ editInput: value, editFormValid: value.length > 0 });
@@ -144,9 +173,14 @@ class CommentReply extends React.Component {
     this.setState({ showEditForm: true });
   };
 
-  onUpdateSubmit = async callback => {
-    const { data } = await callback();
+  onUpdateSubmit = async updateComment => {
+    const { data } = await updateComment();
     if (data) this.setState({ showEditForm: false, editInput: '' });
+  };
+
+  onDeleteCommentReply = deleteCommentReply => {
+    if (confirm('Are you sure you want to delete this reply?'))
+      deleteCommentReply();
   };
 
   render() {
@@ -157,6 +191,7 @@ class CommentReply extends React.Component {
         text,
         author,
         comment: {
+          id: parentId,
           video: { id: videoId },
         },
         createdAt,
@@ -178,7 +213,13 @@ class CommentReply extends React.Component {
         );
     }
     return (
-      <Composed editInput={editInput} videoId={videoId} id={id}>
+      <Composed
+        editInput={editInput}
+        videoId={videoId}
+        id={id}
+        parentId={parentId}
+        currentUser={currentUser}
+      >
         {({
           deleteCommentReplyMutation: {
             deleteCommentReply,
@@ -205,8 +246,9 @@ class CommentReply extends React.Component {
           <Comment>
             <Error error={deleteCommentReplyError} />
             <Error error={updateCommentReplyError} />
+            <Error error={createCommentReplyVoteError} />
             {deleteCommentReplyLoading ? (
-              <Loader active inline="centered" />
+              <Loader active />
             ) : (
               <>
                 {/* <Comment.Avatar src="" /> */}
@@ -222,10 +264,12 @@ class CommentReply extends React.Component {
                       onSubmit={() => {
                         this.onUpdateSubmit(updateCommentReply);
                       }}
+                      autoComplete="off"
                     >
                       <Form.Input
                         onChange={this.onTextChange}
                         defaultValue={text}
+                        autoComplete="off"
                       />
                       <Button
                         content="Update Comment"
@@ -234,7 +278,14 @@ class CommentReply extends React.Component {
                       />
                       <Button
                         content="Cancel"
-                        onClick={() => this.setState({ showEditForm: false })}
+                        onClick={() => {
+                          // if (
+                          //   confirm(
+                          //     'Are you sure you want to discard all changes?'
+                          //   )
+                          // )
+                            this.setState({ showEditForm: false });
+                        }}
                       />
                     </Form>
                   )}
@@ -272,7 +323,6 @@ class CommentReply extends React.Component {
                                   __typename: 'CommentReplyVote',
                                 },
                               },
-                              update: this.update,
                             })
                           }
                         />
@@ -305,7 +355,6 @@ class CommentReply extends React.Component {
                                   __typename: 'CommentReplyVote',
                                 },
                               },
-                              update: this.update,
                             })
                           }
                         />
@@ -317,7 +366,11 @@ class CommentReply extends React.Component {
                             <Comment.Action onClick={this.onClickEdit}>
                               Edit
                             </Comment.Action>
-                            <Comment.Action onClick={deleteCommentReply}>
+                            <Comment.Action
+                              onClick={() =>
+                                this.onDeleteCommentReply(deleteCommentReply)
+                              }
+                            >
                               Delete
                             </Comment.Action>
                           </>

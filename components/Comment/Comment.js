@@ -35,12 +35,33 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
   <Mutation
     mutation={DELETE_COMMENT_MUTATION}
     variables={{ comment: id }}
-    refetchQueries={[
-      {
+    // refetchQueries={[
+    //   {
+    //     query: QUERY_VIDEO_COMMENTS,
+    //     variables: { video: videoId },
+    //   },
+    // ]}
+    update={(proxy, { data: { deleteComment } }) => {
+      const data = proxy.readQuery({
         query: QUERY_VIDEO_COMMENTS,
         variables: { video: videoId },
+      });
+      data.comments = data.comments.filter(
+        comment => comment.id !== deleteComment.id
+      );
+      proxy.writeQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+        data,
+      });
+    }}
+    optimisticResponse={{
+      __typename: 'Mutation',
+      deleteComment: {
+        id: Math.round(Math.random() * -100000000),
+        __typename: 'Comment',
       },
-    ]}
+    }}
   >
     {(deleteComment, deleteCommentResult) => {
       return render({ deleteComment, deleteCommentResult });
@@ -65,7 +86,7 @@ const updateCommentMutation = ({ id, updateInput, videoId, render }) => (
   </Mutation>
 );
 
-const createCommentVoteMutation = ({ videoId, render }) => (
+const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
   <Mutation
     mutation={CREATE_COMMENT_VOTE_MUTATION}
     // refetchQueries={[
@@ -74,6 +95,42 @@ const createCommentVoteMutation = ({ videoId, render }) => (
     //     variables: { video: videoId },
     //   },
     // ]}
+    update={(proxy, { data: { createCommentVote: createVote } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+      });
+      const votingComment = data.comments.find(comment => comment.id === id);
+      const existingVote =
+        votingComment.vote.length > 0
+          ? votingComment.vote.find(vote => vote.user.id === currentUser.id)
+          : null;
+      data.comments = data.comments.map(comment => {
+        if (comment.id === votingComment.id) {
+          if (!existingVote) {
+            comment.vote = comment.vote.concat([createVote]);
+          } else if (existingVote && existingVote.type !== createVote.type) {
+            comment.vote = comment.vote.map(commentVote => {
+              if (commentVote.user.id === currentUser.id) {
+                commentVote.type = createVote.type;
+              }
+              return commentVote;
+            });
+          } else if (existingVote && existingVote.type === createVote.type) {
+            comment.vote = comment.vote.filter(
+              commentVote => commentVote.user.id !== currentUser.id
+            );
+          }
+        }
+        return comment;
+      });
+      proxy.writeQuery({
+        query: QUERY_VIDEO_COMMENTS,
+        variables: { video: videoId },
+        data,
+      });
+    }}
   >
     {(createCommentVote, createCommentVoteResult) => {
       return render({ createCommentVote, createCommentVoteResult });
@@ -123,51 +180,14 @@ class VideoComment extends React.Component {
     if (data) this.setState({ showEditInput: false, updateInput: '' });
   };
 
+  onDeleteComment = deleteComment => {
+    if (confirm('Are you sure you want to delete this comment?'))
+      deleteComment();
+  };
+
   onReplySubmit = async createCommentReply => {
     const { data } = await createCommentReply();
     if (data) this.setState({ replyInput: '', showReplyInput: false });
-  };
-
-  update = (proxy, { data: { createCommentVote: createVote } }) => {
-    const {
-      videoId,
-      comment: { id },
-      currentUser,
-    } = this.props;
-    // Read the data from our cache for this query.
-    const data = proxy.readQuery({
-      query: QUERY_VIDEO_COMMENTS,
-      variables: { video: videoId },
-    });
-    const votingComment = data.comments.find(comment => comment.id === id);
-    const existingVote =
-      votingComment.vote.length > 0
-        ? votingComment.vote.find(vote => vote.user.id === currentUser.id)
-        : null;
-    data.comments = data.comments.map(comment => {
-      if (comment.id === votingComment.id) {
-        if (!existingVote) {
-          comment.vote = comment.vote.concat([createVote]);
-        } else if (existingVote && existingVote.type !== createVote.type) {
-          comment.vote = comment.vote.map(commentVote => {
-            if (commentVote.user.id === currentUser.id) {
-              commentVote.type = createVote.type;
-            }
-            return commentVote;
-          });
-        } else if (existingVote && existingVote.type === createVote.type) {
-          comment.vote = comment.vote.filter(
-            commentVote => commentVote.user.id !== currentUser.id
-          );
-        }
-      }
-      return comment;
-    });
-    proxy.writeQuery({
-      query: QUERY_VIDEO_COMMENTS,
-      variables: { video: videoId },
-      data,
-    });
   };
 
   renderComment(
@@ -228,6 +248,7 @@ class VideoComment extends React.Component {
       <Comment>
         <Error error={deleteCommentError} />
         <Error error={updateCommentError} />
+        <Error error={deleteCommentError} />
         {deleteCommentLoading ? (
           <Loader active />
         ) : (
@@ -240,6 +261,7 @@ class VideoComment extends React.Component {
               </Comment.Metadata>
               {showEditInput ? (
                 <Form
+                  autoComplete="off"
                   loading={updateCommentLoading}
                   reply
                   onSubmit={() => {
@@ -250,6 +272,7 @@ class VideoComment extends React.Component {
                     name="updateInput"
                     onChange={this.onTextChange}
                     defaultValue={text}
+                    autoComplete="off"
                   />
                   <Button
                     content="Update Comment"
@@ -258,7 +281,12 @@ class VideoComment extends React.Component {
                   />
                   <Button
                     content="Cancel"
-                    onClick={() => this.setState({ showEditInput: false })}
+                    onClick={() => {
+                      // if (
+                      //   confirm('Are you sure you want to discard all changes?')
+                      // )
+                        this.setState({ showEditInput: false });
+                    }}
                   />
                 </Form>
               ) : (
@@ -291,7 +319,6 @@ class VideoComment extends React.Component {
                               __typename: 'CommentVote',
                             },
                           },
-                          update: this.update,
                         });
                       }}
                     />
@@ -320,7 +347,6 @@ class VideoComment extends React.Component {
                               __typename: 'CommentVote',
                             },
                           },
-                          update: this.update,
                         })
                       }
                     />
@@ -332,7 +358,9 @@ class VideoComment extends React.Component {
                         <Comment.Action onClick={this.onEditClick}>
                           Edit
                         </Comment.Action>
-                        <Comment.Action onClick={deleteComment}>
+                        <Comment.Action
+                          onClick={() => this.onDeleteComment(deleteComment)}
+                        >
                           Delete
                         </Comment.Action>
                       </>
@@ -365,12 +393,14 @@ class VideoComment extends React.Component {
                   onSubmit={() => {
                     this.onReplySubmit(createCommentReply);
                   }}
+                  autoComplete="off"
                 >
                   <Form.Input
                     name="replyInput"
                     placeholder="Write a reply..."
                     onChange={this.onTextChange}
                     value={replyInput}
+                    autoComplete="off"
                   />
                   <Error error={createCommentReplyError} />
                   <Button
@@ -392,6 +422,7 @@ class VideoComment extends React.Component {
     const {
       comment: { id },
       videoId,
+      currentUser,
     } = this.props;
     return (
       <Composed
@@ -399,6 +430,7 @@ class VideoComment extends React.Component {
         replyInput={replyInput}
         id={id}
         videoId={videoId}
+        currentUser={currentUser}
       >
         {({
           createCommentReplyMutation,
