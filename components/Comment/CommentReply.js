@@ -8,14 +8,9 @@ import Error from '../UI/ErrorMessage';
 import {
   UPDATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENTREPLY_MUTATION,
-<<<<<<< HEAD
-  QUERY_VIDEO_COMMENTS,
   CREATE_COMMENTREPLY_VOTE_MUTATION,
-} from './commentQueries';
-=======
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
->>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -30,7 +25,7 @@ const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
     ]}
     update={(proxy, { data: { deleteCommentReply } }) => {
       const data = proxy.readQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       });
       const commentReplyId = deleteCommentReply.id;
@@ -43,7 +38,7 @@ const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
         return comment;
       });
       proxy.writeQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
         data,
       });
@@ -90,14 +85,14 @@ const createCommentReplyVoteMutation = ({
     mutation={CREATE_COMMENTREPLY_VOTE_MUTATION}
     // refetchQueries={[
     //   {
-    //     query: QUERY_VIDEO_COMMENTS,
+    //     query: VIDEO_COMMENTS_QUERY,
     //     variables: { video: videoId },
     //   },
     // ]}
     update={(proxy, { data: { createCommentReplyVote: createVote } }) => {
       // Read the data from our cache for this query.
       const data = proxy.readQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       });
       const votingComment = data.comments.find(
@@ -140,7 +135,7 @@ const createCommentReplyVoteMutation = ({
         return comment;
       });
       proxy.writeQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
         data,
       });

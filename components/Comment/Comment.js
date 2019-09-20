@@ -11,13 +11,9 @@ import {
   CREATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENT_MUTATION,
   UPDATE_COMMENT_MUTATION,
-<<<<<<< HEAD
   CREATE_COMMENT_VOTE_MUTATION,
-} from './commentQueries';
-=======
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
->>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
 
 /* eslint-disable */
 
@@ -39,28 +35,22 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
   <Mutation
     mutation={DELETE_COMMENT_MUTATION}
     variables={{ comment: id }}
-<<<<<<< HEAD
     // refetchQueries={[
     //   {
-    //     query: QUERY_VIDEO_COMMENTS,
+    //     query: VIDEO_COMMENTS_QUERY,
     //     variables: { video: videoId },
     //   },
     // ]}
     update={(proxy, { data: { deleteComment } }) => {
       const data = proxy.readQuery({
-        query: QUERY_VIDEO_COMMENTS,
-=======
-    refetchQueries={[
-      {
         query: VIDEO_COMMENTS_QUERY,
->>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
         variables: { video: videoId },
       });
       data.comments = data.comments.filter(
         comment => comment.id !== deleteComment.id
       );
       proxy.writeQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
         data,
       });
@@ -101,14 +91,14 @@ const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
     mutation={CREATE_COMMENT_VOTE_MUTATION}
     // refetchQueries={[
     //   {
-    //     query: QUERY_VIDEO_COMMENTS,
+    //     query: VIDEO_COMMENTS_QUERY,
     //     variables: { video: videoId },
     //   },
     // ]}
     update={(proxy, { data: { createCommentVote: createVote } }) => {
       // Read the data from our cache for this query.
       const data = proxy.readQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
       });
       const votingComment = data.comments.find(comment => comment.id === id);
@@ -136,7 +126,7 @@ const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
         return comment;
       });
       proxy.writeQuery({
-        query: QUERY_VIDEO_COMMENTS,
+        query: VIDEO_COMMENTS_QUERY,
         variables: { video: videoId },
         data,
       });
@@ -187,7 +177,11 @@ class VideoComment extends React.Component {
 
   onCommentUpdate = async updateComment => {
     const { data } = await updateComment();
-    if (data) this.setState({ showEditInput: false, updateInput: '' });
+    if (data)
+      this.setState({
+        showEditInput: false,
+        updateInput: '',
+      });
   };
 
   onDeleteComment = deleteComment => {
@@ -197,7 +191,12 @@ class VideoComment extends React.Component {
 
   onReplySubmit = async createCommentReply => {
     const { data } = await createCommentReply();
-    if (data) this.setState({ replyInput: '', showReplyInput: false });
+    if (data)
+      this.setState({
+        replyInput: '',
+        showReplyInput: false,
+        replyFormValid: false,
+      });
   };
 
   renderComment(
@@ -297,7 +296,7 @@ class VideoComment extends React.Component {
                       // if (
                       //   confirm('Are you sure you want to discard all changes?')
                       // )
-                        this.setState({ showEditInput: false });
+                      this.setState({ showEditInput: false });
                     }}
                   />
                 </Form>

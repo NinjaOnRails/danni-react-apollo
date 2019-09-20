@@ -34,6 +34,9 @@ const createCommentMutation = ({ commentInput, videoId, render }) => (
 
 const videoComments = ({ videoId, render }) => (
   <Query query={VIDEO_COMMENTS_QUERY} variables={{ video: videoId }}>
+    {/* {videoComments => {
+      return render({ videoComments });
+    }} */}
     {render}
   </Query>
 );
@@ -93,7 +96,7 @@ class CommentSection extends React.Component {
               <Button
                 content="Add Comment"
                 primary
-                disabled={commentInputValid}
+                disabled={!commentInputValid}
               />
             </Form>
           </PleaseSignIn>
@@ -138,57 +141,12 @@ class CommentSection extends React.Component {
             {commentsLoading ? (
               <Loader active inline="centered" />
             ) : (
-<<<<<<< HEAD
-              <Comment.Group size="large">
-                <PleaseSignIn
-                  action="Comment"
-                  minimalistic
-                  hidden={hideSigninToComment}
-                >
-                  <Form
-                    loading={createCommentLoading}
-                    reply
-                    onSubmit={() => {
-                      if (commentInput.length > 0)
-                        this.onCommentSubmit(createComment);
-                    }}
-                  >
-                    <Form.TextArea
-                      placeholder="Write a comment..."
-                      onChange={this.onTextChange}
-                      value={commentInput}
-                      onClick={() =>
-                        client.writeData({
-                          data: { hideSigninToComment: false },
-                        })
-                      }
-                    />
-                    <Button
-                      content="Add Comment"
-                      primary
-                      disabled={!commentInputValid}
-                    />
-                  </Form>
-                </PleaseSignIn>
-                {comments &&
-                  comments.map(comment => (
-                    <VideoComment
-                      key={comment.id}
-                      comment={comment}
-                      videoId={videoId}
-                      currentUser={currentUser}
-                      client={client}
-                    />
-                  ))}
-              </Comment.Group>
-=======
               this.renderComments(
                 data,
                 createCommentLoading,
                 createComment,
                 currentUser
               )
->>>>>>> c28039345a5f412049bf67dd417a865ba8f70356
             )}
           </>
         )}
