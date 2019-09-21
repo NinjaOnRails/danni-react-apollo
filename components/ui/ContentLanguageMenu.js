@@ -173,6 +173,7 @@ class LanguageMenu extends Component {
 
     const { data } = await client.query({ query: CONTENT_LANGUAGE_QUERY });
 
+    // Check Local State update again due to current Apollo Client bug
     if (data.contentLanguage.length !== contentLanguage.length) {
       contentLanguage = await this.updateLocalState(language);
     }

@@ -48,6 +48,7 @@ const toggleContentLanguage = ({ render }) => {
 const addContentLanguage = ({ render }) => {
   return <Mutation mutation={ADD_CONTENT_LANGUAGE_MUTATION}>{render}</Mutation>;
 };
+/* eslint-enable */
 
 const Composed = adopt({
   user,
@@ -57,7 +58,6 @@ const Composed = adopt({
   toggleContentLanguage,
   addContentLanguage,
 });
-/* eslint-enable */
 
 const ContentLanguage = props => {
   return (
