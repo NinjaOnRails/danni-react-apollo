@@ -114,7 +114,6 @@ const CONTENT_LANGUAGE_QUERY = gql`
 const VIDEO_COMMENTS_QUERY = gql`
   query VIDEO_COMMENTS_QUERY($video: ID!) {
     hideSigninToComment @client
-    hideSigninToVote @client
     comments(where: { video: { id: $video } }) {
       id
       text

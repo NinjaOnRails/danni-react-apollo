@@ -164,6 +164,17 @@ class VideoComment extends React.Component {
     voteClicked: false,
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    // Reset state on signout
+    if (prevProps.currentUser && !this.props.currentUser) {
+      this.setState({
+        showEditInput: false,
+        showReplyInput: false,
+        voteClicked: false,
+      });
+    }
+  }
+
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
   };
@@ -209,7 +220,7 @@ class VideoComment extends React.Component {
   };
 
   onVoteClick = (type, comment, createCommentVote) => {
-    const { currentUser, client } = this.props;
+    const { currentUser } = this.props;
     if (currentUser) {
       createCommentVote({
         variables: { comment, type },
@@ -224,7 +235,6 @@ class VideoComment extends React.Component {
         },
       });
     } else {
-      client.writeData({ data: { hideSigninToVote: false } });
       this.setState({ voteClicked: true });
     }
   };
@@ -271,8 +281,6 @@ class VideoComment extends React.Component {
     const {
       currentUser,
       comment: { id, text, author, reply, createdAt, vote },
-      hideSigninToVote,
-      client,
     } = this.props;
     let voteType = null;
     let voteCount = 0;
@@ -393,7 +401,7 @@ class VideoComment extends React.Component {
                 </>
               )}
             </Comment.Content>
-            {!currentUser && voteClicked && !hideSigninToVote && (
+            {!currentUser && voteClicked && (
               <>
                 <StyledMessage>
                   <Message warning>
@@ -411,8 +419,6 @@ class VideoComment extends React.Component {
                     commentReply={commentReply}
                     onReplyClick={this.onReplyClick}
                     currentUser={currentUser}
-                    client={client}
-                    hideSigninToVote={hideSigninToVote}
                   />
                 ))}
               </Comment.Group>
@@ -488,9 +494,7 @@ class VideoComment extends React.Component {
 
 VideoComment.propTypes = {
   comment: PropTypes.object.isRequired,
-  client: PropTypes.object.isRequired,
   videoId: PropTypes.string.isRequired,
-  hideSigninToVote: PropTypes.bool.isRequired,
   currentUser: PropTypes.object,
 };
 

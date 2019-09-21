@@ -170,6 +170,11 @@ class CommentReply extends React.Component {
     voteClicked: false,
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.currentUser && !this.props.currentUser) {
+      this.setState({ showEditForm: false, voteClicked: false });
+    }
+  }
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
   };
@@ -199,7 +204,6 @@ class CommentReply extends React.Component {
     createCommentReplyVote,
     commentReply
   ) => {
-    const { client } = this.props;
     if (currentUser) {
       createCommentReplyVote({
         variables: { commentReply, type },
@@ -217,7 +221,6 @@ class CommentReply extends React.Component {
         },
       });
     } else {
-      client.writeData({ data: { hideSigninToVote: false } });
       this.setState({ voteClicked: true });
     }
   };
@@ -406,7 +409,7 @@ class CommentReply extends React.Component {
                     </>
                   )}
                 </Comment.Content>
-                {!currentUser && voteClicked && !this.props.hideSigninToVote && (
+                {!currentUser && voteClicked && (
                   <>
                     <StyledMessage>
                       <Message warning>
@@ -427,8 +430,6 @@ class CommentReply extends React.Component {
 
 CommentReply.propTypes = {
   commentReply: PropTypes.object.isRequired,
-  client: PropTypes.object.isRequired,
-  hideSigninToVote: PropTypes.bool.isRequired,
   onReplyClick: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
 };
