@@ -244,6 +244,8 @@ class CommentReply extends React.Component {
           },
         }) => (
           <Comment>
+            {console.log('CommentReply')}
+
             <Error error={deleteCommentReplyError} />
             <Error error={updateCommentReplyError} />
             <Error error={createCommentReplyVoteError} />
@@ -286,7 +288,7 @@ class CommentReply extends React.Component {
                           //     'Are you sure you want to discard all changes?'
                           //   )
                           // )
-                            this.setState({ showEditForm: false });
+                          this.setState({ showEditForm: false });
                         }}
                       />
                     </Form>

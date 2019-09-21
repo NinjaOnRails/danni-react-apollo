@@ -9,6 +9,7 @@ import Error from '../UI/ErrorMessage';
 import { CREATE_COMMENT_MUTATION } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import PleaseSignIn from '../Authentication/PleaseSignIn';
+import CommentList from './CommentList';
 import { user } from '../UI/ContentLanguage';
 
 /* eslint-disable */
@@ -69,6 +70,7 @@ class CommentSection extends React.Component {
 
     return (
       <CommentSectionStyles>
+        {console.log('CommentSection')}
         <Comment.Group size="large">
           <PleaseSignIn
             action="Comment"
@@ -100,16 +102,14 @@ class CommentSection extends React.Component {
               />
             </Form>
           </PleaseSignIn>
-          {data.comments &&
-            data.comments.map(comment => (
-              <VideoComment
-                key={comment.id}
-                comment={comment}
-                videoId={videoId}
-                currentUser={currentUser}
-                client={client}
-              />
-            ))}
+          {data.comments && (
+            <CommentList
+              comments={data.comments}
+              videoId={videoId}
+              client={client}
+              currentUser={currentUser}
+            />
+          )}
         </Comment.Group>
       </CommentSectionStyles>
     );

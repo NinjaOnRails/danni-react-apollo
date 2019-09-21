@@ -155,6 +155,17 @@ class VideoComment extends React.Component {
     replyInput: '',
   };
 
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   if (
+  //     this.props.comment === nextProps.comment ||
+  //     this.props.currentUser === nextProps.currentUser
+  //   ) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
+
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
   };
@@ -258,6 +269,7 @@ class VideoComment extends React.Component {
         <Error error={deleteCommentError} />
         <Error error={updateCommentError} />
         <Error error={deleteCommentError} />
+        {console.log('Comment')}
         {deleteCommentLoading ? (
           <Loader active />
         ) : (
