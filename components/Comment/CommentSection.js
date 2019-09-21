@@ -108,6 +108,7 @@ class CommentSection extends React.Component {
                 videoId={videoId}
                 currentUser={currentUser}
                 client={client}
+                hideSigninToVote={data.hideSigninToVote}
               />
             ))}
         </Comment.Group>
