@@ -5,12 +5,13 @@ import { Comment } from 'semantic-ui-react';
 import CommentReply from './CommentReply';
 
 class CommentReplyList extends React.Component {
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (this.props.reply === nextProps.reply) {
-      return false;
-    }
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   const { reply } = this.props;
+  //   if (reply === nextProps.reply) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   render() {
     const { reply, currentUser, onReplyClick } = this.props;

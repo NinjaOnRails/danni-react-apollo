@@ -183,23 +183,35 @@ class CommentReply extends React.Component {
       deleteCommentReply();
   };
 
-  render() {
+  renderCommentReply = (
+    {
+      deleteCommentReply,
+      deleteCommentReplyResult: {
+        error: deleteCommentReplyError,
+        loading: deleteCommentReplyLoading,
+      },
+    },
+    {
+      updateCommentReply,
+      updateCommentReplyResult: {
+        error: updateCommentReplyError,
+        loading: updateCommentReplyLoading,
+      },
+    },
+    {
+      createCommentReplyVote,
+      createCommentReplyVoteResult: {
+        error: createCommentReplyVoteError,
+        loading: createCommentReplyVoteLoading,
+      },
+    }
+  ) => {
     const {
       onReplyClick,
-      commentReply: {
-        id,
-        text,
-        author,
-        comment: {
-          id: parentId,
-          video: { id: videoId },
-        },
-        createdAt,
-        vote,
-      },
+      commentReply: { id, text, author, createdAt, vote },
       currentUser,
     } = this.props;
-    const { showEditForm, editInput, editFormValid } = this.state;
+    const { showEditForm, editFormValid } = this.state;
     let voteType = null;
     let voteCount = 0;
     if (vote.length > 0) {
@@ -213,6 +225,164 @@ class CommentReply extends React.Component {
         );
     }
     return (
+      <Comment>
+        <Error error={deleteCommentReplyError} />
+        <Error error={updateCommentReplyError} />
+        <Error error={createCommentReplyVoteError} />
+        {deleteCommentReplyLoading ? (
+          <Loader active />
+        ) : (
+          <Comment>
+            {/* <Comment.Avatar src="" /> */}
+            <Comment.Content>
+              <Comment.Author as="a">
+                {author ? author.displayName : 'deleted user'}
+              </Comment.Author>
+              <Comment.Metadata>
+                <div>{this.formatTime(createdAt)}</div>
+              </Comment.Metadata>
+              {showEditForm && (
+                <Form
+                  loading={updateCommentReplyLoading}
+                  reply
+                  onSubmit={() => {
+                    this.onUpdateSubmit(updateCommentReply);
+                  }}
+                  autoComplete="off"
+                >
+                  <Form.Input
+                    onChange={this.onTextChange}
+                    defaultValue={text}
+                    autoComplete="off"
+                  />
+                  <Button
+                    content="Update Comment"
+                    primary
+                    disabled={!editFormValid}
+                  />
+                  <Button
+                    content="Cancel"
+                    onClick={() => {
+                      // if (
+                      //   confirm(
+                      //     'Are you sure you want to discard all changes?'
+                      //   )
+                      // )
+                      this.setState({ showEditForm: false });
+                    }}
+                  />
+                </Form>
+              )}
+              {!showEditForm && (
+                <>
+                  <Comment.Text>
+                    <p>{text}</p>
+                  </Comment.Text>
+                  <Comment.Actions>
+                    <Icon
+                      name="angle up"
+                      size="large"
+                      link
+                      disabled={
+                        createCommentReplyVoteError ||
+                        createCommentReplyVoteLoading
+                      }
+                      color={
+                        voteType && voteType.type === 'UPVOTE'
+                          ? 'orange'
+                          : 'grey'
+                      }
+                      onClick={() =>
+                        createCommentReplyVote({
+                          variables: { commentReply: id, type: 'UPVOTE' },
+                          optimisticResponse: {
+                            __typename: 'Mutation',
+                            createCommentReplyVote: {
+                              id: Math.round(Math.random() * -100000000),
+                              type: 'UPVOTE',
+                              user: {
+                                id: currentUser.id,
+                                __typename: 'User',
+                              },
+                              __typename: 'CommentReplyVote',
+                            },
+                          },
+                        })
+                      }
+                    />
+                    <span>{voteCount} </span>
+                    <Icon
+                      name="angle down"
+                      size="large"
+                      link
+                      disabled={
+                        createCommentReplyVoteError ||
+                        createCommentReplyVoteLoading
+                      }
+                      color={
+                        voteType && voteType.type === 'DOWNVOTE'
+                          ? 'purple'
+                          : 'grey'
+                      }
+                      onClick={() =>
+                        createCommentReplyVote({
+                          variables: { commentReply: id, type: 'DOWNVOTE' },
+                          optimisticResponse: {
+                            __typename: 'Mutation',
+                            createCommentReplyVote: {
+                              id: Math.round(Math.random() * -100000000),
+                              type: 'DOWNVOTE',
+                              user: {
+                                id: currentUser.id,
+                                __typename: 'User',
+                              },
+                              __typename: 'CommentReplyVote',
+                            },
+                          },
+                        })
+                      }
+                    />
+                    <Comment.Action onClick={onReplyClick}>
+                      Reply
+                    </Comment.Action>
+                    {currentUser && author && author.id === currentUser.id ? (
+                      <>
+                        <Comment.Action onClick={this.onClickEdit}>
+                          Edit
+                        </Comment.Action>
+                        <Comment.Action
+                          onClick={() =>
+                            this.onDeleteCommentReply(deleteCommentReply)
+                          }
+                        >
+                          Delete
+                        </Comment.Action>
+                      </>
+                    ) : null}
+                  </Comment.Actions>
+                </>
+              )}
+            </Comment.Content>
+          </Comment>
+        )}
+      </Comment>
+    );
+  };
+
+  render() {
+    const {
+      commentReply: {
+        id,
+        comment: {
+          id: parentId,
+          video: { id: videoId },
+        },
+      },
+      currentUser,
+    } = this.props;
+    const { editInput } = this.state;
+
+    return (
       <Composed
         editInput={editInput}
         videoId={videoId}
@@ -221,172 +391,16 @@ class CommentReply extends React.Component {
         currentUser={currentUser}
       >
         {({
-          deleteCommentReplyMutation: {
-            deleteCommentReply,
-            deleteCommentReplyResult: {
-              error: deleteCommentReplyError,
-              loading: deleteCommentReplyLoading,
-            },
-          },
-          updateCommentReplyMutation: {
-            updateCommentReply,
-            updateCommentReplyResult: {
-              error: updateCommentReplyError,
-              loading: updateCommentReplyLoading,
-            },
-          },
-          createCommentReplyVoteMutation: {
-            createCommentReplyVote,
-            createCommentReplyVoteResult: {
-              error: createCommentReplyVoteError,
-              loading: createCommentReplyVoteLoading,
-            },
-          },
-        }) => (
-          <Comment>
-            <Error error={deleteCommentReplyError} />
-            <Error error={updateCommentReplyError} />
-            <Error error={createCommentReplyVoteError} />
-            {deleteCommentReplyLoading ? (
-              <Loader active />
-            ) : (
-              <>
-                {/* <Comment.Avatar src="" /> */}
-                <Comment.Content>
-                  <Comment.Author as="a">
-                    {author ? author.displayName : 'deleted user'}
-                  </Comment.Author>
-                  <Comment.Metadata>
-                    <div>{this.formatTime(createdAt)}</div>
-                  </Comment.Metadata>
-                  {showEditForm && (
-                    <Form
-                      loading={updateCommentReplyLoading}
-                      reply
-                      onSubmit={() => {
-                        this.onUpdateSubmit(updateCommentReply);
-                      }}
-                      autoComplete="off"
-                    >
-                      <Form.Input
-                        onChange={this.onTextChange}
-                        defaultValue={text}
-                        autoComplete="off"
-                      />
-                      <Button
-                        content="Update Comment"
-                        primary
-                        disabled={!editFormValid}
-                      />
-                      <Button
-                        content="Cancel"
-                        onClick={() => {
-                          // if (
-                          //   confirm(
-                          //     'Are you sure you want to discard all changes?'
-                          //   )
-                          // )
-                          this.setState({ showEditForm: false });
-                        }}
-                      />
-                    </Form>
-                  )}
-                  {!showEditForm && (
-                    <>
-                      <Comment.Text>
-                        <p>{text}</p>
-                      </Comment.Text>
-                      <Comment.Actions>
-                        <Icon
-                          name="angle up"
-                          size="large"
-                          link
-                          disabled={
-                            createCommentReplyVoteError ||
-                            createCommentReplyVoteLoading
-                          }
-                          color={
-                            voteType && voteType.type === 'UPVOTE'
-                              ? 'orange'
-                              : 'grey'
-                          }
-                          onClick={() =>
-                            createCommentReplyVote({
-                              variables: { commentReply: id, type: 'UPVOTE' },
-                              optimisticResponse: {
-                                __typename: 'Mutation',
-                                createCommentReplyVote: {
-                                  id: Math.round(Math.random() * -100000000),
-                                  type: 'UPVOTE',
-                                  user: {
-                                    id: currentUser.id,
-                                    __typename: 'User',
-                                  },
-                                  __typename: 'CommentReplyVote',
-                                },
-                              },
-                            })
-                          }
-                        />
-                        <span>{voteCount} </span>
-                        <Icon
-                          name="angle down"
-                          size="large"
-                          link
-                          disabled={
-                            createCommentReplyVoteError ||
-                            createCommentReplyVoteLoading
-                          }
-                          color={
-                            voteType && voteType.type === 'DOWNVOTE'
-                              ? 'purple'
-                              : 'grey'
-                          }
-                          onClick={() =>
-                            createCommentReplyVote({
-                              variables: { commentReply: id, type: 'DOWNVOTE' },
-                              optimisticResponse: {
-                                __typename: 'Mutation',
-                                createCommentReplyVote: {
-                                  id: Math.round(Math.random() * -100000000),
-                                  type: 'DOWNVOTE',
-                                  user: {
-                                    id: currentUser.id,
-                                    __typename: 'User',
-                                  },
-                                  __typename: 'CommentReplyVote',
-                                },
-                              },
-                            })
-                          }
-                        />
-                        <Comment.Action onClick={onReplyClick}>
-                          Reply
-                        </Comment.Action>
-                        {currentUser &&
-                        author &&
-                        author.id === currentUser.id ? (
-                          <>
-                            <Comment.Action onClick={this.onClickEdit}>
-                              Edit
-                            </Comment.Action>
-                            <Comment.Action
-                              onClick={() =>
-                                this.onDeleteCommentReply(deleteCommentReply)
-                              }
-                            >
-                              Delete
-                            </Comment.Action>
-                          </>
-                        ) : null}
-                      </Comment.Actions>
-                    </>
-                  )}
-                </Comment.Content>
-              </>
-            )}
-          </Comment>
-        )}
+          deleteCommentReplyMutation,
+          updateCommentReplyMutation,
+          createCommentReplyVoteMutation,
+        }) => {
+          return this.renderCommentReply(
+            deleteCommentReplyMutation,
+            updateCommentReplyMutation,
+            createCommentReplyVoteMutation
+          );
+        }}
       </Composed>
     );
   }

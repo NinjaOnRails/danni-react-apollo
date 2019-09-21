@@ -23,6 +23,14 @@ const Composed = adopt({
 });
 
 class CommentSection extends React.Component {
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   const { videoId, client } = this.props;
+  //   if (videoId === nextProps.videoId || client === nextProps.client) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
   renderComments = (data, currentUser) => {
     const { videoId, client } = this.props;
     return (
@@ -33,7 +41,7 @@ class CommentSection extends React.Component {
             client={client}
             hideSigninToComment={data.hideSigninToComment}
           />
-          {data.comments && (
+          {data.comments.length > 0 && (
             <CommentList
               comments={data.comments}
               videoId={videoId}

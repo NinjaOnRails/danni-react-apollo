@@ -4,11 +4,9 @@ import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
-import PleaseSignIn from '../Authentication/PleaseSignIn';
-import CommentReply from './CommentReply';
+import CommentReplyForm from './CommentReplyForm';
 import Error from '../UI/ErrorMessage';
 import {
-  CREATE_COMMENTREPLY_MUTATION,
   DELETE_COMMENT_MUTATION,
   UPDATE_COMMENT_MUTATION,
   CREATE_COMMENT_VOTE_MUTATION,
@@ -17,20 +15,6 @@ import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
 
 /* eslint-disable */
-
-const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
-  <Mutation
-    mutation={CREATE_COMMENTREPLY_MUTATION}
-    variables={{ comment: id, text: replyInput }}
-    refetchQueries={[
-      { query: VIDEO_COMMENTS_QUERY, variables: { video: videoId } },
-    ]}
-  >
-    {(createCommentReply, createCommentReplyResult) => {
-      return render({ createCommentReply, createCommentReplyResult });
-    }}
-  </Mutation>
-);
 
 const deleteCommentMutation = ({ id, videoId, render }) => (
   <Mutation
@@ -141,7 +125,6 @@ const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
 /* eslint-enable */
 
 const Composed = adopt({
-  createCommentReplyMutation,
   deleteCommentMutation,
   updateCommentMutation,
   createCommentVoteMutation,
@@ -152,8 +135,6 @@ class VideoComment extends React.Component {
     showReplyInput: false,
     showEditInput: false,
     updateCommentFormValid: true,
-    replyFormValid: false,
-    replyInput: '',
   };
 
   formatTime = time => {
@@ -176,6 +157,10 @@ class VideoComment extends React.Component {
     this.setState({ showEditInput: true });
   };
 
+  closeReplyInput = () => {
+    this.setState({ showReplyInput: false });
+  };
+
   onCommentUpdate = async updateComment => {
     const { data } = await updateComment();
     if (data)
@@ -190,24 +175,7 @@ class VideoComment extends React.Component {
       deleteComment();
   };
 
-  onReplySubmit = async createCommentReply => {
-    const { data } = await createCommentReply();
-    if (data)
-      this.setState({
-        replyInput: '',
-        showReplyInput: false,
-        replyFormValid: false,
-      });
-  };
-
   renderComment(
-    {
-      createCommentReply,
-      createCommentReplyResult: {
-        error: createCommentReplyError,
-        loading: createReplyLoading,
-      },
-    },
     {
       deleteComment,
       deleteCommentResult: {
@@ -234,13 +202,12 @@ class VideoComment extends React.Component {
       showReplyInput,
       showEditInput,
       updateCommentFormValid,
-      replyFormValid,
-      replyInput,
     } = this.state;
 
     const {
       currentUser,
       comment: { id, text, author, reply, createdAt, vote },
+      videoId,
     } = this.props;
     let voteType = null;
     let voteCount = 0;
@@ -259,7 +226,6 @@ class VideoComment extends React.Component {
         <Error error={deleteCommentError} />
         <Error error={updateCommentError} />
         <Error error={deleteCommentError} />
-        {console.log('Comment')}
         {deleteCommentLoading ? (
           <Loader active />
         ) : (
@@ -382,6 +348,7 @@ class VideoComment extends React.Component {
                 </>
               )}
             </Comment.Content>
+
             {reply.length > 0 && (
               <CommentReplyList
                 reply={reply}
@@ -389,35 +356,14 @@ class VideoComment extends React.Component {
                 onReplyClick={this.onReplyClick}
               />
             )}
+
             {showReplyInput && (
-              <PleaseSignIn
-                action="Reply"
-                minimalistic
-                hidden={!showReplyInput}
-              >
-                <Form
-                  loading={createReplyLoading}
-                  reply
-                  onSubmit={() => {
-                    this.onReplySubmit(createCommentReply);
-                  }}
-                  autoComplete="off"
-                >
-                  <Form.Input
-                    name="replyInput"
-                    placeholder="Write a reply..."
-                    onChange={this.onTextChange}
-                    value={replyInput}
-                    autoComplete="off"
-                  />
-                  <Error error={createCommentReplyError} />
-                  <Button
-                    content="Add Reply"
-                    primary
-                    disabled={!replyFormValid}
-                  />
-                </Form>
-              </PleaseSignIn>
+              <CommentReplyForm
+                closeReplyInput={this.closeReplyInput}
+                showReplyInput={showReplyInput}
+                id={id}
+                videoId={videoId}
+              />
             )}
           </>
         )}
@@ -441,13 +387,11 @@ class VideoComment extends React.Component {
         currentUser={currentUser}
       >
         {({
-          createCommentReplyMutation,
           deleteCommentMutation,
           updateCommentMutation,
           createCommentVoteMutation,
         }) => {
           return this.renderComment(
-            createCommentReplyMutation,
             deleteCommentMutation,
             updateCommentMutation,
             createCommentVoteMutation

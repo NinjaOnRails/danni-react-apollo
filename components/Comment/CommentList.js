@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import VideoComment from './Comment';
 
 class CommentList extends React.Component {
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (this.props.comments === nextProps.comments) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   const { comments } = this.props;
+  //   if (comments === nextProps.comments) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   render() {
     const { comments, client, videoId, currentUser } = this.props;

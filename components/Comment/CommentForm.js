@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Loader } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
