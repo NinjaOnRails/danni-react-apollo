@@ -15,7 +15,6 @@ class CommentList extends React.Component {
     const { comments, client, videoId, currentUser } = this.props;
     return (
       <>
-        {console.log('commentlist')}
         {comments.map(comment => (
           <VideoComment
             key={comment.id}

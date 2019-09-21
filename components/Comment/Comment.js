@@ -14,6 +14,7 @@ import {
   CREATE_COMMENT_VOTE_MUTATION,
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
+import CommentReplyList from './CommentReplyList';
 
 /* eslint-disable */
 
@@ -154,17 +155,6 @@ class VideoComment extends React.Component {
     replyFormValid: false,
     replyInput: '',
   };
-
-  // shouldComponentUpdate(nextProps, nextState, nextContext) {
-  //   if (
-  //     this.props.comment === nextProps.comment ||
-  //     this.props.currentUser === nextProps.currentUser
-  //   ) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
@@ -393,16 +383,11 @@ class VideoComment extends React.Component {
               )}
             </Comment.Content>
             {reply.length > 0 && (
-              <Comment.Group>
-                {reply.map(commentReply => (
-                  <CommentReply
-                    key={commentReply.id}
-                    commentReply={commentReply}
-                    onReplyClick={this.onReplyClick}
-                    currentUser={currentUser}
-                  />
-                ))}
-              </Comment.Group>
+              <CommentReplyList
+                reply={reply}
+                currentUser={currentUser}
+                onReplyClick={this.onReplyClick}
+              />
             )}
             {showReplyInput && (
               <PleaseSignIn

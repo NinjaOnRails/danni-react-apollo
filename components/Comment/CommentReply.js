@@ -244,8 +244,6 @@ class CommentReply extends React.Component {
           },
         }) => (
           <Comment>
-            {console.log('CommentReply')}
-
             <Error error={deleteCommentReplyError} />
             <Error error={updateCommentReplyError} />
             <Error error={createCommentReplyVoteError} />

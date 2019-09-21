@@ -80,7 +80,7 @@ class CommentForm extends React.Component {
   };
 
   render() {
-    const { videoId, commentsLoading } = this.props;
+    const { videoId } = this.props;
     const { commentInput } = this.state;
     return (
       <Composed videoId={videoId} commentInput={commentInput}>
@@ -95,11 +95,7 @@ class CommentForm extends React.Component {
         }) => (
           <>
             <Error error={createCommentError} />
-            {commentsLoading ? (
-              <Loader active inline="centered" />
-            ) : (
-              this.renderCommentForm(createCommentLoading, createComment)
-            )}
+            {this.renderCommentForm(createCommentLoading, createComment)}
           </>
         )}
       </Composed>
@@ -108,14 +104,12 @@ class CommentForm extends React.Component {
 }
 
 CommentForm.defaultProps = {
-  commentsLoading: null,
   hideSigninToComment: true,
 };
 
 CommentForm.propTypes = {
   videoId: PropTypes.string.isRequired,
   client: PropTypes.object.isRequired,
-  commentsLoading: PropTypes.bool,
   hideSigninToComment: PropTypes.bool,
 };
 

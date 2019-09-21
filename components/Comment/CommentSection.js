@@ -12,9 +12,6 @@ import CommentForm from './CommentForm';
 /* eslint-disable */
 const videoComments = ({ videoId, render }) => (
   <Query query={VIDEO_COMMENTS_QUERY} variables={{ video: videoId }}>
-    {/* {videoComments => {
-      return render({ videoComments });
-    }} */}
     {render}
   </Query>
 );
@@ -26,7 +23,7 @@ const Composed = adopt({
 });
 
 class CommentSection extends React.Component {
-  renderComments = (data, currentUser, commentsLoading) => {
+  renderComments = (data, currentUser) => {
     const { videoId, client } = this.props;
     return (
       <CommentSectionStyles>
@@ -34,7 +31,6 @@ class CommentSection extends React.Component {
           <CommentForm
             videoId={videoId}
             client={client}
-            commentsLoading={commentsLoading}
             hideSigninToComment={data.hideSigninToComment}
           />
           {data.comments && (
@@ -67,7 +63,7 @@ class CommentSection extends React.Component {
             {commentsLoading ? (
               <Loader active inline="centered" />
             ) : (
-              this.renderComments(data, currentUser, commentsLoading)
+              this.renderComments(data, currentUser)
             )}
           </>
         )}
