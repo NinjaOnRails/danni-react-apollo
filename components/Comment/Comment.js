@@ -66,7 +66,7 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
     optimisticResponse={{
       __typename: 'Mutation',
       deleteComment: {
-        id: Math.round(Math.random() * -100000000),
+        id,
         __typename: 'Comment',
       },
     }}
