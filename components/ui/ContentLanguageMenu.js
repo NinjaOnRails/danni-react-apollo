@@ -68,6 +68,8 @@ class LanguageMenu extends Component {
 
     if (!data.addContentLanguage) return;
 
+    console.log(data)
+
     await this.refetchData(data.addContentLanguage.data.contentLanguage);
 
     // If signed in update db too

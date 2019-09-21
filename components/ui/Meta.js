@@ -31,7 +31,8 @@ const Meta = () => (
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charSet="utf-8" />
-    <link rel="shortcut icon" href="/static/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
     <link
       rel="stylesheet"
       href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
@@ -41,8 +42,21 @@ const Meta = () => (
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;display=swap&amp;subset=vietnamese"
     />
+    <link rel="canonical" href="https://www.danni.tv/" />
     <title>Danni TV</title>
     <meta name="application-name" content="Danni TV" />
+    <meta
+      name="description"
+      content="Globalized Smart Entertainment Video Content in Multiple Languages"
+    />
+    <meta property="fb:app_id" content="444940199652956" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://danni.tv/" />
+    <meta property="og:title" content="Danni TV - Home Page" />
+    <meta
+      property="og:description"
+      content="Globalized Smart Entertainment Video Content in Multiple Languages"
+    />
   </Head>
 );
 
