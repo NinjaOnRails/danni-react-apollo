@@ -54,6 +54,7 @@ const Meta = () => (
     <meta property="og:url" content="https://danni.tv/" />
     <meta property="og:title" content="Danni TV - Home Page" />
     <meta
+      key="og:description"
       property="og:description"
       content="Globalized Smart Entertainment Video Content in Multiple Languages"
     />

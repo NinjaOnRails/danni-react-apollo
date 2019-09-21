@@ -39,6 +39,7 @@ const VideoHeader = props => {
       />
       <meta property="og:locale" content={originLanguage || ''} />
       <meta
+        key="og:description"
         property="og:description"
         content={
           audio[0] && audio[0].description
