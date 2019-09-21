@@ -170,11 +170,12 @@ class CommentReply extends React.Component {
     voteClicked: false,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.currentUser && !this.props.currentUser) {
       this.setState({ showEditForm: false, voteClicked: false });
     }
   }
+
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
   };

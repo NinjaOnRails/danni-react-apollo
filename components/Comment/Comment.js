@@ -164,7 +164,7 @@ class VideoComment extends React.Component {
     voteClicked: false,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     // Reset state on signout
     if (prevProps.currentUser && !this.props.currentUser) {
       this.setState({

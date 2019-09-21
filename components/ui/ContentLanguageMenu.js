@@ -7,9 +7,17 @@ import {
   languageOptionsLocal,
   flagOptions,
 } from '../../lib/supportedLanguages';
-import { ALL_VIDEOS_QUERY, ALL_AUDIOS_QUERY } from '../../graphql/query';
+import {
+  ALL_VIDEOS_QUERY,
+  ALL_AUDIOS_QUERY,
+  CONTENT_LANGUAGE_QUERY,
+} from '../../graphql/query';
 
 class LanguageMenu extends Component {
+  state = {
+    disabled: false,
+  };
+
   // Determine and set content language from one source
   componentDidMount() {
     const { currentWatchingLanguage, currentUser } = this.props;
@@ -27,7 +35,7 @@ class LanguageMenu extends Component {
     }
     // If currently watching video of new language, add it
     if (currentWatchingLanguage) {
-      this.onCurrentWatchingLanguage(currentWatchingLanguage);
+      this.onCurrentWatchingLanguage();
     }
   }
 
@@ -46,17 +54,24 @@ class LanguageMenu extends Component {
     if (!currentUser && prevProps.currentUser) this.initFromBrowser();
   }
 
-  onCurrentWatchingLanguage = async currentWatchingLanguage => {
+  onCurrentWatchingLanguage = async () => {
     const {
+      currentWatchingLanguage,
       addContentLanguage,
       currentUser,
       updateContentLanguage,
     } = this.props;
+    // Update Local State
     const { data } = await addContentLanguage({
       variables: { language: currentWatchingLanguage },
     });
+
+    if (!data.addContentLanguage) return;
+
+    await this.refetchData(data.addContentLanguage.data.contentLanguage);
+
     // If signed in update db too
-    if (currentUser && data.addContentLanguage) {
+    if (currentUser && addContentLanguage) {
       await updateContentLanguage({
         variables: {
           contentLanguage: data.addContentLanguage.data.contentLanguage,
@@ -96,52 +111,81 @@ class LanguageMenu extends Component {
     return toggleContentLanguage({ variables: { language } });
   };
 
+  updateLocalState = async language => {
+    // Update local state
+    const {
+      data: {
+        toggleContentLanguage: {
+          data: { contentLanguage },
+        },
+      },
+    } = await this.props.toggleContentLanguage({
+      variables: {
+        language,
+      },
+    });
+
+    return contentLanguage;
+  };
+
+  refetchData = async contentLanguage => {
+    const { client } = this.props;
+    const {
+      data: { audios },
+    } = await client.query({
+      query: ALL_AUDIOS_QUERY,
+      variables: { contentLanguage },
+    });
+    const {
+      data: { videos },
+    } = await client.query({
+      query: ALL_VIDEOS_QUERY,
+      variables: { contentLanguage },
+    });
+    return { audios, videos };
+  };
+
   onChange = async e => {
     const {
       currentUser,
       updateContentLanguage,
-      toggleContentLanguage,
-      contentLanguage,
+      contentLanguage: currentContentLanguage,
       client,
     } = this.props;
 
+    const language = e.target.id;
+
     // Require min 1 language active
-    if (contentLanguage.length === 1 && contentLanguage.includes(e.target.id))
+    if (
+      currentContentLanguage.length === 1 &&
+      currentContentLanguage.includes(language)
+    )
       return;
 
-    // Update local state
-    const {
-      data: {
-        toggleContentLanguage: { data },
-      },
-    } = await toggleContentLanguage({
-      variables: {
-        language: e.target.id,
-      },
-    });
+    // Disable buttons
+    this.setState({ disabled: true });
+
+    // Update Local State
+    let contentLanguage = await this.updateLocalState(language);
+
+    // Refetch data
+    await this.refetchData(contentLanguage);
+
+    const { data } = await client.query({ query: CONTENT_LANGUAGE_QUERY });
+
+    if (data.contentLanguage.length !== contentLanguage.length) {
+      contentLanguage = await this.updateLocalState(language);
+    }
+
+    // Re-enable buttons
+    this.setState({ disabled: false });
 
     // Update user in db
     if (currentUser) {
-      await updateContentLanguage({
+      updateContentLanguage({
         variables: {
-          contentLanguage: data.contentLanguage,
+          contentLanguage,
         },
-      });
-    }
-
-    // Reload page
-    if (data && location.pathname === '/') {
-      client.writeData({ data: { reloadingPage: true } });
-      location.reload();
-    } else {
-      // Refetch data
-      client.query({
-        query: ALL_AUDIOS_QUERY,
-        variables: { contentLanguage: data.contentLanguage },
-      });
-      client.query({
-        query: ALL_VIDEOS_QUERY,
-        variables: { contentLanguage: data.contentLanguage },
       });
     }
   };
@@ -177,7 +221,8 @@ class LanguageMenu extends Component {
                 loadingUpdate ||
                 !contentLanguage.length ||
                 loadingData ||
-                reloadingPage
+                reloadingPage ||
+                this.state.disabled
               }
             >
               <Flag name={flag} id={languageOptions[value]} />

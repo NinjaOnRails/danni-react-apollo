@@ -2,11 +2,7 @@ import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { adopt } from 'react-adopt';
 import ContentLanguageMenu from './ContentLanguageMenu';
 import User from '../Authentication/User';
-import {
-  ALL_AUDIOS_QUERY,
-  ALL_VIDEOS_QUERY,
-  CONTENT_LANGUAGE_QUERY,
-} from '../../graphql/query';
+import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
 import {
   TOGGLE_CONTENT_LANGUAGE_MUTATION,
   ADD_CONTENT_LANGUAGE_MUTATION,
@@ -43,50 +39,14 @@ const updateContentLanguageMutation = ({ render }) => (
   </Mutation>
 );
 
-const toggleContentLanguage = ({
-  contentLanguageQuery: { contentLanguage },
-  render,
-}) => {
+const toggleContentLanguage = ({ render }) => {
   return (
-    <Mutation
-      mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}
-      // refetchQueries={[
-      //   {
-      //     query: ALL_AUDIOS_QUERY,
-      //     variables: { contentLanguage },
-      //   },
-      //   {
-      //     query: ALL_VIDEOS_QUERY,
-      //     variables: { contentLanguage },
-      //   },
-      // ]}
-    >
-      {render}
-    </Mutation>
+    <Mutation mutation={TOGGLE_CONTENT_LANGUAGE_MUTATION}>{render}</Mutation>
   );
 };
 
-const addContentLanguage = ({
-  contentLanguageQuery: { contentLanguage },
-  render,
-}) => {
-  return (
-    <Mutation
-      mutation={ADD_CONTENT_LANGUAGE_MUTATION}
-      // refetchQueries={[
-      //   {
-      //     query: ALL_AUDIOS_QUERY,
-      //     variables: { contentLanguage },
-      //   },
-      //   {
-      //     query: ALL_VIDEOS_QUERY,
-      //     variables: { contentLanguage },
-      //   },
-      // ]}
-    >
-      {render}
-    </Mutation>
-  );
+const addContentLanguage = ({ render }) => {
+  return <Mutation mutation={ADD_CONTENT_LANGUAGE_MUTATION}>{render}</Mutation>;
 };
 
 const Composed = adopt({
