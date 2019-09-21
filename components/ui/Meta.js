@@ -43,21 +43,21 @@ const Meta = () => (
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;display=swap&amp;subset=vietnamese"
     />
     <link rel="canonical" href="https://www.danni.tv/" />
-    <title>Danni TV</title>
+    {/* <title key="title">Danni TV</title> */}
     <meta name="application-name" content="Danni TV" />
-    <meta
+    {/* <meta
       name="description"
       content="Globalized Smart Entertainment Video Content in Multiple Languages"
-    />
+    /> */}
     <meta property="fb:app_id" content="444940199652956" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://danni.tv/" />
-    <meta property="og:title" content="Danni TV - Home Page" />
+    {/* <meta property="og:type" content="website" key="og:type" />
+    <meta property="og:url" content="https://danni.tv/" key="og:url" />
+    <meta property="og:title" content="Danni TV - Home Page" key="og:title" />
     <meta
-      key="og:description"
       property="og:description"
       content="Globalized Smart Entertainment Video Content in Multiple Languages"
-    />
+      key="og:description"
+    /> */}
   </Head>
 );
 

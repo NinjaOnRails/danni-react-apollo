@@ -16,7 +16,9 @@ const VideoHeader = props => {
   } = props;
   return (
     <Head>
-      <title>{audio[0] ? audio[0].title : originTitle} | Danni TV</title>
+      <title key="title">
+        {audio[0] ? audio[0].title : originTitle} | Danni TV
+      </title>
       <meta name="author" content={originAuthor} />
       <meta name="title" content={audio[0] ? audio[0].title : originTitle} />
       <meta
@@ -27,11 +29,12 @@ const VideoHeader = props => {
             : originDescription
         }
       />
-      <meta property="og:type" content="article" />
-      <meta property="og:url" content={url} />
+      <meta property="og:type" content="article" key="og:type" />
+      <meta property="og:url" content={url} key="og:url" />
       <meta
         property="og:title"
         content={audio[0] ? audio[0].title : originTitle}
+        key="og:title"
       />
       <meta
         property="og:image"
@@ -47,7 +50,6 @@ const VideoHeader = props => {
             : originDescription
         }
       />
-      <meta property="fb:app_id" content="444940199652956" />
     </Head>
   );
 };
