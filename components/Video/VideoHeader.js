@@ -20,8 +20,13 @@ const VideoHeader = props => {
         {audio[0] ? audio[0].title : originTitle} | Danni TV
       </title>
       <meta name="author" content={originAuthor} />
-      <meta name="title" content={audio[0] ? audio[0].title : originTitle} />
       <meta
+        key="metaTitle"
+        name="title"
+        content={audio[0] ? audio[0].title : originTitle}
+      />
+      <meta
+        key="description"
         name="description"
         content={
           audio[0] && audio[0].description
