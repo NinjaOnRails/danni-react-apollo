@@ -145,7 +145,7 @@ class LanguageMenu extends Component {
     return { audios, videos };
   };
 
-  onChange = async e => {
+  onChange = async ({ target }) => {
     const {
       currentUser,
       updateContentLanguage,
@@ -153,7 +153,7 @@ class LanguageMenu extends Component {
       client,
     } = this.props;
 
-    const language = e.target.value;
+    const language = target.value || target.id;
 
     // Require min 1 language active
     if (
@@ -224,7 +224,7 @@ class LanguageMenu extends Component {
                 this.state.disabled
               }
             >
-              <Flag name={flag} />
+              <Flag name={flag} id={languageOptions[value]} />
               {sideDrawer && languageOptionsLocal[value]}
             </Button>
           ))}
