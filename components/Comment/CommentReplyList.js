@@ -16,20 +16,16 @@ class CommentReplyList extends React.Component {
   render() {
     const { reply, currentUser, onReplyClick } = this.props;
     return (
-      <>
-        {reply.length > 0 && (
-          <Comment.Group>
-            {reply.map(commentReply => (
-              <CommentReply
-                key={commentReply.id}
-                commentReply={commentReply}
-                onReplyClick={onReplyClick}
-                currentUser={currentUser}
-              />
-            ))}
-          </Comment.Group>
-        )}
-      </>
+      <Comment.Group>
+        {reply.map(commentReply => (
+          <CommentReply
+            key={commentReply.id}
+            commentReply={commentReply}
+            onReplyClick={onReplyClick}
+            currentUser={currentUser}
+          />
+        ))}
+      </Comment.Group>
     );
   }
 }
