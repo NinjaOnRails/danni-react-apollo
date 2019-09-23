@@ -153,7 +153,7 @@ class LanguageMenu extends Component {
       client,
     } = this.props;
 
-    const language = e.target.id;
+    const language = e.target.value;
 
     // Require min 1 language active
     if (
@@ -214,7 +214,7 @@ class LanguageMenu extends Component {
             <Button
               key={key}
               onClick={this.onChange}
-              id={languageOptions[value]}
+              value={languageOptions[value]}
               active={contentLanguage.includes(languageOptions[value])}
               disabled={
                 loadingUser ||
@@ -224,7 +224,7 @@ class LanguageMenu extends Component {
                 this.state.disabled
               }
             >
-              <Flag name={flag} id={languageOptions[value]} />
+              <Flag name={flag} />
               {sideDrawer && languageOptionsLocal[value]}
             </Button>
           ))}

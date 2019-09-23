@@ -2,7 +2,6 @@ import Head from 'next/head';
 
 const Meta = () => (
   <Head>
-    <meta charSet="utf-8" />
     <title key="title">Danni TV</title>
     <meta key="metaTitle" name="title" content="Danni TV" />
     <meta
@@ -12,10 +11,9 @@ const Meta = () => (
     />
     <meta
       name="keywords"
-      content="Danni TV, danni.tv, Different, Global, Languages, Dubbed, Voice-over, Free, Videos, TV, Online, Lecture, Lesson, Learn, Health, Science, Business"
+      content="Danni TV, danni.tv, Different, Global, Languages, Translate, Dub, Dubbed, Voice-over, Free, Videos, TV, Online, Lecture, Lesson, Learn, Health, Science, Business"
     />
     <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="application-name" content="Danni TV" />
 
     <meta property="fb:app_id" content="444940199652956" />
@@ -24,13 +22,14 @@ const Meta = () => (
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
     <meta
       property="og:description"
-      content="Videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment video content."
+      content="World's best free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
       key="og:description"
     />
 
     <link rel="canonical" href="https://www.danni.tv/" />
     <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
     <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <link rel="apple-touch-icon" href="/static/favicon.png" />
     <link
       rel="stylesheet"
       href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"

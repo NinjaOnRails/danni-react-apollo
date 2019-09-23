@@ -27,7 +27,7 @@ const LogoStyles = styled.h1`
     font-size: 2rem;
   }
   @media (max-width: 639px) {
-    display: 'grid';
+    display: grid;
     font-size: 1.5rem;
     transform: none;
     margin: 0;
