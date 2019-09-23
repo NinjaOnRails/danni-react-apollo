@@ -3,8 +3,6 @@ import { Button, Flag } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {
   getSupportedLanguage,
-  languageOptions,
-  languageOptionsLocal,
   flagOptions,
 } from '../../lib/supportedLanguages';
 import {
@@ -145,15 +143,13 @@ class LanguageMenu extends Component {
     return { audios, videos };
   };
 
-  onChange = async ({ target }) => {
+  onChange = async (e, { name: language }) => {
     const {
       currentUser,
       updateContentLanguage,
       contentLanguage: currentContentLanguage,
       client,
     } = this.props;
-
-    const language = target.value || target.id;
 
     // Require min 1 language active
     if (
@@ -210,12 +206,12 @@ class LanguageMenu extends Component {
           vertical={sideDrawer}
           widths={buttonWidth}
         >
-          {flagOptions.map(({ key, value, flag }) => (
+          {flagOptions.map(({ key, value, flag, text }) => (
             <Button
               key={key}
+              name={value}
               onClick={this.onChange}
-              value={languageOptions[value]}
-              active={contentLanguage.includes(languageOptions[value])}
+              active={contentLanguage.includes(value)}
               disabled={
                 loadingUser ||
                 loadingUpdate ||
@@ -224,8 +220,8 @@ class LanguageMenu extends Component {
                 this.state.disabled
               }
             >
-              <Flag name={flag} id={languageOptions[value]} />
-              {sideDrawer && languageOptionsLocal[value]}
+              <Flag name={flag} />
+              {sideDrawer && text}
             </Button>
           ))}
         </Button.Group>
