@@ -25,8 +25,7 @@ const contentLanguageQuery = ({ render }) => (
   <Query query={CONTENT_LANGUAGE_QUERY}>
     {({ data }) => {
       const contentLanguage = data ? data.contentLanguage : [];
-      const reloadingPage = data ? data.reloadingPage : false;
-      return render({ contentLanguage, reloadingPage });
+      return render({ contentLanguage });
     }}
   </Query>
 );
@@ -65,7 +64,7 @@ const ContentLanguage = props => {
       {({
         user: { currentUser, loading },
         client: apolloClient,
-        contentLanguageQuery: { contentLanguage, reloadingPage },
+        contentLanguageQuery: { contentLanguage },
         updateContentLanguageMutation: {
           updateContentLanguage,
           loading: loadingUpdate,
@@ -84,7 +83,6 @@ const ContentLanguage = props => {
             updateContentLanguage={updateContentLanguage}
             loadingUpdate={loadingUpdate}
             loadingUser={loading}
-            reloadingPage={reloadingPage}
             {...props}
           />
         );

@@ -68,8 +68,6 @@ class LanguageMenu extends Component {
 
     if (!data.addContentLanguage) return;
 
-    console.log(data)
-
     await this.refetchData(data.addContentLanguage.data.contentLanguage);
 
     // If signed in update db too
@@ -200,7 +198,6 @@ class LanguageMenu extends Component {
       sideDrawer,
       loadingUser,
       loadingData,
-      reloadingPage,
     } = this.props;
     const buttonWidth = sideDrawer ? 2 : 1;
     return (
@@ -224,7 +221,6 @@ class LanguageMenu extends Component {
                 loadingUpdate ||
                 !contentLanguage.length ||
                 loadingData ||
-                reloadingPage ||
                 this.state.disabled
               }
             >
@@ -247,7 +243,6 @@ LanguageMenu.propTypes = {
   contentLanguage: PropTypes.array.isRequired,
   loadingUpdate: PropTypes.bool,
   loadingUser: PropTypes.bool.isRequired,
-  reloadingPage: PropTypes.bool.isRequired,
   loadingData: PropTypes.bool,
   sideDrawer: PropTypes.bool,
   currentWatchingLanguage: PropTypes.string,

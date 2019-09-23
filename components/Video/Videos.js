@@ -46,7 +46,7 @@ const Videos = ({
 }) => (
   <Composed>
     {({
-      contentLanguageQuery: { contentLanguage, reloadingPage },
+      contentLanguageQuery: { contentLanguage },
       audios: { loading: loadingAudios, error: errorAudios, data: dataAudios },
       videos: { loading: loadingVideos, errorVideos, data: dataVideos },
     }) => (
@@ -60,8 +60,7 @@ const Videos = ({
           (contentLanguage.length &&
             (loadingAudios ||
               loadingVideos ||
-              (!dataVideos && !dataAudios) ||
-              reloadingPage)) ? (
+              (!dataVideos && !dataAudios))) ? (
             <VideosLoading />
           ) : errorAudios ? (
             <Error>Error: {errorAudios.message}</Error>

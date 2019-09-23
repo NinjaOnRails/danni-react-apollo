@@ -1,6 +1,10 @@
 import { ApolloConsumer } from 'react-apollo';
 import Watch from '../components/Video/Watch';
-import { VIDEO_QUERY } from '../graphql/query';
+import {
+  VIDEO_QUERY,
+  ALL_VIDEOS_QUERY,
+  ALL_AUDIOS_QUERY,
+} from '../graphql/query';
 
 const WatchPage = props => (
   <ApolloConsumer>
@@ -21,7 +25,28 @@ WatchPage.getInitialProps = async ({
       audioId,
     },
   });
-  return { id, audioId, asPath, payload };
+
+  if (!payload.data) return { id, audioId, asPath, payload };
+
+  const {
+    data: { video },
+  } = payload;
+  const contentLanguage = [];
+  if (video.audio[0]) {
+    contentLanguage.push(video.audio[0].language);
+  } else {
+    contentLanguage.push(video.language);
+  }
+  const videos = await apolloClient.query({
+    query: ALL_VIDEOS_QUERY,
+    variables: { contentLanguage },
+  });
+  const audios = await apolloClient.query({
+    query: ALL_AUDIOS_QUERY,
+    variables: { contentLanguage },
+  });
+
+  return { id, audioId, asPath, payload, videos, audios };
 };
 
 export default WatchPage;
