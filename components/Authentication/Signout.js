@@ -3,11 +3,11 @@ import { Mutation, ApolloConsumer } from 'react-apollo';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { SIGN_OUT_MUTATION } from '../../graphql/mutation';
 
-const onSignout = async (signout, client) => {
+const onSignout = async ({ signout, client }) => {
   await signout();
   localStorage.clear();
   await client.resetStore();
-  client.query({ query: CURRENT_USER_QUERY });
+  return client.query({ query: CURRENT_USER_QUERY });
 };
 
 const Signout = () => (
@@ -15,7 +15,7 @@ const Signout = () => (
     {signout => (
       <ApolloConsumer>
         {client => (
-          <button type="button" onClick={() => onSignout(signout, client)}>
+          <button type="button" onClick={() => onSignout({ signout, client })}>
             Sign Out
           </button>
         )}
@@ -23,5 +23,6 @@ const Signout = () => (
     )}
   </Mutation>
 );
+
 export default Signout;
 export { onSignout };

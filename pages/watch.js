@@ -28,7 +28,9 @@ WatchPage.getInitialProps = async ({
   const {
     data: { video },
   } = payload;
+
   const contentLanguage = [];
+
   if (video.audio[0]) {
     contentLanguage.push(video.audio[0].language);
   } else {

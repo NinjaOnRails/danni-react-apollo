@@ -20,7 +20,8 @@ class LanguageMenu extends Component {
 
     if (currentUser) {
       // Get user's content languages if signed in
-      this.initFromCurrentUser().then(() => this.onCurrentWatchingLanguage());
+      this.initFromCurrentUser();
+      this.onCurrentWatchingLanguage();
     } else if (languages) {
       // Get content languages from local storage if present
       this.initFromLocalStorage(languages);

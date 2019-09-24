@@ -2,14 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
-import { Mutation, Query, ApolloConsumer } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { onSignout } from '../../Authentication/Signout';
-import User from '../../Authentication/User';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
-import ContentLanguage from '../ContentLanguage';
+import ContentLanguage, { client, user } from '../ContentLanguage';
 import {
   SIGN_OUT_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
@@ -38,29 +37,26 @@ const LanguageMenuStyles = styled.div`
 `;
 
 /* eslint-disable */
-const user = ({ render }) => (
-  <User>
-    {({ data, loading }) => {
-      const currentUser = data ? data.currentUser : null;
-      return render({ currentUser, loading });
-    }}
-  </User>
+const signout = ({ render }) => (
+  <Mutation mutation={SIGN_OUT_MUTATION}>{render}</Mutation>
 );
 
-const Composed = adopt({
-  closeSideDrawer: ({ render }) => (
-    <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>{render}</Mutation>
-  ),
-  localData: ({ render }) => <Query query={LOCAL_STATE_QUERY}>{render}</Query>,
-  client: ({ render }) => <ApolloConsumer>{render}</ApolloConsumer>,
-  signout: ({ render }) => (
-    <Mutation mutation={SIGN_OUT_MUTATION}>{render}</Mutation>
-  ),
-  user,
-});
+const closeSideDrawer = ({ render }) => (
+  <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>{render}</Mutation>
+)
+
+const localData = ({ render }) => <Query query={LOCAL_STATE_QUERY}>{render}</Query>
 /* eslint-enable */
 
-const onAuthClick = (router, client) => {
+const Composed = adopt({
+  closeSideDrawer,
+  localData,
+  signout,
+  client,
+  user,
+});
+
+const onAuthClick = ({ router, client }) => {
   if (router) {
     const currentPath = router.asPath;
     localStorage.setItem('previousPage', currentPath);
@@ -137,7 +133,7 @@ const SideDrawer = () => {
                         <MenuItem
                           as="a"
                           onClick={() => {
-                            onAuthClick(router, client);
+                            onAuthClick({ router, client });
                             closeSideDrawer();
                           }}
                         >
