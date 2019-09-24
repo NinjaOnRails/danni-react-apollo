@@ -17,25 +17,24 @@ class LanguageMenu extends Component {
   };
 
   // Determine and set content language from one source
-  componentDidMount() {
-    const { currentWatchingLanguage, currentUser } = this.props;
+  componentDidMount = async () => {
+    const { currentUser } = this.props;
     const languages = localStorage.getItem('contentLanguage');
 
     if (currentUser) {
       // Get user's content languages if signed in
-      this.initFromCurrentUser();
+      await this.initFromCurrentUser();
+      this.onCurrentWatchingLanguage();
     } else if (languages) {
       // Get content languages from local storage if present
-      this.initFromLocalStorage(languages);
+      await this.initFromLocalStorage(languages);
+      this.onCurrentWatchingLanguage();
     } else {
       // Make browser's language default content language
-      this.initFromBrowser();
-    }
-    // If currently watching video of new language, add it
-    if (currentWatchingLanguage) {
+      await this.initFromBrowser();
       this.onCurrentWatchingLanguage();
     }
-  }
+  };
 
   componentDidUpdate(prevProps) {
     const { currentUser } = this.props;
@@ -52,29 +51,48 @@ class LanguageMenu extends Component {
     if (!currentUser && prevProps.currentUser) this.initFromBrowser();
   }
 
+  // If currently watching video of new language, add it
   onCurrentWatchingLanguage = async () => {
     const {
       currentWatchingLanguage,
       addContentLanguage,
       currentUser,
       updateContentLanguage,
+      client,
     } = this.props;
-    // Update Local State
-    const { data } = await addContentLanguage({
-      variables: { language: currentWatchingLanguage },
-    });
-
-    if (!data.addContentLanguage) return;
-
-    await this.refetchData(data.addContentLanguage.data.contentLanguage);
-
-    // If signed in update db too
-    if (currentUser && addContentLanguage) {
-      await updateContentLanguage({
-        variables: {
-          contentLanguage: data.addContentLanguage.data.contentLanguage,
-        },
+    if (currentWatchingLanguage) {
+      // Update Local State
+      const { data } = await addContentLanguage({
+        variables: { language: currentWatchingLanguage },
       });
+
+      if (!data.addContentLanguage) return;
+
+      let {
+        addContentLanguage: {
+          data: { contentLanguage },
+        },
+      } = data;
+
+      await this.refetchData(contentLanguage);
+
+      const { data: newData } = await client.query({
+        query: CONTENT_LANGUAGE_QUERY,
+      });
+
+      // Check Local State update again due to current Apollo Client bug
+      if (newData.contentLanguage.length !== contentLanguage.length) {
+        contentLanguage = await this.updateLocalState(currentWatchingLanguage);
+      }
+
+      // If signed in update db too
+      if (currentUser && addContentLanguage) {
+        await updateContentLanguage({
+          variables: {
+            contentLanguage,
+          },
+        });
+      }
     }
   };
 
@@ -104,9 +122,9 @@ class LanguageMenu extends Component {
   };
 
   initFromBrowser = () => {
-    const { toggleContentLanguage } = this.props;
+    const { addContentLanguage } = this.props;
     const language = getSupportedLanguage(navigator.language); // User browser's language
-    return toggleContentLanguage({ variables: { language } });
+    return addContentLanguage({ variables: { language } });
   };
 
   updateLocalState = async language => {
