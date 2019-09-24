@@ -7,7 +7,7 @@ const Meta = () => (
     <meta
       key="description"
       name="description"
-      content="World's best free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
+      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
     />
     <meta
       name="keywords"
@@ -23,7 +23,7 @@ const Meta = () => (
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
     <meta
       property="og:description"
-      content="World's best free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
+      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
       key="og:description"
     />
 

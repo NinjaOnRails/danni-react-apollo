@@ -121,10 +121,12 @@ class LanguageMenu extends Component {
     });
   };
 
-  initFromBrowser = () => {
+  initFromBrowser = async () => {
     const { addContentLanguage } = this.props;
     const language = getSupportedLanguage(navigator.language); // User browser's language
-    return addContentLanguage({ variables: { language } });
+    const { data } = await addContentLanguage({ variables: { language } });
+    if (data.addContentLanguage)
+      return this.refetchData(data.addContentLanguage.data.contentLanguage);
   };
 
   updateLocalState = async language => {
