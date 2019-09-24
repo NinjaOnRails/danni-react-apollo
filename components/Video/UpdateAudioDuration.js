@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Mutation, Query } from 'react-apollo';
-
-const ALL_AUDIOS_QUERY = gql`
-  query ALL_AUDIOS_QUERY {
-    audios {
-      id
-      source
-      duration
-    }
-  }
-`;
+import { ALL_AUDIOS_QUERY } from '../../graphql/query';
 
 const UPDATE_AUDIO_DURATION_MUTATION = gql`
   mutation UPDATE_AUDIO_DURATION_MUTATION($source: String!, $duration: Int!) {

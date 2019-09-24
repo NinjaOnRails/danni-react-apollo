@@ -5,11 +5,8 @@ import {
   getSupportedLanguage,
   flagOptions,
 } from '../../lib/supportedLanguages';
-import {
-  ALL_VIDEOS_QUERY,
-  ALL_AUDIOS_QUERY,
-  CONTENT_LANGUAGE_QUERY,
-} from '../../graphql/query';
+import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
+import fetchAudiosVideos from '../../lib/fetchAudiosVideos';
 
 class LanguageMenu extends Component {
   state = {
@@ -72,7 +69,7 @@ class LanguageMenu extends Component {
         },
       } = data;
 
-      await this.refetchData(contentLanguage);
+      await fetchAudiosVideos({ client, contentLanguage });
 
       const { data: newData } = await client.query({
         query: CONTENT_LANGUAGE_QUERY,
@@ -120,11 +117,14 @@ class LanguageMenu extends Component {
   };
 
   initFromBrowser = async () => {
-    const { addContentLanguage } = this.props;
+    const { addContentLanguage, client } = this.props;
     const language = getSupportedLanguage(navigator.language); // User browser's language
     const { data } = await addContentLanguage({ variables: { language } });
     if (data.addContentLanguage)
-      return this.refetchData(data.addContentLanguage.data.contentLanguage);
+      return fetchAudiosVideos({
+        client,
+        contentLanguage: data.addContentLanguage.data.contentLanguage,
+      });
     return null;
   };
 
@@ -143,23 +143,6 @@ class LanguageMenu extends Component {
     });
 
     return contentLanguage;
-  };
-
-  refetchData = async contentLanguage => {
-    const { client } = this.props;
-    const {
-      data: { audios },
-    } = await client.query({
-      query: ALL_AUDIOS_QUERY,
-      variables: { contentLanguage },
-    });
-    const {
-      data: { videos },
-    } = await client.query({
-      query: ALL_VIDEOS_QUERY,
-      variables: { contentLanguage },
-    });
-    return { audios, videos };
   };
 
   onChange = async (e, { name: language }) => {
@@ -184,7 +167,7 @@ class LanguageMenu extends Component {
     let contentLanguage = await this.updateLocalState(language);
 
     // Refetch data
-    await this.refetchData(contentLanguage);
+    await fetchAudiosVideos({ client, contentLanguage });
 
     const { data } = await client.query({ query: CONTENT_LANGUAGE_QUERY });
 
