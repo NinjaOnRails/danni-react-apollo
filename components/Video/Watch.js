@@ -67,7 +67,7 @@ class Watch extends Component {
     }
 
     // Video Play Mixpanel tracking
-    const eventSent = trackPlayedDuration(e, video, mixpanelEventsSent);
+    const eventSent = trackPlayedDuration({ e, video, mixpanelEventsSent });
     if (eventSent) {
       this.setState({
         mixpanelEventsSent: [...mixpanelEventsSent, eventSent],
