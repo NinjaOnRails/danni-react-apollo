@@ -17,22 +17,20 @@ class LanguageMenu extends Component {
   };
 
   // Determine and set content language from one source
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const { currentUser } = this.props;
     const languages = localStorage.getItem('contentLanguage');
 
     if (currentUser) {
       // Get user's content languages if signed in
-      await this.initFromCurrentUser();
-      this.onCurrentWatchingLanguage();
+      this.initFromCurrentUser().then(() => this.onCurrentWatchingLanguage());
     } else if (languages) {
       // Get content languages from local storage if present
-      await this.initFromLocalStorage(languages);
+      this.initFromLocalStorage(languages);
       this.onCurrentWatchingLanguage();
     } else {
       // Make browser's language default content language
-      await this.initFromBrowser();
-      this.onCurrentWatchingLanguage();
+      this.initFromBrowser().then(() => this.onCurrentWatchingLanguage());
     }
   };
 
@@ -127,6 +125,7 @@ class LanguageMenu extends Component {
     const { data } = await addContentLanguage({ variables: { language } });
     if (data.addContentLanguage)
       return this.refetchData(data.addContentLanguage.data.contentLanguage);
+    return null;
   };
 
   updateLocalState = async language => {
