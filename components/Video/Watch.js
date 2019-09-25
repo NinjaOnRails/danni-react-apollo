@@ -37,8 +37,14 @@ class Watch extends Component {
     if (
       this.youtubePlayer &&
       (id !== prevProps.id || audioId !== prevProps.audioId)
-    )
+    ) {
+      this.setState({
+        playedFilePlayer: 0,
+        playedYoutube: 0,
+        readyYoutube: false,
+      });
       this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
+    }
   }
 
   onProgressYoutube = (e, video) => {
