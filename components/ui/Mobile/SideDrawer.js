@@ -43,9 +43,11 @@ const signout = ({ render }) => (
 
 const closeSideDrawer = ({ render }) => (
   <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>{render}</Mutation>
-)
+);
 
-const localData = ({ render }) => <Query query={LOCAL_STATE_QUERY}>{render}</Query>
+const localData = ({ render }) => (
+  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
+);
 /* eslint-enable */
 
 const Composed = adopt({
@@ -146,7 +148,10 @@ const SideDrawer = () => {
                     </>
                   )}
                   {currentUser && (
-                    <MenuItem as="a" onClick={() => onSignout(signout, client)}>
+                    <MenuItem
+                      as="a"
+                      onClick={() => onSignout({ signout, client })}
+                    >
                       <div className="link-container">
                         <Icon name="sign-out" size="large" />
                         <span className="link-name">Sign Out</span>
