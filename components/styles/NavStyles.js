@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const NavStyles = styled.ul`
+const NavStyles = styled.div`
   margin: 0;
   padding: 0;
   display: flex;

@@ -1,6 +1,6 @@
 import { List, Image, Icon } from 'semantic-ui-react';
 import Link from 'next/link';
-import PropTypes, { object } from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   VideoItem,
   ListDescriptionStyled,
@@ -64,8 +64,8 @@ const formatDuration = duration => {
 };
 
 const RenderSmallVideoList = ({
-  audios,
-  videos,
+  dataAudios: { audios },
+  dataVideos: { videos },
   id,
   audioId,
   onVideoItemClick,
@@ -131,8 +131,8 @@ RenderSmallVideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
-  audios: PropTypes.arrayOf(object).isRequired,
-  videos: PropTypes.arrayOf(object).isRequired,
+  dataAudios: PropTypes.object.isRequired,
+  dataVideos: PropTypes.object.isRequired,
 };
 
 RenderSmallVideoList.defaultProps = {

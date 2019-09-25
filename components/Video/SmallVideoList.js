@@ -24,6 +24,10 @@ const Composed = adopt({
 });
 
 const SmallVideoList = props => {
+  const {
+    audios: { data: initialAudioData },
+    videos: { data: initialVideoData },
+  } = props;
   return (
     <Composed>
       {({
@@ -42,10 +46,12 @@ const SmallVideoList = props => {
               loadingData={loadingVideos || loadingAudios}
             />
           </LanguageMenuStyles>
-          {!contentLanguage.length ||
-          loadingAudios ||
-          loadingVideos ||
-          (!dataVideos && !dataAudios) ? (
+          {(!contentLanguage.length &&
+            (!initialAudioData || !initialVideoData)) ||
+          (contentLanguage.length &&
+            (loadingAudios ||
+              loadingVideos ||
+              (!dataVideos && !dataAudios))) ? (
             <Loader active />
           ) : errorAudios ? (
             <Error>Error: {errorAudios.message}</Error>
@@ -53,8 +59,8 @@ const SmallVideoList = props => {
             <Error>Error: {errorVideos.message}</Error>
           ) : (
             <RenderSmallVideoList
-              audios={dataAudios.audios}
-              videos={dataVideos.videos}
+              dataAudios={dataAudios || initialAudioData}
+              dataVideos={dataVideos || initialVideoData}
               {...props}
             />
           )}
@@ -69,6 +75,8 @@ SmallVideoList.propTypes = {
   audioId: PropTypes.string,
   currentWatchingLanguage: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
+  audios: PropTypes.object.isRequired,
+  videos: PropTypes.object.isRequired,
 };
 
 SmallVideoList.defaultProps = {

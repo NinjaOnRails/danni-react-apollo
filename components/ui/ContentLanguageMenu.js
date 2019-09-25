@@ -3,33 +3,34 @@ import { Button, Flag } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {
   getSupportedLanguage,
-  languageOptions,
-  languageOptionsLocal,
   flagOptions,
 } from '../../lib/supportedLanguages';
-import { ALL_VIDEOS_QUERY, ALL_AUDIOS_QUERY } from '../../graphql/query';
+import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
+import fetchAudiosVideos from '../../lib/fetchAudiosVideos';
 
 class LanguageMenu extends Component {
+  state = {
+    disabled: false,
+  };
+
   // Determine and set content language from one source
-  componentDidMount() {
-    const { currentWatchingLanguage, currentUser } = this.props;
+  componentDidMount = () => {
+    const { currentUser } = this.props;
     const languages = localStorage.getItem('contentLanguage');
 
     if (currentUser) {
       // Get user's content languages if signed in
       this.initFromCurrentUser();
+      this.onCurrentWatchingLanguage();
     } else if (languages) {
       // Get content languages from local storage if present
       this.initFromLocalStorage(languages);
+      this.onCurrentWatchingLanguage();
     } else {
       // Make browser's language default content language
-      this.initFromBrowser();
+      this.initFromBrowser().then(() => this.onCurrentWatchingLanguage());
     }
-    // If currently watching video of new language, add it
-    if (currentWatchingLanguage) {
-      this.onCurrentWatchingLanguage(currentWatchingLanguage);
-    }
-  }
+  };
 
   componentDidUpdate(prevProps) {
     const { currentUser } = this.props;
@@ -46,22 +47,48 @@ class LanguageMenu extends Component {
     if (!currentUser && prevProps.currentUser) this.initFromBrowser();
   }
 
-  onCurrentWatchingLanguage = async currentWatchingLanguage => {
+  // If currently watching video of new language, add it
+  onCurrentWatchingLanguage = async () => {
     const {
+      currentWatchingLanguage,
       addContentLanguage,
       currentUser,
       updateContentLanguage,
+      client,
     } = this.props;
-    const { data } = await addContentLanguage({
-      variables: { language: currentWatchingLanguage },
-    });
-    // If signed in update db too
-    if (currentUser && data.addContentLanguage) {
-      await updateContentLanguage({
-        variables: {
-          contentLanguage: data.addContentLanguage.data.contentLanguage,
-        },
+    if (currentWatchingLanguage) {
+      // Update Local State
+      const { data } = await addContentLanguage({
+        variables: { language: currentWatchingLanguage },
       });
+
+      if (!data.addContentLanguage) return;
+
+      let {
+        addContentLanguage: {
+          data: { contentLanguage },
+        },
+      } = data;
+
+      await fetchAudiosVideos({ client, contentLanguage });
+
+      const { data: newData } = await client.query({
+        query: CONTENT_LANGUAGE_QUERY,
+      });
+
+      // Check Local State update again due to current Apollo Client bug
+      if (newData.contentLanguage.length !== contentLanguage.length) {
+        contentLanguage = await this.updateLocalState(currentWatchingLanguage);
+      }
+
+      // If signed in update db too
+      if (currentUser && addContentLanguage) {
+        await updateContentLanguage({
+          variables: {
+            contentLanguage,
+          },
+        });
+      }
     }
   };
 
@@ -90,58 +117,75 @@ class LanguageMenu extends Component {
     });
   };
 
-  initFromBrowser = () => {
-    const { toggleContentLanguage } = this.props;
+  initFromBrowser = async () => {
+    const { addContentLanguage, client } = this.props;
     const language = getSupportedLanguage(navigator.language); // User browser's language
-    return toggleContentLanguage({ variables: { language } });
+    const { data } = await addContentLanguage({ variables: { language } });
+    if (data.addContentLanguage)
+      return fetchAudiosVideos({
+        client,
+        contentLanguage: data.addContentLanguage.data.contentLanguage,
+      });
+    return null;
   };
 
-  onChange = async e => {
+  updateLocalState = async language => {
+    // Update local state
+    const {
+      data: {
+        toggleContentLanguage: {
+          data: { contentLanguage },
+        },
+      },
+    } = await this.props.toggleContentLanguage({
+      variables: {
+        language,
+      },
+    });
+
+    return contentLanguage;
+  };
+
+  onChange = async (e, { name: language }) => {
     const {
       currentUser,
       updateContentLanguage,
-      toggleContentLanguage,
-      contentLanguage,
+      contentLanguage: currentContentLanguage,
       client,
     } = this.props;
 
     // Require min 1 language active
-    if (contentLanguage.length === 1 && contentLanguage.includes(e.target.id))
+    if (
+      currentContentLanguage.length === 1 &&
+      currentContentLanguage.includes(language)
+    )
       return;
 
-    // Update local state
-    const {
-      data: {
-        toggleContentLanguage: { data },
-      },
-    } = await toggleContentLanguage({
-      variables: {
-        language: e.target.id,
-      },
-    });
+    // Disable buttons
+    this.setState({ disabled: true });
+
+    // Update Local State
+    let contentLanguage = await this.updateLocalState(language);
+
+    // Refetch data
+    await fetchAudiosVideos({ client, contentLanguage });
+
+    const { data } = await client.query({ query: CONTENT_LANGUAGE_QUERY });
+
+    // Check Local State update again due to current Apollo Client bug
+    if (data.contentLanguage.length !== contentLanguage.length) {
+      contentLanguage = await this.updateLocalState(language);
+    }
+
+    // Re-enable buttons
+    this.setState({ disabled: false });
 
     // Update user in db
     if (currentUser) {
-      await updateContentLanguage({
+      updateContentLanguage({
         variables: {
-          contentLanguage: data.contentLanguage,
+          contentLanguage,
         },
-      });
-    }
-
-    // Reload page
-    if (data && location.pathname === '/') {
-      client.writeData({ data: { reloadingPage: true } });
-      location.reload();
-    } else {
-      // Refetch data
-      client.query({
-        query: ALL_AUDIOS_QUERY,
-        variables: { contentLanguage: data.contentLanguage },
-      });
-      client.query({
-        query: ALL_VIDEOS_QUERY,
-        variables: { contentLanguage: data.contentLanguage },
       });
     }
   };
@@ -153,7 +197,6 @@ class LanguageMenu extends Component {
       sideDrawer,
       loadingUser,
       loadingData,
-      reloadingPage,
     } = this.props;
     const buttonWidth = sideDrawer ? 2 : 1;
     return (
@@ -166,22 +209,22 @@ class LanguageMenu extends Component {
           vertical={sideDrawer}
           widths={buttonWidth}
         >
-          {flagOptions.map(({ key, value, flag }) => (
+          {flagOptions.map(({ key, value, flag, text }) => (
             <Button
               key={key}
+              name={value}
               onClick={this.onChange}
-              id={languageOptions[value]}
-              active={contentLanguage.includes(languageOptions[value])}
+              active={contentLanguage.includes(value)}
               disabled={
                 loadingUser ||
                 loadingUpdate ||
                 !contentLanguage.length ||
                 loadingData ||
-                reloadingPage
+                this.state.disabled
               }
             >
-              <Flag name={flag} id={languageOptions[value]} />
-              {sideDrawer && languageOptionsLocal[value]}
+              <Flag name={flag} />
+              {sideDrawer && text}
             </Button>
           ))}
         </Button.Group>
@@ -199,7 +242,6 @@ LanguageMenu.propTypes = {
   contentLanguage: PropTypes.array.isRequired,
   loadingUpdate: PropTypes.bool,
   loadingUser: PropTypes.bool.isRequired,
-  reloadingPage: PropTypes.bool.isRequired,
   loadingData: PropTypes.bool,
   sideDrawer: PropTypes.bool,
   currentWatchingLanguage: PropTypes.string,

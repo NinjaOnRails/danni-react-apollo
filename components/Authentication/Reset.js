@@ -12,10 +12,6 @@ import { resetFields } from './fieldTypes';
 import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
 
 class Reset extends Component {
-  static propTypes = {
-    router: PropTypes.object.isRequired,
-  };
-
   state = {
     confirmPassword: '',
     password: '',
@@ -73,5 +69,9 @@ class Reset extends Component {
     );
   }
 }
+
+Reset.propTypes = {
+  router: PropTypes.object.isRequired,
+};
 
 export default withRouter(Reset);

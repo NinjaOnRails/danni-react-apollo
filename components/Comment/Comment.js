@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
+import {
+  Comment,
+  Icon,
+  Form,
+  Button,
+  Loader,
+  Message,
+} from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -13,9 +20,10 @@ import {
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
+import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
+import SigninMinimalistic from '../Authentication/SigninMinimalistic';
 
 /* eslint-disable */
-
 const deleteCommentMutation = ({ id, videoId, render }) => (
   <Mutation
     mutation={DELETE_COMMENT_MUTATION}
@@ -43,7 +51,7 @@ const deleteCommentMutation = ({ id, videoId, render }) => (
     optimisticResponse={{
       __typename: 'Mutation',
       deleteComment: {
-        id: Math.round(Math.random() * -100000000),
+        id,
         __typename: 'Comment',
       },
     }}
@@ -135,7 +143,19 @@ class VideoComment extends React.Component {
     showReplyInput: false,
     showEditInput: false,
     updateCommentFormValid: true,
+    voteClicked: false,
   };
+
+  componentDidUpdate(prevProps) {
+    // Reset state on signout
+    if (prevProps.currentUser && !this.props.currentUser) {
+      this.setState({
+        showEditInput: false,
+        showReplyInput: false,
+        voteClicked: false,
+      });
+    }
+  }
 
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
@@ -175,6 +195,26 @@ class VideoComment extends React.Component {
       deleteComment();
   };
 
+  onVoteClick = (type, comment, createCommentVote) => {
+    const { currentUser } = this.props;
+    if (currentUser) {
+      createCommentVote({
+        variables: { comment, type },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          createCommentVote: {
+            id: Math.round(Math.random() * -100000000),
+            type,
+            user: { id: currentUser.id, __typename: 'User' },
+            __typename: 'CommentVote',
+          },
+        },
+      });
+    } else {
+      this.setState({ voteClicked: true });
+    }
+  };
+
   renderComment(
     {
       deleteComment,
@@ -202,6 +242,7 @@ class VideoComment extends React.Component {
       showReplyInput,
       showEditInput,
       updateCommentFormValid,
+      voteClicked,
     } = this.state;
 
     const {
@@ -275,6 +316,7 @@ class VideoComment extends React.Component {
                   </Comment.Text>
                   <Comment.Actions>
                     <Icon
+                      id="UPVOTE"
                       name="angle up"
                       color={
                         voteType && voteType.type === 'UPVOTE'
@@ -286,23 +328,13 @@ class VideoComment extends React.Component {
                       disabled={
                         createCommentVoteLoading || createCommentVoteError
                       }
-                      onClick={() => {
-                        createCommentVote({
-                          variables: { comment: id, type: 'UPVOTE' },
-                          optimisticResponse: {
-                            __typename: 'Mutation',
-                            createCommentVote: {
-                              id: Math.round(Math.random() * -100000000),
-                              type: 'UPVOTE',
-                              user: { id: currentUser.id, __typename: 'User' },
-                              __typename: 'CommentVote',
-                            },
-                          },
-                        });
-                      }}
+                      onClick={e =>
+                        this.onVoteClick(e.target.id, id, createCommentVote)
+                      }
                     />
                     <span>{voteCount}</span>
                     <Icon
+                      id="DOWNVOTE"
                       name="angle down"
                       disabled={
                         createCommentVoteLoading || createCommentVoteError
@@ -314,19 +346,8 @@ class VideoComment extends React.Component {
                       }
                       size="large"
                       link
-                      onClick={() =>
-                        createCommentVote({
-                          variables: { comment: id, type: 'DOWNVOTE' },
-                          optimisticResponse: {
-                            __typename: 'Mutation',
-                            createCommentVote: {
-                              id: Math.round(Math.random() * -100000000),
-                              type: 'DOWNVOTE',
-                              user: { id: currentUser.id, __typename: 'User' },
-                              __typename: 'CommentVote',
-                            },
-                          },
-                        })
+                      onClick={e =>
+                        this.onVoteClick(e.target.id, id, createCommentVote)
                       }
                     />
                     <Comment.Action onClick={this.onReplyClick}>
@@ -349,6 +370,16 @@ class VideoComment extends React.Component {
               )}
             </Comment.Content>
 
+            {!currentUser && voteClicked && (
+              <>
+                <StyledMessage>
+                  <Message warning>
+                    <StyledHeader>Please Sign In to vote</StyledHeader>
+                  </Message>
+                </StyledMessage>
+                <SigninMinimalistic noRedirect />
+              </>
+            )}
             {reply.length > 0 && (
               <CommentReplyList
                 reply={reply}

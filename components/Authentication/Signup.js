@@ -58,7 +58,7 @@ class Signup extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = async (e, signup, previousPage, client) => {
+  onSubmit = async ({ e, signup, previousPage, client }) => {
     e.preventDefault();
     const { data } = await signup();
     this.setState({
@@ -91,7 +91,12 @@ class Signup extends Component {
               <Form
                 method="post"
                 onSubmit={async e =>
-                  this.onSubmit(e, signup, data.previousPage, client)
+                  this.onSubmit({
+                    e,
+                    signup,
+                    previousPage: data.previousPage,
+                    client,
+                  })
                 }
               >
                 <fieldset disabled={loading} aria-busy={loading}>

@@ -9,7 +9,7 @@ import Error from '../UI/ErrorMessage';
 import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import AddVideoForm from './AddVideoForm';
 import youtube from '../../lib/youtube';
-import { languageOptions, defaultLanguage } from '../../lib/supportedLanguages';
+import { defaultLanguage } from '../../lib/supportedLanguages';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import uploadFileData from '../../lib/cloudinaryUploadFileData';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
@@ -71,7 +71,7 @@ class AddVideo extends Component {
     originTags: [],
     youtubeId: '',
     secureUrl: '',
-    language: languageOptions[defaultLanguage],
+    language: defaultLanguage,
     uploadProgress: 0,
     uploadError: false,
     deleteToken: '',
@@ -100,10 +100,10 @@ class AddVideo extends Component {
 
   handleDropdown = (e, { value }) => {
     const { language, deleteToken } = this.state;
-    if (language !== languageOptions[value] && deleteToken) {
+    if (language !== value && deleteToken) {
       this.onDeleteFileSubmit();
     }
-    this.setState({ language: languageOptions[value], error: '' });
+    this.setState({ language: value, error: '' });
   };
 
   onSourceFill = source => {
@@ -267,6 +267,7 @@ class AddVideo extends Component {
       audioDuration,
       isDescription,
       isTags,
+      deleteToken,
     } = this.state;
 
     // Stop form from submitting
@@ -322,7 +323,7 @@ class AddVideo extends Component {
         query: { id, audioId },
       });
     }
-    this.onDeleteFileSubmit();
+    if (deleteToken) this.onDeleteFileSubmit();
 
     // Mixpanel send stat
     trackNewVideo();

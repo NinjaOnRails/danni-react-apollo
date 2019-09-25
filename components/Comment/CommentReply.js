@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
+import {
+  Comment,
+  Icon,
+  Form,
+  Button,
+  Loader,
+  Message,
+} from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -11,6 +18,8 @@ import {
   CREATE_COMMENTREPLY_VOTE_MUTATION,
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
+import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
+import SigninMinimalistic from '../Authentication/SigninMinimalistic';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -158,7 +167,14 @@ class CommentReply extends React.Component {
   state = {
     showEditForm: false,
     editFormValid: true,
+    voteClicked: false,
   };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentUser && !this.props.currentUser) {
+      this.setState({ showEditForm: false, voteClicked: false });
+    }
+  }
 
   formatTime = time => {
     return `${moment(time).fromNow('yy')} ago`;
@@ -181,6 +197,33 @@ class CommentReply extends React.Component {
   onDeleteCommentReply = deleteCommentReply => {
     if (confirm('Are you sure you want to delete this reply?'))
       deleteCommentReply();
+  };
+
+  onVoteClick = (
+    { target: { id: type } },
+    currentUser,
+    createCommentReplyVote,
+    commentReply
+  ) => {
+    if (currentUser) {
+      createCommentReplyVote({
+        variables: { commentReply, type },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          createCommentReplyVote: {
+            id: Math.round(Math.random() * -100000000),
+            type,
+            user: {
+              id: currentUser.id,
+              __typename: 'User',
+            },
+            __typename: 'CommentReplyVote',
+          },
+        },
+      });
+    } else {
+      this.setState({ voteClicked: true });
+    }
   };
 
   renderCommentReply = (
@@ -211,7 +254,8 @@ class CommentReply extends React.Component {
       commentReply: { id, text, author, createdAt, vote },
       currentUser,
     } = this.props;
-    const { showEditForm, editFormValid } = this.state;
+
+    const { showEditForm, editInput, editFormValid, voteClicked } = this.state;
     let voteType = null;
     let voteCount = 0;
     if (vote.length > 0) {
@@ -232,7 +276,7 @@ class CommentReply extends React.Component {
         {deleteCommentReplyLoading ? (
           <Loader active />
         ) : (
-          <Comment>
+          <>
             {/* <Comment.Avatar src="" /> */}
             <Comment.Content>
               <Comment.Author as="a">
@@ -280,6 +324,7 @@ class CommentReply extends React.Component {
                   </Comment.Text>
                   <Comment.Actions>
                     <Icon
+                      id="UPVOTE"
                       name="angle up"
                       size="large"
                       link
@@ -292,26 +337,18 @@ class CommentReply extends React.Component {
                           ? 'orange'
                           : 'grey'
                       }
-                      onClick={() =>
-                        createCommentReplyVote({
-                          variables: { commentReply: id, type: 'UPVOTE' },
-                          optimisticResponse: {
-                            __typename: 'Mutation',
-                            createCommentReplyVote: {
-                              id: Math.round(Math.random() * -100000000),
-                              type: 'UPVOTE',
-                              user: {
-                                id: currentUser.id,
-                                __typename: 'User',
-                              },
-                              __typename: 'CommentReplyVote',
-                            },
-                          },
-                        })
+                      onClick={e =>
+                        this.onVoteClick(
+                          e,
+                          currentUser,
+                          createCommentReplyVote,
+                          id
+                        )
                       }
                     />
                     <span>{voteCount} </span>
                     <Icon
+                      id="DOWNVOTE"
                       name="angle down"
                       size="large"
                       link
@@ -324,22 +361,13 @@ class CommentReply extends React.Component {
                           ? 'purple'
                           : 'grey'
                       }
-                      onClick={() =>
-                        createCommentReplyVote({
-                          variables: { commentReply: id, type: 'DOWNVOTE' },
-                          optimisticResponse: {
-                            __typename: 'Mutation',
-                            createCommentReplyVote: {
-                              id: Math.round(Math.random() * -100000000),
-                              type: 'DOWNVOTE',
-                              user: {
-                                id: currentUser.id,
-                                __typename: 'User',
-                              },
-                              __typename: 'CommentReplyVote',
-                            },
-                          },
-                        })
+                      onClick={e =>
+                        this.onVoteClick(
+                          e,
+                          currentUser,
+                          createCommentReplyVote,
+                          id
+                        )
                       }
                     />
                     <Comment.Action onClick={onReplyClick}>
@@ -363,7 +391,17 @@ class CommentReply extends React.Component {
                 </>
               )}
             </Comment.Content>
-          </Comment>
+            {!currentUser && voteClicked && (
+              <>
+                <StyledMessage>
+                  <Message warning>
+                    <StyledHeader>Please Sign In to vote</StyledHeader>
+                  </Message>
+                </StyledMessage>
+                <SigninMinimalistic noRedirect />
+              </>
+            )}
+          </>
         )}
       </Comment>
     );
@@ -381,7 +419,6 @@ class CommentReply extends React.Component {
       currentUser,
     } = this.props;
     const { editInput } = this.state;
-
     return (
       <Composed
         editInput={editInput}

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import Header from './Header';
-import Meta from './Meta';
 import SideDrawer from './Mobile/SideDrawer';
 
 const theme = {
@@ -62,7 +61,6 @@ class Page extends Component {
       <ThemeProvider theme={theme}>
         <StyledPage>
           <GlobalStyle />
-          <Meta />
           <Header />
           <SideDrawer />
           <Inner>{children}</Inner>

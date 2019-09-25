@@ -53,6 +53,7 @@
     "react/prefer-stateless-function": 0,
     "react/no-unescaped-entities": 0,
     "react/forbid-prop-types": 0,
+    "react/state-in-constructor": 0,
     "prettier/prettier": [
       "error",
       {

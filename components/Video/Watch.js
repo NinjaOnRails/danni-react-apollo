@@ -37,8 +37,14 @@ class Watch extends Component {
     if (
       this.youtubePlayer &&
       (id !== prevProps.id || audioId !== prevProps.audioId)
-    )
+    ) {
+      this.setState({
+        playedFilePlayer: 0,
+        playedYoutube: 0,
+        readyYoutube: false,
+      });
       this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
+    }
   }
 
   onProgressYoutube = (e, video) => {
@@ -67,7 +73,7 @@ class Watch extends Component {
     }
 
     // Video Play Mixpanel tracking
-    const eventSent = trackPlayedDuration(e, video, mixpanelEventsSent);
+    const eventSent = trackPlayedDuration({ e, video, mixpanelEventsSent });
     if (eventSent) {
       this.setState({
         mixpanelEventsSent: [...mixpanelEventsSent, eventSent],

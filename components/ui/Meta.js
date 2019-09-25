@@ -2,6 +2,45 @@ import Head from 'next/head';
 
 const Meta = () => (
   <Head>
+    <title key="title">Danni TV</title>
+    <meta key="metaTitle" name="title" content="Danni TV" />
+    <meta
+      key="description"
+      name="description"
+      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
+    />
+    <meta
+      name="keywords"
+      content="Danni TV, danni.tv, Different, Global, Languages, Translate, Dub, Dubbed, Voice-over, Free, Videos, TV, Online, Lecture, Lesson, Learn, Health, Science, Business"
+    />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="application-name" content="Danni TV" />
+    <meta name="apple-mobile-web-app-title" content="Danni TV" />
+
+    <meta property="fb:app_id" content="444940199652956" />
+    <meta property="og:title" content="Danni TV" key="og:title" />
+    <meta property="og:type" content="website" key="og:type" />
+    <meta property="og:url" content="https://danni.tv/" key="og:url" />
+    <meta
+      property="og:description"
+      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
+      key="og:description"
+    />
+
+    <link rel="canonical" href="https://www.danni.tv/" />
+    <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <link rel="apple-touch-icon" href="/static/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;display=swap&amp;subset=vietnamese"
+    />
+
     <script
       async
       src={`https://www.googletagmanager.com/gtag/js?id=${
@@ -29,20 +68,6 @@ const Meta = () => (
       `,
       }}
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charSet="utf-8" />
-    <link rel="shortcut icon" href="/static/favicon.png" />
-    <link
-      rel="stylesheet"
-      href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
-    />
-    <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;display=swap&amp;subset=vietnamese"
-    />
-    <title>Danni TV</title>
-    <meta name="application-name" content="Danni TV" />
   </Head>
 );
 
