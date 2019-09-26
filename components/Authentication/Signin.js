@@ -105,11 +105,11 @@ class Signin extends Component {
                 ))}
                 <button type="submit">Sign{loading && 'ing'} In</button>
               </fieldset>
-              <Link href="/requestReset">
-                <a>Forgot password?</a>
-              </Link>
               <Link href="/signup">
                 <a>Create a new account</a>
+              </Link>
+              <Link href="/requestReset">
+                <a>Forgot password?</a>
               </Link>
             </Form>
           </Container>

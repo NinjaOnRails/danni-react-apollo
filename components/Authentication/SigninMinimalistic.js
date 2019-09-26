@@ -64,11 +64,11 @@ class Signin extends Component {
                 <Form.Button type="submit">
                   Sign{loading && 'ing'} In
                 </Form.Button>
-                <Link href="/requestReset">
-                  <a>Forgot password?</a>
-                </Link>
                 <Link href="/signup">
                   <a>Create a new account</a>
+                </Link>
+                <Link href="/requestReset">
+                  <a>Forgot password?</a>
                 </Link>
               </Form>
             </Segment>
