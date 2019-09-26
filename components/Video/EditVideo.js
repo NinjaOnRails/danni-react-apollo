@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 import { Loader, Dropdown } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
-import { VIDEO_QUERY } from '../../graphql/query';
+import { VIDEO_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
 import { CREATE_AUDIO_MUTATION } from '../../graphql/mutation';
-import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import youtube from '../../lib/youtube';
 import DropdownForm from '../styles/VideoFormStyles';
 
@@ -52,15 +51,14 @@ const UPDATE_VIDEO_MUTATION = gql`
       password: $password
       data: {
         source: $source
-        titleVi: $titleVi
-        descriptionVi: $descriptionVi
+        title: $titleVi
+        description: $descriptionVi
         tags: $tags
         defaultVolume: $defaultVolume
       }
     ) {
       id
       originId
-      titleVi
     }
   }
 `;
@@ -92,10 +90,6 @@ class EditVideo extends Component {
     isAudioSource: true,
     isTags: true,
     isDefaultVolume: true,
-  };
-
-  static propTypes = {
-    router: PropTypes.object.isRequired,
   };
 
   handleChange = e => {
@@ -556,5 +550,9 @@ class EditVideo extends Component {
     );
   }
 }
+
+EditVideo.propTypes = {
+  router: PropTypes.object.isRequired,
+};
 
 export default withRouter(EditVideo);
