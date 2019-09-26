@@ -62,13 +62,13 @@ class Signin extends Component {
                   />
                 </Form.Group>
                 <Form.Button type="submit">
-                  Sign{loading && 'ing'} In
+                  {loading && 'Đang '}Đăng Nhập
                 </Form.Button>
                 <Link href="/signup">
-                  <a>Create a new account</a>
+                  <a>Tạo tài khoản mới.</a>
                 </Link>
                 <Link href="/requestReset">
-                  <a>Forgot password?</a>
+                  <a>Quên mật khẩu?</a>
                 </Link>
               </Form>
             </Segment>

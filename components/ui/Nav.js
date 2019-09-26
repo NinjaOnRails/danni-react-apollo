@@ -17,10 +17,10 @@ const Nav = () => (
             </a>
           </Link>
           <Link href="/new">
-            <a>Add Video</a>
+            <a>Thêm Video</a>
           </Link>
           <Link href="/about">
-            <a>About</a>
+            <a>Chúng Tôi</a>
           </Link>
           {currentUser && (
             <>

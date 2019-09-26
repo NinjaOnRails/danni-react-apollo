@@ -33,16 +33,16 @@ class Signup extends Component {
               >
                 <fieldset disabled={loading} aria-busy={loading}>
                   {!error && !loading && called && (
-                    <p>Please check your email for reset link.</p>
+                    <p>Hãy kiểm tra e-mail của bạn để tiếp tục.</p>
                   )}
-                  <h2>Password Reset Request</h2>
+                  <h2>Yêu cầu đổi mật khẩu</h2>
                   <AuthForm
                     form={signupFields[0]}
                     saveToState={this.saveToState}
                     value={this.state}
                   />
 
-                  <button type="submit">Send</button>
+                  <button type="submit">Gửi</button>
                 </fieldset>
               </Form>
             </Container>

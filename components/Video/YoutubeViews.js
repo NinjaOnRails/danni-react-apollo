@@ -33,7 +33,7 @@ export default class YoutubeViews extends Component {
   };
 
   render() {
-    return <div>{this.state.youtubeViews} views</div>;
+    return <div>{this.state.youtubeViews} lượt xem</div>;
   }
 }
 

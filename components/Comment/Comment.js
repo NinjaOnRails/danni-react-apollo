@@ -351,17 +351,17 @@ class VideoComment extends React.Component {
                       }
                     />
                     <Comment.Action onClick={this.onReplyClick}>
-                      Reply
+                      Trả lời
                     </Comment.Action>
                     {currentUser && author && author.id === currentUser.id ? (
                       <>
                         <Comment.Action onClick={this.onEditClick}>
-                          Edit
+                          Sửa
                         </Comment.Action>
                         <Comment.Action
                           onClick={() => this.onDeleteComment(deleteComment)}
                         >
-                          Delete
+                          Xoá
                         </Comment.Action>
                       </>
                     ) : null}
@@ -374,7 +374,7 @@ class VideoComment extends React.Component {
               <>
                 <StyledMessage>
                   <Message warning>
-                    <StyledHeader>Please Sign In to vote</StyledHeader>
+                    <StyledHeader>Đăng nhập để đánh giá</StyledHeader>
                   </Message>
                 </StyledMessage>
                 <SigninMinimalistic noRedirect />

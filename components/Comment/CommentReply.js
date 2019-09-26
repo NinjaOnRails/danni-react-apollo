@@ -371,19 +371,19 @@ class CommentReply extends React.Component {
                       }
                     />
                     <Comment.Action onClick={onReplyClick}>
-                      Reply
+                      Trả lời
                     </Comment.Action>
                     {currentUser && author && author.id === currentUser.id ? (
                       <>
                         <Comment.Action onClick={this.onClickEdit}>
-                          Edit
+                          Sửa
                         </Comment.Action>
                         <Comment.Action
                           onClick={() =>
                             this.onDeleteCommentReply(deleteCommentReply)
                           }
                         >
-                          Delete
+                          Xoá
                         </Comment.Action>
                       </>
                     ) : null}
@@ -395,7 +395,7 @@ class CommentReply extends React.Component {
               <>
                 <StyledMessage>
                   <Message warning>
-                    <StyledHeader>Please Sign In to vote</StyledHeader>
+                    <StyledHeader>Đăng nhập để đánh giá</StyledHeader>
                   </Message>
                 </StyledMessage>
                 <SigninMinimalistic noRedirect />

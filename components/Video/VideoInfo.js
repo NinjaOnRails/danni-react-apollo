@@ -95,19 +95,19 @@ export default class VideoInfo extends Component {
         </div>
         <Segment>
           <Header>
-            <h2>Channel: {originAuthor}</h2>
+            <h2>Tác giả: {originAuthor}</h2>
           </Header>
           {(audio[0] && (
             <Header>
               <h3>
-                Read by:{' '}
+                Người đọc:{' '}
                 {audio[0].author ? audio[0].author.displayName : 'deleted user'}
               </h3>
             </Header>
           )) || (
             <Header>
               <h3>
-                Added by: {addedBy ? addedBy.displayName : 'deleted user'}
+                Người đăng: {addedBy ? addedBy.displayName : 'deleted user'}
               </h3>
             </Header>
           )}
@@ -132,7 +132,7 @@ export default class VideoInfo extends Component {
               onClick={() => toggleFullDescription()}
               className="ui button"
             >
-              {showFullDescription ? 'Less' : 'More'}
+              {showFullDescription ? 'Đóng' : 'Tiếp'}
             </button>
           )}
         </Segment>
