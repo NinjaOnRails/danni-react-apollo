@@ -119,8 +119,10 @@ class LanguageMenu extends Component {
 
   initFromBrowser = async () => {
     const { addContentLanguage, client } = this.props;
-    const language = getSupportedLanguage(navigator.language); // User browser's language
-    const { data } = await addContentLanguage({ variables: { language } });
+    // const language = getSupportedLanguage(navigator.language); // User browser's language
+    const { data } = await addContentLanguage({
+      variables: { language: 'VIETNAMESE' },
+    });
     if (data.addContentLanguage)
       return fetchAudiosVideos({
         client,
