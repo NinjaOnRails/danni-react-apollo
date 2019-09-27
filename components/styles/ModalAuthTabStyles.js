@@ -9,7 +9,7 @@ const StyledTab = styled(Tab)`
     text-align: left;
   }
   .ui.grid > .column:not(.row) {
-    padding-bottom: 0;
+    padding: 16px 16px 0 16px;
   }
   .ui.tabular.menu .active.item {
     font-family: ${props => props.theme.font};
@@ -28,11 +28,13 @@ const StyledTab = styled(Tab)`
     border: none;
     width: 50%;
     justify-content: center;
+    border-radius: 0 !important;
   }
   .ui.tabular.menu .active.item {
     background: white;
     color: ${props => props.theme.black};
     border-top: 3px solid ${props => props.theme.red};
+    border-radius: 0 !important;
   }
 `;
 

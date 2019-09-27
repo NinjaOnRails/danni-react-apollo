@@ -16,9 +16,10 @@ const Form = styled.form`
   max-width: ${props => props.theme.maxWidth};
   width: ${props => (props.isModal ? '100%' : 'auto')};
   margin: 0 auto;
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-  background: rgba(0, 0, 0, 0.02);
-  border: 5px solid white;
+  box-shadow: ${props =>
+    props.isModal ? 'none' : '0 0 5px 3px rgba(0, 0, 0, 0.05);'};
+  background: ${props => (props.isModal ? '#ffffff' : 'rgba(0, 0, 0, 0.02)')};
+  border: ${props => (props.isModal ? 'none' : '5px solid white')};
   padding: ${props => (props.isModal ? 0 : '20px')};
   font-size: 1.5rem;
   line-height: 1.5;
@@ -88,7 +89,6 @@ const Form = styled.form`
       font-family: ${props => props.theme.font};
     }
   }
-  
 `;
 
 export default Form;

@@ -7,7 +7,6 @@ import {
   Button,
   Loader,
   Message,
-  Popup,
 } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
@@ -18,6 +17,7 @@ import {
   DELETE_COMMENT_MUTATION,
   UPDATE_COMMENT_MUTATION,
   CREATE_COMMENT_VOTE_MUTATION,
+  OPEN_AUTH_MODAL_MUTATION,
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
@@ -132,6 +132,7 @@ const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
     }}
   </Mutation>
 );
+
 /* eslint-enable */
 
 const Composed = adopt({
@@ -246,7 +247,6 @@ class VideoComment extends React.Component {
       showEditInput,
       updateCommentFormValid,
       voteClicked,
-      showConfirm,
     } = this.state;
 
     const {
@@ -315,85 +315,68 @@ class VideoComment extends React.Component {
                   <Comment.Text>
                     <p>{text}</p>
                   </Comment.Text>
-                  <Popup
-                    trigger={
-                      <Comment.Actions>
-                        <Icon
-                          id="UPVOTE"
-                          name="angle up"
-                          color={
-                            voteType && voteType.type === 'UPVOTE'
-                              ? 'orange'
-                              : 'grey'
-                          }
-                          size="large"
-                          link
-                          disabled={
-                            createCommentVoteLoading || createCommentVoteError
-                          }
-                          onClick={e =>
-                            this.onVoteClick(e.target.id, id, createCommentVote)
-                          }
-                        />
-                        <span>{voteCount}</span>
-                        <Icon
-                          id="DOWNVOTE"
-                          name="angle down"
-                          disabled={
-                            createCommentVoteLoading || createCommentVoteError
-                          }
-                          color={
-                            voteType && voteType.type === 'DOWNVOTE'
-                              ? 'purple'
-                              : 'grey'
-                          }
-                          size="large"
-                          link
-                          onClick={e =>
-                            this.onVoteClick(e.target.id, id, createCommentVote)
-                          }
-                        />
-                        <Comment.Action onClick={this.onReplyClick}>
-                          Reply
+                  <Comment.Actions>
+                    <Icon
+                      id="UPVOTE"
+                      name="angle up"
+                      color={
+                        voteType && voteType.type === 'UPVOTE'
+                          ? 'orange'
+                          : 'grey'
+                      }
+                      size="large"
+                      link
+                      disabled={
+                        createCommentVoteLoading || createCommentVoteError
+                      }
+                      onClick={e =>
+                        this.onVoteClick(e.target.id, id, createCommentVote)
+                      }
+                    />
+                    <span>{voteCount}</span>
+                    <Icon
+                      id="DOWNVOTE"
+                      name="angle down"
+                      disabled={
+                        createCommentVoteLoading || createCommentVoteError
+                      }
+                      color={
+                        voteType && voteType.type === 'DOWNVOTE'
+                          ? 'purple'
+                          : 'grey'
+                      }
+                      size="large"
+                      link
+                      onClick={e =>
+                        this.onVoteClick(e.target.id, id, createCommentVote)
+                      }
+                    />
+                    <Comment.Action onClick={this.onReplyClick}>
+                      Reply
+                    </Comment.Action>
+                    {currentUser && author && author.id === currentUser.id ? (
+                      <>
+                        <Comment.Action onClick={this.onEditClick}>
+                          Edit
                         </Comment.Action>
-                        {currentUser &&
-                        author &&
-                        author.id === currentUser.id ? (
-                          <>
-                            <Comment.Action onClick={this.onEditClick}>
-                              Edit
-                            </Comment.Action>
-                            <StyledPopup
-                              trigger={<Comment.Action>Delete</Comment.Action>}
-                              on="click"
-                              position="bottom left"
-                            >
-                              <Button
-                                fluid
-                                color="red"
-                                content="Confirm delete"
-                                onClick={() =>
-                                  this.onConfirmDelete(deleteComment)
-                                }
-                              />
-                            </StyledPopup>
-                          </>
-                        ) : null}
-                      </Comment.Actions>
-                    }
-                    on="click"
-                    position="bottom left"
-                    // disabled={!!currentUser}
-                    disabled
-                  >
-                    <Popup.Content>
-                      <p>Please login to vote or reply</p>
-                    </Popup.Content>
-                  </Popup>
+                        <StyledPopup
+                          trigger={<Comment.Action>Delete</Comment.Action>}
+                          on="click"
+                          position="bottom left"
+                        >
+                          <Button
+                            fluid
+                            color="red"
+                            content="Confirm delete"
+                            onClick={() => this.onConfirmDelete(deleteComment)}
+                          />
+                        </StyledPopup>
+                      </>
+                    ) : null}
+                  </Comment.Actions>
                 </>
               )}
             </Comment.Content>
-
             {!currentUser && voteClicked && (
               <>
                 <StyledMessage>

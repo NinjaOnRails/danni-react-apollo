@@ -73,7 +73,7 @@ class Signin extends Component {
     });
     if (data) {
       trackSignIn(data.signin.displayName);
-      closeAuthModal()
+      closeAuthModal();
       if (!noRedirect) {
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
@@ -130,7 +130,7 @@ class Signin extends Component {
                 </Link>
               )}
               <Link href="/requestReset">
-                <a>Forgot password?</a>
+                <span onClick={closeAuthModal}>Forgot password?</span>
               </Link>
             </Form>
           </Container>

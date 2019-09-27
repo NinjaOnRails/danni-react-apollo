@@ -8,6 +8,7 @@ export default styled(Popup)`
     background: #db2828;
     opacity: 0.9;
     border-radius: 15px;
+    font-family: ${props => props.theme.font};
     &&&&:before {
       background: inherit;
       opacity: 0.9;

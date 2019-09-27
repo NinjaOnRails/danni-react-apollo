@@ -8,6 +8,7 @@ import Modal from '../UI/Modal';
 import Signin from './Signin';
 import Signup from './Signup';
 import StyledTab from '../styles/ModalAuthTabStyles';
+import { user } from '../UI/ContentLanguage';
 
 /* eslint-disable */
 const closeAuthModal = ({ render }) => (
@@ -23,6 +24,7 @@ const localData = ({ render }) => (
 const Composed = adopt({
   closeAuthModal,
   localData,
+  user,
 });
 
 class AuthModal extends React.Component {
@@ -45,7 +47,11 @@ class AuthModal extends React.Component {
   render() {
     return (
       <Composed>
-        {({ closeAuthModal, localData: { data, loading } }) => {
+        {({
+          closeAuthModal,
+          localData: { data, loading },
+          user: { currentUser },
+        }) => {
           const panes = [
             {
               menuItem: 'Login',
@@ -57,7 +63,10 @@ class AuthModal extends React.Component {
             },
           ];
           return (
-            <Modal show={data.showAuthModal} closed={closeAuthModal}>
+            <Modal
+              show={data.showAuthModal && !currentUser}
+              closed={closeAuthModal}
+            >
               <StyledTab panes={panes} grid={{ paneWidth: 2, tabWidth: 1 }} />
             </Modal>
           );
