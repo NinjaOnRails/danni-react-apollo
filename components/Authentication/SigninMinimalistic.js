@@ -1,18 +1,73 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import Link from 'next/link';
-import { Form, Segment } from 'semantic-ui-react';
+import { Form, Segment, Button, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
+import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { trackSignIn } from '../../lib/mixpanel';
-import { SIGNIN_MUTATION } from '../../graphql/mutation';
+import {
+  SIGNIN_MUTATION,
+  FACEBOOK_LOGIN_MUTATION,
+} from '../../graphql/mutation';
+import { contentLanguageQuery } from '../UI/ContentLanguage';
 
 const FormStyles = styled.div`
-  a {
-    padding-right: 1rem;
+  .signin-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-between;
   }
 `;
+
+const facebookLoginMutation = ({ render }) => (
+  <Mutation
+    mutation={FACEBOOK_LOGIN_MUTATION}
+    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+  >
+    {(facebookLogin, facebookLoginResult) =>
+      render({ facebookLogin, facebookLoginResult })
+    }
+  </Mutation>
+);
+
+const signinMutation = ({ render, variables }) => (
+  <Mutation
+    mutation={SIGNIN_MUTATION}
+    variables={variables}
+    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+  >
+    {(signin, signinResult) => render({ signin, signinResult })}
+  </Mutation>
+);
+
+const Composed = adopt({
+  facebookLoginMutation,
+  signinMutation,
+  contentLanguageQuery,
+});
+
+const onFacebookLoginClick = ({ facebookLogin, contentLanguage }) => {
+  FB.login(
+    async res => {
+      const success = res.status === 'connected';
+      if (success) {
+        const { data } = await facebookLogin({
+          variables: {
+            contentLanguage,
+            accessToken: res.authResponse.accessToken,
+          },
+        });
+        if (data) trackSignIn(data.facebookLogin.displayName);
+      }
+    },
+    {
+      scope: 'public_profile',
+    }
+  );
+};
 
 class Signin extends Component {
   saveToState = (e, { value }) => {
@@ -21,12 +76,21 @@ class Signin extends Component {
 
   render() {
     return (
-      <Mutation
-        mutation={SIGNIN_MUTATION}
-        variables={this.state}
-        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-      >
-        {(signin, { error, loading }) => (
+      <Composed variables={this.state}>
+        {({
+          facebookLoginMutation: {
+            facebookLogin,
+            facebookLoginResult: {
+              error: fbLoginError,
+              loading: fbLoginLoading,
+            },
+          },
+          signinMutation: {
+            signin,
+            signinResult: { error, loading },
+          },
+          contentLanguageQuery: { contentLanguage },
+        }) => (
           <FormStyles>
             <Segment>
               <Form
@@ -43,6 +107,7 @@ class Signin extends Component {
                 }}
               >
                 <Error error={error} />
+                <Error error={fbLoginError} />
                 <Form.Group widths="equal">
                   <Form.Input
                     fluid
@@ -50,33 +115,52 @@ class Signin extends Component {
                     name="email"
                     placeholder="email"
                     onChange={this.saveToState}
-                    disabled={loading}
+                    disabled={loading || fbLoginLoading}
                   />
                   <Form.Input
                     fluid
                     type="password"
                     name="password"
-                    placeholder="password"
+                    placeholder="mật khẩu"
                     onChange={this.saveToState}
-                    disabled={loading}
+                    disabled={loading || fbLoginLoading}
                   />
                 </Form.Group>
-                <Form.Button type="submit">
-                  {loading && 'Đang '}Đăng Nhập
-                </Form.Button>
-                <Link href="/signup">
-                  <a>Tạo tài khoản mới.</a>
-                </Link>
-                <Link href="/requestReset">
-                  <a>Quên mật khẩu?</a>
-                </Link>
+                <div className="signin-options">
+                  <div className="signin-buttons">
+                    <Button primary>
+                      {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
+                    </Button>
+                    <Button
+                      type="button"
+                      color="facebook"
+                      onClick={() =>
+                        onFacebookLoginClick({
+                          facebookLogin,
+                          contentLanguage,
+                        })
+                      }
+                    >
+                      <Icon name="facebook" /> Dùng Facebook
+                    </Button>
+                  </div>
+                  <div className="signin-other">
+                    <Link href="/signup">
+                      <a>Tạo tài khoản mới. </a>
+                    </Link>
+                    <Link href="/requestReset">
+                      <a>Quên mật khẩu?</a>
+                    </Link>
+                  </div>
+                </div>
               </Form>
             </Segment>
           </FormStyles>
         )}
-      </Mutation>
+      </Composed>
     );
   }
 }
 
 export default Signin;
+export { onFacebookLoginClick, facebookLoginMutation, signinMutation };

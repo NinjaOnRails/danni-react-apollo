@@ -55,7 +55,11 @@ class CommentForm extends React.Component {
     const { commentInput, commentInputValid } = this.state;
     const { client, hideSigninToComment } = this.props;
     return (
-      <PleaseSignIn action="Comment" minimalistic hidden={hideSigninToComment}>
+      <PleaseSignIn
+        action="bình luận"
+        minimalistic
+        hidden={hideSigninToComment}
+      >
         <Form
           loading={createCommentLoading}
           reply

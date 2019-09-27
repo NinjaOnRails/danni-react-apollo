@@ -17,7 +17,7 @@ const Meta = () => (
     <meta name="application-name" content="Danni TV" />
     <meta name="apple-mobile-web-app-title" content="Danni TV" />
 
-    <meta property="fb:app_id" content="444940199652956" />
+    <meta property="fb:app_id" content="398428117464454" />
     <meta property="og:title" content="Danni TV" key="og:title" />
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />

@@ -67,7 +67,7 @@ class CommentReplyForm extends React.Component {
     const { replyFormValid, replyInput } = this.state;
     const { showReplyInput } = this.props;
     return (
-      <PleaseSignIn action="Reply" minimalistic hidden={!showReplyInput}>
+      <PleaseSignIn action="trả lời" minimalistic hidden={!showReplyInput}>
         <Form
           loading={createReplyLoading}
           reply

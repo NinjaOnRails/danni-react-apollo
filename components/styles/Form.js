@@ -85,6 +85,10 @@ const Form = styled.form`
     h2 {
       font-family: ${props => props.theme.font};
     }
+    .ui.facebook.button {
+      display: block;
+      margin-bottom: 1rem;
+    }
   }
 `;
 

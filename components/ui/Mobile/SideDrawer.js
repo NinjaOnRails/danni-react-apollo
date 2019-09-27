@@ -1,19 +1,27 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Icon, Menu, MenuItem } from 'semantic-ui-react';
+import { Icon, Menu, MenuItem, Button } from 'semantic-ui-react';
 import { Mutation, Query } from 'react-apollo';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { onSignout } from '../../Authentication/Signout';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
-import ContentLanguage, { client, user } from '../ContentLanguage';
+import ContentLanguage, {
+  client,
+  user,
+  contentLanguageQuery,
+} from '../ContentLanguage';
 import {
   SIGN_OUT_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
 } from '../../../graphql/mutation';
 import { LOCAL_STATE_QUERY } from '../../../graphql/query';
+import {
+  facebookLoginMutation,
+  onFacebookLoginClick,
+} from '../../Authentication/SigninMinimalistic';
 
 const LanguageMenuStyles = styled.div`
   button.ui.button {
@@ -56,6 +64,8 @@ const Composed = adopt({
   signout,
   client,
   user,
+  facebookLoginMutation,
+  contentLanguageQuery,
 });
 
 const onAuthClick = ({ router, client }) => {
@@ -78,6 +88,11 @@ const SideDrawer = () => {
         user: { currentUser },
         client,
         signout,
+        facebookLoginMutation: {
+          facebookLogin,
+          facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
+        },
+        contentLanguageQuery: { contentLanguage },
       }) => {
         if (loading) return <div />;
         const { showSide: show } = data;
@@ -145,6 +160,19 @@ const SideDrawer = () => {
                           </div>
                         </MenuItem>
                       </Link>
+                      <Button
+                        size="big"
+                        type="button"
+                        color="facebook"
+                        onClick={() =>
+                          onFacebookLoginClick({
+                            facebookLogin,
+                            contentLanguage,
+                          })
+                        }
+                      >
+                        <Icon name="facebook" /> Dùng Facebook
+                      </Button>
                     </>
                   )}
                   {currentUser && (

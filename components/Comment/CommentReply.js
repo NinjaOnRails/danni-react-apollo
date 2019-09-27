@@ -19,7 +19,7 @@ import {
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
-import SigninMinimalistic from '../Authentication/SigninMinimalistic';
+import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -391,16 +391,7 @@ class CommentReply extends React.Component {
                 </>
               )}
             </Comment.Content>
-            {!currentUser && voteClicked && (
-              <>
-                <StyledMessage>
-                  <Message warning>
-                    <StyledHeader>Đăng nhập để đánh giá</StyledHeader>
-                  </Message>
-                </StyledMessage>
-                <SigninMinimalistic noRedirect />
-              </>
-            )}
+            {voteClicked && <PleaseSignIn />}
           </>
         )}
       </Comment>
