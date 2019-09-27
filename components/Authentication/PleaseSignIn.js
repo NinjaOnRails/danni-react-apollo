@@ -8,6 +8,7 @@ import SigninMinimalistic from './SigninMinimalistic';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import { client, user } from '../UI/ContentLanguage';
 import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
+import AuthModal from './AuthModal';
 /* eslint-disable */
 
 const openAuthModal = ({ render }) => (
