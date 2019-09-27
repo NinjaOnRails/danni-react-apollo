@@ -20,6 +20,7 @@ import {
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import SigninMinimalistic from '../Authentication/SigninMinimalistic';
+import StyledPopup from '../styles/CommentDeletePopUpStyles';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -192,11 +193,6 @@ class CommentReply extends React.Component {
   onUpdateSubmit = async updateComment => {
     const { data } = await updateComment();
     if (data) this.setState({ showEditForm: false, editInput: '' });
-  };
-
-  onDeleteCommentReply = deleteCommentReply => {
-    if (confirm('Are you sure you want to delete this reply?'))
-      deleteCommentReply();
   };
 
   onVoteClick = (
@@ -378,13 +374,18 @@ class CommentReply extends React.Component {
                         <Comment.Action onClick={this.onClickEdit}>
                           Edit
                         </Comment.Action>
-                        <Comment.Action
-                          onClick={() =>
-                            this.onDeleteCommentReply(deleteCommentReply)
-                          }
+                        <StyledPopup
+                          trigger={<Comment.Action>Delete</Comment.Action>}
+                          on="click"
+                          position="bottom right"
                         >
-                          Delete
-                        </Comment.Action>
+                          <Button
+                            fluid
+                            color="red"
+                            content="Confirm delete"
+                            onClick={deleteCommentReply}
+                          />
+                        </StyledPopup>
                       </>
                     ) : null}
                   </Comment.Actions>

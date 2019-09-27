@@ -7,6 +7,7 @@ import {
   Button,
   Loader,
   Message,
+  Popup,
 } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
@@ -22,6 +23,7 @@ import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import SigninMinimalistic from '../Authentication/SigninMinimalistic';
+import StyledPopup from '../styles/CommentDeletePopUpStyles';
 
 /* eslint-disable */
 const deleteCommentMutation = ({ id, videoId, render }) => (
@@ -144,6 +146,7 @@ class VideoComment extends React.Component {
     showEditInput: false,
     updateCommentFormValid: true,
     voteClicked: false,
+    showConfirm: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -170,11 +173,11 @@ class VideoComment extends React.Component {
   };
 
   onReplyClick = () => {
-    this.setState({ showReplyInput: true });
+    this.setState({ showReplyInput: true, showConfirm: false });
   };
 
   onEditClick = () => {
-    this.setState({ showEditInput: true });
+    this.setState({ showEditInput: true, showConfirm: false });
   };
 
   closeReplyInput = () => {
@@ -187,12 +190,12 @@ class VideoComment extends React.Component {
       this.setState({
         showEditInput: false,
         updateInput: '',
+        showConfirm: false,
       });
   };
 
-  onDeleteComment = deleteComment => {
-    if (confirm('Are you sure you want to delete this comment?'))
-      deleteComment();
+  onConfirmDelete = deleteComment => {
+    deleteComment();
   };
 
   onVoteClick = (type, comment, createCommentVote) => {
@@ -243,6 +246,7 @@ class VideoComment extends React.Component {
       showEditInput,
       updateCommentFormValid,
       voteClicked,
+      showConfirm,
     } = this.state;
 
     const {
@@ -302,9 +306,6 @@ class VideoComment extends React.Component {
                   <Button
                     content="Cancel"
                     onClick={() => {
-                      // if (
-                      //   confirm('Are you sure you want to discard all changes?')
-                      // )
                       this.setState({ showEditInput: false });
                     }}
                   />
@@ -314,58 +315,80 @@ class VideoComment extends React.Component {
                   <Comment.Text>
                     <p>{text}</p>
                   </Comment.Text>
-                  <Comment.Actions>
-                    <Icon
-                      id="UPVOTE"
-                      name="angle up"
-                      color={
-                        voteType && voteType.type === 'UPVOTE'
-                          ? 'orange'
-                          : 'grey'
-                      }
-                      size="large"
-                      link
-                      disabled={
-                        createCommentVoteLoading || createCommentVoteError
-                      }
-                      onClick={e =>
-                        this.onVoteClick(e.target.id, id, createCommentVote)
-                      }
-                    />
-                    <span>{voteCount}</span>
-                    <Icon
-                      id="DOWNVOTE"
-                      name="angle down"
-                      disabled={
-                        createCommentVoteLoading || createCommentVoteError
-                      }
-                      color={
-                        voteType && voteType.type === 'DOWNVOTE'
-                          ? 'purple'
-                          : 'grey'
-                      }
-                      size="large"
-                      link
-                      onClick={e =>
-                        this.onVoteClick(e.target.id, id, createCommentVote)
-                      }
-                    />
-                    <Comment.Action onClick={this.onReplyClick}>
-                      Reply
-                    </Comment.Action>
-                    {currentUser && author && author.id === currentUser.id ? (
-                      <>
-                        <Comment.Action onClick={this.onEditClick}>
-                          Edit
+                  <Popup
+                    trigger={
+                      <Comment.Actions>
+                        <Icon
+                          id="UPVOTE"
+                          name="angle up"
+                          color={
+                            voteType && voteType.type === 'UPVOTE'
+                              ? 'orange'
+                              : 'grey'
+                          }
+                          size="large"
+                          link
+                          disabled={
+                            createCommentVoteLoading || createCommentVoteError
+                          }
+                          onClick={e =>
+                            this.onVoteClick(e.target.id, id, createCommentVote)
+                          }
+                        />
+                        <span>{voteCount}</span>
+                        <Icon
+                          id="DOWNVOTE"
+                          name="angle down"
+                          disabled={
+                            createCommentVoteLoading || createCommentVoteError
+                          }
+                          color={
+                            voteType && voteType.type === 'DOWNVOTE'
+                              ? 'purple'
+                              : 'grey'
+                          }
+                          size="large"
+                          link
+                          onClick={e =>
+                            this.onVoteClick(e.target.id, id, createCommentVote)
+                          }
+                        />
+                        <Comment.Action onClick={this.onReplyClick}>
+                          Reply
                         </Comment.Action>
-                        <Comment.Action
-                          onClick={() => this.onDeleteComment(deleteComment)}
-                        >
-                          Delete
-                        </Comment.Action>
-                      </>
-                    ) : null}
-                  </Comment.Actions>
+                        {currentUser &&
+                        author &&
+                        author.id === currentUser.id ? (
+                          <>
+                            <Comment.Action onClick={this.onEditClick}>
+                              Edit
+                            </Comment.Action>
+                            <StyledPopup
+                              trigger={<Comment.Action>Delete</Comment.Action>}
+                              on="click"
+                              position="bottom left"
+                            >
+                              <Button
+                                fluid
+                                color="red"
+                                content="Confirm delete"
+                                onClick={() =>
+                                  this.onConfirmDelete(deleteComment)
+                                }
+                              />
+                            </StyledPopup>
+                          </>
+                        ) : null}
+                      </Comment.Actions>
+                    }
+                    on="click"
+                    position="bottom left"
+                    disabled={!!currentUser}
+                  >
+                    <Popup.Content>
+                      <p>Please login to vote or reply</p>
+                    </Popup.Content>
+                  </Popup>
                 </>
               )}
             </Comment.Content>
