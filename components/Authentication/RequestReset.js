@@ -41,7 +41,6 @@ class Signup extends Component {
                     saveToState={this.saveToState}
                     value={this.state}
                   />
-
                   <button type="submit">Gửi</button>
                 </fieldset>
               </Form>

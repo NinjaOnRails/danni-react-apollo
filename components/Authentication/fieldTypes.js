@@ -10,14 +10,12 @@ const signupFields = [
     type: 'name',
     name: 'name',
     icon: 'user',
-    placeholder: 'Name',
   },
   {
     label: 'Tên hiển thị',
     type: 'displayName',
     name: 'displayName',
     icon: 'user',
-    placeholder: 'Display Name',
   },
   {
     label: 'Mật khẩu',
