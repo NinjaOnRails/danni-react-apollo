@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Form, Button, Loader , Message} from 'semantic-ui-react';
+import {
+  Comment,
+  Icon,
+  Form,
+  Button,
+  Loader,
+  Message,
+} from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -140,7 +147,6 @@ class VideoComment extends React.Component {
     showEditInput: false,
     updateCommentFormValid: true,
     voteClicked: false,
-    showConfirm: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -167,11 +173,11 @@ class VideoComment extends React.Component {
   };
 
   onReplyClick = () => {
-    this.setState({ showReplyInput: true, showConfirm: false });
+    this.setState({ showReplyInput: true });
   };
 
   onEditClick = () => {
-    this.setState({ showEditInput: true, showConfirm: false });
+    this.setState({ showEditInput: true });
   };
 
   closeReplyInput = () => {
@@ -184,7 +190,6 @@ class VideoComment extends React.Component {
       this.setState({
         showEditInput: false,
         updateInput: '',
-        showConfirm: false,
       });
   };
 
@@ -292,12 +297,12 @@ class VideoComment extends React.Component {
                     autoComplete="off"
                   />
                   <Button
-                    content="Update Comment"
+                    content="Sửa bình luận"
                     primary
                     disabled={!updateCommentFormValid}
                   />
                   <Button
-                    content="Cancel"
+                    content="Huỷ"
                     onClick={() => {
                       this.setState({ showEditInput: false });
                     }}
@@ -360,7 +365,7 @@ class VideoComment extends React.Component {
                           <Button
                             fluid
                             color="red"
-                            content="Confirm delete"
+                            content="Xoá bình luận"
                             onClick={() => this.onConfirmDelete(deleteComment)}
                           />
                         </StyledPopup>

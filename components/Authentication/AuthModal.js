@@ -52,13 +52,14 @@ class AuthModal extends React.Component {
           localData: { data, loading },
           user: { currentUser },
         }) => {
+          console.log("Modal")
           const panes = [
             {
-              menuItem: 'Login',
+              menuItem: 'Đăng nhập',
               render: () => this.renderForm('login'),
             },
             {
-              menuItem: 'Signup',
+              menuItem: 'Đăng ký',
               render: () => this.renderForm('signup'),
             },
           ];

@@ -146,7 +146,10 @@ class Signin extends Component {
                 </Link>
               )}
               <Link href="/requestReset">
-                <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                <a>
+
+                  <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                </a>
               </Link>
             </Form>
           </Container>

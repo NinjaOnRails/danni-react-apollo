@@ -89,7 +89,7 @@ const Form = styled.form`
       font-family: ${props => props.theme.font};
     }
     .ui.facebook.button {
-      display: block;
+      display: ${props => (props.isModal ? 'inline-block' : 'block')};
       margin-bottom: 1rem;
     }
   }

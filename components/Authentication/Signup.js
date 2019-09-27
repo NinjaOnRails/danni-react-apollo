@@ -132,7 +132,9 @@ class Signup extends Component {
                       <a>Đã có tài khoản?</a>
                     </Link>
                     <Link href="/requestReset">
-                      <a>Quên mật khẩu?</a>
+                      <a>
+                        <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                      </a>
                     </Link>
                   </>
                 )}

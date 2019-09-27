@@ -297,18 +297,13 @@ class CommentReply extends React.Component {
                     autoComplete="off"
                   />
                   <Button
-                    content="Update Comment"
+                    content="Sửa bình luận"
                     primary
                     disabled={!editFormValid}
                   />
                   <Button
-                    content="Cancel"
+                    content="Huỷ"
                     onClick={() => {
-                      // if (
-                      //   confirm(
-                      //     'Are you sure you want to discard all changes?'
-                      //   )
-                      // )
                       this.setState({ showEditForm: false });
                     }}
                   />
@@ -383,7 +378,7 @@ class CommentReply extends React.Component {
                           <Button
                             fluid
                             color="red"
-                            content="Confirm delete"
+                            content="Xoá bình luận"
                             onClick={deleteCommentReply}
                           />
                         </StyledPopup>
