@@ -123,15 +123,16 @@ class Signup extends Component {
                       value={this.state}
                     />
                   ))}
-                  <button type="submit">Sign{loading && 'ing'} Up</button>
+                  <button type="submit">{loading && 'Đang '}Đăng Ký</button>
+                  {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
                 </fieldset>
                 {!isModal && (
                   <>
                     <Link href="/signin">
-                      <a>Already have an account?</a>
+                      <a>Đã có tài khoản?</a>
                     </Link>
                     <Link href="/requestReset">
-                      <a>Forgot password?</a>
+                      <a>Quên mật khẩu?</a>
                     </Link>
                   </>
                 )}

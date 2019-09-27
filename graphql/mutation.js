@@ -71,6 +71,7 @@ const SIGNIN_MUTATION = gql`
     signin(email: $email, password: $password) {
       id
       displayName
+      avatar
     }
   }
 `;
@@ -79,6 +80,22 @@ const SIGN_OUT_MUTATION = gql`
   mutation SIGN_OUT_MUTATION {
     signout {
       message
+    }
+  }
+`;
+
+const FACEBOOK_LOGIN_MUTATION = gql`
+  mutation FACEBOOK_LOGIN_MUTATION(
+    $accessToken: String!
+    $contentLanguage: [Language]
+  ) {
+    facebookLogin(
+      accessToken: $accessToken
+      contentLanguage: $contentLanguage
+    ) {
+      id
+      displayName
+      avatar
     }
   }
 `;
@@ -255,4 +272,5 @@ export {
   CREATE_COMMENTREPLY_VOTE_MUTATION,
   CLOSE_AUTH_MODAL_MUTATION,
   OPEN_AUTH_MODAL_MUTATION,
+  FACEBOOK_LOGIN_MUTATION,
 };

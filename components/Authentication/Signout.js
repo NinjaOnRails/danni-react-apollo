@@ -5,6 +5,7 @@ import { SIGN_OUT_MUTATION } from '../../graphql/mutation';
 
 const onSignout = async ({ signout, client }) => {
   await signout();
+  FB.logout();
   localStorage.clear();
   await client.resetStore();
   return client.query({ query: CURRENT_USER_QUERY });
@@ -16,7 +17,7 @@ const Signout = () => (
       <ApolloConsumer>
         {client => (
           <button type="button" onClick={() => onSignout({ signout, client })}>
-            Sign Out
+            Đăng Xuất
           </button>
         )}
       </ApolloConsumer>

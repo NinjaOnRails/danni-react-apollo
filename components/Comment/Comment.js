@@ -1,13 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Comment,
-  Icon,
-  Form,
-  Button,
-  Loader,
-  Message,
-} from 'semantic-ui-react';
+import { Comment, Icon, Form, Button, Loader , Message} from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -17,13 +10,13 @@ import {
   DELETE_COMMENT_MUTATION,
   UPDATE_COMMENT_MUTATION,
   CREATE_COMMENT_VOTE_MUTATION,
-  OPEN_AUTH_MODAL_MUTATION,
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import SigninMinimalistic from '../Authentication/SigninMinimalistic';
 import StyledPopup from '../styles/PopUpStyles';
+import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
 const deleteCommentMutation = ({ id, videoId, render }) => (
@@ -275,10 +268,10 @@ class VideoComment extends React.Component {
           <Loader active />
         ) : (
           <>
-            {/* <Comment.Avatar src="" /> */}
+            {author.avatar && <Comment.Avatar src={author.avatar} />}
             <Comment.Content>
               <Comment.Author as="a">
-                {author ? author.displayName : 'deleted user'}
+                {author ? author.displayName : <i>deleted user</i>}
               </Comment.Author>
               <Comment.Metadata>
                 <div>{this.formatTime(createdAt)}</div>
@@ -352,15 +345,15 @@ class VideoComment extends React.Component {
                       }
                     />
                     <Comment.Action onClick={this.onReplyClick}>
-                      Reply
+                      Trả lời
                     </Comment.Action>
                     {currentUser && author && author.id === currentUser.id ? (
                       <>
                         <Comment.Action onClick={this.onEditClick}>
-                          Edit
+                          Sửa
                         </Comment.Action>
                         <StyledPopup
-                          trigger={<Comment.Action>Delete</Comment.Action>}
+                          trigger={<Comment.Action>Xoá</Comment.Action>}
                           on="click"
                           position="bottom left"
                         >
@@ -387,6 +380,8 @@ class VideoComment extends React.Component {
                 <SigninMinimalistic noRedirect />
               </>
             )}
+
+            {/* {voteClicked && <PleaseSignIn />} */}
             {reply.length > 0 && (
               <CommentReplyList
                 reply={reply}

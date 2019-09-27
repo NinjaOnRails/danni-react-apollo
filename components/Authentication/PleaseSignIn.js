@@ -9,6 +9,8 @@ import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import { client, user } from '../UI/ContentLanguage';
 import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import AuthModal from './AuthModal';
+import { isBrowser } from '../../lib/withApolloClient';
+
 /* eslint-disable */
 
 const openAuthModal = ({ render }) => (
@@ -29,7 +31,7 @@ const PleaseSignIn = ({ action, minimalistic, hidden, children }) => {
       {({ user: { currentUser, loading }, client, openAuthModal }) => {
         if (loading) return <Loader active inline="centered" />;
         if (!currentUser && !hidden) {
-          if (typeof window !== 'undefined' && router) {
+          if (isBrowser && router) {
             const currentPath = router.asPath;
             localStorage.setItem('previousPage', currentPath);
             client.writeData({
@@ -40,11 +42,12 @@ const PleaseSignIn = ({ action, minimalistic, hidden, children }) => {
             <>
               <StyledMessage>
                 <Message warning>
-                  <StyledHeader>{`Please Sign In to ${action}`}</StyledHeader>
+                  <StyledHeader>{`Đăng nhập để ${action}`}</StyledHeader>
+                  {/* <StyledHeader>{`Please Sign In to ${action}`}</StyledHeader> */}
                 </Message>
               </StyledMessage>
               {minimalistic ? (
-                <SigninMinimalistic noRedirect />
+                <SigninMinimalistic noRedirect client={client} />
               ) : (
                 <Signin noRedirect />
               )}
@@ -69,7 +72,7 @@ PleaseSignIn.propTypes = {
 
 PleaseSignIn.defaultProps = {
   children: null,
-  action: 'Continue',
+  action: 'tiếp tục',
   minimalistic: false,
   hidden: false,
 };

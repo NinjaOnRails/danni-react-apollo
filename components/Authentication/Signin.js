@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Mutation, Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Container } from 'semantic-ui-react';
+import { Container, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Form from '../styles/Form';
@@ -10,29 +10,16 @@ import Error from '../UI/ErrorMessage';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { trackSignIn } from '../../lib/mixpanel';
+import { client, contentLanguageQuery } from '../UI/ContentLanguage';
+import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
+import { CLOSE_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import {
-  CURRENT_USER_QUERY,
-  CONTENT_LANGUAGE_QUERY,
-} from '../../graphql/query';
-import {
-  SIGNIN_MUTATION,
-  CLOSE_AUTH_MODAL_MUTATION,
-} from '../../graphql/mutation';
-import { client } from '../UI/ContentLanguage';
+  onFacebookLoginClick,
+  signinMutation,
+  facebookLoginMutation,
+} from './SigninMinimalistic';
 
 /* eslint-disable */
-const signinMutation = ({ variables, render }) => (
-  <Mutation
-    mutation={SIGNIN_MUTATION}
-    variables={variables}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
-    {(signin, signinResult) => {
-      return render({ signin, signinResult });
-    }}
-  </Mutation>
-);
-
 const closeAuthModal = ({ render }) => (
   <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
 );
@@ -42,10 +29,11 @@ const Composed = adopt({
   localState: ({ render }) => (
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
+  facebookLoginMutation,
   signinMutation,
   closeAuthModal,
+  contentLanguageQuery,
 });
-/* eslint-enable */
 
 class Signin extends Component {
   state = {
@@ -91,11 +79,19 @@ class Signin extends Component {
         {({
           client,
           localState: { data },
+          facebookLoginMutation: {
+            facebookLogin,
+            facebookLoginResult: {
+              error: fbLoginError,
+              loading: fbLoginLoading,
+            },
+          },
           signinMutation: {
             signin,
             signinResult: { error, loading },
           },
           closeAuthModal,
+          contentLanguageQuery: { contentLanguage },
         }) => (
           <Container>
             <Form
@@ -112,8 +108,12 @@ class Signin extends Component {
               }
               isModal
             >
-              <fieldset disabled={loading} aria-busy={loading}>
+              <fieldset
+                disabled={loading || fbLoginLoading}
+                aria-busy={loading || fbLoginLoading}
+              >
                 <Error error={error} />
+                <Error error={fbLoginError} />
                 {signinFields.map(form => (
                   <AuthForm
                     key={form.name}
@@ -122,15 +122,31 @@ class Signin extends Component {
                     value={this.state}
                   />
                 ))}
-                <button type="submit">Sign{loading && 'ing'} In</button>
+                <button type="submit">
+                  {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
+                </button>
+                <Button
+                  size="big"
+                  type="button"
+                  color="facebook"
+                  onClick={() =>
+                    onFacebookLoginClick({
+                      facebookLogin,
+                      contentLanguage,
+                    })
+                  }
+                >
+                  <Icon name="facebook" /> Dùng Facebook
+                </Button>
+                {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
               </fieldset>
               {!isModal && (
                 <Link href="/signup">
-                  <a>Create a new account</a>
+                  <a>Tạo tài khoản mới.</a>
                 </Link>
               )}
               <Link href="/requestReset">
-                <span onClick={closeAuthModal}>Forgot password?</span>
+                <span onClick={closeAuthModal}>Quên mật khẩu?</span>
               </Link>
             </Form>
           </Container>

@@ -55,7 +55,11 @@ class CommentForm extends React.Component {
     const { commentInput, commentInputValid } = this.state;
     const { client, hideSigninToComment } = this.props;
     return (
-      <PleaseSignIn action="Comment" minimalistic hidden={hideSigninToComment}>
+      <PleaseSignIn
+        action="bình luận"
+        minimalistic
+        hidden={hideSigninToComment}
+      >
         <Form
           loading={createCommentLoading}
           reply
@@ -64,7 +68,7 @@ class CommentForm extends React.Component {
           }}
         >
           <Form.TextArea
-            placeholder="Write a comment..."
+            placeholder="Viết bình luận..."
             onChange={this.onTextChange}
             value={commentInput}
             onClick={() =>
@@ -73,7 +77,7 @@ class CommentForm extends React.Component {
               })
             }
           />
-          <Button content="Add Comment" primary disabled={!commentInputValid} />
+          <Button content="Đăng" primary disabled={!commentInputValid} />
         </Form>
       </PleaseSignIn>
     );

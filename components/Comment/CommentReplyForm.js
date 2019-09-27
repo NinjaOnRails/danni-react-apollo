@@ -67,7 +67,7 @@ class CommentReplyForm extends React.Component {
     const { replyFormValid, replyInput } = this.state;
     const { showReplyInput } = this.props;
     return (
-      <PleaseSignIn action="Reply" minimalistic hidden={!showReplyInput}>
+      <PleaseSignIn action="trả lời" minimalistic hidden={!showReplyInput}>
         <Form
           loading={createReplyLoading}
           reply
@@ -78,13 +78,13 @@ class CommentReplyForm extends React.Component {
         >
           <Form.Input
             name="replyInput"
-            placeholder="Write a reply..."
+            placeholder="Viết trả lời..."
             onChange={this.onTextChange}
             value={replyInput}
             autoComplete="off"
           />
           <Error error={createCommentReplyError} />
-          <Button content="Add Reply" primary disabled={!replyFormValid} />
+          <Button content="Đăng" primary disabled={!replyFormValid} />
         </Form>
       </PleaseSignIn>
     );

@@ -21,6 +21,7 @@ import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import SigninMinimalistic from '../Authentication/SigninMinimalistic';
 import StyledPopup from '../styles/PopUpStyles';
+import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -251,7 +252,7 @@ class CommentReply extends React.Component {
       currentUser,
     } = this.props;
 
-    const { showEditForm, editInput, editFormValid, voteClicked } = this.state;
+    const { showEditForm, editFormValid, voteClicked } = this.state;
     let voteType = null;
     let voteCount = 0;
     if (vote.length > 0) {
@@ -367,15 +368,15 @@ class CommentReply extends React.Component {
                       }
                     />
                     <Comment.Action onClick={onReplyClick}>
-                      Reply
+                      Trả lời
                     </Comment.Action>
                     {currentUser && author && author.id === currentUser.id ? (
                       <>
                         <Comment.Action onClick={this.onClickEdit}>
-                          Edit
+                          Sửa
                         </Comment.Action>
                         <StyledPopup
-                          trigger={<Comment.Action>Delete</Comment.Action>}
+                          trigger={<Comment.Action>Xoá</Comment.Action>}
                           on="click"
                           position="bottom right"
                         >
@@ -386,22 +387,14 @@ class CommentReply extends React.Component {
                             onClick={deleteCommentReply}
                           />
                         </StyledPopup>
+
                       </>
                     ) : null}
                   </Comment.Actions>
                 </>
               )}
             </Comment.Content>
-            {!currentUser && voteClicked && (
-              <>
-                <StyledMessage>
-                  <Message warning>
-                    <StyledHeader>Please Sign In to vote</StyledHeader>
-                  </Message>
-                </StyledMessage>
-                <SigninMinimalistic noRedirect />
-              </>
-            )}
+            {voteClicked && <PleaseSignIn />}
           </>
         )}
       </Comment>

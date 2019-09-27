@@ -1,19 +1,27 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Icon, Menu, MenuItem } from 'semantic-ui-react';
+import { Icon, Menu, MenuItem, Button } from 'semantic-ui-react';
 import { Mutation, Query } from 'react-apollo';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { onSignout } from '../../Authentication/Signout';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
-import ContentLanguage, { client, user } from '../ContentLanguage';
+import ContentLanguage, {
+  client,
+  user,
+  contentLanguageQuery,
+} from '../ContentLanguage';
 import {
   SIGN_OUT_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
 } from '../../../graphql/mutation';
 import { LOCAL_STATE_QUERY } from '../../../graphql/query';
+import {
+  facebookLoginMutation,
+  onFacebookLoginClick,
+} from '../../Authentication/SigninMinimalistic';
 
 const LanguageMenuStyles = styled.div`
   button.ui.button {
@@ -56,6 +64,8 @@ const Composed = adopt({
   signout,
   client,
   user,
+  facebookLoginMutation,
+  contentLanguageQuery,
 });
 
 const onAuthClick = ({ router, client }) => {
@@ -78,8 +88,13 @@ const SideDrawer = () => {
         user: { currentUser },
         client,
         signout,
+        facebookLoginMutation: {
+          facebookLogin,
+          facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
+        },
+        contentLanguageQuery: { contentLanguage },
       }) => {
-        if (loading) return <div>loading...</div>;
+        if (loading) return <div />;
         const { showSide: show } = data;
         return (
           <SideDrawerStyles>
@@ -92,7 +107,7 @@ const SideDrawer = () => {
                     <MenuItem as="a" onClick={closeSideDrawer}>
                       <div className="link-container">
                         <Icon name="home" size="large" />
-                        <span className="link-name">Home</span>
+                        <span className="link-name">Trang Chủ</span>
                       </div>
                     </MenuItem>
                   </Link>
@@ -103,7 +118,7 @@ const SideDrawer = () => {
                           <Icon name="video" />
                           <Icon color="black" name="plus" size="tiny" />
                         </Icon.Group>
-                        <span className="link-name">Add Video</span>
+                        <span className="link-name">Thêm Video</span>
                       </div>
                     </MenuItem>
                   </Link>
@@ -111,7 +126,7 @@ const SideDrawer = () => {
                     <MenuItem as="a" onClick={closeSideDrawer}>
                       <div className="link-container">
                         <Icon name="info" size="large" />
-                        <span className="link-name">About</span>
+                        <span className="link-name">Chúng Tôi</span>
                       </div>
                     </MenuItem>
                   </Link>
@@ -127,7 +142,7 @@ const SideDrawer = () => {
                         >
                           <div className="link-container">
                             <Icon name="user" size="large" />
-                            <span className="link-name">Sign In</span>
+                            <span className="link-name">Đăng Nhập</span>
                           </div>
                         </MenuItem>
                       </Link>
@@ -141,10 +156,23 @@ const SideDrawer = () => {
                         >
                           <div className="link-container">
                             <Icon name="user plus" size="large" />
-                            <span className="link-name">Sign Up</span>
+                            <span className="link-name">Đăng Ký</span>
                           </div>
                         </MenuItem>
                       </Link>
+                      <Button
+                        size="big"
+                        type="button"
+                        color="facebook"
+                        onClick={() =>
+                          onFacebookLoginClick({
+                            facebookLogin,
+                            contentLanguage,
+                          })
+                        }
+                      >
+                        <Icon name="facebook" /> Dùng Facebook
+                      </Button>
                     </>
                   )}
                   {currentUser && (
@@ -154,7 +182,7 @@ const SideDrawer = () => {
                     >
                       <div className="link-container">
                         <Icon name="sign-out" size="large" />
-                        <span className="link-name">Sign Out</span>
+                        <span className="link-name">Đăng Xuất</span>
                       </div>
                     </MenuItem>
                   )}
