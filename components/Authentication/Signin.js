@@ -14,7 +14,10 @@ import {
   CURRENT_USER_QUERY,
   CONTENT_LANGUAGE_QUERY,
 } from '../../graphql/query';
-import { SIGNIN_MUTATION } from '../../graphql/mutation';
+import {
+  SIGNIN_MUTATION,
+  CLOSE_AUTH_MODAL_MUTATION,
+} from '../../graphql/mutation';
 import { client } from '../UI/ContentLanguage';
 
 /* eslint-disable */
@@ -30,12 +33,17 @@ const signinMutation = ({ variables, render }) => (
   </Mutation>
 );
 
+const closeAuthModal = ({ render }) => (
+  <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
+);
+
 const Composed = adopt({
   client,
   localState: ({ render }) => (
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
   signinMutation,
+  closeAuthModal,
 });
 /* eslint-enable */
 
@@ -55,6 +63,7 @@ class Signin extends Component {
     data: { previousPage },
     client,
     noRedirect,
+    closeAuthModal,
   }) => {
     e.preventDefault();
     const { data } = await signin();
@@ -64,6 +73,7 @@ class Signin extends Component {
     });
     if (data) {
       trackSignIn(data.signin.displayName);
+      closeAuthModal()
       if (!noRedirect) {
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
@@ -75,7 +85,7 @@ class Signin extends Component {
   };
 
   render() {
-    const { noRedirect } = this.props;
+    const { noRedirect, isModal } = this.props;
     return (
       <Composed variables={this.state}>
         {({
@@ -85,13 +95,22 @@ class Signin extends Component {
             signin,
             signinResult: { error, loading },
           },
+          closeAuthModal,
         }) => (
           <Container>
             <Form
               method="post"
               onSubmit={e =>
-                this.onSubmit({ e, signin, data, client, noRedirect })
+                this.onSubmit({
+                  e,
+                  signin,
+                  data,
+                  client,
+                  noRedirect,
+                  closeAuthModal,
+                })
               }
+              isModal
             >
               <fieldset disabled={loading} aria-busy={loading}>
                 <Error error={error} />
@@ -105,9 +124,11 @@ class Signin extends Component {
                 ))}
                 <button type="submit">Sign{loading && 'ing'} In</button>
               </fieldset>
-              <Link href="/signup">
-                <a>Create a new account</a>
-              </Link>
+              {!isModal && (
+                <Link href="/signup">
+                  <a>Create a new account</a>
+                </Link>
+              )}
               <Link href="/requestReset">
                 <a>Forgot password?</a>
               </Link>
@@ -121,10 +142,12 @@ class Signin extends Component {
 
 Signin.propTypes = {
   noRedirect: PropTypes.bool,
+  isModal: PropTypes.bool,
 };
 
 Signin.defaultProps = {
   noRedirect: false,
+  isModal: false,
 };
 
 export default Signin;

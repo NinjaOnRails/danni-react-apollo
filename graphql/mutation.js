@@ -220,15 +220,15 @@ const CLOSE_SIDEDRAWER_MUTATION = gql`
   }
 `;
 
-const OPEN_SIGNIN_MODAL_MUTATION = gql`
+const OPEN_AUTH_MODAL_MUTATION = gql`
   mutation {
-    openSigninModal @client
+    openAuthModal @client
   }
 `;
 
-const CLOSE_SIGNIN_MODAL_MUTATION = gql`
+const CLOSE_AUTH_MODAL_MUTATION = gql`
   mutation {
-    closeSigninModal @client
+    closeAuthModal @client
   }
 `;
 
@@ -253,6 +253,6 @@ export {
   CLOSE_SIDEDRAWER_MUTATION,
   CREATE_COMMENT_VOTE_MUTATION,
   CREATE_COMMENTREPLY_VOTE_MUTATION,
-  CLOSE_SIGNIN_MODAL_MUTATION,
-  OPEN_SIGNIN_MODAL_MUTATION,
+  CLOSE_AUTH_MODAL_MUTATION,
+  OPEN_AUTH_MODAL_MUTATION,
 };

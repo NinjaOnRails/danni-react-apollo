@@ -160,7 +160,7 @@ const VIDEO_COMMENTS_QUERY = gql`
 const LOCAL_STATE_QUERY = gql`
   query {
     showSide @client
-    showSigninModal @client
+    showAuthModal @client
   }
 `;
 

@@ -3,7 +3,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import Header from './Header';
 import SideDrawer from './Mobile/SideDrawer';
-import SigninModal from '../Authentication/SigninModal';
+import AuthModal from '../Authentication/AuthModal';
 
 const theme = {
   red: '#FF0000',
@@ -64,7 +64,7 @@ class Page extends Component {
           <GlobalStyle />
           <Header />
           <SideDrawer />
-          <SigninModal />
+          <AuthModal />
           <Inner>{children}</Inner>
         </StyledPage>
       </ThemeProvider>

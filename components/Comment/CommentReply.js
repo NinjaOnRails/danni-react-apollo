@@ -20,7 +20,7 @@ import {
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import SigninMinimalistic from '../Authentication/SigninMinimalistic';
-import StyledPopup from '../styles/CommentDeletePopUpStyles';
+import StyledPopup from '../styles/PopUpStyles';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (

@@ -16,25 +16,38 @@ const ModalStyles = styled.div`
     top: 30%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
+    transform: ${props =>
+      props.show ? 'translateY(0)' : 'translateY(-100vh)'};
+    opacity: ${props => (props.show ? 1 : 0)};
   }
 
   @media (min-width: 640px) {
     .Modal {
-      width: 500px;
-      left: calc(50% - 250px);
+      transition: all 0.3s ease-out;
+      width: 400px;
+      left: calc(50% - 200px);
+      opacity: ${props => (props.show ? 1 : 0)};
+    }
+  }
+  @media (max-width: 639px) {
+    .Modal {
+      transition: all 0.3s ease-out;
+      transform: ${props =>
+        props.show ? 'translateY(-100px)' : 'translateY(-100vh)'};
+      opacity: ${props => (props.show ? 1 : 0)};
     }
   }
 `;
 const Modal = ({ show, closed, children }) => {
   return (
-    <ModalStyles>
+    <ModalStyles show={show}>
       <Backdrop show={show} clicked={closed} />
       <div
         className="Modal"
-        style={{
-          transform: show ? 'translateY(0)' : 'translateY(-100vh)',
-          opacity: show ? '1' : '0',
-        }}
+        // style={{
+        //   transform: show ? 'translateY(0)' : 'translateY(-100vh)',
+        //   opacity: show ? 1 : 0,
+        // }}
       >
         {children}
       </div>

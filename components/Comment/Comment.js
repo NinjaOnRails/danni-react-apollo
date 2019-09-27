@@ -23,7 +23,7 @@ import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import SigninMinimalistic from '../Authentication/SigninMinimalistic';
-import StyledPopup from '../styles/CommentDeletePopUpStyles';
+import StyledPopup from '../styles/PopUpStyles';
 
 /* eslint-disable */
 const deleteCommentMutation = ({ id, videoId, render }) => (
@@ -383,7 +383,8 @@ class VideoComment extends React.Component {
                     }
                     on="click"
                     position="bottom left"
-                    disabled={!!currentUser}
+                    // disabled={!!currentUser}
+                    disabled
                   >
                     <Popup.Content>
                       <p>Please login to vote or reply</p>

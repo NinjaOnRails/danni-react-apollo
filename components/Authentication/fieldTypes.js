@@ -41,22 +41,4 @@ const resetFields = [
 
 const signinFields = [{ ...signupFields[0] }, { ...signupFields[3] }];
 
-const modalLoginForm = {
-  headerText: 'Login to your account',
-  forms: [...signinFields],
-  buttonText: 'Login',
-};
-
-const modalSignupForm = {
-  headerText: 'Create a new account',
-  forms: [...signupFields],
-  buttonText: 'Sign Up',
-};
-
-export {
-  signupFields,
-  resetFields,
-  signinFields,
-  modalLoginForm,
-  modalSignupForm,
-};
+export { signupFields, resetFields, signinFields };
