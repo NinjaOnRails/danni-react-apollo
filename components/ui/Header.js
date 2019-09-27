@@ -57,13 +57,13 @@ const Header = () => (
       <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
         {toggleSideDrawer => <DrawerToggle clicked={toggleSideDrawer} />}
       </Mutation>
-      <Mutation mutation={OPEN_AUTH_MODAL_MUTATION}>
+      {/* <Mutation mutation={OPEN_AUTH_MODAL_MUTATION}>
         {openAuthModal => (
           <button onClick={openAuthModal} type="button">
             Open!!!
           </button>
         )}
-      </Mutation>
+      </Mutation> */}
       {/* <MobileSearch /> */}
     </div>
     {/* <Search /> */}
