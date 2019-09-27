@@ -88,10 +88,14 @@ const FACEBOOK_LOGIN_MUTATION = gql`
   mutation FACEBOOK_LOGIN_MUTATION(
     $accessToken: String!
     $contentLanguage: [Language]
+    $facebookUserId: String!
   ) {
     facebookLogin(
-      accessToken: $accessToken
-      contentLanguage: $contentLanguage
+      data: {
+        accessToken: $accessToken
+        contentLanguage: $contentLanguage
+        facebookUserId: $facebookUserId
+      }
     ) {
       id
       displayName

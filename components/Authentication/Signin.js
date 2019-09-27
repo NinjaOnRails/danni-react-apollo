@@ -77,11 +77,11 @@ class Signin extends Component {
               loading: fbLoginLoading,
             },
           },
+          contentLanguageQuery: { contentLanguage },
           signinMutation: {
             signin,
             signinResult: { error, loading },
           },
-          contentLanguageQuery: { contentLanguage },
         }) => (
           <Container>
             <Form

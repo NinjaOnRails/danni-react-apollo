@@ -58,6 +58,7 @@ const onFacebookLoginClick = ({ facebookLogin, contentLanguage }) => {
           variables: {
             contentLanguage,
             accessToken: res.authResponse.accessToken,
+            facebookUserId: res.authResponse.userID,
           },
         });
         if (data) trackSignIn(data.facebookLogin.displayName);
