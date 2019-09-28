@@ -152,6 +152,7 @@ const VIDEO_COMMENTS_QUERY = gql`
         author {
           id
           displayName
+          avatar
         }
       }
     }
