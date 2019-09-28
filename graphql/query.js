@@ -130,6 +130,7 @@ const VIDEO_COMMENTS_QUERY = gql`
       author {
         id
         displayName
+        avatar
       }
       reply {
         id
@@ -151,6 +152,7 @@ const VIDEO_COMMENTS_QUERY = gql`
         author {
           id
           displayName
+          avatar
         }
       }
     }

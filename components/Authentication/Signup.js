@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import generateName from 'sillyname';
-import { Container } from 'semantic-ui-react';
+import { Container, Button, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
@@ -20,6 +20,10 @@ import {
   CLOSE_AUTH_MODAL_MUTATION,
 } from '../../graphql/mutation';
 import { client } from '../UI/ContentLanguage';
+import {
+  onFacebookLoginClick,
+  facebookLoginMutation,
+} from './SigninMinimalistic';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -36,6 +40,7 @@ const signupMutation = ({ localState: { data }, variables, render }) => (
     }}
   </Mutation>
 );
+/* eslint-enable */
 
 const closeAuthModal = ({ render }) => (
   <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
@@ -48,8 +53,8 @@ const Composed = adopt({
   ),
   signupMutation,
   closeAuthModal,
+  facebookLoginMutation,
 });
-/* eslint-enable */
 
 class Signup extends Component {
   state = {
@@ -96,6 +101,13 @@ class Signup extends Component {
             signupResult: { error, loading },
           },
           closeAuthModal,
+          facebookLoginMutation: {
+            facebookLogin,
+            facebookLoginResult: {
+              error: fbLoginError,
+              loading: fbLoginLoading,
+            },
+          },
         }) => {
           const { isModal } = this.props;
           return (
@@ -113,8 +125,12 @@ class Signup extends Component {
                 }
                 isModal
               >
-                <fieldset disabled={loading} aria-busy={loading}>
+                <fieldset
+                  disabled={loading || fbLoginLoading}
+                  aria-busy={loading || fbLoginLoading}
+                >
                   <Error error={error} />
+                  <Error error={fbLoginError} />
                   {signupFields.map(form => (
                     <AuthForm
                       key={form.name}
@@ -123,7 +139,24 @@ class Signup extends Component {
                       value={this.state}
                     />
                   ))}
-                  <button type="submit">{loading && 'Đang '}Đăng Ký</button>
+                  <button type="submit">
+                    {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
+                  </button>
+                  <Button
+                    size="big"
+                    type="button"
+                    color="facebook"
+                    onClick={() =>
+                      onFacebookLoginClick({
+                        facebookLogin,
+                        contentLanguage: data.contentLanguage,
+                        client,
+                        data,
+                      })
+                    }
+                  >
+                    <Icon name="facebook" /> Dùng Facebook
+                  </Button>
                   {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
                 </fieldset>
                 {!isModal && (

@@ -30,9 +30,9 @@ const Composed = adopt({
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
   facebookLoginMutation,
+  contentLanguageQuery,
   signinMutation,
   closeAuthModal,
-  contentLanguageQuery,
 });
 
 class Signin extends Component {
@@ -86,12 +86,12 @@ class Signin extends Component {
               loading: fbLoginLoading,
             },
           },
+          contentLanguageQuery: { contentLanguage },
           signinMutation: {
             signin,
             signinResult: { error, loading },
           },
           closeAuthModal,
-          contentLanguageQuery: { contentLanguage },
         }) => (
           <Container>
             <Form
@@ -133,6 +133,8 @@ class Signin extends Component {
                     onFacebookLoginClick({
                       facebookLogin,
                       contentLanguage,
+                      client,
+                      data,
                     })
                   }
                 >

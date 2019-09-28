@@ -274,7 +274,13 @@ class CommentReply extends React.Component {
           <Loader active />
         ) : (
           <>
-            {/* <Comment.Avatar src="" /> */}
+            <Comment.Avatar
+              src={
+                author && author.avatar
+                  ? author.avatar
+                  : 'https://react.semantic-ui.com/images/avatar/small/matt.jpg'
+              }
+            />
             <Comment.Content>
               <Comment.Author as="a">
                 {author ? author.displayName : 'deleted user'}
@@ -389,7 +395,7 @@ class CommentReply extends React.Component {
                 </>
               )}
             </Comment.Content>
-            {voteClicked && <PleaseSignIn />}
+            {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
           </>
         )}
       </Comment>

@@ -273,7 +273,13 @@ class VideoComment extends React.Component {
           <Loader active />
         ) : (
           <>
-            {author.avatar && <Comment.Avatar src={author.avatar} />}
+            <Comment.Avatar
+              src={
+                author && author.avatar
+                  ? author.avatar
+                  : 'https://react.semantic-ui.com/images/avatar/small/matt.jpg'
+              }
+            />
             <Comment.Content>
               <Comment.Author as="a">
                 {author ? author.displayName : <i>deleted user</i>}
@@ -375,18 +381,19 @@ class VideoComment extends React.Component {
                 </>
               )}
             </Comment.Content>
-            {!currentUser && voteClicked && (
-              <>
-                <StyledMessage>
-                  <Message warning>
-                    <StyledHeader>Please Sign In to vote</StyledHeader>
-                  </Message>
-                </StyledMessage>
-                <SigninMinimalistic noRedirect />
-              </>
-            )}
+          //  {!currentUser && voteClicked && (
+          //    <>
+          //      <StyledMessage>
+          //        <Message warning>
+          //          <StyledHeader>Please Sign In to vote</StyledHeader>
+          //        </Message>
+          //      </StyledMessage>
+          //      <SigninMinimalistic noRedirect />
+          //    </>
+          //  )}
 
             {/* {voteClicked && <PleaseSignIn />} */}
+            {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
             {reply.length > 0 && (
               <CommentReplyList
                 reply={reply}

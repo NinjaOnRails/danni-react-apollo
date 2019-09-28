@@ -161,13 +161,15 @@ const SideDrawer = () => {
                         </MenuItem>
                       </Link>
                       <Button
-                        size="big"
                         type="button"
                         color="facebook"
                         onClick={() =>
                           onFacebookLoginClick({
                             facebookLogin,
                             contentLanguage,
+                            client,
+                            data,
+                            noRedirect: true,
                           })
                         }
                       >
