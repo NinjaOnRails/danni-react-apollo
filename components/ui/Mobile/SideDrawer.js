@@ -167,6 +167,9 @@ const SideDrawer = () => {
                           onFacebookLoginClick({
                             facebookLogin,
                             contentLanguage,
+                            client,
+                            data,
+                            noRedirect: true,
                           })
                         }
                       >

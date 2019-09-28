@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import Link from 'next/link';
 import { Form, Segment, Button, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
+import Router from 'next/router';
 import Error from '../UI/ErrorMessage';
-import { CURRENT_USER_QUERY } from '../../graphql/query';
+import {
+  CURRENT_USER_QUERY,
+  CONTENT_LANGUAGE_QUERY,
+} from '../../graphql/query';
 import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
 import {
   SIGNIN_MUTATION,
   FACEBOOK_LOGIN_MUTATION,
 } from '../../graphql/mutation';
-import { contentLanguageQuery } from '../UI/ContentLanguage';
+import { contentLanguageQuery, client } from '../UI/ContentLanguage';
 
 const FormStyles = styled.div`
   .signin-options {
@@ -44,12 +48,22 @@ const signinMutation = ({ render, variables }) => (
 );
 
 const Composed = adopt({
+  client,
   facebookLoginMutation,
   signinMutation,
   contentLanguageQuery,
+  localState: ({ render }) => (
+    <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
+  ),
 });
 
-const onFacebookLoginClick = ({ facebookLogin, contentLanguage }) => {
+const onFacebookLoginClick = ({
+  facebookLogin,
+  contentLanguage,
+  client,
+  data: { previousPage },
+  noRedirect = null,
+}) => {
   FB.login(
     async res => {
       if (res.status === 'connected') {
@@ -73,6 +87,13 @@ const onFacebookLoginClick = ({ facebookLogin, contentLanguage }) => {
             trackSignIn(user.displayName);
           }
         }
+        if (!noRedirect) {
+          Router.push(
+            localStorage.getItem('previousPage') || previousPage || '/'
+          );
+          localStorage.removeItem('previousPage');
+          client.writeData({ data: { previousPage: null } });
+        }
       }
     },
     {
@@ -90,6 +111,7 @@ class Signin extends Component {
     return (
       <Composed variables={this.state}>
         {({
+          client,
           facebookLoginMutation: {
             facebookLogin,
             facebookLoginResult: {
@@ -102,6 +124,7 @@ class Signin extends Component {
             signinResult: { error, loading },
           },
           contentLanguageQuery: { contentLanguage },
+          localState: { data },
         }) => (
           <FormStyles>
             <Segment>
@@ -150,6 +173,8 @@ class Signin extends Component {
                         onFacebookLoginClick({
                           facebookLogin,
                           contentLanguage,
+                          client,
+                          data,
                         })
                       }
                     >

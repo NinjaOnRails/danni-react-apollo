@@ -115,6 +115,8 @@ class Signin extends Component {
                     onFacebookLoginClick({
                       facebookLogin,
                       contentLanguage,
+                      client,
+                      data,
                     })
                   }
                 >
