@@ -368,7 +368,7 @@ class VideoComment extends React.Component {
               )}
             </Comment.Content>
 
-            {voteClicked && <PleaseSignIn />}
+            {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
             {reply.length > 0 && (
               <CommentReplyList
                 reply={reply}

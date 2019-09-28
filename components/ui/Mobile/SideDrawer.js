@@ -161,7 +161,6 @@ const SideDrawer = () => {
                         </MenuItem>
                       </Link>
                       <Button
-                        size="big"
                         type="button"
                         color="facebook"
                         onClick={() =>

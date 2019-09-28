@@ -397,7 +397,7 @@ class CommentReply extends React.Component {
                 </>
               )}
             </Comment.Content>
-            {voteClicked && <PleaseSignIn />}
+            {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
           </>
         )}
       </Comment>

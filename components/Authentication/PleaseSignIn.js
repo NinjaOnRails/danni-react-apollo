@@ -31,7 +31,7 @@ const PleaseSignIn = ({ action, minimalistic, hidden, children }) => {
             <>
               <StyledMessage>
                 <Message warning>
-                  <StyledHeader>{`Đăng nhập đẻ ${action}`}</StyledHeader>
+                  <StyledHeader>{`Đăng nhập để ${action}`}</StyledHeader>
                   {/* <StyledHeader>{`Please Sign In to ${action}`}</StyledHeader> */}
                 </Message>
               </StyledMessage>
