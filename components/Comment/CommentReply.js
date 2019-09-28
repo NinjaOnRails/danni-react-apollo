@@ -279,8 +279,9 @@ class CommentReply extends React.Component {
           <>
             <Comment.Avatar
               src={
-                author.avatar ||
-                'https://react.semantic-ui.com/images/avatar/small/steve.jpg'
+                author && author.avatar
+                  ? author.avatar
+                  : 'https://react.semantic-ui.com/images/avatar/small/matt.jpg'
               }
             />
             <Comment.Content>

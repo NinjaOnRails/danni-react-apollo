@@ -51,8 +51,11 @@ const Composed = adopt({
 
 const onFacebookLoginClick = ({ facebookLogin, contentLanguage }) => {
   FB.login(
-    async ({ status, authResponse: { accessToken, userID } }) => {
-      if (status === 'connected') {
+    async res => {
+      if (res.status === 'connected') {
+        const {
+          authResponse: { accessToken, userID },
+        } = res;
         const { data } = await facebookLogin({
           variables: {
             contentLanguage,
