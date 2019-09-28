@@ -277,7 +277,12 @@ class CommentReply extends React.Component {
           <Loader active />
         ) : (
           <>
-            {/* <Comment.Avatar src="" /> */}
+            <Comment.Avatar
+              src={
+                author.avatar ||
+                'https://react.semantic-ui.com/images/avatar/small/steve.jpg'
+              }
+            />
             <Comment.Content>
               <Comment.Author as="a">
                 {author ? author.displayName : 'deleted user'}

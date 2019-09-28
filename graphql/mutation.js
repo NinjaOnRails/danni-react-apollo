@@ -97,9 +97,11 @@ const FACEBOOK_LOGIN_MUTATION = gql`
         facebookUserId: $facebookUserId
       }
     ) {
-      id
-      displayName
-      avatar
+      user {
+        id
+        displayName
+      }
+      firstLogin
     }
   }
 `;

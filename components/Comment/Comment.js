@@ -263,7 +263,12 @@ class VideoComment extends React.Component {
           <Loader active />
         ) : (
           <>
-            {author.avatar && <Comment.Avatar src={author.avatar} />}
+            <Comment.Avatar
+              src={
+                author.avatar ||
+                'https://react.semantic-ui.com/images/avatar/small/steve.jpg'
+              }
+            />
             <Comment.Content>
               <Comment.Author as="a">
                 {author ? author.displayName : <i>deleted user</i>}

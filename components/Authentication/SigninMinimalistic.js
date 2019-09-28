@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
-import { trackSignIn } from '../../lib/mixpanel';
+import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
 import {
   SIGNIN_MUTATION,
   FACEBOOK_LOGIN_MUTATION,
@@ -51,17 +51,25 @@ const Composed = adopt({
 
 const onFacebookLoginClick = ({ facebookLogin, contentLanguage }) => {
   FB.login(
-    async res => {
-      const success = res.status === 'connected';
-      if (success) {
+    async ({ status, authResponse: { accessToken, userID } }) => {
+      if (status === 'connected') {
         const { data } = await facebookLogin({
           variables: {
             contentLanguage,
-            accessToken: res.authResponse.accessToken,
-            facebookUserId: res.authResponse.userID,
+            accessToken,
+            facebookUserId: userID,
           },
         });
-        if (data) trackSignIn(data.facebookLogin.displayName);
+        if (data) {
+          const {
+            facebookLogin: { user, firstLogin },
+          } = data;
+          if (firstLogin) {
+            trackSignUp(user);
+          } else {
+            trackSignIn(user.displayName);
+          }
+        }
       }
     },
     {
