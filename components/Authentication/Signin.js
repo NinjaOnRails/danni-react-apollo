@@ -106,7 +106,7 @@ class Signin extends Component {
                   closeAuthModal,
                 })
               }
-              isModal={isModal}
+              isModal
             >
               <fieldset
                 disabled={loading || fbLoginLoading}

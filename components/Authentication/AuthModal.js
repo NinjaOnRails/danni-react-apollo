@@ -1,13 +1,13 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { adopt } from 'react-adopt';
-import { Grid, Header, Icon } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import { CLOSE_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import { LOCAL_STATE_QUERY } from '../../graphql/query';
 import Modal from '../UI/Modal';
 import Signin from './Signin';
 import Signup from './Signup';
-import StyledTab from '../styles/AuthModalTabStyles';
+import StyledTab from '../styles/ModalAuthTabStyles';
 import { user } from '../UI/ContentLanguage';
 
 /* eslint-disable */
@@ -31,7 +31,7 @@ class AuthModal extends React.Component {
   renderForm = type => {
     const headerText =
       type === 'login' ? 'Login to your account' : 'Create a new account';
-    const render = type === 'login' ? <Signin isModal  /> : <Signup isModal  />;
+    const render = type === 'login' ? <Signin isModal /> : <Signup isModal />;
     return (
       <Grid textAlign="center" verticalAlign="top">
         <Grid.Column style={{ maxWidth: 450 }}>
@@ -52,6 +52,7 @@ class AuthModal extends React.Component {
           localData: { data, loading },
           user: { currentUser },
         }) => {
+          console.log("Modal")
           const panes = [
             {
               menuItem: 'Đăng nhập',
@@ -63,27 +64,12 @@ class AuthModal extends React.Component {
             },
           ];
           return (
-            <>
-              <Modal
-                show={data.showAuthModal && !currentUser}
-                closed={closeAuthModal}
-              >
-                <Icon
-                  name="close"
-                  inverted
-                  link
-                  size="large"
-                  style={{
-                    position: 'absolute',
-                    top: '-30px',
-                    left: '95%',
-                    // display: "inline-block"
-                  }}
-                  onClick={closeAuthModal}
-                />
-                <StyledTab panes={panes} grid={{ paneWidth: 2, tabWidth: 1 }} />
-              </Modal>
-            </>
+            <Modal
+              show={data.showAuthModal && !currentUser}
+              closed={closeAuthModal}
+            >
+              <StyledTab panes={panes} grid={{ paneWidth: 2, tabWidth: 1 }} />
+            </Modal>
           );
         }}
       </Composed>

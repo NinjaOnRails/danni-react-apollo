@@ -49,8 +49,7 @@ const GlobalStyle = createGlobalStyle`
     line-height: 2;
     font-family: ${props => props.theme.font};
     /* overflow: scroll; */
-    overflow: ${props =>
-      props.showSide || props.showAuthModal ? 'hidden' : 'scroll'};
+    overflow: ${props => (props.showSide ? 'hidden' : 'scroll')};
   }
   
   a {
@@ -78,17 +77,13 @@ class Page extends Component {
     return (
       <Composed>
         {({ localData: { data, loading } }) => {
-          const { showSide, showAuthModal } = data;
+          const { showSide } = data;
           return (
             <ThemeProvider theme={theme}>
               <StyledPage>
-                <GlobalStyle
-                  showSide={showSide}
-                  showAuthModal={showAuthModal}
-                />
+                <GlobalStyle showSide={showSide} />
                 <Header />
                 <SideDrawer />
-                <AuthModal />
                 <Inner>{children}</Inner>
               </StyledPage>
             </ThemeProvider>
