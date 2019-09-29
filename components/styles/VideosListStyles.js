@@ -49,6 +49,9 @@ const VideosListStyles = styled.div`
     div.ui.fluid.card {
       height: 214.11px;
     }
+    div.header {
+      height: 32px;
+    }
   }
   @media (min-width: 720px) {
     grid-template-columns: 210px 210px 210px;
