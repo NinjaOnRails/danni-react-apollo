@@ -110,6 +110,8 @@ class Signup extends Component {
           },
         }) => {
           const { isModal } = this.props;
+              console.log(isModal)
+
           return (
             <Container>
               <Form
@@ -123,7 +125,7 @@ class Signup extends Component {
                     closeAuthModal,
                   })
                 }
-                isModal
+                isModal={isModal}
               >
                 <fieldset
                   disabled={loading || fbLoginLoading}
