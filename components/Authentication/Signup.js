@@ -110,8 +110,6 @@ class Signup extends Component {
           },
         }) => {
           const { isModal } = this.props;
-              console.log(isModal)
-
           return (
             <Container>
               <Form

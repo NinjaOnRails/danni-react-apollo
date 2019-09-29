@@ -146,8 +146,7 @@ class Signin extends Component {
                   <Link href="/signup">
                     <a>Tạo tài khoản mới.</a>
                   </Link>
-                ) &&
-                console.log(isModal)}
+                )}
               <Link href="/requestReset">
                 <a>
                   <span onClick={closeAuthModal}>Quên mật khẩu?</span>
