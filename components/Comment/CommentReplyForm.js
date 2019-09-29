@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Form, Button } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import { adopt } from 'react-adopt';
-import PleaseSignIn from '../Authentication/PleaseSignIn';
 import Error from '../UI/ErrorMessage';
 import { CREATE_COMMENTREPLY_MUTATION } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
@@ -23,7 +22,6 @@ const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
     }}
   </Mutation>
 );
-
 
 /* eslint-enable */
 
@@ -65,28 +63,25 @@ class CommentReplyForm extends React.Component {
     },
   }) => {
     const { replyFormValid, replyInput } = this.state;
-    const { showReplyInput } = this.props;
     return (
-      <PleaseSignIn action="trả lời" minimalistic hidden={!showReplyInput}>
-        <Form
-          loading={createReplyLoading}
-          reply
-          onSubmit={() => {
-            this.onReplySubmit(createCommentReply);
-          }}
+      <Form
+        loading={createReplyLoading}
+        reply
+        onSubmit={() => {
+          this.onReplySubmit(createCommentReply);
+        }}
+        autoComplete="off"
+      >
+        <Form.Input
+          name="replyInput"
+          placeholder="Viết trả lời..."
+          onChange={this.onTextChange}
+          value={replyInput}
           autoComplete="off"
-        >
-          <Form.Input
-            name="replyInput"
-            placeholder="Viết trả lời..."
-            onChange={this.onTextChange}
-            value={replyInput}
-            autoComplete="off"
-          />
-          <Error error={createCommentReplyError} />
-          <Button content="Đăng" primary disabled={!replyFormValid} />
-        </Form>
-      </PleaseSignIn>
+        />
+        <Error error={createCommentReplyError} />
+        <Button content="Đăng" primary disabled={!replyFormValid} />
+      </Form>
     );
   };
 
@@ -106,7 +101,6 @@ class CommentReplyForm extends React.Component {
 CommentReplyForm.propTypes = {
   id: PropTypes.string.isRequired,
   videoId: PropTypes.string.isRequired,
-  showReplyInput: PropTypes.bool.isRequired,
   closeReplyInput: PropTypes.func.isRequired,
 };
 

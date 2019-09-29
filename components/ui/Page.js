@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
 import { adopt } from 'react-adopt';
 import Header from './Header';
 import SideDrawer from './Mobile/SideDrawer';
-import AuthModal from '../Authentication/AuthModal';
-import { LOCAL_STATE_QUERY } from '../../graphql/query';
+import AuthModal, { localData } from '../Authentication/AuthModal';
 
 const theme = {
   red: '#FF0000',
@@ -48,7 +46,6 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.5rem;
     line-height: 2;
     font-family: ${props => props.theme.font};
-    /* overflow: scroll; */
     overflow: ${props => (props.showSide ? 'hidden' : 'scroll')};
   }
   
@@ -60,13 +57,6 @@ const GlobalStyle = createGlobalStyle`
   button {  font-family: "Verdana"; }
 `;
 
-/* eslint-disable */
-
-const localData = ({ render }) => (
-  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
-);
-/* eslint-enable */
-
 const Composed = adopt({
   localData,
 });
@@ -76,14 +66,15 @@ class Page extends Component {
     const { children } = this.props;
     return (
       <Composed>
-        {({ localData: { data, loading } }) => {
-          const { showSide } = data;
+        {({ localData: { data } }) => {
+          if (!data) return <div>Loading...</div>;
           return (
             <ThemeProvider theme={theme}>
               <StyledPage>
-                <GlobalStyle showSide={showSide} />
+                <GlobalStyle showSide={data.showSide} />
                 <Header />
                 <SideDrawer />
+                <AuthModal />
                 <Inner>{children}</Inner>
               </StyledPage>
             </ThemeProvider>

@@ -16,6 +16,7 @@ const signupFields = [
     type: 'displayName',
     name: 'displayName',
     icon: 'user',
+    placeholder: 'bắt buộc',
   },
   {
     label: 'Mật khẩu',

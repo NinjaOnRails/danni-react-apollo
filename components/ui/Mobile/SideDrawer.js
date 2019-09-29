@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon, Menu, MenuItem, Button } from 'semantic-ui-react';
-import { Mutation, Query } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { onSignout } from '../../Authentication/Signout';
@@ -17,11 +17,11 @@ import {
   SIGN_OUT_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
 } from '../../../graphql/mutation';
-import { LOCAL_STATE_QUERY } from '../../../graphql/query';
 import {
   facebookLoginMutation,
   onFacebookLoginClick,
 } from '../../Authentication/SigninMinimalistic';
+import { localData } from '../../Authentication/AuthModal';
 
 const LanguageMenuStyles = styled.div`
   button.ui.button {
@@ -52,10 +52,6 @@ const signout = ({ render }) => (
 const closeSideDrawer = ({ render }) => (
   <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>{render}</Mutation>
 );
-
-const localData = ({ render }) => (
-  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
-);
 /* eslint-enable */
 
 const Composed = adopt({
@@ -84,7 +80,9 @@ const SideDrawer = () => {
     <Composed>
       {({
         closeSideDrawer,
-        localData: { data, loading },
+        localData: {
+          data: { showSide },
+        },
         user: { currentUser },
         client,
         signout,
@@ -93,110 +91,106 @@ const SideDrawer = () => {
           facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
         },
         contentLanguageQuery: { contentLanguage },
-      }) => {
-        if (loading) return <div />;
-        const { showSide: show } = data;
-        return (
-          <SideDrawerStyles>
-            <BackDrop clicked={closeSideDrawer} show={show} />
-            <div className={`SideDrawer ${show ? 'Open' : 'Close'}`}>
-              {/* <Logo inDrawer /> */}
-              <div className="links">
-                <Menu vertical icon="labeled" inverted>
-                  <Link href="/">
-                    <MenuItem as="a" onClick={closeSideDrawer}>
-                      <div className="link-container">
-                        <Icon name="home" size="large" />
-                        <span className="link-name">Trang Chủ</span>
-                      </div>
-                    </MenuItem>
-                  </Link>
-                  <Link href="/new">
-                    <MenuItem as="a" onClick={closeSideDrawer}>
-                      <div className="link-container">
-                        <Icon.Group size="large">
-                          <Icon name="video" />
-                          <Icon color="black" name="plus" size="tiny" />
-                        </Icon.Group>
-                        <span className="link-name">Thêm Video</span>
-                      </div>
-                    </MenuItem>
-                  </Link>
-                  <Link href="/about">
-                    <MenuItem as="a" onClick={closeSideDrawer}>
-                      <div className="link-container">
-                        <Icon name="info" size="large" />
-                        <span className="link-name">Chúng Tôi</span>
-                      </div>
-                    </MenuItem>
-                  </Link>
-                  {!currentUser && (
-                    <>
-                      <Link href="/signin">
-                        <MenuItem
-                          as="a"
-                          onClick={() => {
-                            onAuthClick(router, client);
-                            closeSideDrawer();
-                          }}
-                        >
-                          <div className="link-container">
-                            <Icon name="user" size="large" />
-                            <span className="link-name">Đăng Nhập</span>
-                          </div>
-                        </MenuItem>
-                      </Link>
-                      <Link href="/signup">
-                        <MenuItem
-                          as="a"
-                          onClick={() => {
-                            onAuthClick({ router, client });
-                            closeSideDrawer();
-                          }}
-                        >
-                          <div className="link-container">
-                            <Icon name="user plus" size="large" />
-                            <span className="link-name">Đăng Ký</span>
-                          </div>
-                        </MenuItem>
-                      </Link>
-                      <Button
-                        type="button"
-                        color="facebook"
-                        onClick={() =>
-                          onFacebookLoginClick({
-                            facebookLogin,
-                            contentLanguage,
-                            client,
-                            data,
-                            closeSideDrawer: closeSideDrawer(),
-                          })
-                        }
+      }) => (
+        <SideDrawerStyles>
+          <BackDrop clicked={closeSideDrawer} show={showSide} />
+          <div className={`SideDrawer ${showSide ? 'Open' : 'Close'}`}>
+            {/* <Logo inDrawer /> */}
+            <div className="links">
+              <Menu vertical icon="labeled" inverted>
+                <Link href="/">
+                  <MenuItem as="a" onClick={closeSideDrawer}>
+                    <div className="link-container">
+                      <Icon name="home" size="large" />
+                      <span className="link-name">Trang Chủ</span>
+                    </div>
+                  </MenuItem>
+                </Link>
+                <Link href="/new">
+                  <MenuItem as="a" onClick={closeSideDrawer}>
+                    <div className="link-container">
+                      <Icon.Group size="large">
+                        <Icon name="video" />
+                        <Icon color="black" name="plus" size="tiny" />
+                      </Icon.Group>
+                      <span className="link-name">Thêm Video</span>
+                    </div>
+                  </MenuItem>
+                </Link>
+                <Link href="/about">
+                  <MenuItem as="a" onClick={closeSideDrawer}>
+                    <div className="link-container">
+                      <Icon name="info" size="large" />
+                      <span className="link-name">Chúng Tôi</span>
+                    </div>
+                  </MenuItem>
+                </Link>
+                {!currentUser && (
+                  <>
+                    <Link href="/signin">
+                      <MenuItem
+                        as="a"
+                        onClick={() => {
+                          onAuthClick(router, client);
+                          closeSideDrawer();
+                        }}
                       >
-                        <Icon name="facebook" /> Dùng Facebook
-                      </Button>
-                    </>
-                  )}
-                  {currentUser && (
-                    <MenuItem
-                      as="a"
-                      onClick={() => onSignout({ signout, client })}
+                        <div className="link-container">
+                          <Icon name="user" size="large" />
+                          <span className="link-name">Đăng Nhập</span>
+                        </div>
+                      </MenuItem>
+                    </Link>
+                    <Link href="/signup">
+                      <MenuItem
+                        as="a"
+                        onClick={() => {
+                          onAuthClick({ router, client });
+                          closeSideDrawer();
+                        }}
+                      >
+                        <div className="link-container">
+                          <Icon name="user plus" size="large" />
+                          <span className="link-name">Đăng Ký</span>
+                        </div>
+                      </MenuItem>
+                    </Link>
+                    <Button
+                      type="button"
+                      color="facebook"
+                      onClick={() =>
+                        onFacebookLoginClick({
+                          facebookLogin,
+                          contentLanguage,
+                          client,
+                          data,
+                          closeSideDrawer,
+                        })
+                      }
                     >
-                      <div className="link-container">
-                        <Icon name="sign-out" size="large" />
-                        <span className="link-name">Đăng Xuất</span>
-                      </div>
-                    </MenuItem>
-                  )}
-                </Menu>
-                <LanguageMenuStyles>
-                  <ContentLanguage sideDrawer loadingData={false} />
-                </LanguageMenuStyles>
-              </div>
+                      <Icon name="facebook" /> Dùng Facebook
+                    </Button>
+                  </>
+                )}
+                {currentUser && (
+                  <MenuItem
+                    as="a"
+                    onClick={() => onSignout({ signout, client })}
+                  >
+                    <div className="link-container">
+                      <Icon name="sign-out" size="large" />
+                      <span className="link-name">Đăng Xuất</span>
+                    </div>
+                  </MenuItem>
+                )}
+              </Menu>
+              <LanguageMenuStyles>
+                <ContentLanguage sideDrawer loadingData={false} />
+              </LanguageMenuStyles>
             </div>
-          </SideDrawerStyles>
-        );
-      }}
+          </div>
+        </SideDrawerStyles>
+      )}
     </Composed>
   );
 };

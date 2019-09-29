@@ -1,13 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Comment,
-  Icon,
-  Form,
-  Button,
-  Loader,
-  Message,
-} from 'semantic-ui-react';
+import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -18,10 +11,7 @@ import {
   CREATE_COMMENTREPLY_VOTE_MUTATION,
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
-import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
-import SigninMinimalistic from '../Authentication/SigninMinimalistic';
 import StyledPopup from '../styles/PopUpStyles';
-import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
 const deleteCommentReplyMutation = ({ id, videoId, render, parentId }) => (
@@ -169,12 +159,11 @@ class CommentReply extends React.Component {
   state = {
     showEditForm: false,
     editFormValid: true,
-    voteClicked: false,
   };
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser && !this.props.currentUser) {
-      this.setState({ showEditForm: false, voteClicked: false });
+      this.setState({ showEditForm: false });
     }
   }
 
@@ -188,23 +177,33 @@ class CommentReply extends React.Component {
   };
 
   onClickEdit = () => {
-    this.setState({ showEditForm: true });
+    const { currentUser, openAuthModal } = this.props;
+    if (currentUser) {
+      this.setState({ showEditForm: true });
+    } else {
+      openAuthModal();
+    }
   };
 
   onUpdateSubmit = async updateComment => {
-    const { data } = await updateComment();
-    if (data) this.setState({ showEditForm: false, editInput: '' });
+    const { currentUser, openAuthModal } = this.props;
+    if (currentUser) {
+      const { data } = await updateComment();
+      if (data) this.setState({ showEditForm: false, editInput: '' });
+    } else {
+      openAuthModal();
+    }
   };
 
-  onVoteClick = (
-    { target: { id: type } },
-    currentUser,
-    createCommentReplyVote,
-    commentReply
-  ) => {
+  onVoteClick = ({ target: { id: type } }, createCommentReplyVote) => {
+    const {
+      currentUser,
+      openAuthModal,
+      commentReply: { id },
+    } = this.props;
     if (currentUser) {
       createCommentReplyVote({
-        variables: { commentReply, type },
+        variables: { commentReply: id, type },
         optimisticResponse: {
           __typename: 'Mutation',
           createCommentReplyVote: {
@@ -219,7 +218,7 @@ class CommentReply extends React.Component {
         },
       });
     } else {
-      this.setState({ voteClicked: true });
+      openAuthModal();
     }
   };
 
@@ -248,11 +247,11 @@ class CommentReply extends React.Component {
   ) => {
     const {
       onReplyClick,
-      commentReply: { id, text, author, createdAt, vote },
       currentUser,
+      commentReply: { vote, author, createdAt, text },
     } = this.props;
 
-    const { showEditForm, editFormValid, voteClicked } = this.state;
+    const { showEditForm, editFormValid } = this.state;
     let voteType = null;
     let voteCount = 0;
     if (vote.length > 0) {
@@ -335,14 +334,7 @@ class CommentReply extends React.Component {
                           ? 'orange'
                           : 'grey'
                       }
-                      onClick={e =>
-                        this.onVoteClick(
-                          e,
-                          currentUser,
-                          createCommentReplyVote,
-                          id
-                        )
-                      }
+                      onClick={e => this.onVoteClick(e, createCommentReplyVote)}
                     />
                     <span>{voteCount} </span>
                     <Icon
@@ -359,14 +351,7 @@ class CommentReply extends React.Component {
                           ? 'purple'
                           : 'grey'
                       }
-                      onClick={e =>
-                        this.onVoteClick(
-                          e,
-                          currentUser,
-                          createCommentReplyVote,
-                          id
-                        )
-                      }
+                      onClick={e => this.onVoteClick(e, createCommentReplyVote)}
                     />
                     <Comment.Action onClick={onReplyClick}>
                       Trả lời
@@ -388,14 +373,12 @@ class CommentReply extends React.Component {
                             onClick={deleteCommentReply}
                           />
                         </StyledPopup>
-
                       </>
                     ) : null}
                   </Comment.Actions>
                 </>
               )}
             </Comment.Content>
-            {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
           </>
         )}
       </Comment>
@@ -441,6 +424,7 @@ class CommentReply extends React.Component {
 CommentReply.propTypes = {
   commentReply: PropTypes.object.isRequired,
   onReplyClick: PropTypes.func.isRequired,
+  openAuthModal: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
 };
 

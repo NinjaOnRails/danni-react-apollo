@@ -40,10 +40,10 @@ const ModalStyles = styled.div`
     }
   }
 `;
-const Modal = ({ show, closed, children }) => {
+const Modal = ({ show, close, children }) => {
   return (
     <ModalStyles show={show}>
-      <Backdrop show={show} clicked={closed} />
+      <Backdrop show={show} clicked={close} />
       <div
         className="Modal"
         // style={{
@@ -59,7 +59,7 @@ const Modal = ({ show, closed, children }) => {
 
 Modal.propTypes = {
   show: PropTypes.bool.isRequired,
-  closed: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,

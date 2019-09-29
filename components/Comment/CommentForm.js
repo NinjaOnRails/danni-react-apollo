@@ -3,7 +3,6 @@ import { Button, Form } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
-import PleaseSignIn from '../Authentication/PleaseSignIn';
 import { CREATE_COMMENT_MUTATION } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import { user } from '../UI/ContentLanguage';
@@ -51,35 +50,29 @@ class CommentForm extends React.Component {
     if (data) this.setState({ commentInput: '', commentInputValid: false });
   };
 
+  onTextAreaClick = () => {
+    const { currentUser, openAuthModal } = this.props;
+    if (!currentUser) openAuthModal();
+  };
+
   renderCommentForm = (createCommentLoading, createComment) => {
     const { commentInput, commentInputValid } = this.state;
-    const { client, hideSigninToComment } = this.props;
     return (
-      <PleaseSignIn
-        action="bình luận"
-        minimalistic
-        hidden={hideSigninToComment}
+      <Form
+        loading={createCommentLoading}
+        reply
+        onSubmit={() => {
+          if (commentInput.length > 0) this.onCommentSubmit(createComment);
+        }}
       >
-        <Form
-          loading={createCommentLoading}
-          reply
-          onSubmit={() => {
-            if (commentInput.length > 0) this.onCommentSubmit(createComment);
-          }}
-        >
-          <Form.TextArea
-            placeholder="Viết bình luận..."
-            onChange={this.onTextChange}
-            value={commentInput}
-            onClick={() =>
-              client.writeData({
-                data: { hideSigninToComment: false },
-              })
-            }
-          />
-          <Button content="Đăng" primary disabled={!commentInputValid} />
-        </Form>
-      </PleaseSignIn>
+        <Form.TextArea
+          placeholder="Viết bình luận..."
+          onChange={this.onTextChange}
+          value={commentInput}
+          onClick={this.onTextAreaClick}
+        />
+        <Button content="Đăng" primary disabled={!commentInputValid} />
+      </Form>
     );
   };
 
@@ -107,14 +100,14 @@ class CommentForm extends React.Component {
   }
 }
 
-CommentForm.defaultProps = {
-  hideSigninToComment: true,
-};
-
 CommentForm.propTypes = {
   videoId: PropTypes.string.isRequired,
-  client: PropTypes.object.isRequired,
-  hideSigninToComment: PropTypes.bool,
+  openAuthModal: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
+};
+
+CommentForm.defaultProps = {
+  currentUser: null,
 };
 
 export default CommentForm;

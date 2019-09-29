@@ -9,20 +9,44 @@ import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
-import { trackSignIn } from '../../lib/mixpanel';
+import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
 import { client, contentLanguageQuery } from '../UI/ContentLanguage';
-import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
-import { CLOSE_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import {
-  onFacebookLoginClick,
-  signinMutation,
-  facebookLoginMutation,
-} from './SigninMinimalistic';
+  CONTENT_LANGUAGE_QUERY,
+  CURRENT_USER_QUERY,
+} from '../../graphql/query';
+import {
+  CLOSE_AUTH_MODAL_MUTATION,
+  FACEBOOK_LOGIN_MUTATION,
+  SIGNIN_MUTATION,
+} from '../../graphql/mutation';
 
 /* eslint-disable */
+const signinMutation = ({ render, variables }) => (
+  <Mutation
+    mutation={SIGNIN_MUTATION}
+    variables={variables}
+    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+  >
+    {(signin, signinResult) => render({ signin, signinResult })}
+  </Mutation>
+);
+
+const facebookLoginMutation = ({ render }) => (
+  <Mutation
+    mutation={FACEBOOK_LOGIN_MUTATION}
+    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+  >
+    {(facebookLogin, facebookLoginResult) =>
+      render({ facebookLogin, facebookLoginResult })
+    }
+  </Mutation>
+);
+
 const closeAuthModal = ({ render }) => (
   <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
 );
+/* eslint-enable */
 
 const Composed = adopt({
   client,
@@ -34,6 +58,53 @@ const Composed = adopt({
   signinMutation,
   closeAuthModal,
 });
+
+const onFacebookLoginClick = ({
+  facebookLogin,
+  contentLanguage,
+  client,
+  data: { previousPage },
+  closeSideDrawer = null,
+}) => {
+  FB.login(
+    async res => {
+      if (res.status === 'connected') {
+        const {
+          authResponse: { accessToken, userID },
+        } = res;
+        const { data } = await facebookLogin({
+          variables: {
+            contentLanguage,
+            accessToken,
+            facebookUserId: userID,
+          },
+        });
+        if (data) {
+          const {
+            facebookLogin: { user, firstLogin },
+          } = data;
+          if (firstLogin) {
+            trackSignUp(user);
+          } else {
+            trackSignIn(user.displayName);
+          }
+          if (!closeSideDrawer) {
+            Router.push(
+              localStorage.getItem('previousPage') || previousPage || '/'
+            );
+            localStorage.removeItem('previousPage');
+            client.writeData({ data: { previousPage: null } });
+          } else {
+            closeSideDrawer();
+          }
+        }
+      }
+    },
+    {
+      scope: 'public_profile',
+    }
+  );
+};
 
 class Signin extends Component {
   state = {
@@ -73,7 +144,7 @@ class Signin extends Component {
   };
 
   render() {
-    const { noRedirect, isModal } = this.props;
+    const { noRedirect, modal } = this.props;
     return (
       <Composed variables={this.state}>
         {({
@@ -106,7 +177,7 @@ class Signin extends Component {
                   closeAuthModal,
                 })
               }
-              isModal
+              modal
             >
               <fieldset
                 disabled={loading || fbLoginLoading}
@@ -142,14 +213,16 @@ class Signin extends Component {
                 </Button>
                 {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
               </fieldset>
-              {!isModal && (
+              {!modal && (
                 <Link href="/signup">
                   <a>Tạo tài khoản mới.</a>
                 </Link>
               )}
               <Link href="/requestReset">
                 <a>
-                  <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                  <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                    Quên mật khẩu?
+                  </span>
                 </a>
               </Link>
             </Form>
@@ -162,12 +235,18 @@ class Signin extends Component {
 
 Signin.propTypes = {
   noRedirect: PropTypes.bool,
-  isModal: PropTypes.bool,
+  modal: PropTypes.bool,
 };
 
 Signin.defaultProps = {
   noRedirect: false,
-  isModal: false,
+  modal: false,
 };
 
 export default Signin;
+export {
+  onFacebookLoginClick,
+  facebookLoginMutation,
+  signinMutation,
+  closeAuthModal,
+};

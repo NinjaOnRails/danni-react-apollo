@@ -13,14 +13,15 @@ const Nav = () => (
         <NavStyles data-test="nav">
           <Link href="/">
             <a>
-              <Icon name="home" size="large" />
+              Trang chủ
+              {/* <Icon name="home" size="large" /> */}
             </a>
           </Link>
           <Link href="/new">
             <a>Thêm Video</a>
           </Link>
           <Link href="/about">
-            <a>Chúng Tôi</a>
+            <a>Giới thiệu</a>
           </Link>
           {currentUser && (
             <>

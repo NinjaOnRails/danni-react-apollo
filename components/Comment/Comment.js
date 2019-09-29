@@ -1,13 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Comment,
-  Icon,
-  Form,
-  Button,
-  Loader,
-  Message,
-} from 'semantic-ui-react';
+import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -20,10 +13,7 @@ import {
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
-import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
-import SigninMinimalistic from '../Authentication/SigninMinimalistic';
 import StyledPopup from '../styles/PopUpStyles';
-import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
 const deleteCommentMutation = ({ id, videoId, render }) => (
@@ -132,7 +122,6 @@ const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
     }}
   </Mutation>
 );
-
 /* eslint-enable */
 
 const Composed = adopt({
@@ -146,7 +135,6 @@ class VideoComment extends React.Component {
     showReplyInput: false,
     showEditInput: false,
     updateCommentFormValid: true,
-    voteClicked: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -155,7 +143,6 @@ class VideoComment extends React.Component {
       this.setState({
         showEditInput: false,
         showReplyInput: false,
-        voteClicked: false,
       });
     }
   }
@@ -173,7 +160,12 @@ class VideoComment extends React.Component {
   };
 
   onReplyClick = () => {
-    this.setState({ showReplyInput: true });
+    const { currentUser, openAuthModal } = this.props;
+    if (currentUser) {
+      this.setState({ showReplyInput: true });
+    } else {
+      openAuthModal();
+    }
   };
 
   onEditClick = () => {
@@ -198,7 +190,7 @@ class VideoComment extends React.Component {
   };
 
   onVoteClick = (type, comment, createCommentVote) => {
-    const { currentUser } = this.props;
+    const { currentUser, openAuthModal } = this.props;
     if (currentUser) {
       createCommentVote({
         variables: { comment, type },
@@ -213,7 +205,7 @@ class VideoComment extends React.Component {
         },
       });
     } else {
-      this.setState({ voteClicked: true });
+      openAuthModal();
     }
   };
 
@@ -244,13 +236,13 @@ class VideoComment extends React.Component {
       showReplyInput,
       showEditInput,
       updateCommentFormValid,
-      voteClicked,
     } = this.state;
 
     const {
       currentUser,
       comment: { id, text, author, reply, createdAt, vote },
       videoId,
+      openAuthModal,
     } = this.props;
     let voteType = null;
     let voteCount = 0;
@@ -334,7 +326,12 @@ class VideoComment extends React.Component {
                         createCommentVoteLoading || createCommentVoteError
                       }
                       onClick={e =>
-                        this.onVoteClick(e.target.id, id, createCommentVote)
+                        this.onVoteClick(
+                          e.target.id,
+                          id,
+                          createCommentVote,
+                          openAuthModal
+                        )
                       }
                     />
                     <span>{voteCount}</span>
@@ -381,28 +378,15 @@ class VideoComment extends React.Component {
                 </>
               )}
             </Comment.Content>
-          //  {!currentUser && voteClicked && (
-          //    <>
-          //      <StyledMessage>
-          //        <Message warning>
-          //          <StyledHeader>Please Sign In to vote</StyledHeader>
-          //        </Message>
-          //      </StyledMessage>
-          //      <SigninMinimalistic noRedirect />
-          //    </>
-          //  )}
-
-            {/* {voteClicked && <PleaseSignIn />} */}
-            {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
             {reply.length > 0 && (
               <CommentReplyList
                 reply={reply}
                 currentUser={currentUser}
                 onReplyClick={this.onReplyClick}
+                openAuthModal={openAuthModal}
               />
             )}
-
-            {showReplyInput && (
+            {showReplyInput && currentUser && (
               <CommentReplyForm
                 closeReplyInput={this.closeReplyInput}
                 showReplyInput={showReplyInput}
@@ -450,6 +434,7 @@ class VideoComment extends React.Component {
 VideoComment.propTypes = {
   comment: PropTypes.object.isRequired,
   videoId: PropTypes.string.isRequired,
+  openAuthModal: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
 };
 

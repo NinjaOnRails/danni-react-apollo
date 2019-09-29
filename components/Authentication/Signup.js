@@ -15,15 +15,13 @@ import {
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
-import {
-  SIGNUP_MUTATION,
-  CLOSE_AUTH_MODAL_MUTATION,
-} from '../../graphql/mutation';
+import { SIGNUP_MUTATION } from '../../graphql/mutation';
 import { client } from '../UI/ContentLanguage';
 import {
   onFacebookLoginClick,
   facebookLoginMutation,
-} from './SigninMinimalistic';
+  closeAuthModal,
+} from './Signin';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -41,10 +39,6 @@ const signupMutation = ({ localState: { data }, variables, render }) => (
   </Mutation>
 );
 /* eslint-enable */
-
-const closeAuthModal = ({ render }) => (
-  <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
-);
 
 const Composed = adopt({
   client,
@@ -109,7 +103,7 @@ class Signup extends Component {
             },
           },
         }) => {
-          const { isModal } = this.props;
+          const { modal } = this.props;
           return (
             <Container>
               <Form
@@ -123,7 +117,7 @@ class Signup extends Component {
                     closeAuthModal,
                   })
                 }
-                isModal
+                modal
               >
                 <fieldset
                   disabled={loading || fbLoginLoading}
@@ -159,14 +153,16 @@ class Signup extends Component {
                   </Button>
                   {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
                 </fieldset>
-                {!isModal && (
+                {!modal && (
                   <>
                     <Link href="/signin">
                       <a>Đã có tài khoản?</a>
                     </Link>
                     <Link href="/requestReset">
                       <a>
-                        <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                        <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                          Quên mật khẩu?
+                        </span>
                       </a>
                     </Link>
                   </>
@@ -181,11 +177,11 @@ class Signup extends Component {
 }
 
 Signup.propTypes = {
-  isModal: PropTypes.bool,
+  modal: PropTypes.bool,
 };
 
 Signup.defaultProps = {
-  isModal: false,
+  modal: false,
 };
 
 export default Signup;

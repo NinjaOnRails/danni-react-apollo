@@ -9,6 +9,8 @@ import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentList from './CommentList';
 import { user } from '../UI/ContentLanguage';
 import CommentForm from './CommentForm';
+import { openAuthModal } from '../Authentication/PleaseSignIn';
+
 /* eslint-disable */
 const videoComments = ({ videoId, render }) => (
   <Query query={VIDEO_COMMENTS_QUERY} variables={{ video: videoId }}>
@@ -20,18 +22,11 @@ const videoComments = ({ videoId, render }) => (
 const Composed = adopt({
   user,
   videoComments,
+  openAuthModal,
 });
 
 class CommentSection extends React.Component {
-  // shouldComponentUpdate(nextProps, nextState, nextContext) {
-  //   const { videoId, client } = this.props;
-  //   if (videoId === nextProps.videoId || client === nextProps.client) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  renderComments = (data, currentUser) => {
+  renderComments = (data, currentUser, openAuthModal) => {
     const { videoId, client } = this.props;
     return (
       <CommentSectionStyles>
@@ -40,6 +35,8 @@ class CommentSection extends React.Component {
             videoId={videoId}
             client={client}
             hideSigninToComment={data.hideSigninToComment}
+            openAuthModal={openAuthModal}
+            currentUser={currentUser}
           />
           {data.comments.length > 0 && (
             <CommentList
@@ -47,6 +44,7 @@ class CommentSection extends React.Component {
               videoId={videoId}
               client={client}
               currentUser={currentUser}
+              openAuthModal={openAuthModal}
             />
           )}
         </Comment.Group>
@@ -65,13 +63,14 @@ class CommentSection extends React.Component {
             loading: commentsLoading,
             data,
           },
+          openAuthModal,
         }) => (
           <>
             <Error error={commentsLoadingError} />
             {commentsLoading ? (
               <Loader active inline="centered" />
             ) : (
-              this.renderComments(data, currentUser)
+              this.renderComments(data, currentUser, openAuthModal)
             )}
           </>
         )}

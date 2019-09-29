@@ -4,7 +4,7 @@ const Meta = () => (
   <Head>
     <title key="title">Danni TV</title>
     <meta key="metaTitle" name="title" content="Danni TV" />
-    <meta
+    {/* <meta
       key="description"
       name="description"
       content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
@@ -12,19 +12,19 @@ const Meta = () => (
     <meta
       name="keywords"
       content="Danni TV, danni.tv, Different, Global, Languages, Translate, Dub, Dubbed, Voice-over, Free, Videos, TV, Online, Lecture, Lesson, Learn, Health, Science, Business"
-    />
-    {/* <meta
+    /> */}
+    <meta
       key="description"
       name="description"
-      content="Video miễn phí về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ với nhiều ngoại ngữ khác nhau."
+      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ."
     />
     <meta
       name="keywords"
-      content="Danni TV, danni.tv, Toàn cầu, Ngôn ngữ, Dịch, Lồng, Lồng tiếng, Thuyết minh, Miễn phí, Video, TV, Online, Trực tuyến, Học
-      Toan cau, Ngon ngu, Dich, Long, Long tieng, Thuyet minh, Mien phi, Truc tuyen, Hoc,
-       Toancau, Ngonngu, Longtieng, Thuyetminh, Mienphi, Tructuyen
+      content="Danni TV, danni.tv, Toàn cầu, Dịch, Lồng tiếng, Thuyết minh, Miễn phí, Video, Phim, Phim ngắn, TV, Online, Trực tuyến, Học
+      Toan cau, Ngon ngu, Dich, Long, Long tieng, Thuyet minh, Mien phi, Truc tuyen, Phim, Phim ngan, Hoc,
+       Toancau, Ngonngu, Longtieng, Thuyetminh, Mienphi, Tructuyen, Phimngan
       "
-    /> */}
+    />
     <meta name="HandheldFriendly" content="True" />
     <meta name="application-name" content="Danni TV" />
     <meta name="apple-mobile-web-app-title" content="Danni TV" />
@@ -33,16 +33,16 @@ const Meta = () => (
     <meta property="og:title" content="Danni TV" key="og:title" />
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
-    <meta
+    {/* <meta
       property="og:description"
       content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
       key="og:description"
-    />
-    {/* <meta
-      property="og:description"
-      content="Video miễn phí về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ với nhiều ngoại ngữ khác nhau."
-      key="og:description"
     /> */}
+    <meta
+      property="og:description"
+      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ."
+      key="og:description"
+    />
 
     <link rel="canonical" href="https://www.danni.tv/" />
     <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
