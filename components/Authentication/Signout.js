@@ -5,9 +5,9 @@ import { SIGN_OUT_MUTATION } from '../../graphql/mutation';
 
 const onSignout = async ({ signout, client }) => {
   await signout();
-  FB.logout();
   localStorage.clear();
   await client.resetStore();
+  if (FB && FB.getAccessToken()) FB.logout();
   return client.query({ query: CURRENT_USER_QUERY });
 };
 

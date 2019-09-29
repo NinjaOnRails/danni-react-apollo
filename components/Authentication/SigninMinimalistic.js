@@ -62,7 +62,7 @@ const onFacebookLoginClick = ({
   contentLanguage,
   client,
   data: { previousPage },
-  noRedirect = null,
+  closeSideDrawer = null,
 }) => {
   FB.login(
     async res => {
@@ -86,13 +86,15 @@ const onFacebookLoginClick = ({
           } else {
             trackSignIn(user.displayName);
           }
-        }
-        if (!noRedirect) {
-          Router.push(
-            localStorage.getItem('previousPage') || previousPage || '/'
-          );
-          localStorage.removeItem('previousPage');
-          client.writeData({ data: { previousPage: null } });
+          if (!closeSideDrawer) {
+            Router.push(
+              localStorage.getItem('previousPage') || previousPage || '/'
+            );
+            localStorage.removeItem('previousPage');
+            client.writeData({ data: { previousPage: null } });
+          } else {
+            closeSideDrawer();
+          }
         }
       }
     },
