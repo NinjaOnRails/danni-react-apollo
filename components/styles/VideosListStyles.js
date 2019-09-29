@@ -8,9 +8,7 @@ const VideosListStyles = styled.div`
   margin: 0 auto;
   justify-content: center;
   padding: 0;
-  .ui.card {
-    box-shadow: none;
-  }
+
   .ui.large.label {
     position: absolute;
     bottom: 0.2rem;
@@ -37,16 +35,22 @@ const VideosListStyles = styled.div`
   }
   @media (max-width: 479px) {
     grid-template-columns: auto;
+    .ui.card {
+      box-shadow: none;
+    }
     .ui.placeholder .rectangular.image:not(.header) {
       width: 320px;
       height: 180px;
     }
   }
   @media (min-width: 480px) {
+    grid-gap: 42px 14px;
     grid-template-columns: 210px 210px;
-    .ui.card > .content {
-      padding-left: 0px;
-      padding-right: 0px;
+    div.ui.fluid.card {
+      height: 214.11px;
+    }
+    div.header {
+      height: 32px;
     }
   }
   @media (min-width: 720px) {

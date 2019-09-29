@@ -169,7 +169,7 @@ const SideDrawer = () => {
                             contentLanguage,
                             client,
                             data,
-                            noRedirect: true,
+                            closeSideDrawer: closeSideDrawer(),
                           })
                         }
                       >
