@@ -44,7 +44,7 @@ const VideosListStyles = styled.div`
     }
   }
   @media (min-width: 480px) {
-    grid-gap: 50px 20px;
+    grid-gap: 42px 14px;
     grid-template-columns: 210px 210px;
     div.ui.fluid.card {
       height: 214.11px;
