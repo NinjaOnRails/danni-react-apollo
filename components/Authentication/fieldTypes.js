@@ -1,4 +1,4 @@
-export const signupFields = [
+const signupFields = [
   {
     label: 'E-mail',
     type: 'email',
@@ -9,11 +9,13 @@ export const signupFields = [
     label: 'Tên',
     type: 'name',
     name: 'name',
+    icon: 'user',
   },
   {
     label: 'Tên hiển thị',
     type: 'displayName',
     name: 'displayName',
+    icon: 'user',
   },
   {
     label: 'Mật khẩu',
@@ -23,7 +25,7 @@ export const signupFields = [
   },
 ];
 
-export const resetFields = [
+const resetFields = [
   { ...signupFields[3] },
   {
     label: 'Lập lại mật khẩu',
@@ -33,4 +35,6 @@ export const resetFields = [
   },
 ];
 
-export const signinFields = [{ ...signupFields[0] }, { ...signupFields[3] }];
+const signinFields = [{ ...signupFields[0] }, { ...signupFields[3] }];
+
+export { signupFields, resetFields, signinFields };

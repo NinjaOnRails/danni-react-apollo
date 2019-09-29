@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Container, Button, Icon } from 'semantic-ui-react';
@@ -10,13 +10,19 @@ import Error from '../UI/ErrorMessage';
 import { signinFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { trackSignIn } from '../../lib/mixpanel';
-import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
 import { client, contentLanguageQuery } from '../UI/ContentLanguage';
+import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
+import { CLOSE_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import {
   onFacebookLoginClick,
   signinMutation,
   facebookLoginMutation,
 } from './SigninMinimalistic';
+
+/* eslint-disable */
+const closeAuthModal = ({ render }) => (
+  <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
+);
 
 const Composed = adopt({
   client,
@@ -24,8 +30,9 @@ const Composed = adopt({
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
   facebookLoginMutation,
-  signinMutation,
   contentLanguageQuery,
+  signinMutation,
+  closeAuthModal,
 });
 
 class Signin extends Component {
@@ -44,6 +51,7 @@ class Signin extends Component {
     data: { previousPage },
     client,
     noRedirect,
+    closeAuthModal,
   }) => {
     e.preventDefault();
     const { data } = await signin();
@@ -53,6 +61,7 @@ class Signin extends Component {
     });
     if (data) {
       trackSignIn(data.signin.displayName);
+      closeAuthModal();
       if (!noRedirect) {
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
@@ -64,7 +73,7 @@ class Signin extends Component {
   };
 
   render() {
-    const { noRedirect } = this.props;
+    const { noRedirect, isModal } = this.props;
     return (
       <Composed variables={this.state}>
         {({
@@ -82,13 +91,22 @@ class Signin extends Component {
             signin,
             signinResult: { error, loading },
           },
+          closeAuthModal,
         }) => (
           <Container>
             <Form
               method="post"
               onSubmit={e =>
-                this.onSubmit({ e, signin, data, client, noRedirect })
+                this.onSubmit({
+                  e,
+                  signin,
+                  data,
+                  client,
+                  noRedirect,
+                  closeAuthModal,
+                })
               }
+              isModal
             >
               <fieldset
                 disabled={loading || fbLoginLoading}
@@ -124,11 +142,15 @@ class Signin extends Component {
                 </Button>
                 {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
               </fieldset>
-              <Link href="/signup">
-                <a>Tạo tài khoản mới.</a>
-              </Link>
+              {!isModal && (
+                <Link href="/signup">
+                  <a>Tạo tài khoản mới.</a>
+                </Link>
+              )}
               <Link href="/requestReset">
-                <a>Quên mật khẩu?</a>
+                <a>
+                  <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                </a>
               </Link>
             </Form>
           </Container>
@@ -140,10 +162,12 @@ class Signin extends Component {
 
 Signin.propTypes = {
   noRedirect: PropTypes.bool,
+  isModal: PropTypes.bool,
 };
 
 Signin.defaultProps = {
   noRedirect: false,
+  isModal: false,
 };
 
 export default Signin;

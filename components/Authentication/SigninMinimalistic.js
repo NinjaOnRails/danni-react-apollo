@@ -25,6 +25,7 @@ const FormStyles = styled.div`
     align-content: space-between;
   }
 `;
+/* eslint-disable */
 
 const facebookLoginMutation = ({ render }) => (
   <Mutation
@@ -56,6 +57,7 @@ const Composed = adopt({
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
 });
+/* eslint-enable */
 
 const onFacebookLoginClick = ({
   facebookLogin,

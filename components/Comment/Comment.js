@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
+import {
+  Comment,
+  Icon,
+  Form,
+  Button,
+  Loader,
+  Message,
+} from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -13,6 +20,9 @@ import {
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import CommentReplyList from './CommentReplyList';
+import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
+import SigninMinimalistic from '../Authentication/SigninMinimalistic';
+import StyledPopup from '../styles/PopUpStyles';
 import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
@@ -122,6 +132,7 @@ const createCommentVoteMutation = ({ videoId, render, id, currentUser }) => (
     }}
   </Mutation>
 );
+
 /* eslint-enable */
 
 const Composed = adopt({
@@ -182,9 +193,8 @@ class VideoComment extends React.Component {
       });
   };
 
-  onDeleteComment = deleteComment => {
-    if (confirm('Are you sure you want to delete this comment?'))
-      deleteComment();
+  onConfirmDelete = deleteComment => {
+    deleteComment();
   };
 
   onVoteClick = (type, comment, createCommentVote) => {
@@ -293,16 +303,13 @@ class VideoComment extends React.Component {
                     autoComplete="off"
                   />
                   <Button
-                    content="Update Comment"
+                    content="Sửa bình luận"
                     primary
                     disabled={!updateCommentFormValid}
                   />
                   <Button
-                    content="Cancel"
+                    content="Huỷ"
                     onClick={() => {
-                      // if (
-                      //   confirm('Are you sure you want to discard all changes?')
-                      // )
                       this.setState({ showEditInput: false });
                     }}
                   />
@@ -356,18 +363,36 @@ class VideoComment extends React.Component {
                         <Comment.Action onClick={this.onEditClick}>
                           Sửa
                         </Comment.Action>
-                        <Comment.Action
-                          onClick={() => this.onDeleteComment(deleteComment)}
+                        <StyledPopup
+                          trigger={<Comment.Action>Xoá</Comment.Action>}
+                          on="click"
+                          position="bottom left"
                         >
-                          Xoá
-                        </Comment.Action>
+                          <Button
+                            fluid
+                            color="red"
+                            content="Xoá bình luận"
+                            onClick={() => this.onConfirmDelete(deleteComment)}
+                          />
+                        </StyledPopup>
                       </>
                     ) : null}
                   </Comment.Actions>
                 </>
               )}
             </Comment.Content>
+          //  {!currentUser && voteClicked && (
+          //    <>
+          //      <StyledMessage>
+          //        <Message warning>
+          //          <StyledHeader>Please Sign In to vote</StyledHeader>
+          //        </Message>
+          //      </StyledMessage>
+          //      <SigninMinimalistic noRedirect />
+          //    </>
+          //  )}
 
+            {/* {voteClicked && <PleaseSignIn />} */}
             {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
             {reply.length > 0 && (
               <CommentReplyList

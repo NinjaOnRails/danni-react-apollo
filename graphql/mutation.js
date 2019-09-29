@@ -243,6 +243,18 @@ const CLOSE_SIDEDRAWER_MUTATION = gql`
   }
 `;
 
+const OPEN_AUTH_MODAL_MUTATION = gql`
+  mutation {
+    openAuthModal @client
+  }
+`;
+
+const CLOSE_AUTH_MODAL_MUTATION = gql`
+  mutation {
+    closeAuthModal @client
+  }
+`;
+
 export {
   CREATE_AUDIO_MUTATION,
   CREATE_VIDEO_MUTATION,
@@ -264,5 +276,7 @@ export {
   CLOSE_SIDEDRAWER_MUTATION,
   CREATE_COMMENT_VOTE_MUTATION,
   CREATE_COMMENTREPLY_VOTE_MUTATION,
+  CLOSE_AUTH_MODAL_MUTATION,
+  OPEN_AUTH_MODAL_MUTATION,
   FACEBOOK_LOGIN_MUTATION,
 };

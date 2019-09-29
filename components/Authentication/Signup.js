@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
+import PropTypes from 'prop-types';
 import generateName from 'sillyname';
 import { Container, Button, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
@@ -14,7 +15,10 @@ import {
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
-import { SIGNUP_MUTATION } from '../../graphql/mutation';
+import {
+  SIGNUP_MUTATION,
+  CLOSE_AUTH_MODAL_MUTATION,
+} from '../../graphql/mutation';
 import { client } from '../UI/ContentLanguage';
 import {
   onFacebookLoginClick,
@@ -38,12 +42,17 @@ const signupMutation = ({ localState: { data }, variables, render }) => (
 );
 /* eslint-enable */
 
+const closeAuthModal = ({ render }) => (
+  <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
+);
+
 const Composed = adopt({
   client,
   localState: ({ render }) => (
     <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
   ),
   signupMutation,
+  closeAuthModal,
   facebookLoginMutation,
 });
 
@@ -63,7 +72,7 @@ class Signup extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = async ({ e, signup, previousPage, client }) => {
+  onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
     e.preventDefault();
     const { data } = await signup();
     this.setState({
@@ -77,6 +86,7 @@ class Signup extends Component {
       Router.push(localStorage.getItem('previousPage') || previousPage || '/');
       localStorage.removeItem('previousPage');
       client.writeData({ data: { previousPage: null } });
+      closeAuthModal();
     }
   };
 
@@ -90,6 +100,7 @@ class Signup extends Component {
             signup,
             signupResult: { error, loading },
           },
+          closeAuthModal,
           facebookLoginMutation: {
             facebookLogin,
             facebookLoginResult: {
@@ -98,6 +109,7 @@ class Signup extends Component {
             },
           },
         }) => {
+          const { isModal } = this.props;
           return (
             <Container>
               <Form
@@ -108,8 +120,10 @@ class Signup extends Component {
                     signup,
                     previousPage: data.previousPage,
                     client,
+                    closeAuthModal,
                   })
                 }
+                isModal
               >
                 <fieldset
                   disabled={loading || fbLoginLoading}
@@ -145,12 +159,18 @@ class Signup extends Component {
                   </Button>
                   {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
                 </fieldset>
-                <Link href="/signin">
-                  <a>Đã có tài khoản?</a>
-                </Link>
-                <Link href="/requestReset">
-                  <a>Quên mật khẩu?</a>
-                </Link>
+                {!isModal && (
+                  <>
+                    <Link href="/signin">
+                      <a>Đã có tài khoản?</a>
+                    </Link>
+                    <Link href="/requestReset">
+                      <a>
+                        <span onClick={closeAuthModal}>Quên mật khẩu?</span>
+                      </a>
+                    </Link>
+                  </>
+                )}
               </Form>
             </Container>
           );
@@ -159,5 +179,13 @@ class Signup extends Component {
     );
   }
 }
+
+Signup.propTypes = {
+  isModal: PropTypes.bool,
+};
+
+Signup.defaultProps = {
+  isModal: false,
+};
 
 export default Signup;

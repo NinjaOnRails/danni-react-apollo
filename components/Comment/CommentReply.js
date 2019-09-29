@@ -19,6 +19,8 @@ import {
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
+import SigninMinimalistic from '../Authentication/SigninMinimalistic';
+import StyledPopup from '../styles/PopUpStyles';
 import PleaseSignIn from '../Authentication/PleaseSignIn';
 
 /* eslint-disable */
@@ -194,11 +196,6 @@ class CommentReply extends React.Component {
     if (data) this.setState({ showEditForm: false, editInput: '' });
   };
 
-  onDeleteCommentReply = deleteCommentReply => {
-    if (confirm('Are you sure you want to delete this reply?'))
-      deleteCommentReply();
-  };
-
   onVoteClick = (
     { target: { id: type } },
     currentUser,
@@ -255,7 +252,7 @@ class CommentReply extends React.Component {
       currentUser,
     } = this.props;
 
-    const { showEditForm, editInput, editFormValid, voteClicked } = this.state;
+    const { showEditForm, editFormValid, voteClicked } = this.state;
     let voteType = null;
     let voteCount = 0;
     if (vote.length > 0) {
@@ -306,18 +303,13 @@ class CommentReply extends React.Component {
                     autoComplete="off"
                   />
                   <Button
-                    content="Update Comment"
+                    content="Sửa bình luận"
                     primary
                     disabled={!editFormValid}
                   />
                   <Button
-                    content="Cancel"
+                    content="Huỷ"
                     onClick={() => {
-                      // if (
-                      //   confirm(
-                      //     'Are you sure you want to discard all changes?'
-                      //   )
-                      // )
                       this.setState({ showEditForm: false });
                     }}
                   />
@@ -384,13 +376,19 @@ class CommentReply extends React.Component {
                         <Comment.Action onClick={this.onClickEdit}>
                           Sửa
                         </Comment.Action>
-                        <Comment.Action
-                          onClick={() =>
-                            this.onDeleteCommentReply(deleteCommentReply)
-                          }
+                        <StyledPopup
+                          trigger={<Comment.Action>Xoá</Comment.Action>}
+                          on="click"
+                          position="bottom right"
                         >
-                          Xoá
-                        </Comment.Action>
+                          <Button
+                            fluid
+                            color="red"
+                            content="Xoá bình luận"
+                            onClick={deleteCommentReply}
+                          />
+                        </StyledPopup>
+
                       </>
                     ) : null}
                   </Comment.Actions>

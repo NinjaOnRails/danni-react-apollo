@@ -14,11 +14,13 @@ const loading = keyframes`
 
 const Form = styled.form`
   max-width: ${props => props.theme.maxWidth};
+  width: ${props => (props.isModal ? '100%' : 'auto')};
   margin: 0 auto;
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-  background: rgba(0, 0, 0, 0.02);
-  border: 5px solid white;
-  padding: 20px;
+  box-shadow: ${props =>
+    props.isModal ? 'none' : '0 0 5px 3px rgba(0, 0, 0, 0.05);'};
+  background: ${props => (props.isModal ? '#ffffff' : 'rgba(0, 0, 0, 0.02)')};
+  border: ${props => (props.isModal ? 'none' : '5px solid white')};
+  padding: ${props => (props.isModal ? 0 : '20px')};
   font-size: 1.5rem;
   line-height: 1.5;
   font-weight: 600;
@@ -28,7 +30,7 @@ const Form = styled.form`
   input[type='number'],
   a {
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: ${props => (props.isModal ? '0.5rem' : '1rem')};
   }
   textarea {
     resize: none;
@@ -54,6 +56,7 @@ const Form = styled.form`
     font-size: 2rem;
     font-weight: 600;
     padding: 0.5rem 1.2rem;
+    margin-top: ${props => (props.isModal ? '1rem' : 0)};
     margin-bottom: 1rem;
   }
   input[type='radio'],
@@ -86,7 +89,7 @@ const Form = styled.form`
       font-family: ${props => props.theme.font};
     }
     .ui.facebook.button {
-      display: block;
+      display: ${props => (props.isModal ? 'inline-block' : 'block')};
       margin-bottom: 1rem;
     }
   }
