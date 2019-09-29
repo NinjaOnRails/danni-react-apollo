@@ -1,13 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Comment,
-  Icon,
-  Form,
-  Button,
-  Loader,
-  Message,
-} from 'semantic-ui-react';
+import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
@@ -381,18 +374,18 @@ class VideoComment extends React.Component {
                 </>
               )}
             </Comment.Content>
-          //  {!currentUser && voteClicked && (
-          //    <>
-          //      <StyledMessage>
-          //        <Message warning>
-          //          <StyledHeader>Please Sign In to vote</StyledHeader>
-          //        </Message>
-          //      </StyledMessage>
-          //      <SigninMinimalistic noRedirect />
-          //    </>
-          //  )}
+            {/* {!currentUser && voteClicked && (
+             <>
+               <StyledMessage>
+                 <Message warning>
+                   <StyledHeader>Please Sign In to vote</StyledHeader>
+                 </Message>
+               </StyledMessage>
+               <SigninMinimalistic noRedirect />
+             </>
+           )}
 
-            {/* {voteClicked && <PleaseSignIn />} */}
+            {voteClicked && <PleaseSignIn />} */}
             {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
             {reply.length > 0 && (
               <CommentReplyList
