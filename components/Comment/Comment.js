@@ -381,18 +381,16 @@ class VideoComment extends React.Component {
                 </>
               )}
             </Comment.Content>
-          //  {!currentUser && voteClicked && (
-          //    <>
-          //      <StyledMessage>
-          //        <Message warning>
-          //          <StyledHeader>Please Sign In to vote</StyledHeader>
-          //        </Message>
-          //      </StyledMessage>
-          //      <SigninMinimalistic noRedirect />
-          //    </>
-          //  )}
-
-            {/* {voteClicked && <PleaseSignIn />} */}
+            {/* {!currentUser && voteClicked && (
+             <>
+               <StyledMessage>
+                 <Message warning>
+                   <StyledHeader>Please Sign In to vote</StyledHeader>
+                 </Message>
+               </StyledMessage>
+               <SigninMinimalistic noRedirect />
+             </>
+           )}*/}
             {voteClicked && <PleaseSignIn action="đánh giá" minimalistic />}
             {reply.length > 0 && (
               <CommentReplyList

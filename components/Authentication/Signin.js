@@ -106,7 +106,7 @@ class Signin extends Component {
                   closeAuthModal,
                 })
               }
-              isModal
+              isModal={isModal}
             >
               <fieldset
                 disabled={loading || fbLoginLoading}
@@ -143,10 +143,10 @@ class Signin extends Component {
                 {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
               </fieldset>
               {!isModal && (
-                <Link href="/signup">
-                  <a>Tạo tài khoản mới.</a>
-                </Link>
-              )}
+                  <Link href="/signup">
+                    <a>Tạo tài khoản mới.</a>
+                  </Link>
+                )}
               <Link href="/requestReset">
                 <a>
                   <span onClick={closeAuthModal}>Quên mật khẩu?</span>

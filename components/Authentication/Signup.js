@@ -123,7 +123,7 @@ class Signup extends Component {
                     closeAuthModal,
                   })
                 }
-                isModal
+                isModal={isModal}
               >
                 <fieldset
                   disabled={loading || fbLoginLoading}
