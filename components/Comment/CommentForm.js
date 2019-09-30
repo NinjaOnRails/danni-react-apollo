@@ -41,8 +41,12 @@ class CommentForm extends React.Component {
     commentInputValid: false,
   };
 
-  onTextChange = ({ target: { value } }) => {
-    this.setState({ commentInput: value, commentInputValid: value.length > 0 });
+  onChange = ({ target: { value } }) => {
+    if (this.props.currentUser)
+      this.setState({
+        commentInput: value,
+        commentInputValid: value.length > 0,
+      });
   };
 
   onCommentSubmit = async createComment => {
@@ -67,7 +71,7 @@ class CommentForm extends React.Component {
       >
         <Form.TextArea
           placeholder="Viết bình luận..."
-          onChange={this.onTextChange}
+          onChange={this.onChange}
           value={commentInput}
           onClick={this.onTextAreaClick}
         />

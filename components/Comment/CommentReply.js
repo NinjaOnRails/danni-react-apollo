@@ -171,9 +171,10 @@ class CommentReply extends React.Component {
     return `${moment(time).fromNow('yy')} ago`;
   };
 
-  onTextChange = e => {
+  onChange = e => {
     const { value } = e.target;
-    this.setState({ editInput: value, editFormValid: value.length > 0 });
+    if (this.props.currentUser)
+      this.setState({ editInput: value, editFormValid: value.length > 0 });
   };
 
   onClickEdit = () => {
@@ -297,7 +298,7 @@ class CommentReply extends React.Component {
                   autoComplete="off"
                 >
                   <Form.Input
-                    onChange={this.onTextChange}
+                    onChange={this.onChange}
                     defaultValue={text}
                     autoComplete="off"
                   />

@@ -151,7 +151,7 @@ class VideoComment extends React.Component {
     return `${moment(time).fromNow('yy')} ago`;
   };
 
-  onTextChange = e => {
+  onChange = e => {
     const { value, name } = e.target;
     const form =
       name === 'updateInput' ? 'updateCommentFormValid' : 'replyFormValid';
@@ -290,7 +290,7 @@ class VideoComment extends React.Component {
                 >
                   <Form.Input
                     name="updateInput"
-                    onChange={this.onTextChange}
+                    onChange={this.onChange}
                     defaultValue={text}
                     autoComplete="off"
                   />
