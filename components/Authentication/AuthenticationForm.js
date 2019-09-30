@@ -14,6 +14,7 @@ const AuthForm = ({
       placeholder={placeholder}
       value={value[name]}
       onChange={saveToState}
+      autoFocus={type === 'email'}
     />
   </label>
 );

@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 const StyledTab = styled(Tab)`
   .ui.center.aligned.header {
-    margin: 10px 0 0 0;
+    margin: 10px auto 0 auto;
+    font-family: ${props => props.theme.font};
   }
   label {
     text-align: left;

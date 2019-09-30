@@ -12,7 +12,7 @@ const loading = keyframes`
 
 const Form = styled.form`
   max-width: ${props => props.theme.maxWidth};
-  width: ${props => (props.modal ? '100%' : 'auto')};
+  width: ${props => (props.modal ? '80%' : 'auto')};
   margin: 0 auto;
   box-shadow: ${props =>
     props.modal ? 'none' : '0 0 5px 3px rgba(0, 0, 0, 0.05);'};
@@ -56,6 +56,8 @@ const Form = styled.form`
     padding: 0.5rem 1.2rem;
     margin-top: ${props => (props.modal ? '1rem' : 0)};
     margin-bottom: 1rem;
+    border-radius: 0.28571429rem;
+
   }
   input[type='radio'],
   input[type='checkbox'] {
@@ -78,6 +80,8 @@ const Form = styled.form`
         #e2b04a 50%,
         #ff3019 100%
       );
+      margin: ${props => (props.modal ? '0.5rem auto' : '0')};
+
     }
     &[aria-busy='true']::before {
       background-size: 50% auto;
@@ -86,7 +90,8 @@ const Form = styled.form`
   }
   .ui.facebook.button {
     display: block;
-    margin-bottom: 1rem;
+    /* ${props => (props.modal ? 'inline-block' : 'block')}; */
+    margin: ${props => (props.modal ? '0 auto 0.75rem auto' : '0 0 1rem 0')};
   }
 `;
 
