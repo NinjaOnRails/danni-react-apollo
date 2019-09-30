@@ -65,6 +65,7 @@ const onFacebookLoginClick = ({
   client,
   data: { previousPage },
   closeSideDrawer = null,
+  closeAuthModal = null,
 }) => {
   FB.login(
     async res => {
@@ -88,14 +89,16 @@ const onFacebookLoginClick = ({
           } else {
             trackSignIn(user.displayName);
           }
-          if (!closeSideDrawer) {
+          if (closeSideDrawer) {
+            closeSideDrawer();
+          } else if (closeAuthModal) {
+            closeAuthModal();
+          } else {
             Router.push(
               localStorage.getItem('previousPage') || previousPage || '/'
             );
             localStorage.removeItem('previousPage');
             client.writeData({ data: { previousPage: null } });
-          } else {
-            closeSideDrawer();
           }
         }
       }
@@ -206,6 +209,7 @@ class Signin extends Component {
                       contentLanguage,
                       client,
                       data,
+                      closeAuthModal: modal && closeAuthModal,
                     })
                   }
                 >

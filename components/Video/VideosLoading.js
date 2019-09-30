@@ -2,7 +2,7 @@ import { Placeholder } from 'semantic-ui-react';
 
 const VideosLoading = () => (
   <>
-    {[...Array(30)].map((x, i) => (
+    {[...Array(21)].map((x, i) => (
       <span key={i}>
         <Placeholder fluid>
           <Placeholder.Image rectangular />
