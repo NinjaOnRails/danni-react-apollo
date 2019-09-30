@@ -1,11 +1,11 @@
 import { Query } from 'react-apollo';
 import { adopt } from 'react-adopt';
-import { Grid, Header } from 'semantic-ui-react';
+import { Grid, Header, Icon } from 'semantic-ui-react';
 import { LOCAL_STATE_QUERY } from '../../graphql/query';
 import Modal from '../UI/Modal';
 import Signin, { closeAuthModal } from './Signin';
 import Signup from './Signup';
-import StyledTab from '../styles/ModalAuthTabStyles';
+import StyledTab from '../styles/AuthModalTabStyles';
 import { user } from '../UI/ContentLanguage';
 
 /* eslint-disable */
@@ -32,7 +32,7 @@ const renderForm = type => {
   return (
     <Grid textAlign="center" verticalAlign="top">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="black" textAlign="center" size="large">
+        <Header as="h2" color="black" textAlign="center" size='medium'>
           {headerText}
         </Header>
         {render}
@@ -62,6 +62,19 @@ const AuthModal = () => (
       ];
       return (
         <Modal show={showAuthModal && !currentUser} close={closeAuthModal}>
+          <Icon
+            name="close"
+            inverted
+            link
+            size="large"
+            style={{
+              position: 'absolute',
+              top: '-30px',
+              left: '95%',
+              // display: "inline-block"
+            }}
+            onClick={closeAuthModal}
+          />
           <StyledTab panes={panes} grid={{ paneWidth: 2, tabWidth: 1 }} />
         </Modal>
       );

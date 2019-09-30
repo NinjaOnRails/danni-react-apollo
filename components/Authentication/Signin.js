@@ -180,7 +180,7 @@ class Signin extends Component {
                   closeAuthModal,
                 })
               }
-              modal
+              modal={modal}
             >
               <fieldset
                 disabled={loading || fbLoginLoading}
