@@ -20,7 +20,7 @@ import {
 import {
   facebookLoginMutation,
   onFacebookLoginClick,
-} from '../../Authentication/SigninMinimalistic';
+} from '../../Authentication/Signin';
 import { localData } from '../../Authentication/AuthModal';
 
 const LanguageMenuStyles = styled.div`
@@ -80,9 +80,7 @@ const SideDrawer = () => {
     <Composed>
       {({
         closeSideDrawer,
-        localData: {
-          data: { showSide },
-        },
+        localData: { data },
         user: { currentUser },
         client,
         signout,
@@ -93,8 +91,8 @@ const SideDrawer = () => {
         contentLanguageQuery: { contentLanguage },
       }) => (
         <SideDrawerStyles>
-          <BackDrop clicked={closeSideDrawer} show={showSide} />
-          <div className={`SideDrawer ${showSide ? 'Open' : 'Close'}`}>
+          <BackDrop clicked={closeSideDrawer} show={data.showSide} />
+          <div className={`SideDrawer ${data.showSide ? 'Open' : 'Close'}`}>
             {/* <Logo inDrawer /> */}
             <div className="links">
               <Menu vertical icon="labeled" inverted>
