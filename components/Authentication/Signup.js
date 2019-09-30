@@ -146,6 +146,7 @@ class Signup extends Component {
                         contentLanguage: data.contentLanguage,
                         client,
                         data,
+                        closeAuthModal: modal && closeAuthModal,
                       })
                     }
                   >
