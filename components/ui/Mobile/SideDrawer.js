@@ -121,7 +121,7 @@ const SideDrawer = () => {
                   <MenuItem as="a" onClick={closeSideDrawer}>
                     <div className="link-container">
                       <Icon name="info" size="large" />
-                      <span className="link-name">Chúng Tôi</span>
+                      <span className="link-name">Giới Thiệu</span>
                     </div>
                   </MenuItem>
                 </Link>
