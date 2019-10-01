@@ -137,7 +137,6 @@ class Signup extends Component {
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
                   <Button
-                    size="big"
                     type="button"
                     color="facebook"
                     onClick={() =>

@@ -72,7 +72,10 @@ class Page extends Component {
           return (
             <ThemeProvider theme={theme}>
               <StyledPage>
-                <GlobalStyle showSide={data.showSide} showAuthModal={data.showAuthModal} />
+                <GlobalStyle
+                  showSide={data.showSide}
+                  showAuthModal={data.showAuthModal}
+                />
                 <Header />
                 <SideDrawer />
                 <AuthModal />

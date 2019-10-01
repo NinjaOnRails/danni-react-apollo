@@ -30,6 +30,10 @@ const Form = styled.form`
     display: block;
     margin-bottom: ${props => (props.modal ? '0.5rem' : '1rem')};
   }
+  a {
+    font-size: 1rem;
+    margin-bottom: 0.1rem;
+  }
   textarea {
     resize: none;
   }
@@ -51,11 +55,11 @@ const Form = styled.form`
     background: red;
     color: white;
     border: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    padding: 0.5rem 1.2rem;
+    padding: 0.5rem 11.36px;
     margin-top: ${props => (props.modal ? '1rem' : 0)};
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
 
   }

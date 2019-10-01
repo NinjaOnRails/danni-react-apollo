@@ -32,7 +32,7 @@ const renderForm = type => {
   return (
     <Grid textAlign="center" verticalAlign="top">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="black" textAlign="center" size='medium'>
+        <Header as="h2" color="black" textAlign="center" size="medium">
           {headerText}
         </Header>
         {render}
