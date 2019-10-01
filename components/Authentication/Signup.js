@@ -131,6 +131,8 @@ class Signup extends Component {
                       form={form}
                       saveToState={this.saveToState}
                       value={this.state}
+                      autoComplete="new-password"
+
                     />
                   ))}
                   <button type="submit">

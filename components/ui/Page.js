@@ -5,6 +5,7 @@ import { adopt } from 'react-adopt';
 import Header from './Header';
 import SideDrawer from './Mobile/SideDrawer';
 import AuthModal, { localData } from '../Authentication/AuthModal';
+import FullModal from "../Authentication/AuthModalFullScreen"
 
 const theme = {
   red: '#FF0000',
@@ -76,6 +77,7 @@ class Page extends Component {
                 <Header />
                 <SideDrawer />
                 <AuthModal />
+                <FullModal />
                 <Inner>{children}</Inner>
               </StyledPage>
             </ThemeProvider>
