@@ -76,7 +76,7 @@ class Page extends Component {
                 <GlobalStyle showSide={data.showSide} showAuthModal={data.showAuthModal} />
                 <Header />
                 <SideDrawer />
-                <AuthModal />
+                {/* <AuthModal /> */}
                 <FullModal />
                 <Inner>{children}</Inner>
               </StyledPage>
