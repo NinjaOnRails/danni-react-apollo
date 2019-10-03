@@ -44,16 +44,13 @@ const StyledForm = styled.form`
     border: 0;
     font-size: 1.8rem;
     font-weight: 600;
-    padding: 0.5rem 1.2rem;
     margin: 0 auto 10px auto;
     font-size: 1.5rem;
     padding: 0.5rem 11.36px;
-    margin-top: ${props => (props.modal ? '1rem' : 0)};
     margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
   }
   .center {
-    margin-top: 1.5rem;
     text-align: center;
   }
   input:focus + label,
