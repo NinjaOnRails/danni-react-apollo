@@ -1,102 +1,86 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-const loading = keyframes`
-  from {
-    background-position: 0 0;
+const StyledForm = styled.form`
+  margin: 0;
+  width: 100%;
+  fieldset {
+    border: none;
+    width:  ${props => (props.modal ? '100%' : '50%')};
+    margin: ${props => (props.modal ? 0 : 'auto')};
+    padding: 0;
   }
+  .auth-input {
+    margin: 0 16px 8px;
+    position: relative;
+}
 
-  to {
-    background-position: 100% 100%;
-  }
-`;
-
-const Form = styled.form`
-  max-width: ${props => props.theme.maxWidth};
-  width: ${props => (props.modal ? '80%' : 'auto')};
-  margin: 0 auto;
-  box-shadow: ${props =>
-    props.modal ? 'none' : '0 0 5px 3px rgba(0, 0, 0, 0.05);'};
-  background: ${props => (props.modal ? '#ffffff' : 'rgba(0, 0, 0, 0.02)')};
-  border: ${props => (props.modal ? 'none' : '5px solid white')};
-  padding: ${props => (props.modal ? 0 : '20px')};
-  font-size: 1.5rem;
-  line-height: 1.5;
-  font-weight: 600;
-  word-break: break-word;
-  label,
-  input[type='text'],
-  input[type='number'],
-  a {
-    display: block;
-    margin-bottom: ${props => (props.modal ? '0.5rem' : '1rem')};
-  }
-  a {
-    font-size: 1rem;
-    margin-bottom: 0.1rem;
-  }
-  textarea {
-    resize: none;
-  }
-  input,
-  textarea,
-  select {
+  input {
+    border: none;
+    border-bottom: 1px solid #000;
+    background-color: transparent;
+    color: #000;
+    font-size: 16px;
+    height: 48px;
+    padding: 22px 36px 10px 12px;
     width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid black;
-    &:focus {
-      outline: 0;
-      border-color: ${props => props.theme.red};
-    }
+    /* ${props => (props.modal ? '100%' : '50%')}; */
   }
-  button,
-  input[type='submit'] {
+  label {
+    color: #818384;
+    display: inline-block;
+    font-size: 16px;
+    left: 11px;
+    position: absolute;
+    top: 12px;
+    transform-origin: 0 50%;
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+    pointer-events: none;
+  }
+  button {
     width: auto;
     background: red;
     color: white;
     border: 0;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 600;
+    margin: 0 auto 10px auto;
+    font-size: 1.5rem;
     padding: 0.5rem 11.36px;
-    margin-top: ${props => (props.modal ? '1rem' : 0)};
     margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
-
   }
-  input[type='radio'],
-  input[type='checkbox'] {
-    width: auto;
+  .center {
+    text-align: center;
   }
-  fieldset {
-    border: 0;
-    padding: 0;
-
-    &[disabled] {
-      opacity: 0.5;
-    }
-    &::before {
-      height: 10px;
-      content: '';
-      display: block;
-      background-image: linear-gradient(
-        to right,
-        #ff3019 0%,
-        #e2b04a 50%,
-        #ff3019 100%
-      );
-      margin: ${props => (props.modal ? '0.5rem auto' : '0')};
-
-    }
-    &[aria-busy='true']::before {
-      background-size: 50% auto;
-      animation: ${loading} 0.5s linear infinite;
-    }
+  input:focus + label,
+  input[data-empty='false'] + label {
+    transform: translate3d(0, -15px, 0) scale(0.83);
   }
   .ui.facebook.button {
     display: block;
-    /* ${props => (props.modal ? 'inline-block' : 'block')}; */
-    margin: ${props => (props.modal ? '0 auto 0.75rem auto' : '0 0 1rem 0')};
+    margin: 0 auto 0.75rem auto;
+  }
+  .auth-links {
+    color: #fff;
+    font-size: 15px;
+    padding: 8px;
+    text-align: center;
+  }
+  .auth-links a {
+    color: #0079d3;
+  }
+  .auth-links a:hover {
+    color: #3394dc;
+  }
+  .auth-title {
+    color: #000;
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 16px;
+    text-align: center;
   }
 `;
 
-export default Form;
+export default StyledForm;

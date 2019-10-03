@@ -1,6 +1,6 @@
 const signupFields = [
   {
-    label: 'E-mail',
+    label: 'E-mail (bắt buộc)',
     type: 'email',
     name: 'email',
     placeholder: 'bắt buộc',
@@ -19,7 +19,7 @@ const signupFields = [
     placeholder: 'bắt buộc',
   },
   {
-    label: 'Mật khẩu',
+    label: 'Mật khẩu (bắt buộc)',
     type: 'password',
     name: 'password',
     placeholder: 'bắt buộc',

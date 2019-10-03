@@ -14,7 +14,7 @@ const ModalStyles = styled.div`
     /* padding: 16px; */
     padding: 0 0 16px 0;
     left: 15%;
-    top: 30%;
+    top: 20%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     transform: ${props =>
@@ -37,6 +37,12 @@ const ModalStyles = styled.div`
       transform: ${props =>
         props.show ? 'translateY(-100px)' : 'translateY(-100vh)'};
       opacity: ${props => (props.show ? 1 : 0)};
+    }
+  }
+  @media (max-width: 639px) {
+    .Modal {
+      height: 90vh;
+      overflow-y: scroll
     }
   }
 `;

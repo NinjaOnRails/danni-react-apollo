@@ -4,15 +4,13 @@ import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import generateName from 'sillyname';
-import { Container, Button, Icon } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
-import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import {
   CURRENT_USER_QUERY,
   CONTENT_LANGUAGE_QUERY,
 } from '../../graphql/query';
-import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
 import { SIGNUP_MUTATION } from '../../graphql/mutation';
@@ -22,6 +20,7 @@ import {
   facebookLoginMutation,
   closeAuthModal,
 } from './Signin';
+import StyledForm from '../styles/Form';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -105,34 +104,43 @@ class Signup extends Component {
         }) => {
           const { modal } = this.props;
           return (
-            <Container>
-              <Form
-                method="post"
-                onSubmit={async e =>
-                  this.onSubmit({
-                    e,
-                    signup,
-                    previousPage: data.previousPage,
-                    client,
-                    closeAuthModal,
-                  })
-                }
-                modal={modal}
+            <StyledForm
+              method="post"
+              onSubmit={async e =>
+                this.onSubmit({
+                  e,
+                  signup,
+                  previousPage: data.previousPage,
+                  client,
+                  closeAuthModal,
+                })
+              }
+              modal={modal}
+            >
+              <p className="auth-title">Tạo tài khoản miễn phí</p>
+
+              <fieldset
+                disabled={loading || fbLoginLoading}
+                aria-busy={loading || fbLoginLoading}
               >
-                <fieldset
-                  disabled={loading || fbLoginLoading}
-                  aria-busy={loading || fbLoginLoading}
-                >
-                  <Error error={error} />
-                  <Error error={fbLoginError} />
-                  {signupFields.map(form => (
-                    <AuthForm
-                      key={form.name}
-                      form={form}
-                      saveToState={this.saveToState}
-                      value={this.state}
+                <Error error={error} />
+                <Error error={fbLoginError} />
+                {signupFields.map(({ name, type, label }) => (
+                  <div className="auth-input" key={name}>
+                    <input
+                      type={type}
+                      // placeholder={placeholder}
+                      name={name}
+                      value={this.state[name]}
+                      onChange={this.saveToState}
+                      data-empty={!this.state[name]}
+                      autoComplete="new-password"
                     />
-                  ))}
+                    <label htmlFor={name}>{label}</label>
+                  </div>
+                ))}
+
+                <div className="center">
                   <button type="submit">
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
@@ -151,24 +159,27 @@ class Signup extends Component {
                   >
                     <Icon name="facebook" /> Dùng Facebook
                   </Button>
-                  {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
-                </fieldset>
+                </div>
+                {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
+              </fieldset>
+              <div className="auth-links">
                 {!modal && (
                   <>
                     <Link href="/signin">
-                      <a>Đã có tài khoản?</a>
+                      <a>Đã có tài khoản</a>
                     </Link>
+                    ---
                     <Link href="/requestReset">
                       <a>
                         <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                          Quên mật khẩu?
+                          Quên mật khẩu
                         </span>
                       </a>
                     </Link>
                   </>
                 )}
-              </Form>
-            </Container>
+              </div>
+            </StyledForm>
           );
         }}
       </Composed>
