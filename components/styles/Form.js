@@ -12,7 +12,8 @@ const StyledForm = styled.form`
   .auth-input {
     margin: 0 16px 8px;
     position: relative;
-  }
+}
+
   input {
     border: none;
     border-bottom: 1px solid #000;
@@ -45,6 +46,10 @@ const StyledForm = styled.form`
     font-weight: 600;
     padding: 0.5rem 1.2rem;
     margin: 0 auto 10px auto;
+    font-size: 1.5rem;
+    padding: 0.5rem 11.36px;
+    margin-top: ${props => (props.modal ? '1rem' : 0)};
+    margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
   }
   .center {

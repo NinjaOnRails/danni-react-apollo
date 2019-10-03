@@ -221,7 +221,6 @@ class Signin extends Component {
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
                 <Button
-                  size="big"
                   type="button"
                   color="facebook"
                   onClick={() =>
