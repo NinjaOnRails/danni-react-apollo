@@ -38,13 +38,13 @@ class AuthModal extends React.Component {
     if (mode === 'signup') {
       return (
         <div className="auth-section">
-          <Signup modal />
+          <Signup modal noRedirect />
         </div>
       );
     }
     return (
       <div className="auth-section">
-        <Signin modal />
+        <Signin modal noRedirect />
       </div>
     );
   };
