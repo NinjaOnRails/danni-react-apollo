@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Container, Button, Icon } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
-import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import { signinFields } from './fieldTypes';
-import AuthForm from './AuthenticationForm';
 import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
 import { client, contentLanguageQuery } from '../UI/ContentLanguage';
 import {
@@ -20,6 +18,7 @@ import {
   FACEBOOK_LOGIN_MUTATION,
   SIGNIN_MUTATION,
 } from '../../graphql/mutation';
+import StyledForm from '../styles/Form';
 
 /* eslint-disable */
 const signinMutation = ({ render, variables }) => (
@@ -167,35 +166,57 @@ class Signin extends Component {
           },
           closeAuthModal,
         }) => (
-          <Container>
-            <Form
-              method="post"
-              onSubmit={e =>
-                this.onSubmit({
-                  e,
-                  signin,
-                  data,
-                  client,
-                  noRedirect,
-                  closeAuthModal,
-                })
-              }
-              modal={modal}
+          <StyledForm
+            method="post"
+            onSubmit={e =>
+              this.onSubmit({
+                e,
+                signin,
+                data,
+                client,
+                noRedirect,
+                closeAuthModal,
+              })
+            }
+            modal={modal}
+          >
+            <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
+            <fieldset
+              disabled={loading || fbLoginLoading}
+              aria-busy={loading || fbLoginLoading}
             >
-              <fieldset
-                disabled={loading || fbLoginLoading}
-                aria-busy={loading || fbLoginLoading}
-              >
-                <Error error={error} />
-                <Error error={fbLoginError} />
-                {signinFields.map(form => (
-                  <AuthForm
-                    key={form.name}
-                    form={form}
-                    saveToState={this.saveToState}
-                    value={this.state}
+              <Error error={error} />
+              <Error error={fbLoginError} />
+              {signinFields.map(({ type, name, placeholder, label }) => (
+                <div className="auth-input" key={name}>
+                  <input
+                    type={type}
+                    // placeholder={placeholder}
+                    name={name}
+                    value={this.state[name]}
+                    onChange={this.saveToState}
+                    data-empty={!this.state[name]}
                   />
-                ))}
+                  <label htmlFor={name}>{label}</label>
+                </div>
+              ))}
+              <div className="auth-links">
+                {!modal && (
+                  <Link href="/signup">
+                    <a>Tạo tài khoản mới</a>
+                  </Link>
+                )}
+                ---
+                <Link href="/requestReset">
+                  <a>
+                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                      Quên mật khẩu?
+                    </span>
+                  </a>
+                </Link>
+              </div>
+
+              <div className="center">
                 <button type="submit">
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
@@ -215,22 +236,11 @@ class Signin extends Component {
                 >
                   <Icon name="facebook" /> Dùng Facebook
                 </Button>
-                {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
-              </fieldset>
-              {!modal && (
-                <Link href="/signup">
-                  <a>Tạo tài khoản mới.</a>
-                </Link>
-              )}
-              <Link href="/requestReset">
-                <a>
-                  <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                    Quên mật khẩu?
-                  </span>
-                </a>
-              </Link>
-            </Form>
-          </Container>
+              </div>
+
+              {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
+            </fieldset>
+          </StyledForm>
         )}
       </Composed>
     );
