@@ -179,13 +179,13 @@ class Signin extends Component {
               })
             }
           >
+            <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
             <fieldset
               disabled={loading || fbLoginLoading}
               aria-busy={loading || fbLoginLoading}
             >
               <Error error={error} />
               <Error error={fbLoginError} />
-
               {signinFields.map(({ type, name, placeholder, label }) => (
                 <div className="auth-input" key={name}>
                   <input
@@ -202,9 +202,10 @@ class Signin extends Component {
               <div className="auth-links">
                 {!modal && (
                   <Link href="/signup">
-                    <a>Tạo tài khoản mới.</a>
+                    <a>Tạo tài khoản mới</a>
                   </Link>
                 )}
+                ---
                 <Link href="/requestReset">
                   <a>
                     <span role="link" tabIndex={0} onClick={closeAuthModal}>

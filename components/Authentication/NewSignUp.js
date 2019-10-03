@@ -118,6 +118,8 @@ class Signup extends Component {
               }
               modal={modal}
             >
+              <p className="auth-title">Tạo tài khoản miễn phí</p>
+
               <fieldset
                 disabled={loading || fbLoginLoading}
                 aria-busy={loading || fbLoginLoading}
