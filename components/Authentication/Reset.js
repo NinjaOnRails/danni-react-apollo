@@ -31,38 +31,46 @@ class Reset extends Component {
       >
         {(resetPassword, { error, loading }) => {
           return (
-            <Container>
-              <Form
-                method="post"
-                onSubmit={async e => {
-                  e.preventDefault();
-                  const { data } = await resetPassword();
-                  if (data) {
-                    this.setState({
-                      confirmPassword: '',
-                      password: '',
-                    });
-                    router.push('/');
-                  }
-                }}
-              >
-                <fieldset disabled={loading} aria-busy={loading}>
-                  <Error error={error} />
-                  {resetFields.map(form => (
-                    <AuthForm
-                      key={form.name}
-                      form={form}
-                      saveToState={this.saveToState}
-                      value={this.state}
+            <Form
+              method="post"
+              onSubmit={async e => {
+                e.preventDefault();
+                const { data } = await resetPassword();
+                if (data) {
+                  this.setState({
+                    confirmPassword: '',
+                    password: '',
+                  });
+                  router.push('/');
+                }
+              }}
+            >
+              <p className="auth-title">Tạo mật khẩu mới</p>
+
+              <fieldset disabled={loading} aria-busy={loading}>
+                <Error error={error} />
+                {resetFields.map(({ type, name, label }) => (
+                  <div className="auth-input">
+                    <input
+                      type={type}
+                      name={name}
+                      value={this.state[name]}
+                      onChange={this.saveToState}
+                      data-empty={!this.state[name]}
                     />
-                  ))}
+                    <label htmlFor={name}>{label}</label>
+                  </div>
+                ))}
+                <div className="center">
                   <button type="submit">Set New Password</button>
-                </fieldset>
+                </div>
+              </fieldset>
+              <div className="auth-links">
                 <Link href="/requestReset">
                   <a>Resend reset password link</a>
                 </Link>
-              </Form>
-            </Container>
+              </div>
+            </Form>
           );
         }}
       </Mutation>

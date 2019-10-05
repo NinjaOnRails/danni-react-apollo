@@ -20,31 +20,40 @@ class Signup extends Component {
       <Mutation mutation={REQUEST_RESET_MUTATION} variables={this.state}>
         {(requestReset, { error, loading, called }) => {
           return (
-            <Container>
-              <Form
-                method="post"
-                onSubmit={async e => {
-                  e.preventDefault();
-                  await requestReset();
-                  this.setState({
-                    email: '',
-                  });
-                }}
+            <Form
+              method="post"
+              onSubmit={async e => {
+                e.preventDefault();
+                await requestReset();
+                this.setState({
+                  email: '',
+                });
+              }}
+            >
+              <fieldset
+                disabled={loading}
+                aria-busy={loading}
+                style={{ marginTop: '10px', textAlign: 'center' }}
               >
-                <fieldset disabled={loading} aria-busy={loading}>
-                  {!error && !loading && called && (
-                    <p>Hãy kiểm tra e-mail của bạn để tiếp tục.</p>
-                  )}
-                  <h2>Yêu cầu đổi mật khẩu</h2>
-                  <AuthForm
-                    form={signupFields[0]}
-                    saveToState={this.saveToState}
-                    value={this.state}
+                {!error && !loading && called && (
+                  <p>Hãy kiểm tra e-mail của bạn để tiếp tục.</p>
+                )}
+                <h2>Yêu cầu đổi mật khẩu</h2>
+                <div className="auth-input">
+                  <input
+                    type="email"
+                    name="email"
+                    value={this.state.email}
+                    onChange={this.saveToState}
+                    data-empty={this.state.email}
                   />
+                  <label htmlFor="email">E-mail</label>
+                </div>
+                <div className="center">
                   <button type="submit">Gửi</button>
-                </fieldset>
-              </Form>
-            </Container>
+                </div>
+              </fieldset>
+            </Form>
           );
         }}
       </Mutation>

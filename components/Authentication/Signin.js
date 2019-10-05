@@ -187,11 +187,10 @@ class Signin extends Component {
             >
               <Error error={error} />
               <Error error={fbLoginError} />
-              {signinFields.map(({ type, name, placeholder, label }) => (
+              {signinFields.map(({ type, name, label }) => (
                 <div className="auth-input" key={name}>
                   <input
                     type={type}
-                    // placeholder={placeholder}
                     name={name}
                     value={this.state[name]}
                     onChange={this.saveToState}
