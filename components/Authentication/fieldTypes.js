@@ -27,7 +27,7 @@ const signupFields = [
 ];
 
 const resetFields = [
-  { ...signupFields[3] },
+  { ...signupFields[3], label: 'Mật khẩu mới' },
   {
     label: 'Lập lại mật khẩu',
     type: 'password',
