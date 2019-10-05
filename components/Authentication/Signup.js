@@ -129,7 +129,6 @@ class Signup extends Component {
                   <div className="auth-input" key={name}>
                     <input
                       type={type}
-                      // placeholder={placeholder}
                       name={name}
                       value={this.state[name]}
                       onChange={this.saveToState}
