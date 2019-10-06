@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Loader, Dropdown } from 'semantic-ui-react';
-import Form from '../styles/Form';
+import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
 import { VIDEO_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
 import { CREATE_AUDIO_MUTATION } from '../../graphql/mutation';

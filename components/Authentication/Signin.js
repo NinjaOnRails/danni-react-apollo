@@ -216,7 +216,7 @@ class Signin extends Component {
               </div>
 
               <div className="center">
-                <button type="submit">
+                <button type="submit" disabled={loading || fbLoginLoading}>
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
                 <Button

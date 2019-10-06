@@ -4,7 +4,7 @@ import Router from 'next/router';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
-import Form from '../styles/Form';
+import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
 import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import AddVideoForm from './AddVideoForm';
