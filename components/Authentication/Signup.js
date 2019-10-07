@@ -54,7 +54,9 @@ class Signup extends Component {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     displayName: '',
+    passwordMatch: null,
   };
 
   componentDidMount() {
@@ -66,13 +68,21 @@ class Signup extends Component {
   };
 
   onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
+    const { password, confirmPassword } = this.state;
+    if (password !== confirmPassword) {
+      return this.setState({
+        passwordMatch: 'Mật khẩu không khớp! Xin vui lòng điền lại',
+      });
+    }
     e.preventDefault();
     const { data } = await signup();
     this.setState({
       name: '',
       email: '',
       password: '',
+      confirmPassword: '',
       displayName: '',
+      passwordMatch: null,
     });
     if (data) {
       trackSignUp(data.signup);
@@ -102,6 +112,7 @@ class Signup extends Component {
             },
           },
         }) => {
+          const { passwordMatch } = this.state;
           const { modal } = this.props;
           return (
             <StyledForm
@@ -125,6 +136,7 @@ class Signup extends Component {
               >
                 <Error error={error} />
                 <Error error={fbLoginError} />
+                <Error error={passwordMatch} />
                 {signupFields.map(({ name, type, label }) => (
                   <div className="auth-input" key={name}>
                     <input

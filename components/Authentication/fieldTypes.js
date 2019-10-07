@@ -24,6 +24,12 @@ const signupFields = [
     name: 'password',
     placeholder: 'bắt buộc',
   },
+  {
+    label: 'Lặp lại mật khẩu (bắt buộc)',
+    type: 'password',
+    name: 'confirmPassword',
+    placeholder: 'bắt buộc',
+  },
 ];
 
 const resetFields = [
