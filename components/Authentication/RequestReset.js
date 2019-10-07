@@ -50,7 +50,9 @@ class Signup extends Component {
                   <label htmlFor="email">E-mail</label>
                 </div>
                 <div className="center">
-                  <button type="submit">Gửi</button>
+                  <button type="submit" disabled={loading}>
+                    Gửi
+                  </button>
                 </div>
               </fieldset>
             </Form>

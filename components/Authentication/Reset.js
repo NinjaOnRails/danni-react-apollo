@@ -62,7 +62,9 @@ class Reset extends Component {
                   </div>
                 ))}
                 <div className="center">
-                  <button type="submit">Set New Password</button>
+                  <button type="submit" disabled={loading}>
+                    Set New Password
+                  </button>
                 </div>
               </fieldset>
               <div className="auth-links">

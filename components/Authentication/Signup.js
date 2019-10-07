@@ -138,9 +138,8 @@ class Signup extends Component {
                     <label htmlFor={name}>{label}</label>
                   </div>
                 ))}
-
                 <div className="center">
-                  <button type="submit">
+                  <button type="submit" disabled={loading || fbLoginLoading}>
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
                   <Button

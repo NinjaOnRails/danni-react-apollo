@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const StyledForm = styled.form`
+font-family: ${props => props.theme.font};
   margin: 0;
   width: 100%;
   fieldset {
@@ -12,6 +13,10 @@ const StyledForm = styled.form`
   .auth-input {
     margin: 0 16px 8px;
     position: relative;
+}
+h2{
+  font-family: ${props => props.theme.font};
+
 }
 
   input {
@@ -49,6 +54,9 @@ const StyledForm = styled.form`
     padding: 0.5rem 11.36px;
     margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
+  }
+  button:disabled{
+    background: lightgrey;
   }
   .center {
     text-align: center;
