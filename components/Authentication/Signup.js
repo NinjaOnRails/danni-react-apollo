@@ -278,6 +278,7 @@ class Signup extends Component {
                   >
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
+                  <p className="or">hoặc</p>
                   <Button
                     type="button"
                     color="facebook"
@@ -294,11 +295,8 @@ class Signup extends Component {
                     <Icon name="facebook" /> Dùng Facebook
                   </Button>
                 </div>
-                {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
-              </fieldset>
-              <div className="auth-links">
                 {!modal && (
-                  <>
+                  <div className="auth-links">
                     <Link href="/signin">
                       <a>Đã có tài khoản</a>
                     </Link>
@@ -309,9 +307,10 @@ class Signup extends Component {
                         </span>
                       </a>
                     </Link>
-                  </>
+                  </div>
                 )}
-              </div>
+                {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
+              </fieldset>
             </StyledForm>
           );
         }}

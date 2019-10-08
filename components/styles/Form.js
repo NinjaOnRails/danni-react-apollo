@@ -14,6 +14,10 @@ font-family: ${props => props.theme.font};
     margin: 0 16px 8px;
     position: relative;
   }
+  .auth-input:last-child {
+    margin-bottom: 10px;
+    background: #ff0000;
+  }
   h2 {
   font-family: ${props => props.theme.font};
   }
@@ -30,6 +34,9 @@ font-family: ${props => props.theme.font};
   }
   .invalid {
     border-bottom: 1px solid red;
+  }
+  .or {
+    margin: 5px 0;
   }
   label {
     color: #818384;
@@ -50,22 +57,23 @@ font-family: ${props => props.theme.font};
     border: 0;
     font-size: 1.8rem;
     font-weight: 600;
-    margin: 0 auto 10px auto;
+    /* margin: ${props => (props.modal ? '10px' : 0)} auto 0 auto; */
     font-size: 1.5rem;
     padding: 0.5rem 11.36px;
-    margin-bottom: 0.5rem;
+    /* margin-bottom: 0.5rem; */
     border-radius: 0.28571429rem;
     cursor: pointer;
+  }
+  button:hover{
+    background: #cc0000;
   }
   button:disabled{
     background: lightgrey;
     color: grey;
   }
-  button:hover{
-    background: #cc0000;
-  }
   .center {
     text-align: center;
+    margin-top: 20px;
   }
   input:focus + label,
   input[data-empty='false'] + label {
@@ -83,7 +91,12 @@ font-family: ${props => props.theme.font};
   }
   .auth-links a {
     color: #0079d3;
-    display: block;
+    display: inline-block;
+    width: fit-content;
+    margin: 0 10px 10px;
+    /* display: block;
+    width: fit-content;
+    margin:auto; */
   }
   .auth-links a:hover {
     color: #3394dc;
@@ -96,6 +109,12 @@ font-family: ${props => props.theme.font};
     line-height: 30px;
     margin: 16px;
     text-align: center;
+  }
+  @media(max-width: 639px){
+    fieldset {
+    width:  ${props => (props.modal ? '90%' : '70%')};
+    margin: auto
+  }
   }
 `;
 
