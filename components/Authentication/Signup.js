@@ -20,8 +20,10 @@ import {
   facebookLoginMutation,
   closeAuthModal,
 } from './Signin';
+
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
+import validateInput from './utils';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -69,9 +71,6 @@ class Signup extends Component {
         inputConfig: {
           ...signupFields.name,
         },
-        // validation: {
-        //   required: false,
-        // },
         modified: false,
         valid: true,
         value: '',
@@ -80,9 +79,6 @@ class Signup extends Component {
         inputConfig: {
           ...signupFields.displayName,
         },
-        // validation: {
-        //   required: false,
-        // },
         modified: false,
         valid: false,
         value: '',
@@ -111,7 +107,7 @@ class Signup extends Component {
       },
     },
     formValid: false,
-    confirmMatch: null,
+    passwordsMatch: null,
   };
 
   componentDidMount() {
@@ -139,7 +135,7 @@ class Signup extends Component {
         ...updatedForm[input],
       };
       updatedInput.value = eventValue;
-      updatedInput.valid = this.checkValidity(
+      updatedInput.valid = validateInput(
         updatedInput.value,
         updatedInput.validation
       );
@@ -153,21 +149,6 @@ class Signup extends Component {
     });
   };
 
-  checkValidity = (value, rule) => {
-    let isValid = true;
-    if (!rule) {
-      return true;
-    }
-    if (rule.required) {
-      isValid = value.trim() !== '' && isValid;
-    }
-    if (rule.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid;
-    }
-    return isValid;
-  };
-
   onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
     const {
       signupForm: { password, confirmPassword, email, name, displayName },
@@ -175,11 +156,21 @@ class Signup extends Component {
     e.preventDefault();
     if (password.value !== confirmPassword.value) {
       this.setState({
-        formValid: false,
-        confirmMatch: { message: 'Mật khẩu không khớp' },
+        signupForm: {
+          password: { ...password, value: '', valid: false, modified: false },
+          confirmPassword: {
+            ...confirmPassword,
+            value: '',
+            valid: false,
+            modified: false,
+          },
+        },
+        passwordsMatch: {
+          message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+        },
       });
     } else {
-      this.setState({ confirmMatch: null });
+      this.setState({ passwordsMatch: null });
       const { data } = await signup();
       this.setState({
         signupForm: {
@@ -194,6 +185,7 @@ class Signup extends Component {
             modified: false,
           },
         },
+        formValid: false,
       });
       if (data) {
         trackSignUp(data.signup);
@@ -208,13 +200,19 @@ class Signup extends Component {
   };
 
   render() {
-    const { formValid, signupForm, confirmMatch } = this.state;
+    const { formValid, signupForm, passwordsMatch } = this.state;
     const { modal } = this.props;
     const variables = {};
+    const formElArr = [];
+
     for (let key in signupForm) {
       variables[key] = signupForm[key].value;
+      formElArr.push({
+        id: key,
+        input: signupForm[key],
+      });
     }
-    console.log(signupForm);
+
     return (
       <Composed variables={variables}>
         {({
@@ -233,13 +231,6 @@ class Signup extends Component {
             },
           },
         }) => {
-          const formElArr = [];
-          for (let key in signupForm) {
-            formElArr.push({
-              id: key,
-              input: signupForm[key],
-            });
-          }
           return (
             <StyledForm
               method="post"
@@ -262,7 +253,7 @@ class Signup extends Component {
               >
                 <Error error={error} />
                 <Error error={fbLoginError} />
-                <Error error={confirmMatch} />
+                <Error error={passwordsMatch} />
                 {formElArr.map(({ id, input }) => (
                   <AuthForm
                     key={id}
@@ -278,7 +269,11 @@ class Signup extends Component {
                 <div className="center">
                   <button
                     type="submit"
-                    disabled={loading || fbLoginLoading || !formValid}
+                    disabled={
+                      loading ||
+                      fbLoginLoading ||
+                      (!formValid && !passwordsMatch)
+                    }
                   >
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
@@ -306,7 +301,6 @@ class Signup extends Component {
                     <Link href="/signin">
                       <a>Đã có tài khoản</a>
                     </Link>
-                    ---
                     <Link href="/requestReset">
                       <a>
                         <span role="link" tabIndex={0} onClick={closeAuthModal}>

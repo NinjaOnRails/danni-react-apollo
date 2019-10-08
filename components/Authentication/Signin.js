@@ -19,6 +19,8 @@ import {
   SIGNIN_MUTATION,
 } from '../../graphql/mutation';
 import StyledForm from '../styles/Form';
+import AuthForm from './AuthenticationForm';
+import validateInput from './utils';
 
 /* eslint-disable */
 const signinMutation = ({ render, variables }) => (
@@ -110,12 +112,60 @@ const onFacebookLoginClick = ({
 
 class Signin extends Component {
   state = {
-    email: '',
-    password: '',
+    signinForm: {
+      email: {
+        inputConfig: {
+          ...signinFields.email,
+        },
+        validation: {
+          required: true,
+          isEmail: true,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+      password: {
+        inputConfig: {
+          ...signinFields.password,
+        },
+        validation: {
+          required: true,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+    },
+    formValid: false,
   };
 
   saveToState = e => {
     this.setState({ [e.target.name]: e.target.value });
+  };
+
+  inputchangeHandler = (e, input) => {
+    const eventValue = e.target.value;
+    this.setState(prevState => {
+      const updatedForm = {
+        ...prevState.signinForm,
+      };
+      const updatedInput = {
+        ...updatedForm[input],
+      };
+      updatedInput.value = eventValue;
+      updatedInput.valid = validateInput(
+        updatedInput.value,
+        updatedInput.validation
+      );
+      updatedInput.modified = true;
+      updatedForm[input] = updatedInput;
+      let formValid = true;
+      for (let input in updatedForm) {
+        formValid = updatedForm[input].valid && formValid;
+      }
+      return { signinForm: updatedForm, formValid };
+    });
   };
 
   onSubmit = async ({
@@ -126,11 +176,16 @@ class Signin extends Component {
     noRedirect,
     closeAuthModal,
   }) => {
+    const {
+      signinForm: { password, email },
+    } = this.state;
     e.preventDefault();
     const { data } = await signin();
     this.setState({
-      email: '',
-      password: '',
+      signinForm: {
+        email: { ...email, value: '', valid: false, modified: false },
+        password: { ...password, value: '', valid: false, modified: false },
+      },
     });
     if (data) {
       trackSignIn(data.signin.displayName);
@@ -147,8 +202,18 @@ class Signin extends Component {
 
   render() {
     const { noRedirect, modal } = this.props;
+    const { formValid, signinForm } = this.state;
+    const variables = {};
+    const formElArr = [];
+    for (let key in signinForm) {
+      variables[key] = signinForm[key].value;
+      formElArr.push({
+        id: key,
+        input: signinForm[key],
+      });
+    }
     return (
-      <Composed variables={this.state}>
+      <Composed variables={variables}>
         {({
           client,
           localState: { data },
@@ -187,7 +252,7 @@ class Signin extends Component {
             >
               <Error error={error} />
               <Error error={fbLoginError} />
-              {signinFields.map(({ type, name, label }) => (
+              {/* {signinFields.map(({ type, name, label }) => (
                 <div className="auth-input" key={name}>
                   <input
                     type={type}
@@ -198,6 +263,17 @@ class Signin extends Component {
                   />
                   <label htmlFor={name}>{label}</label>
                 </div>
+              ))} */}
+              {formElArr.map(({ id, input }) => (
+                <AuthForm
+                  key={id}
+                  value={input.value}
+                  config={input.inputConfig}
+                  shouldValidate={input.validation}
+                  invalid={!input.valid}
+                  saveToState={e => this.inputchangeHandler(e, id)}
+                  touched={input.modified}
+                />
               ))}
               <div className="auth-links">
                 {!modal && (
@@ -205,7 +281,6 @@ class Signin extends Component {
                     <a>Tạo tài khoản mới</a>
                   </Link>
                 )}
-                ---
                 <Link href="/requestReset">
                   <a>
                     <span role="link" tabIndex={0} onClick={closeAuthModal}>
@@ -216,7 +291,10 @@ class Signin extends Component {
               </div>
 
               <div className="center">
-                <button type="submit" disabled={loading || fbLoginLoading}>
+                <button
+                  type="submit"
+                  disabled={loading || fbLoginLoading || !formValid}
+                >
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
                 <Button

@@ -12,7 +12,9 @@ const AuthForm = ({
 }) => (
   <div className="auth-input">
     <input
-      className={`${shouldValidate && invalid && touched ? 'invalid' : null}`}
+      className={`${
+        shouldValidate.required && invalid && touched ? 'invalid' : ''
+      }`}
       type={config.type}
       name={config.name}
       value={value}
@@ -26,13 +28,14 @@ const AuthForm = ({
 
 AuthForm.defaultProps = {
   autoComplete: 'on',
+  shouldValidate: { required: false },
 };
 
 AuthForm.propTypes = {
   config: PropTypes.object.isRequired,
   value: PropTypes.string.isRequired,
   saveToState: PropTypes.func.isRequired,
-  shouldValidate: PropTypes.bool.isRequired,
+  shouldValidate: PropTypes.object,
   invalid: PropTypes.bool.isRequired,
   touched: PropTypes.bool.isRequired,
   autoComplete: PropTypes.string,

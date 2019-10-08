@@ -78,6 +78,7 @@ font-family: ${props => props.theme.font};
   }
   .auth-links a {
     color: #0079d3;
+    display: block;
   }
   .auth-links a:hover {
     color: #3394dc;

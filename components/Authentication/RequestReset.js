@@ -1,23 +1,67 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import { Container } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import { signupFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { REQUEST_RESET_MUTATION } from '../../graphql/mutation';
+import validateInput from './utils';
 
-class Signup extends Component {
+class RequestReset extends Component {
   state = {
-    email: '',
+    requestResetForm: {
+      email: {
+        inputConfig: {
+          ...signupFields.email,
+        },
+        validation: {
+          required: true,
+          isEmail: true,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+    },
+    formValid: false,
   };
 
   saveToState = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  inputchangeHandler = (e, input) => {
+    const eventValue = e.target.value;
+    this.setState(prevState => {
+      const updatedForm = {
+        ...prevState.requestResetForm,
+      };
+      const updatedInput = {
+        ...updatedForm[input],
+      };
+      updatedInput.value = eventValue;
+      updatedInput.valid = validateInput(
+        updatedInput.value,
+        updatedInput.validation
+      );
+      updatedInput.modified = true;
+      updatedForm[input] = updatedInput;
+      let formValid = true;
+      for (let input in updatedForm) {
+        formValid = updatedForm[input].valid && formValid;
+      }
+      return { requestResetForm: updatedForm, formValid };
+    });
+  };
+
   render() {
+    const {
+      formValid,
+      requestResetForm: {
+        email: { value, inputConfig, modified, valid, validation },
+      },
+    } = this.state;
     return (
-      <Mutation mutation={REQUEST_RESET_MUTATION} variables={this.state}>
+      <Mutation mutation={REQUEST_RESET_MUTATION} variables={{ email: value }}>
         {(requestReset, { error, loading, called }) => {
           return (
             <Form
@@ -26,7 +70,16 @@ class Signup extends Component {
                 e.preventDefault();
                 await requestReset();
                 this.setState({
-                  email: '',
+                  requestResetForm: {
+                    email: {
+                      value: '',
+                      inputConfig,
+                      modified: false,
+                      valid: false,
+                      validation,
+                    },
+                  },
+                  formValid: false,
                 });
               }}
             >
@@ -39,18 +92,16 @@ class Signup extends Component {
                   <p>Hãy kiểm tra e-mail của bạn để tiếp tục.</p>
                 )}
                 <h2>Yêu cầu đổi mật khẩu</h2>
-                <div className="auth-input">
-                  <input
-                    type="email"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.saveToState}
-                    data-empty={this.state.email}
-                  />
-                  <label htmlFor="email">E-mail</label>
-                </div>
+                <AuthForm
+                  value={value}
+                  config={inputConfig}
+                  shouldValidate={validation}
+                  invalid={!valid}
+                  saveToState={e => this.inputchangeHandler(e, 'email')}
+                  touched={modified}
+                />
                 <div className="center">
-                  <button type="submit" disabled={loading}>
+                  <button type="submit" disabled={loading || !formValid}>
                     Gửi
                   </button>
                 </div>
@@ -63,4 +114,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default RequestReset;
