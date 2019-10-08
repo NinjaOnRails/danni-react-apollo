@@ -6,7 +6,7 @@ const StyledModal = styled.div`
     z-index: 500;
     width: 40%;
     left: 30%;
-    top: 20%;
+    top: 10%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     transform: ${props =>
@@ -67,13 +67,20 @@ const StyledModal = styled.div`
     text-decoration: none;
     font-family: ${props => props.theme.font};
   }
+  a:active,
+  a:focus {
+    outline: 0;
+    border: none;
+    -moz-outline-style: none;
+  }
+
   .auth-modes .active {
     background-color: ${props => props.theme.red};
     color: #fff;
   }
   i.large.icon,
   i.large.icons {
-    top: -10%;
+    top: -30px;
     position: absolute;
     right: -5%;
     font-size: 2em;

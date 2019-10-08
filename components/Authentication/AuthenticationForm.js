@@ -2,23 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const AuthForm = ({
-  form: { type, name, label, placeholder },
   value,
+  config,
   saveToState,
   autoComplete,
+  shouldValidate,
+  invalid,
+  touched,
 }) => (
-  <label htmlFor={name}>
-    {label}
+  <div className="auth-input">
     <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      value={value[name]}
+      className={`${shouldValidate && invalid && touched ? 'invalid' : null}`}
+      type={config.type}
+      name={config.name}
+      value={value}
       onChange={saveToState}
-      autoFocus={type === 'email'}
+      data-empty={!value}
       autoComplete={autoComplete}
     />
-  </label>
+    <label htmlFor={config.name}>{config.label}</label>
+  </div>
 );
 
 AuthForm.defaultProps = {
@@ -26,9 +29,12 @@ AuthForm.defaultProps = {
 };
 
 AuthForm.propTypes = {
-  form: PropTypes.object.isRequired,
-  value: PropTypes.object.isRequired,
+  config: PropTypes.object.isRequired,
+  value: PropTypes.string.isRequired,
   saveToState: PropTypes.func.isRequired,
+  shouldValidate: PropTypes.bool.isRequired,
+  invalid: PropTypes.bool.isRequired,
+  touched: PropTypes.bool.isRequired,
   autoComplete: PropTypes.string,
 };
 
