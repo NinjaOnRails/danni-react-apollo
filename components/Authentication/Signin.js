@@ -299,21 +299,6 @@ class Signin extends Component {
                   <Icon name="facebook" /> Dùng Facebook
                 </Button>
               </div>
-              <div className="auth-links">
-                {!modal && (
-                  <Link href="/signup">
-                    <a>Tạo tài khoản mới</a>
-                  </Link>
-                )}
-                <Link href="/requestReset">
-                  <a>
-                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Quên mật khẩu?
-                    </span>
-                  </a>
-                </Link>
-              </div>
-
               {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
 
               <div className="auth-links">
