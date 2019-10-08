@@ -33,7 +33,7 @@ const DisplayError = ({ error }) => {
   }
   return (
     <Message negative>
-      <StyledMessage>Holy Moly!</StyledMessage>
+      {/* <StyledMessage>Holy Moly!</StyledMessage> */}
       <audio
         autoPlay
         src="https://res.cloudinary.com/danni/video/upload/v1566550191/iam2kigyc7gwxrjkmi8j.mp3"

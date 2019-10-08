@@ -20,7 +20,10 @@ import {
   facebookLoginMutation,
   closeAuthModal,
 } from './Signin';
+
 import StyledForm from '../styles/Form';
+import AuthForm from './AuthenticationForm';
+import validateInput from './utils';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -51,41 +54,168 @@ const Composed = adopt({
 
 class Signup extends Component {
   state = {
-    name: '',
-    email: '',
-    password: '',
-    displayName: '',
+    signupForm: {
+      email: {
+        inputConfig: {
+          ...signupFields.email,
+        },
+        validation: {
+          required: true,
+          isEmail: true,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+      name: {
+        inputConfig: {
+          ...signupFields.name,
+        },
+        modified: false,
+        valid: true,
+        value: '',
+      },
+      displayName: {
+        inputConfig: {
+          ...signupFields.displayName,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+      password: {
+        inputConfig: {
+          ...signupFields.password,
+        },
+        validation: {
+          required: true,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+      confirmPassword: {
+        inputConfig: {
+          ...signupFields.confirmPassword,
+        },
+        modified: false,
+        validation: {
+          required: true,
+        },
+        valid: false,
+        value: '',
+      },
+    },
+    formValid: false,
+    passwordsMatch: null,
   };
 
   componentDidMount() {
-    this.setState({ displayName: generateName() });
+    const { signupForm } = this.state;
+    const { displayName } = signupForm;
+    this.setState({
+      signupForm: {
+        ...signupForm,
+        displayName: { ...displayName, value: generateName(), valid: true },
+      },
+    });
   }
 
   saveToState = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
-    e.preventDefault();
-    const { data } = await signup();
-    if (data) {
-      this.setState({
-        name: '',
-        email: '',
-        password: '',
-        displayName: '',
+  inputchangeHandler = (e, input) => {
+    const eventValue = e.target.value;
+    this.setState(prevState => {
+      const updatedForm = {
+        ...prevState.signupForm,
+      };
+      const updatedInput = {
+        ...updatedForm[input],
+      };
+      updatedInput.value = eventValue;
+      updatedInput.valid = validateInput(
+        updatedInput.value,
+        updatedInput.validation
+      );
+      updatedInput.modified = true;
+      updatedForm[input] = updatedInput;
+      let formValid = true;
+      Object.keys(updatedForm).forEach(key => {
+        formValid = updatedForm[key].valid && formValid;
       });
-      trackSignUp(data.signup);
-      Router.push(localStorage.getItem('previousPage') || previousPage || '/');
-      localStorage.removeItem('previousPage');
-      client.writeData({ data: { previousPage: null } });
-      closeAuthModal();
+      return { signupForm: updatedForm, formValid };
+    });
+  };
+
+  onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
+    const {
+      signupForm,
+      signupForm: { password, confirmPassword, email, name, displayName },
+    } = this.state;
+    e.preventDefault();
+    if (password.value !== confirmPassword.value) {
+      this.setState({
+        signupForm: {
+          ...signupForm,
+          password: { ...password, value: '', valid: false, modified: false },
+          confirmPassword: {
+            ...confirmPassword,
+            value: '',
+            valid: false,
+            modified: false,
+          },
+        },
+        passwordsMatch: {
+          message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+        },
+      });
+    } else {
+      this.setState({ passwordsMatch: null });
+      const { data } = await signup();
+      this.setState({
+        signupForm: {
+          email: { ...email, value: '', valid: false, modified: false },
+          name: { ...name, value: '', modified: false },
+          displayName: { ...displayName, value: '', modified: false },
+          password: { ...password, value: '', valid: false, modified: false },
+          confirmPassword: {
+            ...confirmPassword,
+            value: '',
+            valid: false,
+            modified: false,
+          },
+        },
+        formValid: false,
+      });
+      if (data) {
+        trackSignUp(data.signup);
+        Router.push(
+          localStorage.getItem('previousPage') || previousPage || '/'
+        );
+        localStorage.removeItem('previousPage');
+        client.writeData({ data: { previousPage: null } });
+        closeAuthModal();
+      }
     }
   };
 
   render() {
+    const { formValid, signupForm, passwordsMatch } = this.state;
+    const { modal } = this.props;
+    const variables = {};
+    const formElArr = [];
+
+    Object.keys(signupForm).forEach(key => {
+      variables[key] = signupForm[key].value;
+      formElArr.push({
+        id: key,
+        input: signupForm[key],
+      });
+    });
     return (
-      <Composed variables={this.state}>
+      <Composed variables={variables}>
         {({
           client,
           localState: { data },
@@ -102,7 +232,6 @@ class Signup extends Component {
             },
           },
         }) => {
-          const { modal } = this.props;
           return (
             <StyledForm
               method="post"
@@ -125,21 +254,28 @@ class Signup extends Component {
               >
                 <Error error={error} />
                 <Error error={fbLoginError} />
-                {signupFields.map(({ name, type, label }) => (
-                  <div className="auth-input" key={name}>
-                    <input
-                      type={type}
-                      name={name}
-                      value={this.state[name]}
-                      onChange={this.saveToState}
-                      data-empty={!this.state[name]}
-                      autoComplete="new-password"
-                    />
-                    <label htmlFor={name}>{label}</label>
-                  </div>
+                <Error error={passwordsMatch} />
+                {formElArr.map(({ id, input }) => (
+                  <AuthForm
+                    key={id}
+                    value={input.value}
+                    config={input.inputConfig}
+                    shouldValidate={input.validation}
+                    invalid={!input.valid}
+                    saveToState={e => this.inputchangeHandler(e, id)}
+                    touched={input.modified}
+                    autoComplete="new-password"
+                  />
                 ))}
                 <div className="center">
-                  <button type="submit" disabled={loading || fbLoginLoading}>
+                  <button
+                    type="submit"
+                    disabled={
+                      loading ||
+                      fbLoginLoading ||
+                      (!formValid && !passwordsMatch)
+                    }
+                  >
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
                   <Button
@@ -166,7 +302,6 @@ class Signup extends Component {
                     <Link href="/signin">
                       <a>Đã có tài khoản</a>
                     </Link>
-                    ---
                     <Link href="/requestReset">
                       <a>
                         <span role="link" tabIndex={0} onClick={closeAuthModal}>

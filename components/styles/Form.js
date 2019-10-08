@@ -13,12 +13,10 @@ font-family: ${props => props.theme.font};
   .auth-input {
     margin: 0 16px 8px;
     position: relative;
-}
-h2{
+  }
+  h2 {
   font-family: ${props => props.theme.font};
-
-}
-
+  }
   input {
     border: none;
     border-bottom: 1px solid #000;
@@ -29,6 +27,9 @@ h2{
     padding: 22px 36px 10px 12px;
     width: 100%;
     /* ${props => (props.modal ? '100%' : '50%')}; */
+  }
+  .invalid {
+    border-bottom: 1px solid red;
   }
   label {
     color: #818384;
@@ -54,9 +55,14 @@ h2{
     padding: 0.5rem 11.36px;
     margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
+    cursor: pointer;
   }
   button:disabled{
     background: lightgrey;
+    color: grey;
+  }
+  button:hover{
+    background: #cc0000;
   }
   .center {
     text-align: center;
@@ -77,10 +83,12 @@ h2{
   }
   .auth-links a {
     color: #0079d3;
+    display: block;
   }
   .auth-links a:hover {
     color: #3394dc;
   }
+  
   .auth-title {
     color: #000;
     font-size: 2.8rem;
