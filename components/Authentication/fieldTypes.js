@@ -17,7 +17,7 @@ const signupFields = {
     icon: 'user',
   },
   password: {
-    label: 'Mật khẩu',
+    label: 'Mật khẩu (ít nhất 6 ký tự)',
     type: 'password',
     name: 'password',
   },
@@ -29,7 +29,10 @@ const signupFields = {
 };
 
 const resetFields = {
-  password: { ...signupFields.password, label: 'Mật khẩu mới' },
+  password: {
+    ...signupFields.password,
+    label: 'Mật khẩu mới (ít nhất 6 ký tự)',
+  },
   confirmPassword: {
     label: 'Lặp lại mật khẩu',
     type: 'password',
@@ -39,7 +42,7 @@ const resetFields = {
 
 const signinFields = {
   email: { ...signupFields.email },
-  password: { ...signupFields.password },
+  password: { ...signupFields.password, label: 'Mật khẩu' },
 };
 
 export { signupFields, resetFields, signinFields };

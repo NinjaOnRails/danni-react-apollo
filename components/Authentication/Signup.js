@@ -89,6 +89,7 @@ class Signup extends Component {
         },
         validation: {
           required: true,
+          minLength: 6,
         },
         modified: false,
         valid: false,
@@ -101,6 +102,7 @@ class Signup extends Component {
         modified: false,
         validation: {
           required: true,
+          minLength: 6,
         },
         valid: false,
         value: '',
@@ -159,17 +161,17 @@ class Signup extends Component {
       this.setState({
         signupForm: {
           ...signupForm,
-          password: { ...password, value: '', valid: false, modified: false },
+          password: { ...password, value: '', valid: false },
           confirmPassword: {
             ...confirmPassword,
             value: '',
             valid: false,
-            modified: false,
           },
         },
         passwordsMatch: {
           message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
         },
+        formValid: false,
       });
     } else {
       this.setState({ passwordsMatch: null });
@@ -179,7 +181,11 @@ class Signup extends Component {
           signupForm: {
             email: { ...email, value: '', valid: false, modified: false },
             name: { ...name, value: '', modified: false },
-            displayName: { ...displayName, value: '', modified: false },
+            displayName: {
+              ...displayName,
+              value: generateName(),
+              modified: false,
+            },
             password: { ...password, value: '', valid: false, modified: false },
             confirmPassword: {
               ...confirmPassword,
@@ -206,7 +212,6 @@ class Signup extends Component {
     const { modal } = this.props;
     const variables = {};
     const formElArr = [];
-
     Object.keys(signupForm).forEach(key => {
       variables[key] = signupForm[key].value;
       formElArr.push({
@@ -270,11 +275,7 @@ class Signup extends Component {
                 <div className="center">
                   <button
                     type="submit"
-                    disabled={
-                      loading ||
-                      fbLoginLoading ||
-                      (!formValid && !passwordsMatch)
-                    }
+                    disabled={loading || fbLoginLoading || !formValid}
                   >
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
