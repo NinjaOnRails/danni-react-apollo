@@ -68,13 +68,13 @@ class Signup extends Component {
   onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
     e.preventDefault();
     const { data } = await signup();
-    this.setState({
-      name: '',
-      email: '',
-      password: '',
-      displayName: '',
-    });
     if (data) {
+      this.setState({
+        name: '',
+        email: '',
+        password: '',
+        displayName: '',
+      });
       trackSignUp(data.signup);
       Router.push(localStorage.getItem('previousPage') || previousPage || '/');
       localStorage.removeItem('previousPage');
