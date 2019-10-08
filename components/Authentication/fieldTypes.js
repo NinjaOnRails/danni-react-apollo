@@ -12,7 +12,7 @@ const signupFields = {
     icon: 'user',
   },
   displayName: {
-    label: 'Tên hiển thị (bắt buộc)',
+    label: 'Tên hiển thị',
     type: 'displayName',
     name: 'displayName',
     icon: 'user',
@@ -35,7 +35,7 @@ const signupFields = {
 const resetFields = {
   password: { ...signupFields.password, label: 'Mật khẩu mới (bắt buộc)' },
   confirmPassword: {
-    label: 'Lập lại mật khẩu (bắt buộc)',
+    label: 'Lập lại mật khẩu (bắt buộc) ',
     type: 'password',
     name: 'confirmPassword',
     placeholder: 'bắt buộc',
