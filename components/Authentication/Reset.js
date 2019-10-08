@@ -74,7 +74,7 @@ class Reset extends Component {
       resetForm: { password, confirmPassword },
     } = this.state;
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (password.value !== confirmPassword.value) {
       this.setState({
         resetForm: {
           password: { ...password, value: '', valid: false, modified: false },
