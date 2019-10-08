@@ -275,20 +275,6 @@ class Signin extends Component {
                   touched={input.modified}
                 />
               ))}
-              <div className="auth-links">
-                {!modal && (
-                  <Link href="/signup">
-                    <a>Tạo tài khoản mới</a>
-                  </Link>
-                )}
-                <Link href="/requestReset">
-                  <a>
-                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Quên mật khẩu?
-                    </span>
-                  </a>
-                </Link>
-              </div>
 
               <div className="center">
                 <button
@@ -297,6 +283,7 @@ class Signin extends Component {
                 >
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
+                <p className="or">hoặc</p>
                 <Button
                   type="button"
                   color="facebook"
@@ -312,6 +299,20 @@ class Signin extends Component {
                 >
                   <Icon name="facebook" /> Dùng Facebook
                 </Button>
+              </div>
+              <div className="auth-links">
+                {!modal && (
+                  <Link href="/signup">
+                    <a>Tạo tài khoản mới</a>
+                  </Link>
+                )}
+                <Link href="/requestReset">
+                  <a>
+                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                      Quên mật khẩu?
+                    </span>
+                  </a>
+                </Link>
               </div>
 
               {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
