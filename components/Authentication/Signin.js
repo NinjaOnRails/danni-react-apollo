@@ -161,9 +161,9 @@ class Signin extends Component {
       updatedInput.modified = true;
       updatedForm[input] = updatedInput;
       let formValid = true;
-      for (let input in updatedForm) {
-        formValid = updatedForm[input].valid && formValid;
-      }
+      Object.keys(updatedForm).forEach(key => {
+        formValid = updatedForm[key].valid && formValid;
+      });
       return { signinForm: updatedForm, formValid };
     });
   };
@@ -205,13 +205,13 @@ class Signin extends Component {
     const { formValid, signinForm } = this.state;
     const variables = {};
     const formElArr = [];
-    for (let key in signinForm) {
+    Object.keys(signinForm).forEach(key => {
       variables[key] = signinForm[key].value;
       formElArr.push({
         id: key,
         input: signinForm[key],
       });
-    }
+    });
     return (
       <Composed variables={variables}>
         {({

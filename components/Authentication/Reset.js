@@ -62,9 +62,9 @@ class Reset extends Component {
       updatedInput.modified = true;
       updatedForm[input] = updatedInput;
       let formValid = true;
-      for (let input in updatedForm) {
-        formValid = updatedForm[input].valid && formValid;
-      }
+      Object.keys(updatedForm).forEach(key => {
+        formValid = updatedForm[key].valid && formValid;
+      });
       return { resetForm: updatedForm, formValid };
     });
   };
@@ -121,13 +121,13 @@ class Reset extends Component {
     const { formValid, resetForm, passwordsMatch } = this.state;
     const variables = {};
     const formElArr = [];
-    for (let key in resetForm) {
+    Object.keys(resetForm).forEach(key => {
       variables[key] = resetForm[key].value;
       formElArr.push({
         id: key,
         input: resetForm[key],
       });
-    }
+    });
 
     const { router } = this.props;
     return (

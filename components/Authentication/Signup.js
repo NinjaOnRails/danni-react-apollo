@@ -142,21 +142,23 @@ class Signup extends Component {
       updatedInput.modified = true;
       updatedForm[input] = updatedInput;
       let formValid = true;
-      for (let input in updatedForm) {
-        formValid = updatedForm[input].valid && formValid;
-      }
+      Object.keys(updatedForm).forEach(key => {
+        formValid = updatedForm[key].valid && formValid;
+      });
       return { signupForm: updatedForm, formValid };
     });
   };
 
   onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
     const {
+      signupForm,
       signupForm: { password, confirmPassword, email, name, displayName },
     } = this.state;
     e.preventDefault();
     if (password.value !== confirmPassword.value) {
       this.setState({
         signupForm: {
+          ...signupForm,
           password: { ...password, value: '', valid: false, modified: false },
           confirmPassword: {
             ...confirmPassword,
@@ -205,14 +207,13 @@ class Signup extends Component {
     const variables = {};
     const formElArr = [];
 
-    for (let key in signupForm) {
+    Object.keys(signupForm).forEach(key => {
       variables[key] = signupForm[key].value;
       formElArr.push({
         id: key,
         input: signupForm[key],
       });
-    }
-
+    });
     return (
       <Composed variables={variables}>
         {({

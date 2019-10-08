@@ -46,9 +46,9 @@ class RequestReset extends Component {
       updatedInput.modified = true;
       updatedForm[input] = updatedInput;
       let formValid = true;
-      for (let input in updatedForm) {
-        formValid = updatedForm[input].valid && formValid;
-      }
+      Object.keys(updatedForm).forEach(key => {
+        formValid = updatedForm[key].valid && formValid;
+      });
       return { requestResetForm: updatedForm, formValid };
     });
   };
