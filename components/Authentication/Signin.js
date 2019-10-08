@@ -181,13 +181,13 @@ class Signin extends Component {
     } = this.state;
     e.preventDefault();
     const { data } = await signin();
-    this.setState({
-      signinForm: {
-        email: { ...email, value: '', valid: false, modified: false },
-        password: { ...password, value: '', valid: false, modified: false },
-      },
-    });
     if (data) {
+      this.setState({
+        signinForm: {
+          email: { ...email, value: '', valid: false, modified: false },
+          password: { ...password, value: '', valid: false, modified: false },
+        },
+      });
       trackSignIn(data.signin.displayName);
       closeAuthModal();
       if (!noRedirect) {
@@ -275,21 +275,6 @@ class Signin extends Component {
                   touched={input.modified}
                 />
               ))}
-              <div className="auth-links">
-                {!modal && (
-                  <Link href="/signup">
-                    <a>Tạo tài khoản mới</a>
-                  </Link>
-                )}
-                <Link href="/requestReset">
-                  <a>
-                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Quên mật khẩu?
-                    </span>
-                  </a>
-                </Link>
-              </div>
-
               <div className="center">
                 <button
                   type="submit"
@@ -315,6 +300,21 @@ class Signin extends Component {
               </div>
 
               {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
+
+              <div className="auth-links">
+                {!modal && (
+                  <Link href="/signup">
+                    <a>Tạo tài khoản mới</a>
+                  </Link>
+                )}
+                <Link href="/requestReset">
+                  <a>
+                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                      Quên mật khẩu?
+                    </span>
+                  </a>
+                </Link>
+              </div>
             </fieldset>
           </StyledForm>
         )}

@@ -1,44 +1,39 @@
 const signupFields = {
   email: {
-    label: 'E-mail (bắt buộc)',
+    label: 'E-mail',
     type: 'email',
     name: 'email',
-    placeholder: 'bắt buộc',
   },
   name: {
-    label: 'Tên',
+    label: 'Tên (không bắt buộc)',
     type: 'name',
     name: 'name',
     icon: 'user',
   },
   displayName: {
-    label: 'Tên hiển thị (bắt buộc)',
+    label: 'Tên hiển thị',
     type: 'displayName',
     name: 'displayName',
     icon: 'user',
-    placeholder: 'bắt buộc',
   },
   password: {
-    label: 'Mật khẩu (bắt buộc)',
+    label: 'Mật khẩu',
     type: 'password',
     name: 'password',
-    placeholder: 'bắt buộc',
   },
   confirmPassword: {
-    label: 'Lặp lại mật khẩu (bắt buộc)',
+    label: 'Lặp lại mật khẩu',
     type: 'password',
     name: 'confirmPassword',
-    placeholder: 'bắt buộc',
   },
 };
 
 const resetFields = {
-  password: { ...signupFields.password, label: 'Mật khẩu mới (bắt buộc)' },
+  password: { ...signupFields.password, label: 'Mật khẩu mới' },
   confirmPassword: {
-    label: 'Lập lại mật khẩu (bắt buộc)',
+    label: 'Lặp lại mật khẩu',
     type: 'password',
     name: 'confirmPassword',
-    placeholder: 'bắt buộc',
   },
 };
 

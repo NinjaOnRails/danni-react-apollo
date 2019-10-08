@@ -174,22 +174,22 @@ class Signup extends Component {
     } else {
       this.setState({ passwordsMatch: null });
       const { data } = await signup();
-      this.setState({
-        signupForm: {
-          email: { ...email, value: '', valid: false, modified: false },
-          name: { ...name, value: '', modified: false },
-          displayName: { ...displayName, value: '', modified: false },
-          password: { ...password, value: '', valid: false, modified: false },
-          confirmPassword: {
-            ...confirmPassword,
-            value: '',
-            valid: false,
-            modified: false,
-          },
-        },
-        formValid: false,
-      });
       if (data) {
+        this.setState({
+          signupForm: {
+            email: { ...email, value: '', valid: false, modified: false },
+            name: { ...name, value: '', modified: false },
+            displayName: { ...displayName, value: '', modified: false },
+            password: { ...password, value: '', valid: false, modified: false },
+            confirmPassword: {
+              ...confirmPassword,
+              value: '',
+              valid: false,
+              modified: false,
+            },
+          },
+          formValid: false,
+        });
         trackSignUp(data.signup);
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'

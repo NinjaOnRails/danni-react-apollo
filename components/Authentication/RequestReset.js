@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
+import { Message } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import { signupFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
@@ -89,7 +90,9 @@ class RequestReset extends Component {
                 style={{ marginTop: '10px', textAlign: 'center' }}
               >
                 {!error && !loading && called && (
-                  <p>Hãy kiểm tra e-mail của bạn để tiếp tục.</p>
+                  <Message info>
+                    Hãy kiểm tra e-mail của bạn để tiếp tục.
+                  </Message>
                 )}
                 <h2>Yêu cầu đổi mật khẩu</h2>
                 <AuthForm
