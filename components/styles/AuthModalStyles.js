@@ -67,16 +67,22 @@ const StyledModal = styled.div`
     text-decoration: none;
     font-family: ${props => props.theme.font};
   }
+  .auth-mode:hover {
+    background-color: #bfbfbf;
+    /* color: #fff; */
+  }
   a:active,
   a:focus {
     outline: 0;
     border: none;
-    -moz-outline-style: none;
   }
 
   .auth-modes .active {
     background-color: ${props => props.theme.red};
     color: #fff;
+  }
+  .auth-modes .active:hover {
+    background-color: #cc0000;
   }
   i.large.icon,
   i.large.icons {

@@ -55,9 +55,14 @@ font-family: ${props => props.theme.font};
     padding: 0.5rem 11.36px;
     margin-bottom: 0.5rem;
     border-radius: 0.28571429rem;
+    cursor: pointer;
   }
   button:disabled{
     background: lightgrey;
+    color: grey;
+  }
+  button:hover{
+    background: #cc0000;
   }
   .center {
     text-align: center;
@@ -83,6 +88,7 @@ font-family: ${props => props.theme.font};
   .auth-links a:hover {
     color: #3394dc;
   }
+  
   .auth-title {
     color: #000;
     font-size: 2.8rem;
