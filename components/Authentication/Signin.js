@@ -299,7 +299,6 @@ class Signin extends Component {
                   <Icon name="facebook" /> Dùng Facebook
                 </Button>
               </div>
-
               {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
 
               <div className="auth-links">
