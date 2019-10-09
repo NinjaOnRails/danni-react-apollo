@@ -163,7 +163,7 @@ class Reset extends Component {
                   />
                 ))}
                 <div className="center">
-                  <button type="submit" disabled={loading || !formValid}>
+                  <button type="submit" disabled={loading}>
                     Đặt mật khẩu mới
                   </button>
                 </div>

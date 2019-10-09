@@ -275,7 +275,7 @@ class Signup extends Component {
                 <div className="center">
                   <button
                     type="submit"
-                    disabled={loading || fbLoginLoading || !formValid}
+                    disabled={loading || fbLoginLoading}
                   >
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>

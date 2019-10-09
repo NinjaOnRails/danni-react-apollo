@@ -276,10 +276,7 @@ class Signin extends Component {
                 />
               ))}
               <div className="center">
-                <button
-                  type="submit"
-                  disabled={loading || fbLoginLoading || !formValid}
-                >
+                <button type="submit" disabled={loading || fbLoginLoading}>
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
                 <p className="or">hoặc</p>
