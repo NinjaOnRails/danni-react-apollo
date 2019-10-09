@@ -7,7 +7,12 @@ import { Loader, Dropdown } from 'semantic-ui-react';
 import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
 import { VIDEO_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
-import { CREATE_AUDIO_MUTATION } from '../../graphql/mutation';
+import {
+  CREATE_AUDIO_MUTATION,
+  UPDATE_AUDIO_MUTATION,
+  VIDEO_DELETE,
+  UPDATE_VIDEO_MUTATION,
+} from '../../graphql/mutation';
 import youtube from '../../lib/youtube';
 import DropdownForm from '../styles/VideoFormStyles';
 
@@ -27,62 +32,6 @@ const languageOptions = {
   CZECH: 'cz',
   ENGLISH: 'gb',
 };
-
-const VIDEO_DELETE = gql`
-  mutation VIDEO_DELETE($id: ID!, $password: String!) {
-    deleteVideo(id: $id, password: $password) {
-      id
-    }
-  }
-`;
-
-const UPDATE_VIDEO_MUTATION = gql`
-  mutation UPDATE_VIDEO_MUTATION(
-    $id: ID!
-    $source: String
-    $titleVi: String
-    $descriptionVi: String
-    $tags: String
-    $defaultVolume: Int
-    $password: String!
-  ) {
-    updateVideo(
-      id: $id
-      password: $password
-      data: {
-        source: $source
-        title: $titleVi
-        description: $descriptionVi
-        tags: $tags
-        defaultVolume: $defaultVolume
-      }
-    ) {
-      id
-      originId
-    }
-  }
-`;
-
-const UPDATE_AUDIO_MUTATION = gql`
-  mutation UPDATE_AUDIO_MUTATION(
-    $id: ID!
-    $source: String
-    $author: String
-    $language: Language
-  ) {
-    updateAudio(
-      id: $id
-      data: { source: $source, author: $author, language: $language }
-    ) {
-      id
-      source
-      language
-      video {
-        id
-      }
-    }
-  }
-`;
 
 class EditVideo extends Component {
   state = {
@@ -196,7 +145,7 @@ class EditVideo extends Component {
   render() {
     const {
       router: {
-        query: { id, password },
+        query: { id, audioId },
       },
     } = this.props;
     const {
@@ -222,22 +171,23 @@ class EditVideo extends Component {
         mutation={VIDEO_DELETE}
         refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
       >
-        {(deleteVideo, { error }) => (
-          <Query query={VIDEO_QUERY} variables={{ id }}>
+        {(deleteVideo, { error }) => console.log(error) &&(
+          <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
             {({ error, loading, data }) => {
-              if (error || password !== 'dracarys') return <p>Error</p>;
+              console.log('error?');
+              console.log(error);
+              if (error) return <p>Error</p>;
               if (loading) return <Loader active />;
               if (!data.video) return <p>No Video Found for {id}</p>;
               const {
                 video: {
-                  titleVi: oldTitleVi,
-                  descriptionVi: oldDescriptionVi,
+                  originTitle: oldTitleVi,
+                  originDescription: oldDescriptionVi,
                   defaultVolume: oldDefaultVolume,
                   originId: oldOriginId,
-                  tags: oldTagsObj,
+                  originTags: oldTagsObj,
                 },
               } = data;
-
               let oldTags = '';
               Object.values(oldTagsObj).forEach(val => {
                 oldTags = oldTags + val.text + ' ';
@@ -271,7 +221,6 @@ class EditVideo extends Component {
                             descriptionVi,
                             tags,
                             defaultVolume,
-                            password,
                           }}
                           refetchQueries={[
                             { query: VIDEO_QUERY, variables: { id } },
@@ -511,9 +460,7 @@ class EditVideo extends Component {
                               <button
                                 type="submit"
                                 onClick={async () => {
-                                  if (password !== 'dracarys') {
-                                    alert('Wrong password');
-                                  } else if (
+                                  if (
                                     confirm(
                                       'Are you sure you want to delete this video?'
                                     )
@@ -521,7 +468,6 @@ class EditVideo extends Component {
                                     const res = await deleteVideo({
                                       variables: {
                                         id,
-                                        password,
                                       },
                                     }).catch(err => {
                                       alert(err.message);

@@ -10,6 +10,39 @@ const CREATE_VIDEO_MUTATION = gql`
   }
 `;
 
+const VIDEO_DELETE = gql`
+  mutation VIDEO_DELETE($id: ID!) {
+    deleteVideo(id: $id) {
+      id
+    }
+  }
+`;
+
+const UPDATE_VIDEO_MUTATION = gql`
+  mutation UPDATE_VIDEO_MUTATION(
+    $id: ID!
+    $source: String
+    $titleVi: String
+    $descriptionVi: String
+    $tags: String
+    $defaultVolume: Int
+  ) {
+    updateVideo(
+      id: $id
+      data: {
+        source: $source
+        originTitle: $titleVi
+        originDescription: $descriptionVi
+        originTags: $tags
+        defaultVolume: $defaultVolume
+      }
+    ) {
+      id
+      originId
+    }
+  }
+`;
+
 const CREATE_AUDIO_MUTATION = gql`
   mutation CREATE_AUDIO_MUTATION(
     $source: String!
@@ -37,6 +70,27 @@ const CREATE_AUDIO_MUTATION = gql`
       source
       language
       title
+    }
+  }
+`;
+
+const UPDATE_AUDIO_MUTATION = gql`
+  mutation UPDATE_AUDIO_MUTATION(
+    $id: ID!
+    $source: String
+    $author: String
+    $language: Language
+  ) {
+    updateAudio(
+      id: $id
+      data: { source: $source, author: $author, language: $language }
+    ) {
+      id
+      source
+      language
+      video {
+        id
+      }
     }
   }
 `;
@@ -257,6 +311,9 @@ const CLOSE_AUTH_MODAL_MUTATION = gql`
 
 export {
   CREATE_AUDIO_MUTATION,
+  UPDATE_AUDIO_MUTATION,
+  VIDEO_DELETE,
+  UPDATE_VIDEO_MUTATION,
   CREATE_VIDEO_MUTATION,
   SIGNUP_MUTATION,
   SIGNIN_MUTATION,

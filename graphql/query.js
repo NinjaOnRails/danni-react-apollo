@@ -37,9 +37,9 @@ const VIDEO_QUERY = gql`
         displayName
       }
       language
-      # originTags {
-      #   text
-      # }
+      originTags {
+        text
+      }
       audio(where: { id: $audioId }) {
         id
         source
@@ -52,9 +52,9 @@ const VIDEO_QUERY = gql`
         defaultVolume
         startAt
         duration
-        # tags {
-        #   text
-        # }
+        tags {
+          text
+        }
       }
     }
   }

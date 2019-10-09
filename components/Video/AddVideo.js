@@ -206,7 +206,7 @@ class AddVideo extends Component {
       id,
       cloudinaryAuth
     );
-
+console.log(cloudinaryAuth)
     // Upload file with post request
     try {
       const {
@@ -227,7 +227,8 @@ class AddVideo extends Component {
         deleteToken: newDeleteToken,
         audioSource: '',
       });
-    } catch {
+    } catch (err) {
+      console.log(err);
       this.setState({
         uploadError: true,
       });
