@@ -42,21 +42,20 @@ class CommentForm extends React.Component {
   };
 
   onChange = ({ target: { value } }) => {
-    if (this.props.currentUser)
-      this.setState({
-        commentInput: value,
-        commentInputValid: value.length > 0,
-      });
+    this.setState({
+      commentInput: value,
+      commentInputValid: value.length > 0,
+    });
   };
 
   onCommentSubmit = async createComment => {
-    const { data } = await createComment();
-    if (data) this.setState({ commentInput: '', commentInputValid: false });
-  };
-
-  onTextAreaClick = () => {
     const { currentUser, openAuthModal } = this.props;
-    if (!currentUser) openAuthModal();
+    if (!currentUser) {
+      openAuthModal();
+    } else {
+      const { data } = await createComment();
+      if (data) this.setState({ commentInput: '', commentInputValid: false });
+    }
   };
 
   renderCommentForm = (createCommentLoading, createComment) => {
@@ -73,7 +72,6 @@ class CommentForm extends React.Component {
           placeholder="Viết bình luận..."
           onChange={this.onChange}
           value={commentInput}
-          onClick={this.onTextAreaClick}
         />
         <Button content="Đăng" primary disabled={!commentInputValid} />
       </Form>

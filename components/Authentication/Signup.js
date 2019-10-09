@@ -197,12 +197,15 @@ class Signup extends Component {
           formValid: false,
         });
         trackSignUp(data.signup);
-        Router.push(
-          localStorage.getItem('previousPage') || previousPage || '/'
-        );
         localStorage.removeItem('previousPage');
         client.writeData({ data: { previousPage: null } });
-        closeAuthModal();
+        if (this.props.modal) {
+          closeAuthModal();
+        } else {
+          Router.push(
+            localStorage.getItem('previousPage') || previousPage || '/'
+          );
+        }
       }
     }
   };
@@ -273,10 +276,7 @@ class Signup extends Component {
                   />
                 ))}
                 <div className="center">
-                  <button
-                    type="submit"
-                    disabled={loading || fbLoginLoading}
-                  >
+                  <button type="submit" disabled={loading || fbLoginLoading}>
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
                   <p className="or">hoặc</p>

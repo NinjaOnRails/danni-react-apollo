@@ -173,7 +173,6 @@ class Signin extends Component {
     signin,
     data: { previousPage },
     client,
-    noRedirect,
     closeAuthModal,
   }) => {
     const {
@@ -189,8 +188,9 @@ class Signin extends Component {
         },
       });
       trackSignIn(data.signin.displayName);
-      closeAuthModal();
-      if (!noRedirect) {
+      if (this.props.modal) {
+        closeAuthModal();
+      } else {
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );
@@ -201,7 +201,7 @@ class Signin extends Component {
   };
 
   render() {
-    const { noRedirect, modal } = this.props;
+    const { modal } = this.props;
     const { formValid, signinForm } = this.state;
     const variables = {};
     const formElArr = [];
@@ -239,7 +239,6 @@ class Signin extends Component {
                 signin,
                 data,
                 client,
-                noRedirect,
                 closeAuthModal,
               })
             }
@@ -321,12 +320,10 @@ class Signin extends Component {
 }
 
 Signin.propTypes = {
-  noRedirect: PropTypes.bool,
   modal: PropTypes.bool,
 };
 
 Signin.defaultProps = {
-  noRedirect: false,
   modal: false,
 };
 
