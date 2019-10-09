@@ -4,16 +4,16 @@ const signupFields = {
     type: 'email',
     name: 'email',
   },
+  password: {
+    label: 'Mật khẩu',
+    type: 'password',
+    name: 'password',
+  },
   displayName: {
     label: 'Tên hiển thị',
     type: 'displayName',
     name: 'displayName',
     icon: 'user',
-  },
-  password: {
-    label: 'Mật khẩu',
-    type: 'password',
-    name: 'password',
   },
 };
 

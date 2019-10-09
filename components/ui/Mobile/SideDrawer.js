@@ -1,25 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
-import { Icon, Menu, MenuItem, Button } from 'semantic-ui-react';
+import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { onSignout } from '../../Authentication/Signout';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
-import ContentLanguage, {
-  client,
-  user,
-  contentLanguageQuery,
-} from '../ContentLanguage';
+import ContentLanguage, { client, user } from '../ContentLanguage';
 import {
   SIGN_OUT_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
 } from '../../../graphql/mutation';
-import {
-  facebookLoginMutation,
-  onFacebookLoginClick,
-} from '../../Authentication/Signin';
 import { localData } from '../../Authentication/AuthModal';
 import { openAuthModal } from '../../Authentication/PleaseSignIn';
 
@@ -57,11 +49,9 @@ const closeSideDrawer = ({ render }) => (
 const Composed = adopt({
   closeSideDrawer,
   localData,
-  signout,
-  client,
   user,
-  facebookLoginMutation,
-  contentLanguageQuery,
+  client,
+  signout,
   openAuthModal,
 });
 
@@ -74,11 +64,6 @@ const SideDrawer = () => {
         user: { currentUser },
         client,
         signout,
-        facebookLoginMutation: {
-          facebookLogin,
-          facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
-        },
-        contentLanguageQuery: { contentLanguage },
         openAuthModal,
       }) => (
         <SideDrawerStyles>
@@ -126,25 +111,6 @@ const SideDrawer = () => {
                     <span className="link-name">Tài Khoản</span>
                   </div>
                 </MenuItem>
-                {!currentUser && (
-                  <>
-                    <Button
-                      type="button"
-                      color="facebook"
-                      onClick={() =>
-                        onFacebookLoginClick({
-                          facebookLogin,
-                          contentLanguage,
-                          client,
-                          data,
-                          closeSideDrawer,
-                        })
-                      }
-                    >
-                      <Icon name="facebook" /> Dùng Facebook
-                    </Button>
-                  </>
-                )}
                 {currentUser && (
                   <MenuItem
                     as="a"

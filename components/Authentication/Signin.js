@@ -279,7 +279,7 @@ class Signin extends Component {
                 <button type="submit" disabled={loading || fbLoginLoading}>
                   {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
                 </button>
-                <p className="or">hoặc</p>
+                <p className="or">hoặc dùng</p>
                 <Button
                   type="button"
                   color="facebook"
@@ -293,7 +293,7 @@ class Signin extends Component {
                     })
                   }
                 >
-                  <Icon name="facebook" /> Dùng Facebook
+                  <Icon name="facebook" />Facebook
                 </Button>
               </div>
               {/* <button type="submit">Sign{loading && 'ing'} In</button> */}

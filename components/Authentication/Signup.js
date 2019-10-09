@@ -67,14 +67,6 @@ class Signup extends Component {
         valid: false,
         value: '@',
       },
-      displayName: {
-        inputConfig: {
-          ...signupFields.displayName,
-        },
-        modified: false,
-        valid: false,
-        value: '',
-      },
       password: {
         inputConfig: {
           ...signupFields.password,
@@ -82,6 +74,14 @@ class Signup extends Component {
         validation: {
           required: true,
           minLength: 6,
+        },
+        modified: false,
+        valid: false,
+        value: '',
+      },
+      displayName: {
+        inputConfig: {
+          ...signupFields.displayName,
         },
         modified: false,
         valid: false,
@@ -230,7 +230,7 @@ class Signup extends Component {
                   <button type="submit" disabled={loading || fbLoginLoading}>
                     {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
                   </button>
-                  <p className="or">hoặc</p>
+                  <p className="or">hoặc dùng</p>
                   <Button
                     type="button"
                     color="facebook"
@@ -244,7 +244,8 @@ class Signup extends Component {
                       })
                     }
                   >
-                    <Icon name="facebook" /> Dùng Facebook
+                    <Icon name="facebook" />
+                    Facebook
                   </Button>
                 </div>
                 {!modal && (
