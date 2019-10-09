@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Loader, Dropdown } from 'semantic-ui-react';
@@ -171,11 +170,9 @@ class EditVideo extends Component {
         mutation={VIDEO_DELETE}
         refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
       >
-        {(deleteVideo, { error }) => console.log(error) &&(
+        {(deleteVideo, { error }) => (
           <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
             {({ error, loading, data }) => {
-              console.log('error?');
-              console.log(error);
               if (error) return <p>Error</p>;
               if (loading) return <Loader active />;
               if (!data.video) return <p>No Video Found for {id}</p>;
