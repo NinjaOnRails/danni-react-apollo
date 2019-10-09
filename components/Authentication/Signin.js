@@ -191,6 +191,7 @@ class Signin extends Component {
       if (this.props.modal) {
         closeAuthModal();
       } else {
+        console.log(localStorage.getItem('previousPage'));
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );

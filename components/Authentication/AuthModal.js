@@ -23,7 +23,7 @@ const Composed = adopt({
 
 class AuthModal extends React.Component {
   state = {
-    mode: 'signin',
+    mode: 'signup',
   };
 
   onSigninClick = () => {

@@ -67,14 +67,6 @@ class Signup extends Component {
         valid: false,
         value: '',
       },
-      name: {
-        inputConfig: {
-          ...signupFields.name,
-        },
-        modified: false,
-        valid: true,
-        value: '',
-      },
       displayName: {
         inputConfig: {
           ...signupFields.displayName,
@@ -95,21 +87,8 @@ class Signup extends Component {
         valid: false,
         value: '',
       },
-      confirmPassword: {
-        inputConfig: {
-          ...signupFields.confirmPassword,
-        },
-        modified: false,
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        valid: false,
-        value: '',
-      },
     },
     formValid: false,
-    passwordsMatch: null,
   };
 
   componentDidMount() {
@@ -127,7 +106,7 @@ class Signup extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  inputchangeHandler = (e, input) => {
+  inputChangeHandler = (e, input) => {
     const eventValue = e.target.value;
     this.setState(prevState => {
       const updatedForm = {
@@ -153,65 +132,38 @@ class Signup extends Component {
 
   onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
     const {
-      signupForm,
-      signupForm: { password, confirmPassword, email, name, displayName },
+      signupForm: { password, email, displayName },
     } = this.state;
     e.preventDefault();
-    if (password.value !== confirmPassword.value) {
+    const { data } = await signup();
+    if (data) {
       this.setState({
         signupForm: {
-          ...signupForm,
-          password: { ...password, value: '', valid: false },
-          confirmPassword: {
-            ...confirmPassword,
-            value: '',
-            valid: false,
+          email: { ...email, value: '', valid: false, modified: false },
+          displayName: {
+            ...displayName,
+            value: generateName(),
+            modified: false,
           },
-        },
-        passwordsMatch: {
-          message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+          password: { ...password, value: '', valid: false, modified: false },
         },
         formValid: false,
       });
-    } else {
-      this.setState({ passwordsMatch: null });
-      const { data } = await signup();
-      if (data) {
-        this.setState({
-          signupForm: {
-            email: { ...email, value: '', valid: false, modified: false },
-            name: { ...name, value: '', modified: false },
-            displayName: {
-              ...displayName,
-              value: generateName(),
-              modified: false,
-            },
-            password: { ...password, value: '', valid: false, modified: false },
-            confirmPassword: {
-              ...confirmPassword,
-              value: '',
-              valid: false,
-              modified: false,
-            },
-          },
-          formValid: false,
-        });
-        trackSignUp(data.signup);
+      trackSignUp(data.signup);
+      if (this.props.modal) {
+        closeAuthModal();
+      } else {
+        Router.push(
+          localStorage.getItem('previousPage') || previousPage || '/'
+        );
         localStorage.removeItem('previousPage');
         client.writeData({ data: { previousPage: null } });
-        if (this.props.modal) {
-          closeAuthModal();
-        } else {
-          Router.push(
-            localStorage.getItem('previousPage') || previousPage || '/'
-          );
-        }
       }
     }
   };
 
   render() {
-    const { formValid, signupForm, passwordsMatch } = this.state;
+    const { signupForm } = this.state;
     const { modal } = this.props;
     const variables = {};
     const formElArr = [];
@@ -262,7 +214,6 @@ class Signup extends Component {
               >
                 <Error error={error} />
                 <Error error={fbLoginError} />
-                <Error error={passwordsMatch} />
                 {formElArr.map(({ id, input }) => (
                   <AuthForm
                     key={id}
@@ -270,7 +221,7 @@ class Signup extends Component {
                     config={input.inputConfig}
                     shouldValidate={input.validation}
                     invalid={!input.valid}
-                    saveToState={e => this.inputchangeHandler(e, id)}
+                    saveToState={e => this.inputChangeHandler(e, id)}
                     touched={input.modified}
                     autoComplete="new-password"
                   />

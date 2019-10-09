@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { Icon, Menu, MenuItem, Button } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import styled from 'styled-components';
@@ -22,6 +21,7 @@ import {
   onFacebookLoginClick,
 } from '../../Authentication/Signin';
 import { localData } from '../../Authentication/AuthModal';
+import { openAuthModal } from '../../Authentication/PleaseSignIn';
 
 const LanguageMenuStyles = styled.div`
   button.ui.button {
@@ -62,20 +62,10 @@ const Composed = adopt({
   user,
   facebookLoginMutation,
   contentLanguageQuery,
+  openAuthModal,
 });
 
-const onAuthClick = ({ router, client }) => {
-  if (router) {
-    const currentPath = router.asPath;
-    localStorage.setItem('previousPage', currentPath);
-    client.writeData({
-      data: { previousPage: currentPath },
-    });
-  }
-};
-
 const SideDrawer = () => {
-  const router = useRouter();
   return (
     <Composed>
       {({
@@ -89,6 +79,7 @@ const SideDrawer = () => {
           facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
         },
         contentLanguageQuery: { contentLanguage },
+        openAuthModal,
       }) => (
         <SideDrawerStyles>
           <BackDrop clicked={closeSideDrawer} show={data.showSide} />
@@ -123,36 +114,20 @@ const SideDrawer = () => {
                     </div>
                   </MenuItem>
                 </Link>
+                <MenuItem
+                  as="a"
+                  onClick={() => {
+                    closeSideDrawer();
+                    if (!currentUser) openAuthModal();
+                  }}
+                >
+                  <div className="link-container">
+                    <Icon name="user" size="large" />
+                    <span className="link-name">Tài Khoản</span>
+                  </div>
+                </MenuItem>
                 {!currentUser && (
                   <>
-                    <Link href="/signin">
-                      <MenuItem
-                        as="a"
-                        onClick={() => {
-                          onAuthClick(router, client);
-                          closeSideDrawer();
-                        }}
-                      >
-                        <div className="link-container">
-                          <Icon name="user" size="large" />
-                          <span className="link-name">Đăng Nhập</span>
-                        </div>
-                      </MenuItem>
-                    </Link>
-                    <Link href="/signup">
-                      <MenuItem
-                        as="a"
-                        onClick={() => {
-                          onAuthClick({ router, client });
-                          closeSideDrawer();
-                        }}
-                      >
-                        <div className="link-container">
-                          <Icon name="user plus" size="large" />
-                          <span className="link-name">Đăng Ký</span>
-                        </div>
-                      </MenuItem>
-                    </Link>
                     <Button
                       type="button"
                       color="facebook"
