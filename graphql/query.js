@@ -7,6 +7,84 @@ const CURRENT_USER_QUERY = gql`
       displayName
       permissions
       contentLanguage
+      avatar
+      name
+      email
+      location
+      bio
+      showName
+      showEmail
+      showBio
+      showLocation
+      video {
+        id
+        originTitle
+        originAuthor
+        originThumbnailUrl
+        duration
+        addedBy {
+          id
+        }
+        audio {
+          id
+        }
+      }
+      audio {
+        id
+        title
+        video {
+          id
+          originTitle
+          originAuthor
+          originThumbnailUrl
+          duration
+        }
+        author {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const USER_QUERY = gql`
+  query USER_QUERY($id: ID!) {
+    user(id: $id) {
+      createdAt
+      displayName
+      contentLanguage
+      avatar
+      name
+      email
+      location
+      bio
+      video {
+        id
+        originTitle
+        originAuthor
+        originThumbnailUrl
+        duration
+        addedBy {
+          id
+        }
+        audio {
+          id
+        }
+      }
+      audio {
+        id
+        title
+        video {
+          id
+          originTitle
+          originAuthor
+          originThumbnailUrl
+          duration
+        }
+        author {
+          id
+        }
+      }
     }
   }
 `;
@@ -34,16 +112,15 @@ const VIDEO_QUERY = gql`
       originThumbnailUrlSd
       duration
       addedBy {
+        id
         displayName
       }
       language
-      # originTags {
-      #   text
-      # }
       audio(where: { id: $audioId }) {
         id
         source
         author {
+          id
           displayName
         }
         language
@@ -52,9 +129,6 @@ const VIDEO_QUERY = gql`
         defaultVolume
         startAt
         duration
-        # tags {
-        #   text
-        # }
       }
     }
   }
@@ -71,12 +145,14 @@ const ALL_VIDEOS_QUERY = gql`
       originAuthor
       originViewCount
       addedBy {
+        id
         displayName
       }
       audio {
         id
         title
         author {
+          id
           displayName
         }
       }
@@ -90,6 +166,7 @@ const ALL_AUDIOS_QUERY = gql`
       id
       title
       author {
+        id
         displayName
       }
       video {
@@ -168,6 +245,7 @@ const LOCAL_STATE_QUERY = gql`
 
 export {
   CURRENT_USER_QUERY,
+  USER_QUERY,
   CLOUDINARY_AUTH,
   ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,

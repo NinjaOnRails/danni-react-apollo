@@ -99,18 +99,14 @@ const SideDrawer = () => {
                     </div>
                   </MenuItem>
                 </Link>
-                <MenuItem
-                  as="a"
-                  onClick={() => {
-                    closeSideDrawer();
-                    if (!currentUser) openAuthModal();
-                  }}
-                >
-                  <div className="link-container">
-                    <Icon name="user" size="large" />
-                    <span className="link-name">Tài Khoản</span>
-                  </div>
-                </MenuItem>
+                <Link href="/me">
+                  <MenuItem as="a" onClick={closeSideDrawer}>
+                    <div className="link-container">
+                      <Icon name="user" size="large" />
+                      <span className="link-name">Tài Khoản</span>
+                    </div>
+                  </MenuItem>
+                </Link>
                 {currentUser && (
                   <MenuItem
                     as="a"

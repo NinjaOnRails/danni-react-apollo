@@ -15,6 +15,17 @@ const VideosListStyles = styled.div`
     right: 0.2rem;
   }
 
+  div.meta,
+  .author {
+    font-family: ${props => props.theme.font};
+  }
+
+  .author {
+    position: relative;
+    top: -15px;
+    left: 11px;
+  }
+
   .ui.card > .content > .header {
     font-family: ${props => props.theme.font};
     overflow: hidden;
@@ -52,14 +63,19 @@ const VideosListStyles = styled.div`
     div.header {
       height: 32px;
     }
+    .author {
+      position: relative;
+      top: -30px;
+      left: 11px;
+    }
   }
   @media (min-width: 720px) {
     grid-template-columns: 210px 210px 210px;
   }
-  @media (min-width: 960px) {
+  @media (min-width: 992px) {
     grid-template-columns: 210px 210px 210px 210px;
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1200px) {
     grid-template-columns: 210px 210px 210px 210px 210px;
   }
   @media (min-width: 1600px) {
