@@ -206,7 +206,6 @@ class AddVideo extends Component {
       id,
       cloudinaryAuth
     );
-console.log(cloudinaryAuth)
     // Upload file with post request
     try {
       const {
@@ -384,3 +383,4 @@ console.log(cloudinaryAuth)
 }
 
 export default AddVideo;
+export { createAudioMutation };
