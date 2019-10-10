@@ -248,7 +248,6 @@ class EditVideo extends Component {
         query: { id, audioId },
       },
     } = this.props;
-    const { error } = this.state;
     return (
       <Composed id={id} audioId={audioId}>
         {({
@@ -302,7 +301,7 @@ class EditVideo extends Component {
           Object.values(oldTagsObj).forEach(val => {
             oldTags = oldTags + val.text + ' ';
           });
-          console.log(oldTags)
+
           return (
             <Container>
               <Form

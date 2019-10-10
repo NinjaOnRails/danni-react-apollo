@@ -4,15 +4,6 @@ import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import DropDownForm from '../styles/VideoFormStyles';
 
-const languageOptions = {
-  vn: 'VIETNAMESE',
-  gb: 'ENGLISH',
-  cz: 'CZECH',
-  VIETNAMESE: 'vn',
-  CZECH: 'cz',
-  ENGLISH: 'gb',
-};
-
 const EditVideoForm = ({
   oldTitleVi,
   oldDescriptionVi,
@@ -176,9 +167,7 @@ const EditVideoForm = ({
             onChange={handleDropdown}
             defaultValue={
               data.video.audio.length &&
-              languageOptions[
-                data.video.audio[data.video.audio.length - 1].language
-              ]
+              data.video.audio[data.video.audio.length - 1].language
             }
             name="audioLanguage"
             className="semantic-dropdown"
