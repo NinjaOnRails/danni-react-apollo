@@ -23,10 +23,7 @@ const StyledPage = styled.div`
 `;
 
 const Inner = styled.div`
-  /* max-width: ${props => props.theme.maxWidth};
-  margin: 0 auto; */
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 24px 0;
   @media (max-width: 479px) {
     padding: 0;
   }

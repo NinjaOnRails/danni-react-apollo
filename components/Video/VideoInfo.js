@@ -3,6 +3,7 @@ import { FacebookShareButton, FacebookIcon } from 'react-share';
 import { Segment, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import YoutubeViews from './YoutubeViews';
 
 const VideoInfoStyles = styled.div`
@@ -100,14 +101,24 @@ export default class VideoInfo extends Component {
           {(audio[0] && (
             <Header>
               <h3>
-                Người đọc:{' '}
-                {audio[0].author ? audio[0].author.displayName : 'deleted user'}
+                <Link href="user/[id]" as={`user/${audio[0].author.id}`}>
+                  <a>
+                    Người đọc:{' '}
+                    {audio[0].author
+                      ? audio[0].author.displayName
+                      : 'deleted user'}
+                  </a>
+                </Link>
               </h3>
             </Header>
           )) || (
             <Header>
               <h3>
-                Người đăng: {addedBy ? addedBy.displayName : 'deleted user'}
+                <Link href="user/[id]" as={`user/${addedBy.id}`}>
+                  <a>
+                    Người đăng: {addedBy ? addedBy.displayName : 'deleted user'}
+                  </a>
+                </Link>
               </h3>
             </Header>
           )}

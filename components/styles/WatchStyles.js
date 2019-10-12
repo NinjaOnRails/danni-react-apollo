@@ -1,19 +1,28 @@
 import styled from 'styled-components';
 
-export const StyledContainer = styled.div`
-  margin: 0 auto;
-  max-width: 1366px;
-  padding: 0px 24px;
+export const WatchPageStyles = styled.div`
+  display: grid;
   .filePlayer {
     display: none; /* Hide audio File Player */
   }
-  @media (max-width: 760px) {
-    padding: 0 1rem;
-  }
-  @media (max-width: 479px) {
-    div.eleven.wide.computer.sixteen.wide.mobile.sixteen.wide.tablet.column {
-      padding: 0;
+  @media (max-width: 991px) {
+    .tablet-padding {
+      padding: 0 1rem;
     }
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: auto 350px;
+    margin: 0 1rem;
+    .main {
+      padding-right: 1rem;
+    }
+  }
+  @media (min-width: 1200px) {
+    grid-template-columns: auto 402px;
+    .main {
+      padding-right: 24px;
+    }
+    margin: 0 24px;
   }
 `;
 

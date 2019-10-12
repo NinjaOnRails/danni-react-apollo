@@ -3,7 +3,7 @@ import { Container, Item, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import RenderVideos from '../Video/RenderVideos';
-import VideosListStyles from '../styles/VideosListStyles';
+import VideoListStyles from '../styles/VideoListStyles';
 import { user } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
@@ -73,14 +73,14 @@ class UserProfile extends Component {
                 </Item.Group>
               </UserProfileStyles>
               <h1>Uploads:</h1>
-              <VideosListStyles>
+              <VideoListStyles>
                 <RenderVideos
                   dataAudios={{ audios: audio }}
                   dataVideos={{ videos: video }}
                   hideAuthor
                   currentUser={currentUser}
                 />
-              </VideosListStyles>
+              </VideoListStyles>
             </Container>
           );
         }}

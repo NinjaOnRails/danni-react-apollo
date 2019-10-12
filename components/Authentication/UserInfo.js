@@ -2,7 +2,7 @@ import { Icon, Item } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const UserInfo = ({
-  user: { audio, video, displayName, name, bio, email, location },
+  user: { displayName, name, bio, email, location },
   userId,
   currentUser,
   onUserInfoEditClick,

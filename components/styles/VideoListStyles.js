@@ -1,40 +1,94 @@
 import styled from 'styled-components';
-import { List } from 'semantic-ui-react';
 
-export const VideoItem = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  .content {
-    padding-left: 0.5rem;
-  }
-  .ui.image img {
-    max-width: 168px;
-  }
-  .ui.label {
+const VideoListStyles = styled.div`
+  font-size: 1.1rem;
+  display: grid;
+  grid-template-columns: 210px 210px 210px 210px 210px;
+  grid-gap: 5px;
+  margin: 0 auto;
+  justify-content: center;
+  padding: 0;
+
+  .ui.large.label {
     position: absolute;
-    bottom: 0.3rem;
-    right: 0.3rem;
+    bottom: 0.2rem;
+    right: 0.2rem;
   }
-`;
 
-export const ListHeaderStyled = styled(List.Header)`
-  &&&& {
+  div.meta,
+  .author {
+    font-family: ${props => props.theme.font};
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-height: 1.8rem;
-    max-height: 5.4rem;
-    font-size: 1.4rem;
+    -webkit-line-clamp: 1;
+    line-height: 17px;
+    max-height: 17px;
+  }
+
+  .author {
+    position: relative;
+    top: -15px;
+    left: 11px;
+    max-width: 188px;
+  }
+
+  .ui.card > .content > .header {
     font-family: ${props => props.theme.font};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Show only first 2 lines */
+    line-height: 1.6rem; /* Implement for browsers with no support for webkit */
+    max-height: 3.2rem; /* This is line height X no. of lines to show */
+  }
+  .ui.card > .content > .meta + .description {
+    margin-top: 0;
+  }
+  .ui.placeholder .rectangular.image:not(.header) {
+    width: 210px;
+    height: 118.13px;
+    padding-top: 0;
+  }
+  @media (max-width: 479px) {
+    grid-template-columns: auto;
+    .ui.card {
+      box-shadow: none;
+    }
+    .ui.placeholder .rectangular.image:not(.header) {
+      width: 320px;
+      height: 180px;
+    }
+  }
+  @media (min-width: 480px) {
+    grid-gap: 42px 14px;
+    grid-template-columns: 210px 210px;
+    div.ui.fluid.card {
+      height: 214.11px;
+    }
+    .author {
+      position: relative;
+      top: -30px;
+      left: 11px;
+    }
+  }
+  @media (min-width: 720px) {
+    grid-template-columns: 210px 210px 210px;
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: 210px 210px 210px 210px;
+  }
+  @media (min-width: 1200px) {
+    grid-template-columns: 210px 210px 210px 210px 210px;
+  }
+  @media (min-width: 1600px) {
+    grid-template-columns: 210px 210px 210px 210px 210px 210px;
+  }
+  @media (min-width: 1920px) {
+    grid-template-columns: 210px 210px 210px 210px 210px 210px 210px;
   }
 `;
 
-export const ListDescriptionStyled = styled(List.Description)`
-  padding-top: 0.4rem;
-  &&&& {
-    font-size: 1.3rem;
-  }
-`;
+export default VideoListStyles;
