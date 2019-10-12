@@ -227,7 +227,6 @@ class EditVideo extends Component {
     Object.values(oldTagsObj).forEach(val => {
       oldTags = oldTags + val.text + ' ';
     });
-
     return {
       oldOriginId,
       oldTitleVi,
@@ -250,54 +249,33 @@ class EditVideo extends Component {
     } = this.props;
     const {
       source,
-      language,
+
       title,
       description,
       tags,
       defaultVolume,
-      isAudioSource,
       isTags,
       isDescription,
       isDefaultVolume,
       audioSource,
-      audioAuthor,
       audioLanguage,
     } = this.state;
+
+    // Call createAudio mutation
     if (source) {
-      // Call updateVideo mutation
       await updateVideo({
         variables: {
           id,
           source,
-          language,
+          language: audioLanguage,
         },
       });
     }
 
-    // Call createAudio mutation
-
-    if (
-      audioSource &&
-      isAudioSource &&
-      (!data.video.audio[0] || data.video.audio[0].source !== audioSource)
-    ) {
-      await createAudio({
-        variables: {
-          // source: secureUrl,
-          source: audioSource,
-          language,
-          title,
-          description: isDescription ? description : undefined,
-          tags: isTags ? tags : undefined,
-          // duration: audioDuration,
-          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
-          video: id,
-        },
-      });
-    } else if (isAudioSource && (audioAuthor || audioLanguage)) {
+    if (audioId) {
       await updateAudio({
         variables: {
-          language,
+          language: audioLanguage,
           id: audioId,
           source: audioSource,
           // source: secureUrl,
@@ -309,7 +287,25 @@ class EditVideo extends Component {
         },
       });
     }
-
+    if (
+      !audioId &&
+      audioSource &&
+      (!data.video.audio[0] || data.video.audio[0].source !== audioSource)
+    ) {
+      await createAudio({
+        variables: {
+          // source: secureUrl,
+          source: audioSource,
+          language: audioLanguage,
+          title,
+          description: isDescription ? description : undefined,
+          tags: isTags ? tags : undefined,
+          duration: 0,
+          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
+          video: id,
+        },
+      });
+    }
     // Redirect to newly updated Video watch page
     Router.push({
       pathname: '/watch',
@@ -397,7 +393,6 @@ class EditVideo extends Component {
                   loadingUpdateVideo={loadingUpdateVideo}
                   loadingCreateAudio={loadingCreateAudio}
                   loadingUpdateAudio={loadingUpdateAudio}
-                  data={data}
                   handleChange={this.handleChange}
                   handleDropdown={this.handleDropdown}
                 />

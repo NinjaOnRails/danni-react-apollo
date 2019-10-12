@@ -68,7 +68,6 @@ const UPDATE_AUDIO_MUTATION = gql`
     $tags: String
     $duration: Int
     $defaultVolume: Int
-    $video: ID
   ) {
     updateAudio(
       id: $id
@@ -80,7 +79,6 @@ const UPDATE_AUDIO_MUTATION = gql`
         tags: $tags
         duration: $duration
         defaultVolume: $defaultVolume
-        video: $video
       }
     ) {
       id

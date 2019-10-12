@@ -17,7 +17,6 @@ const EditVideoForm = ({
   loadingUpdateVideo,
   loadingCreateAudio,
   loadingUpdateAudio,
-  data,
   handleChange,
   handleDropdown,
   // passed state
@@ -220,7 +219,6 @@ EditVideoForm.propTypes = {
   // passsed down methods
   handleChange: PropTypes.func.isRequired,
   handleDropdown: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
 };
 
 export default EditVideoForm;
