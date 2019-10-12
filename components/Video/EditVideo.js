@@ -249,33 +249,36 @@ class EditVideo extends Component {
     } = this.props;
     const {
       source,
-
       title,
       description,
       tags,
       defaultVolume,
+      language,
       isTags,
       isDescription,
       isDefaultVolume,
       audioSource,
-      audioLanguage,
     } = this.state;
-
+    let action;
     // Call createAudio mutation
-    if (source) {
+    if (source || (!audioId && language)) {
+      action = 'updateVideo';
       await updateVideo({
         variables: {
           id,
           source,
-          language: audioLanguage,
+          language,
         },
       });
     }
 
     if (audioId) {
+      action = 'updateAutio';
+      console.log(action);
+
       await updateAudio({
         variables: {
-          language: audioLanguage,
+          language,
           id: audioId,
           source: audioSource,
           // source: secureUrl,
@@ -292,11 +295,14 @@ class EditVideo extends Component {
       audioSource &&
       (!data.video.audio[0] || data.video.audio[0].source !== audioSource)
     ) {
+      action = 'createAudio';
+      console.log(action);
+
       await createAudio({
         variables: {
           // source: secureUrl,
           source: audioSource,
-          language: audioLanguage,
+          language,
           title,
           description: isDescription ? description : undefined,
           tags: isTags ? tags : undefined,
@@ -306,11 +312,12 @@ class EditVideo extends Component {
         },
       });
     }
+    console.log(action);
     // Redirect to newly updated Video watch page
-    Router.push({
-      pathname: '/watch',
-      query: { id, audioId },
-    });
+    // Router.push({
+    //   pathname: '/watch',
+    //   query: { id, audioId },
+    // });
   };
 
   render() {
