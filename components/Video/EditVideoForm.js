@@ -3,6 +3,7 @@ import { Dropdown, Loader, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import DropDownForm from '../styles/VideoFormStyles';
+import CloudinaryUpload from './CloudinaryUpload';
 
 const EditVideoForm = ({
   oldTitleVi,
@@ -10,6 +11,9 @@ const EditVideoForm = ({
   oldDefaultVolume,
   oldOriginId,
   oldTags,
+  oldAudioSource,
+  oldLanguage,
+  oldAuthor,
   loadingUpdateVideo,
   loadingCreateAudio,
   loadingUpdateAudio,
@@ -17,7 +21,7 @@ const EditVideoForm = ({
   handleChange,
   handleDropdown,
   // passed state
-  isDescriptionVi,
+  isDescription,
   isAudioSource,
   isTags,
   isDefaultVolume,
@@ -51,33 +55,34 @@ const EditVideoForm = ({
         {image && <img width="200" src={image} alt="thumbnail" />}
       </Segment>
     )}
-    <label htmlFor="titleVi">
+    <label htmlFor="title">
       Tiêu đề:
       <input
         type="text"
-        id="titleVi"
-        name="titleVi"
+        id="title"
+        name="title"
         required
-        placeholder="ví dụ 'Sự sống trên mặt trăng xanh'"
+        maxLength="100"
         defaultValue={oldTitleVi}
         onChange={handleChange}
       />
     </label>
-    <label htmlFor="descriptionVi">
+    <label htmlFor="description">
       <input
-        id="descriptionVi"
-        name="isDescriptionVi"
+        id="description"
+        name="isDescription"
         type="checkbox"
-        checked={isDescriptionVi}
+        checked={isDescription}
         onChange={handleChange}
       />
       Nội dung:
     </label>
-    {isDescriptionVi && (
-      <label htmlFor="descriptionVi">
-        <input
-          type="text"
-          name="descriptionVi"
+    {isDescription && (
+      <label htmlFor="description">
+        <textarea
+          name="description"
+          maxLength="5000"
+          rows="10"
           defaultValue={oldDescriptionVi}
           onChange={handleChange}
         />
@@ -114,13 +119,19 @@ const EditVideoForm = ({
       Tags:
     </label>
     {isTags && (
-      <input
-        type="text"
-        name="tags"
-        placeholder="ví dụ 'thúvị khoahọc vũtrụ thuyếtphục yhọc lịchsử'"
-        defaultValue={oldTags.trim()}
-        onChange={handleChange}
-      />
+      <>
+        <input
+          type="text"
+          name="tags"
+          maxLength="500"
+          defaultValue={oldTags.trim()}
+          onChange={handleChange}
+        />
+        <Segment>
+          <p>Current YouTube tags:</p>
+          {oldTags}
+        </Segment>
+      </>
     )}
     <label htmlFor="audioSource">
       <input
@@ -134,28 +145,30 @@ const EditVideoForm = ({
     </label>
     {isAudioSource && (
       <>
+        {/* <CloudinaryUpload
+          onUploadFileSubmit={onUploadFileSubmit}
+          source={youtubeId}
+          language={language}
+          uploadProgress={uploadProgress}
+          uploadError={uploadError}
+          deleteToken={deleteToken}
+          onDeleteFileSubmit={onDeleteFileSubmit}
+          secureUrl={secureUrl}
+          handleChange={handleChange}
+          audioSource={audioSource}
+          onAudioLoadedMetadata={onAudioLoadedMetadata}
+        /> */}
         <input
           type="text"
           name="audioSource"
-          placeholder="ví dụ 'http://k007.kiwi6.com/hotlink/ceru6wup3q/ung_thu_tu_cung_18s.mp3'"
-          defaultValue={
-            data.video.audio.length
-              ? data.video.audio[data.video.audio.length - 1].source
-              : ''
-          }
+          defaultValue={oldAudioSource}
           onChange={handleChange}
         />
         Người đọc:
         <input
           type="text"
           name="audioAuthor"
-          placeholder="ví dụ 'Paní'"
-          defaultValue={
-            data.video.audio.length &&
-            data.video.audio[data.video.audio.length - 1].author
-              ? data.video.audio[data.video.audio.length - 1].author.displayName
-              : ''
-          }
+          defaultValue={oldAuthor}
           onChange={handleChange}
         />
         Language:
@@ -165,10 +178,7 @@ const EditVideoForm = ({
             selection
             options={flagOptions}
             onChange={handleDropdown}
-            defaultValue={
-              data.video.audio.length &&
-              data.video.audio[data.video.audio.length - 1].language
-            }
+            defaultValue={oldLanguage || ''}
             name="audioLanguage"
             className="semantic-dropdown"
           />
@@ -179,9 +189,13 @@ const EditVideoForm = ({
   </fieldset>
 );
 
+EditVideoForm.defaultProps = {
+  oldLanguage: null,
+};
+
 EditVideoForm.propTypes = {
   // props from state
-  isDescriptionVi: PropTypes.bool.isRequired,
+  isDescription: PropTypes.bool.isRequired,
   isTags: PropTypes.bool.isRequired,
   isDefaultVolume: PropTypes.bool.isRequired,
   isAudioSource: PropTypes.bool.isRequired,
@@ -196,6 +210,9 @@ EditVideoForm.propTypes = {
   oldDefaultVolume: PropTypes.number.isRequired,
   oldOriginId: PropTypes.string.isRequired,
   oldTags: PropTypes.string.isRequired,
+  oldAudioSource: PropTypes.string.isRequired,
+  oldAuthor: PropTypes.string.isRequired,
+  oldLanguage: PropTypes.string,
   // loading status
   loadingUpdateAudio: PropTypes.bool.isRequired,
   loadingCreateAudio: PropTypes.bool.isRequired,

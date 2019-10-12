@@ -69,7 +69,7 @@ const Composed = adopt({
 
 class EditVideo extends Component {
   state = {
-    isDescriptionVi: true,
+    isDescription: true,
     isAudioSource: true,
     isTags: true,
     isDefaultVolume: true,
@@ -180,37 +180,100 @@ class EditVideo extends Component {
     }
   };
 
+  getDefaultValues = data => {
+    const {
+      router: {
+        query: { audioId },
+      },
+    } = this.props;
+    const {
+      video: { originId: oldOriginId },
+    } = data;
+    let oldTitleVi;
+    let oldDescriptionVi;
+    let oldDefaultVolume = 30;
+    let oldTagsObj;
+    let oldAudioSource = '';
+    let oldAuthor;
+    let oldLanguage;
+    if (!audioId) {
+      ({
+        video: {
+          originTitle: oldTitleVi,
+          originDescription: oldDescriptionVi,
+          originTags: oldTagsObj,
+          addedBy: { displayName: oldAuthor },
+          language: oldLanguage,
+        },
+      } = data);
+    } else {
+      const {
+        video: { audio },
+      } = data;
+      // Destructor audio array
+      [
+        {
+          source: oldAudioSource,
+          title: oldTitleVi,
+          description: oldDescriptionVi,
+          tags: oldTagsObj,
+          defaultVolume: oldDefaultVolume,
+          author: { displayName: oldAuthor },
+          language: oldLanguage,
+        },
+      ] = audio;
+    }
+    let oldTags = '';
+    Object.values(oldTagsObj).forEach(val => {
+      oldTags = oldTags + val.text + ' ';
+    });
+
+    return {
+      oldOriginId,
+      oldTitleVi,
+      oldDescriptionVi,
+      oldDefaultVolume,
+      oldTags,
+      oldAudioSource,
+      oldAuthor,
+      oldLanguage,
+    };
+  };
+
   onSubmit = async (e, updateVideo, data, createAudio, updateAudio) => {
     // Stop form from submitting
     e.preventDefault();
     const {
       router: {
-        query: { id },
+        query: { id, audioId },
       },
     } = this.props;
     const {
       source,
-      titleVi,
-      descriptionVi,
+      language,
+      title,
+      description,
       tags,
       defaultVolume,
       isAudioSource,
+      isTags,
+      isDescription,
+      isDefaultVolume,
       audioSource,
       audioAuthor,
       audioLanguage,
     } = this.state;
+    if (source) {
+      // Call updateVideo mutation
+      await updateVideo({
+        variables: {
+          id,
+          source,
+          language,
+        },
+      });
+    }
 
-    // Call updateVideo mutation
-    await updateVideo({
-      variables: {
-        id,
-        source,
-        titleVi,
-        descriptionVi,
-        tags,
-        defaultVolume,
-      },
-    });
     // Call createAudio mutation
 
     if (
@@ -220,17 +283,29 @@ class EditVideo extends Component {
     ) {
       await createAudio({
         variables: {
+          // source: secureUrl,
           source: audioSource,
-          author: audioAuthor,
+          language,
+          title,
+          description: isDescription ? description : undefined,
+          tags: isTags ? tags : undefined,
+          // duration: audioDuration,
+          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
           video: id,
         },
       });
     } else if (isAudioSource && (audioAuthor || audioLanguage)) {
       await updateAudio({
         variables: {
-          language: audioLanguage,
-          author: audioAuthor,
-          id: data.video.audio[data.video.audio.length - 1].id,
+          language,
+          id: audioId,
+          source: audioSource,
+          // source: secureUrl,
+          // duration: audioDuration,
+          title,
+          description: isDescription ? description : undefined,
+          tags: isTags ? tags : undefined,
+          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
         },
       });
     }
@@ -238,7 +313,7 @@ class EditVideo extends Component {
     // Redirect to newly updated Video watch page
     Router.push({
       pathname: '/watch',
-      query: { id },
+      query: { id, audioId },
     });
   };
 
@@ -289,19 +364,15 @@ class EditVideo extends Component {
           if (loadingQueryVideo) return <Loader active />;
           if (!data.video) return <p>No Video Found for {id}</p>;
           const {
-            video: {
-              originTitle: oldTitleVi,
-              originDescription: oldDescriptionVi,
-              defaultVolume: oldDefaultVolume,
-              originId: oldOriginId,
-              originTags: oldTagsObj,
-            },
-          } = data;
-          let oldTags = '';
-          Object.values(oldTagsObj).forEach(val => {
-            oldTags = oldTags + val.text + ' ';
-          });
-
+            oldOriginId,
+            oldTitleVi,
+            oldDescriptionVi,
+            oldDefaultVolume,
+            oldTags,
+            oldAudioSource,
+            oldAuthor,
+            oldLanguage,
+          } = this.getDefaultValues(data);
           return (
             <Container>
               <Form
@@ -320,6 +391,9 @@ class EditVideo extends Component {
                   oldDefaultVolume={oldDefaultVolume}
                   oldOriginId={oldOriginId}
                   oldTags={oldTags}
+                  oldAudioSource={oldAudioSource}
+                  oldAuthor={oldAuthor}
+                  oldLanguage={oldLanguage}
                   loadingUpdateVideo={loadingUpdateVideo}
                   loadingCreateAudio={loadingCreateAudio}
                   loadingUpdateAudio={loadingUpdateAudio}

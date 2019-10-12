@@ -74,7 +74,6 @@ const RenderVideos = ({ dataAudios, dataVideos }) => (
         },
       }) => {
         const displayDuration = formatDuration(duration);
-
         return renderVideoItem(
           id,
           originThumbnailUrl,
@@ -100,7 +99,6 @@ const RenderVideos = ({ dataAudios, dataVideos }) => (
         addedBy,
       }) => {
         const displayDuration = formatDuration(duration);
-
         if (audio.length === 0) {
           return renderVideoItem(
             id,

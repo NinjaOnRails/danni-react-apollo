@@ -49,32 +49,34 @@ const Videos = ({
       contentLanguageQuery: { contentLanguage },
       audios: { loading: loadingAudios, error: errorAudios, data: dataAudios },
       videos: { loading: loadingVideos, errorVideos, data: dataVideos },
-    }) => (
-      <>
-        <LanguageMenuStyles>
-          <ContentLanguage loadingData={loadingAudios || loadingVideos} />
-        </LanguageMenuStyles>
-        <VideosListStyles>
-          {(!contentLanguage.length &&
-            (!initialVideoData || !initialAudioData)) ||
-          (contentLanguage.length &&
-            (loadingAudios ||
-              loadingVideos ||
-              (!dataVideos && !dataAudios))) ? (
-            <VideosLoading />
-          ) : errorAudios ? (
-            <Error>Error: {errorAudios.message}</Error>
-          ) : errorVideos ? (
-            <Error>Error: {errorVideos.message}</Error>
-          ) : (
-            <RenderVideos
-              dataAudios={dataAudios || initialAudioData}
-              dataVideos={dataVideos || initialVideoData}
-            />
-          )}
-        </VideosListStyles>
-      </>
-    )}
+    }) => {
+      return (
+        <>
+          <LanguageMenuStyles>
+            <ContentLanguage loadingData={loadingAudios || loadingVideos} />
+          </LanguageMenuStyles>
+          <VideosListStyles>
+            {(!contentLanguage.length &&
+              (!initialVideoData || !initialAudioData)) ||
+            (contentLanguage.length &&
+              (loadingAudios ||
+                loadingVideos ||
+                (!dataVideos && !dataAudios))) ? (
+              <VideosLoading />
+            ) : errorAudios ? (
+              <Error>Error: {errorAudios.message}</Error>
+            ) : errorVideos ? (
+              <Error>Error: {errorVideos.message}</Error>
+            ) : (
+              <RenderVideos
+                dataAudios={dataAudios || initialAudioData}
+                dataVideos={dataVideos || initialVideoData}
+              />
+            )}
+          </VideosListStyles>
+        </>
+      );
+    }}
   </Composed>
 );
 
