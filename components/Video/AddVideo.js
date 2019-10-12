@@ -227,7 +227,6 @@ class AddVideo extends Component {
         audioSource: '',
       });
     } catch (err) {
-      console.log(err);
       this.setState({
         uploadError: true,
       });

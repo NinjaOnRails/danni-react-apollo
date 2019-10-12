@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 const CREATE_VIDEO_MUTATION = gql`
-  mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
+  mutation CREATE_VIDEO_MUTATION($source: String!, $language: Language) {
     createVideo(source: $source, language: $language) {
       id
       originId
@@ -19,7 +19,7 @@ const VIDEO_DELETE = gql`
 `;
 
 const UPDATE_VIDEO_MUTATION = gql`
-  mutation UPDATE_VIDEO_MUTATION($id: ID!, $source: String, $language: String) {
+  mutation UPDATE_VIDEO_MUTATION($id: ID!, $source: String, $language: Language) {
     updateVideo(id: $id, data: { source: $source, language: $language }) {
       id
       originId

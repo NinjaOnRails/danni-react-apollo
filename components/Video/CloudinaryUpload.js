@@ -43,6 +43,7 @@ class CloudinaryUpload extends Component {
       audioSource,
       onAudioLoadedMetadata,
     } = this.props;
+    const { startingUpload } = this.state;
     return (
       <Composed source={source} language={language}>
         {({
@@ -79,7 +80,7 @@ class CloudinaryUpload extends Component {
                     </Button>
                   </>
                 )) ||
-                ((this.state.startingUpload || deleteToken) && (
+                ((startingUpload || deleteToken) && (
                   <Loader inline="centered" active />
                 )) || (
                   <>

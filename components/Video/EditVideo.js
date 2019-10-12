@@ -4,6 +4,7 @@ import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Loader, Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
+import axios from 'axios';
 import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
 import { VIDEO_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
@@ -16,6 +17,8 @@ import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import youtube from '../../lib/youtube';
 import { createAudioMutation } from './AddVideo';
 import EditVideoForm from './EditVideoForm';
+import deleteFile from '../../lib/cloudinaryDeleteFile';
+import uploadFileData from '../../lib/cloudinaryUploadFileData';
 
 /* eslint-disable */
 const videoQuery = ({ render, id, audioId }) => (
@@ -75,9 +78,13 @@ class EditVideo extends Component {
     isDefaultVolume: true,
     fetchingYoutube: false,
     youtubeIdStatus: '',
-    image: '',
-    originTitle: '',
-    channelTitle: '',
+    youtubeId: '',
+    secureUrl: '',
+    uploadProgress: 0,
+    uploadError: false,
+    deleteToken: '',
+    error: '',
+    audioDuration: 0,
   };
 
   handleChange = ({ target: { name, type, value, checked } }) => {
@@ -163,6 +170,7 @@ class EditVideo extends Component {
 
       this.setState({
         youtubeIdStatus: '',
+        youtubeId: id,
         image: url,
         originTitle: title,
         channelTitle,
@@ -180,6 +188,78 @@ class EditVideo extends Component {
     }
   };
 
+  onUploadFileSubmit = async (cloudinaryAuth, id, e) => {
+    // Reset uploadError display and assign appropriate value to file
+    this.setState({ uploadError: false, error: '' });
+    const { audioSource, youtubeId, language, deleteToken } = this.state;
+    const file = e ? e.target.files[0] : audioSource;
+
+    if (!file) return; // Do nothing if no file selected
+
+    if (deleteToken) await this.onDeleteFileSubmit();
+
+    // More initial state reset
+    this.setState({
+      uploadProgress: 0,
+      deleteToken: '',
+      secureUrl: '',
+    });
+
+    // Prepare cloudinary upload params
+    const { url, data } = uploadFileData(
+      file,
+      youtubeId,
+      language,
+      id,
+      cloudinaryAuth
+    );
+    // Upload file with post request
+    try {
+      const {
+        data: { secure_url: secureUrl, delete_token: newDeleteToken },
+      } = await axios({
+        method: 'post',
+        url,
+        data,
+        onUploadProgress: p => {
+          // Show upload progress
+          this.setState({
+            uploadProgress: Math.floor((p.loaded / p.total) * 100),
+          });
+        },
+      });
+      this.setState({
+        secureUrl,
+        deleteToken: newDeleteToken,
+        audioSource: '',
+      });
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        uploadError: true,
+      });
+    }
+  };
+
+  onDeleteFileSubmit = async () => {
+    const { deleteToken } = this.state;
+    this.setState({
+      uploadProgress: 0,
+      secureUrl: '',
+      error: '',
+    });
+    const res = await deleteFile(deleteToken);
+    if (res.status === 200) {
+      this.setState({
+        deleteToken: '',
+      });
+    }
+  };
+
+  onAudioLoadedMetadata = e => {
+    this.setState({ audioDuration: Math.round(e.target.duration) });
+  };
+
   getDefaultValues = data => {
     const {
       router: {
@@ -187,7 +267,13 @@ class EditVideo extends Component {
       },
     } = this.props;
     const {
-      video: { originId: oldOriginId },
+      video: {
+        originId: oldOriginId,
+        originThumbnailUrl: oldImage,
+        originTitle: oldOriginTitle,
+        originAuthor: oldOriginChannel,
+        originTags: oldOriginTags,
+      },
     } = data;
     let oldTitleVi;
     let oldDescriptionVi;
@@ -221,7 +307,7 @@ class EditVideo extends Component {
           author: { displayName: oldAuthor },
           language: oldLanguage,
         },
-      ] = audio;
+      ] = audio.filter(audioFile => audioFile.id === audioId);
     }
     let oldTags = '';
     Object.values(oldTagsObj).forEach(val => {
@@ -236,10 +322,20 @@ class EditVideo extends Component {
       oldAudioSource,
       oldAuthor,
       oldLanguage,
+      oldImage,
+      oldOriginTitle,
+      oldOriginChannel,
+      oldOriginTags,
     };
   };
 
-  onSubmit = async (e, updateVideo, data, createAudio, updateAudio) => {
+  onSubmit = async (
+    e,
+    updateVideo,
+    createAudio,
+    updateAudio,
+    oldValuesObject
+  ) => {
     // Stop form from submitting
     e.preventDefault();
     const {
@@ -254,15 +350,25 @@ class EditVideo extends Component {
       tags,
       defaultVolume,
       language,
+      audioDuration,
       isTags,
       isDescription,
       isDefaultVolume,
       audioSource,
+      secureUrl,
     } = this.state;
-    let action;
+    // if fields unchanged, use default values
+    const {
+      oldTitleVi,
+      oldDescriptionVi,
+      oldDefaultVolume,
+      oldTags,
+      oldAudioSource,
+      oldLanguage,
+    } = oldValuesObject;
+    let redirectAudioParam;
     // Call createAudio mutation
-    if (source || (!audioId && language)) {
-      action = 'updateVideo';
+    if (!audioId && !audioSource && (language || source)) {
       await updateVideo({
         variables: {
           id,
@@ -270,54 +376,57 @@ class EditVideo extends Component {
           language,
         },
       });
-    }
-
-    if (audioId) {
-      action = 'updateAutio';
-      console.log(action);
-
-      await updateAudio({
+    } else if (
+      !audioId &&
+      (audioSource || secureUrl) &&
+      (!oldAudioSource || oldAudioSource !== audioSource)
+    ) {
+      ({
+        data: {
+          createAudio: { id: redirectAudioParam },
+        },
+      } = await createAudio({
+        variables: {
+          source: secureUrl || oldAudioSource,
+          // source: audioSource || oldAudioSource,
+          language: [language] || [oldLanguage],
+          title: title || oldTitleVi,
+          description: isDescription
+            ? description || oldDescriptionVi
+            : undefined,
+          tags: isTags ? tags || oldTags : undefined,
+          duration: audioDuration,
+          defaultVolume: isDefaultVolume
+            ? defaultVolume || oldDefaultVolume
+            : undefined,
+          video: id,
+        },
+      }));
+    } else if (audioId) {
+      ({
+        data: {
+          updateAudio: { id: redirectAudioParam },
+        },
+      } = await updateAudio({
         variables: {
           language,
           id: audioId,
-          source: audioSource,
-          // source: secureUrl,
-          // duration: audioDuration,
+          // source: audioSource,
+          source: secureUrl,
+          duration: audioDuration,
           title,
-          description: isDescription ? description : undefined,
-          tags: isTags ? tags : undefined,
-          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
+          description,
+          tags,
+          defaultVolume,
         },
-      });
+      }));
     }
-    if (
-      !audioId &&
-      audioSource &&
-      (!data.video.audio[0] || data.video.audio[0].source !== audioSource)
-    ) {
-      action = 'createAudio';
-      console.log(action);
 
-      await createAudio({
-        variables: {
-          // source: secureUrl,
-          source: audioSource,
-          language,
-          title,
-          description: isDescription ? description : undefined,
-          tags: isTags ? tags : undefined,
-          duration: 0,
-          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
-          video: id,
-        },
-      });
-    }
-    console.log(action);
     // Redirect to newly updated Video watch page
-    // Router.push({
-    //   pathname: '/watch',
-    //   query: { id, audioId },
-    // });
+    Router.push({
+      pathname: '/watch',
+      query: { id, audioId: redirectAudioParam },
+    });
   };
 
   render() {
@@ -366,22 +475,19 @@ class EditVideo extends Component {
           if (errorQueryVideo) return <p>Error</p>;
           if (loadingQueryVideo) return <Loader active />;
           if (!data.video) return <p>No Video Found for {id}</p>;
-          const {
-            oldOriginId,
-            oldTitleVi,
-            oldDescriptionVi,
-            oldDefaultVolume,
-            oldTags,
-            oldAudioSource,
-            oldAuthor,
-            oldLanguage,
-          } = this.getDefaultValues(data);
+          const oldValuesObject = this.getDefaultValues(data);
           return (
             <Container>
               <Form
                 data-test="form"
                 onSubmit={e =>
-                  this.onSubmit(e, updateVideo, data, createAudio, updateAudio)
+                  this.onSubmit(
+                    e,
+                    updateVideo,
+                    createAudio,
+                    updateAudio,
+                    oldValuesObject
+                  )
                 }
               >
                 <Error error={errorCreateAudio} />
@@ -389,19 +495,15 @@ class EditVideo extends Component {
                 <Error error={errorUpdateAudio} />
                 <EditVideoForm
                   {...this.state}
-                  oldTitleVi={oldTitleVi}
-                  oldDescriptionVi={oldDescriptionVi}
-                  oldDefaultVolume={oldDefaultVolume}
-                  oldOriginId={oldOriginId}
-                  oldTags={oldTags}
-                  oldAudioSource={oldAudioSource}
-                  oldAuthor={oldAuthor}
-                  oldLanguage={oldLanguage}
+                  {...oldValuesObject}
                   loadingUpdateVideo={loadingUpdateVideo}
                   loadingCreateAudio={loadingCreateAudio}
                   loadingUpdateAudio={loadingUpdateAudio}
                   handleChange={this.handleChange}
                   handleDropdown={this.handleDropdown}
+                  onUploadFileSubmit={this.onUploadFileSubmit}
+                  onDeleteFileSubmit={this.onDeleteFileSubmit}
+                  onAudioLoadedMetadata={this.onAudioLoadedMetadata}
                 />
               </Form>
             </Container>

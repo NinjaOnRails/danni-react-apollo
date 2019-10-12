@@ -6,6 +6,7 @@ import DropDownForm from '../styles/VideoFormStyles';
 import CloudinaryUpload from './CloudinaryUpload';
 
 const EditVideoForm = ({
+  // default values
   oldTitleVi,
   oldDescriptionVi,
   oldDefaultVolume,
@@ -14,21 +15,41 @@ const EditVideoForm = ({
   oldAudioSource,
   oldLanguage,
   oldAuthor,
+  oldImage,
+  oldOriginTitle,
+  oldOriginChannel,
+  oldOriginTags,
+  // input state
+  language,
+  audioSource,
+  secureUrl,
+  uploadProgress,
+  uploadError,
+  deleteToken,
+  youtubeId,
+  tags,
+  // ui state
   loadingUpdateVideo,
   loadingCreateAudio,
   loadingUpdateAudio,
-  handleChange,
-  handleDropdown,
-  // passed state
   isDescription,
   isAudioSource,
   isTags,
   isDefaultVolume,
+  // methods
+  handleChange,
+  handleDropdown,
+  onUploadFileSubmit,
+  onDeleteFileSubmit,
+  onAudioLoadedMetadata,
+  // passed state
+  // thumbnail
   image,
   originTitle,
   channelTitle,
   youtubeIdStatus,
   fetchingYoutube,
+  originTags,
 }) => (
   <fieldset
     disabled={loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio}
@@ -47,11 +68,13 @@ const EditVideoForm = ({
     </label>
     {fetchingYoutube && <Loader inline="centered" active />}
     {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
-    {originTitle && (
+    {(originTitle || oldOriginTitle) && (
       <Segment>
-        <p>{originTitle}</p>
-        <p>{channelTitle}</p>
-        {image && <img width="200" src={image} alt="thumbnail" />}
+        <p>{originTitle || oldOriginTitle}</p>
+        <p>{channelTitle || oldOriginChannel}</p>
+        {(image || oldImage) && (
+          <img width="200" src={image || oldImage} alt="thumbnail" />
+        )}
       </Segment>
     )}
     <label htmlFor="title">
@@ -128,7 +151,11 @@ const EditVideoForm = ({
         />
         <Segment>
           <p>Current YouTube tags:</p>
-          {oldTags}
+          {originTags.join(' ') ||
+            oldOriginTags.reduce(
+              (tagString, tag) => tagString + ' ' + tag.text,
+              ' '
+            )}
         </Segment>
       </>
     )}
@@ -146,8 +173,8 @@ const EditVideoForm = ({
       <>
         {/* <CloudinaryUpload
           onUploadFileSubmit={onUploadFileSubmit}
-          source={youtubeId}
-          language={language}
+          source={youtubeId || oldOriginId}
+          language={language || oldLanguage}
           uploadProgress={uploadProgress}
           uploadError={uploadError}
           deleteToken={deleteToken}
@@ -178,7 +205,7 @@ const EditVideoForm = ({
             options={flagOptions}
             onChange={handleDropdown}
             defaultValue={oldLanguage || ''}
-            name="audioLanguage"
+            name="language"
             className="semantic-dropdown"
           />
         </DropDownForm>
@@ -190,6 +217,13 @@ const EditVideoForm = ({
 
 EditVideoForm.defaultProps = {
   oldLanguage: null,
+  image: '',
+  channelTitle: '',
+  originTitle: '',
+  tags: '',
+  originTags: [],
+  language: '',
+  audioSource: '',
 };
 
 EditVideoForm.propTypes = {
@@ -200,9 +234,18 @@ EditVideoForm.propTypes = {
   isAudioSource: PropTypes.bool.isRequired,
   fetchingYoutube: PropTypes.bool.isRequired,
   youtubeIdStatus: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  channelTitle: PropTypes.string.isRequired,
-  originTitle: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  channelTitle: PropTypes.string,
+  originTitle: PropTypes.string,
+  tags: PropTypes.string,
+  originTags: PropTypes.array,
+  language: PropTypes.string,
+  audioSource: PropTypes.string,
+  secureUrl: PropTypes.string.isRequired,
+  uploadProgress: PropTypes.number.isRequired,
+  uploadError: PropTypes.bool.isRequired,
+  deleteToken: PropTypes.string.isRequired,
+  youtubeId: PropTypes.string.isRequired,
   // default values
   oldTitleVi: PropTypes.string.isRequired,
   oldDescriptionVi: PropTypes.string.isRequired,
@@ -212,6 +255,10 @@ EditVideoForm.propTypes = {
   oldAudioSource: PropTypes.string.isRequired,
   oldAuthor: PropTypes.string.isRequired,
   oldLanguage: PropTypes.string,
+  oldImage: PropTypes.string.isRequired,
+  oldOriginTitle: PropTypes.string.isRequired,
+  oldOriginChannel: PropTypes.string.isRequired,
+  oldOriginTags: PropTypes.array.isRequired,
   // loading status
   loadingUpdateAudio: PropTypes.bool.isRequired,
   loadingCreateAudio: PropTypes.bool.isRequired,
@@ -219,6 +266,9 @@ EditVideoForm.propTypes = {
   // passsed down methods
   handleChange: PropTypes.func.isRequired,
   handleDropdown: PropTypes.func.isRequired,
+  onUploadFileSubmit: PropTypes.func.isRequired,
+  onDeleteFileSubmit: PropTypes.func.isRequired,
+  onAudioLoadedMetadata: PropTypes.func.isRequired,
 };
 
 export default EditVideoForm;
