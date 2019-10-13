@@ -1,10 +1,10 @@
-import UserProfile from '../components/Authentication/UserProfile';
+import Me from '../components/Authentication/Me';
 import PleaseSignIn from '../components/Authentication/PleaseSignIn';
 
-const Me = () => (
+const MePage = () => (
   <PleaseSignIn>
-    <UserProfile />
+    <Me />
   </PleaseSignIn>
 );
 
-export default Me;
+export default MePage;

@@ -29,7 +29,7 @@ const VideoListStyles = styled.div`
 
   .author {
     position: relative;
-    top: -15px;
+    top: -10px;
     left: 11px;
     max-width: 188px;
   }
@@ -72,9 +72,7 @@ const VideoListStyles = styled.div`
       height: 214.11px;
     }
     .author {
-      position: relative;
       top: -30px;
-      left: 11px;
     }
   }
   @media (min-width: 720px) {

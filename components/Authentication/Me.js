@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
 import { Container, Item, Loader } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
-import { Query } from 'react-apollo';
 import RenderVideos from '../Video/RenderVideos';
 import VideoListStyles from '../styles/VideoListStyles';
 import { user } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
-import { USER_QUERY } from '../../graphql/query';
-
-const userQuery = ({ render, id }) => (
-  <Query query={USER_QUERY} variables={{ id }}>
-    {render}
-  </Query>
-);
 
 const Composed = adopt({
-  userQuery,
   user,
 });
 
-class UserProfile extends Component {
+class Me extends Component {
   state = {
     editMode: false,
   };
@@ -36,15 +26,12 @@ class UserProfile extends Component {
   };
 
   render() {
-    const { userId } = this.props;
-    let { user } = this.props;
     const { editMode } = this.state;
     return (
-      <Composed id={userId}>
-        {({ user: { currentUser }, userQuery: { data } }) => {
-          if (!currentUser && !user) return <Loader active inline="centered" />;
-          if (data) user = data.user;
-          const { audio, video, avatar, displayName } = user;
+      <Composed>
+        {({ user: { currentUser } }) => {
+          if (!currentUser) return <Loader active inline="centered" />;
+          const { audio, video, avatar, displayName } = currentUser;
           const uploadsTotal = audio.length + video.length;
           return (
             <Container>
@@ -54,14 +41,11 @@ class UserProfile extends Component {
                     <Item.Image
                       src={avatar}
                       alt={displayName}
-                      label={
-                        currentUser &&
-                        currentUser.id === userId && {
-                          as: 'a',
-                          icon: 'write',
-                          size: 'big',
-                        }
-                      }
+                      label={{
+                        as: 'a',
+                        icon: 'write',
+                        size: 'big',
+                      }}
                       size="medium"
                     />
                     {editMode ? (
@@ -71,8 +55,8 @@ class UserProfile extends Component {
                       />
                     ) : (
                       <UserInfo
-                        user={user}
-                        userId={userId}
+                        user={currentUser}
+                        userId={currentUser.id}
                         currentUser={currentUser}
                         onUserInfoEditClick={this.onUserInfoEditClick}
                         uploadsTotal={uploadsTotal}
@@ -98,14 +82,4 @@ class UserProfile extends Component {
   }
 }
 
-UserProfile.propTypes = {
-  user: PropTypes.object,
-  userId: PropTypes.string,
-};
-
-UserProfile.defaultProps = {
-  user: null,
-  userId: null,
-};
-
-export default UserProfile;
+export default Me;

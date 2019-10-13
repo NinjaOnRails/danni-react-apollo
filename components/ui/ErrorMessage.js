@@ -18,7 +18,7 @@ const DisplayError = ({ error }) => {
   ) {
     return error.networkError.result.errors.map((error, i) => (
       <Message negative key={i}>
-        <StyledMessage>Holy Moly!</StyledMessage>
+        <StyledMessage>Ôi trời!</StyledMessage>
         <audio
           autoPlay
           src="https://res.cloudinary.com/danni/video/upload/v1566550191/iam2kigyc7gwxrjkmi8j.mp3"
