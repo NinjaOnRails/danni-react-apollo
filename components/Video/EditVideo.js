@@ -188,12 +188,12 @@ class EditVideo extends Component {
     }
   };
 
-  onUploadFileSubmit = async (cloudinaryAuth, id, e) => {
+  onUploadFileSubmit = async (cloudinaryAuth, id, e, defaultValues) => {
     // Reset uploadError display and assign appropriate value to file
     this.setState({ uploadError: false, error: '' });
     const { audioSource, youtubeId, language, deleteToken } = this.state;
     const file = e ? e.target.files[0] : audioSource;
-
+    const { oldOriginId, oldLanguage } = defaultValues;
     if (!file) return; // Do nothing if no file selected
 
     if (deleteToken) await this.onDeleteFileSubmit();
@@ -204,16 +204,16 @@ class EditVideo extends Component {
       deleteToken: '',
       secureUrl: '',
     });
-
     // Prepare cloudinary upload params
     const { url, data } = uploadFileData(
       file,
-      youtubeId,
-      language,
+      youtubeId || oldOriginId,
+      language || oldLanguage,
       id,
       cloudinaryAuth
     );
     // Upload file with post request
+    console.log(url, data);
     try {
       const {
         data: { secure_url: secureUrl, delete_token: newDeleteToken },
@@ -381,27 +381,29 @@ class EditVideo extends Component {
       (audioSource || secureUrl) &&
       (!oldAudioSource || oldAudioSource !== audioSource)
     ) {
-      ({
-        data: {
-          createAudio: { id: redirectAudioParam },
-        },
-      } = await createAudio({
-        variables: {
-          source: secureUrl || oldAudioSource,
-          // source: audioSource || oldAudioSource,
-          language: [language] || [oldLanguage],
-          title: title || oldTitleVi,
-          description: isDescription
-            ? description || oldDescriptionVi
-            : undefined,
-          tags: isTags ? tags || oldTags : undefined,
-          duration: audioDuration,
-          defaultVolume: isDefaultVolume
-            ? defaultVolume || oldDefaultVolume
-            : undefined,
-          video: id,
-        },
-      }));
+      console.log([language] || [oldLanguage])(
+        ({
+          data: {
+            createAudio: { id: redirectAudioParam },
+          },
+        } = await createAudio({
+          variables: {
+            source: secureUrl || oldAudioSource,
+            // source: audioSource || oldAudioSource,
+            language: language || oldLanguage,
+            title: title || oldTitleVi,
+            description: isDescription
+              ? description || oldDescriptionVi
+              : undefined,
+            tags: isTags ? tags || oldTags : undefined,
+            duration: audioDuration,
+            defaultVolume: isDefaultVolume
+              ? defaultVolume || oldDefaultVolume
+              : undefined,
+            video: id,
+          },
+        }))
+      );
     } else if (audioId) {
       ({
         data: {
@@ -501,7 +503,14 @@ class EditVideo extends Component {
                   loadingUpdateAudio={loadingUpdateAudio}
                   handleChange={this.handleChange}
                   handleDropdown={this.handleDropdown}
-                  onUploadFileSubmit={this.onUploadFileSubmit}
+                  onUploadFileSubmit={(cloudinaryAuth, id, e) =>
+                    this.onUploadFileSubmit(
+                      cloudinaryAuth,
+                      id,
+                      e,
+                      oldValuesObject
+                    )
+                  }
                   onDeleteFileSubmit={this.onDeleteFileSubmit}
                   onAudioLoadedMetadata={this.onAudioLoadedMetadata}
                 />

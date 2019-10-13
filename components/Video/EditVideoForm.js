@@ -171,7 +171,7 @@ const EditVideoForm = ({
     </label>
     {isAudioSource && (
       <>
-        {/* <CloudinaryUpload
+        <CloudinaryUpload
           onUploadFileSubmit={onUploadFileSubmit}
           source={youtubeId || oldOriginId}
           language={language || oldLanguage}
@@ -183,13 +183,13 @@ const EditVideoForm = ({
           handleChange={handleChange}
           audioSource={audioSource}
           onAudioLoadedMetadata={onAudioLoadedMetadata}
-        /> */}
-        <input
+        />
+        {/* <input
           type="text"
           name="audioSource"
           defaultValue={oldAudioSource}
           onChange={handleChange}
-        />
+        /> */}
         Người đọc:
         <input
           type="text"
