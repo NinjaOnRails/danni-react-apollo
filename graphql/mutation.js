@@ -186,6 +186,50 @@ const RESET_PASSWORD_MUTATION = gql`
   }
 `;
 
+const UPDATE_USER_MUTATION = gql`
+  mutation UPDATE_USER_MUTATION(
+    $displayName: String
+    $name: String
+    $bio: String
+    $location: String
+    $email: String
+    $password: String
+    $confirmPassword: String
+    $showName: Boolean
+    $showEmail: Boolean
+    $showBio: Boolean
+    $showLocation: Boolean
+  ) {
+    updateUser(
+      data: {
+        displayName: $displayName
+        name: $name
+        bio: $bio
+        location: $location
+        email: $email
+        password: $password
+        confirmPassword: $confirmPassword
+        showName: $showName
+        showEmail: $showEmail
+        showBio: $showBio
+        showLocation: $showLocation
+      }
+    ) {
+      id
+      displayName
+    }
+  }
+`;
+
+const UPDATE_AVATAR_MUTATION = gql`
+  mutation UPDATE_AVATAR_MUTATION($avatar: String!) {
+    updateAvatar(avatar: $avatar) {
+      id
+      avatar
+    }
+  }
+`;
+
 const CREATE_COMMENTREPLY_MUTATION = gql`
   mutation CREATE_COMMENTREPLY_MUTATION($comment: ID!, $text: String!) {
     createCommentReply(comment: $comment, text: $text) {
@@ -336,4 +380,6 @@ export {
   CLOSE_AUTH_MODAL_MUTATION,
   OPEN_AUTH_MODAL_MUTATION,
   FACEBOOK_LOGIN_MUTATION,
+  UPDATE_USER_MUTATION,
+  UPDATE_AVATAR_MUTATION,
 };

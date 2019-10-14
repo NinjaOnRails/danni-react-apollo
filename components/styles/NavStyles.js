@@ -56,7 +56,7 @@ const NavStyles = styled.div`
   @media (max-width: 1279px) {
     font-size: 1.5rem;
   }
-  @media (max-width: 772px) {
+  @media (max-width: 822px) {
     font-size: 1.2rem;
   }
   @media (max-width: 639px) {

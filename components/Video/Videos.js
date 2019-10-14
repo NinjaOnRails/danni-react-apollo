@@ -4,9 +4,9 @@ import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { ALL_AUDIOS_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
-import VideosLoading from './VideosLoading';
+import VideosLoading from './VideoLoading';
 import RenderVideos from './RenderVideos';
-import VideosListStyles from '../styles/VideosListStyles';
+import VideoListStyles from '../styles/VideoListStyles';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 
 const LanguageMenuStyles = styled.div`
@@ -54,7 +54,7 @@ const Videos = ({
         <LanguageMenuStyles>
           <ContentLanguage loadingData={loadingAudios || loadingVideos} />
         </LanguageMenuStyles>
-        <VideosListStyles>
+        <VideoListStyles>
           {(!contentLanguage.length &&
             (!initialVideoData || !initialAudioData)) ||
           (contentLanguage.length &&
@@ -72,7 +72,7 @@ const Videos = ({
               dataVideos={dataVideos || initialVideoData}
             />
           )}
-        </VideosListStyles>
+        </VideoListStyles>
       </>
     )}
   </Composed>

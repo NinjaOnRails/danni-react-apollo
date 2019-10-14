@@ -2,10 +2,12 @@ import { List, Image, Icon } from 'semantic-ui-react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {
-  VideoItem,
+  VideoItemStyles,
   ListDescriptionStyled,
   ListHeaderStyled,
-} from '../styles/VideoListStyles';
+  AuthorStyles,
+  SmallVideoListStyles,
+} from '../styles/SmallVideoListStyles';
 
 const renderVideoItem = (
   onVideoItemClick,
@@ -31,7 +33,7 @@ const renderVideoItem = (
         }}
       >
         <a>
-          <VideoItem>
+          <VideoItemStyles>
             <Image
               src={originThumbnailUrl || originThumbnailUrlSd}
               alt={title}
@@ -43,14 +45,18 @@ const renderVideoItem = (
             <List.Content>
               <ListHeaderStyled>{title}</ListHeaderStyled>
               <ListDescriptionStyled>{originAuthor}</ListDescriptionStyled>
-              <ListDescriptionStyled>
-                <Icon name="user" />
-                {author ? author.displayName : 'deleted user'}
-              </ListDescriptionStyled>
             </List.Content>
-          </VideoItem>
+          </VideoItemStyles>
         </a>
       </Link>
+      <AuthorStyles>
+        <Link href="user/[id]" as={`user/${author.id}`}>
+          <a className="author">
+            <Icon name="user" />
+            {author ? author.displayName : 'deleted user'}
+          </a>
+        </Link>
+      </AuthorStyles>
     </List.Item>
   );
 };
@@ -71,59 +77,61 @@ const RenderSmallVideoList = ({
   onVideoItemClick,
 }) => {
   return (
-    <List divided relaxed>
-      {audios.map(audio => {
-        const {
-          id: videoId,
-          originThumbnailUrl,
-          originThumbnailUrlSd,
-          originAuthor,
-          duration,
-        } = audio.video;
-        const displayDuration = formatDuration(duration);
-        if (audioId !== audio.id) {
-          return renderVideoItem(
-            onVideoItemClick,
-            videoId,
+    <SmallVideoListStyles>
+      <List divided relaxed>
+        {audios.map(audio => {
+          const {
+            id: videoId,
             originThumbnailUrl,
             originThumbnailUrlSd,
-            audio.title,
-            displayDuration,
             originAuthor,
-            audio.author,
-            audio.id
-          );
-        }
-        return null;
-      })}
-      {videos.map(
-        ({
-          audio,
-          originTitle,
-          addedBy,
-          id: videoId,
-          originThumbnailUrl,
-          originThumbnailUrlSd,
-          originAuthor,
-          duration,
-        }) => {
+            duration,
+          } = audio.video;
           const displayDuration = formatDuration(duration);
-          if (audio.length === 0 && videoId !== id) {
+          if (audioId !== audio.id) {
             return renderVideoItem(
               onVideoItemClick,
               videoId,
               originThumbnailUrl,
               originThumbnailUrlSd,
-              originTitle,
+              audio.title,
               displayDuration,
               originAuthor,
-              addedBy
+              audio.author,
+              audio.id
             );
           }
           return null;
-        }
-      )}
-    </List>
+        })}
+        {videos.map(
+          ({
+            audio,
+            originTitle,
+            addedBy,
+            id: videoId,
+            originThumbnailUrl,
+            originThumbnailUrlSd,
+            originAuthor,
+            duration,
+          }) => {
+            const displayDuration = formatDuration(duration);
+            if (audio.length === 0 && videoId !== id) {
+              return renderVideoItem(
+                onVideoItemClick,
+                videoId,
+                originThumbnailUrl,
+                originThumbnailUrlSd,
+                originTitle,
+                displayDuration,
+                originAuthor,
+                addedBy
+              );
+            }
+            return null;
+          }
+        )}
+      </List>
+    </SmallVideoListStyles>
   );
 };
 
