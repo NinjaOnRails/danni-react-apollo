@@ -101,7 +101,12 @@ export default class VideoInfo extends Component {
           {(audio[0] && (
             <Header>
               <h3>
-                <Link href="user/[id]" as={`user/${audio[0].author.id}`}>
+                <Link
+                  href={{
+                    pathname: '/user',
+                    query: { id: audio[0].author.id },
+                  }}
+                >
                   <a>
                     Người đọc:{' '}
                     {audio[0].author
@@ -114,7 +119,12 @@ export default class VideoInfo extends Component {
           )) || (
             <Header>
               <h3>
-                <Link href="user/[id]" as={`user/${addedBy.id}`}>
+                <Link
+                  href={{
+                    pathname: '/user',
+                    query: { id: addedBy.id },
+                  }}
+                >
                   <a>
                     Người đăng: {addedBy ? addedBy.displayName : 'deleted user'}
                   </a>

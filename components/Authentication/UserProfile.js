@@ -47,16 +47,20 @@ class UserProfile extends Component {
   };
 
   render() {
-    const { userId } = this.props;
-    let { user } = this.props;
+    const {
+      userId,
+      payload: { data: initialData, loading: initialLoading, error },
+    } = this.props;
     const { editMode, showUpdateAvatarModal } = this.state;
+    if (initialLoading || !userId) return <Loader active inline="centered" />;
+    if (error) return <Error error={error} />;
+
     return (
       <Composed id={userId}>
         {({ user: { currentUser }, userQuery: { data, loading, error } }) => {
-          if ((!currentUser && !user) || loading)
-            return <Loader active inline="centered" />;
+          if (loading) return <Loader active inline="centered" />;
           if (error) return <Error error={error} />;
-          user = data.user;
+          const user = data ? data.user : initialData.user;
           const { audio, video, avatar, displayName } = user;
           const uploadsTotal = audio.length + video.length;
           return (
@@ -116,12 +120,12 @@ class UserProfile extends Component {
 }
 
 UserProfile.propTypes = {
-  user: PropTypes.object,
+  payload: PropTypes.object,
   userId: PropTypes.string,
 };
 
 UserProfile.defaultProps = {
-  user: null,
+  payload: null,
   userId: null,
 };
 
