@@ -123,6 +123,7 @@ const VIDEO_QUERY = gql`
       addedBy {
         id
         displayName
+        avatar
       }
       language
       audio(where: { id: $audioId }) {
@@ -131,6 +132,7 @@ const VIDEO_QUERY = gql`
         author {
           id
           displayName
+          avatar
         }
         language
         title

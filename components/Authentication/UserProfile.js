@@ -62,7 +62,6 @@ class UserProfile extends Component {
           if (error) return <Error error={error} />;
           const user = data ? data.user : initialData.user;
           const { audio, video, avatar, displayName } = user;
-          const uploadsTotal = audio.length + video.length;
           return (
             <Container>
               <UserProfileStyles>
@@ -96,7 +95,7 @@ class UserProfile extends Component {
                         userId={userId}
                         currentUser={currentUser}
                         onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={uploadsTotal}
+                        uploadsTotal={audio.length}
                       />
                     )}
                   </Item>
