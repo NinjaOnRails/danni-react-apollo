@@ -12,13 +12,13 @@ const UserProfileStyles = styled.div`
     text-align: center;
     max-width: 350px;
   }
-  a.ui.label {
-    position: relative;
-    top: 28.81px;
-  }
   @media (max-width: 767px) {
-    a.ui.label {
-      left: 207px;
+    .ui.big.icon.button {
+      position: relative;
+      left: 211px;
+      top: 35.34px;
+      width: 35.34px;
+      z-index: 1;
     }
   }
   .ui.icon.button {

@@ -11,6 +11,7 @@ import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
 import { USER_QUERY } from '../../graphql/query';
 import UpdateAvatarModal from './UpdateAvatarModal';
+import Error from '../UI/ErrorMessage';
 
 const userQuery = ({ render, id }) => (
   <Query query={USER_QUERY} variables={{ id }}>
@@ -51,9 +52,11 @@ class UserProfile extends Component {
     const { editMode, showUpdateAvatarModal } = this.state;
     return (
       <Composed id={userId}>
-        {({ user: { currentUser }, userQuery: { data } }) => {
-          if (!currentUser && !user) return <Loader active inline="centered" />;
-          if (data) user = data.user;
+        {({ user: { currentUser }, userQuery: { data, loading, error } }) => {
+          if ((!currentUser && !user) || loading)
+            return <Loader active inline="centered" />;
+          if (error) return <Error error={error} />;
+          user = data.user;
           const { audio, video, avatar, displayName } = user;
           const uploadsTotal = audio.length + video.length;
           return (
