@@ -19,8 +19,22 @@ const VIDEO_DELETE = gql`
 `;
 
 const UPDATE_VIDEO_MUTATION = gql`
-  mutation UPDATE_VIDEO_MUTATION($id: ID!, $source: String, $language: Language) {
-    updateVideo(id: $id, data: { source: $source, language: $language }) {
+  mutation UPDATE_VIDEO_MUTATION(
+    $id: ID!
+    $source: String
+    $language: Language
+    $originThumbnailUrl: String
+    $originThumbnailUrlSd: String
+  ) {
+    updateVideo(
+      id: $id
+      data: {
+        source: $source
+        language: $language
+        originThumbnailUrl: $originThumbnailUrl
+        originThumbnailUrlSd: $originThumbnailUrlSd
+      }
+    ) {
       id
       originId
     }

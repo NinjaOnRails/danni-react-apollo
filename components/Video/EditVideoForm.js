@@ -169,8 +169,21 @@ const EditVideoForm = ({
       />
       Nguồn Audio:
     </label>
+
     {isAudioSource && (
       <>
+        {oldAudioSource && (
+          <>
+            <p>Current Audio:</p>
+            <audio
+              controls
+              src={oldAudioSource}
+              onLoadedMetadata={e => onAudioLoadedMetadata(e)}
+            >
+              <track kind="captions" />
+            </audio>
+          </>
+        )}
         <CloudinaryUpload
           onUploadFileSubmit={onUploadFileSubmit}
           source={youtubeId || oldOriginId}
@@ -184,19 +197,15 @@ const EditVideoForm = ({
           audioSource={audioSource}
           onAudioLoadedMetadata={onAudioLoadedMetadata}
         />
-        {/* <input
-          type="text"
-          name="audioSource"
-          defaultValue={oldAudioSource}
-          onChange={handleChange}
-        /> */}
-        Người đọc:
-        <input
-          type="text"
-          name="audioAuthor"
-          defaultValue={oldAuthor}
-          onChange={handleChange}
-        />
+        <label htmlFor="audioAuthor">
+          Người đọc:
+          <input
+            type="text"
+            name="audioAuthor"
+            defaultValue={oldAuthor}
+            onChange={handleChange}
+          />
+        </label>
         Language:
         <DropDownForm>
           <Dropdown

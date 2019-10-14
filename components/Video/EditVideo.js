@@ -213,7 +213,7 @@ class EditVideo extends Component {
       cloudinaryAuth
     );
     // Upload file with post request
-    console.log(url, data);
+
     try {
       const {
         data: { secure_url: secureUrl, delete_token: newDeleteToken },
@@ -356,6 +356,7 @@ class EditVideo extends Component {
       isDefaultVolume,
       audioSource,
       secureUrl,
+      image,
     } = this.state;
     // if fields unchanged, use default values
     const {
@@ -368,42 +369,47 @@ class EditVideo extends Component {
     } = oldValuesObject;
     let redirectAudioParam;
     // Call createAudio mutation
-    if (!audioId && !audioSource && (language || source)) {
+    if (
+      (!audioId && !audioSource && (language || source)) ||
+      (audioId && source)
+    ) {
       await updateVideo({
         variables: {
           id,
           source,
           language,
+          originThumbnailUrl: image,
+          originThumbnailUrlSd: image,
         },
       });
-    } else if (
+      redirectAudioParam = audioId;
+    }
+    if (
       !audioId &&
       (audioSource || secureUrl) &&
       (!oldAudioSource || oldAudioSource !== audioSource)
     ) {
-      console.log([language] || [oldLanguage])(
-        ({
-          data: {
-            createAudio: { id: redirectAudioParam },
-          },
-        } = await createAudio({
-          variables: {
-            source: secureUrl || oldAudioSource,
-            // source: audioSource || oldAudioSource,
-            language: language || oldLanguage,
-            title: title || oldTitleVi,
-            description: isDescription
-              ? description || oldDescriptionVi
-              : undefined,
-            tags: isTags ? tags || oldTags : undefined,
-            duration: audioDuration,
-            defaultVolume: isDefaultVolume
-              ? defaultVolume || oldDefaultVolume
-              : undefined,
-            video: id,
-          },
-        }))
-      );
+      ({
+        data: {
+          createAudio: { id: redirectAudioParam },
+        },
+      } = await createAudio({
+        variables: {
+          source: secureUrl || oldAudioSource,
+          // source: audioSource || oldAudioSource,
+          language: language || oldLanguage,
+          title: title || oldTitleVi,
+          description: isDescription
+            ? description || oldDescriptionVi
+            : undefined,
+          tags: isTags ? tags || oldTags : undefined,
+          duration: audioDuration,
+          defaultVolume: isDefaultVolume
+            ? defaultVolume || oldDefaultVolume
+            : undefined,
+          video: id,
+        },
+      }));
     } else if (audioId) {
       ({
         data: {
@@ -414,7 +420,7 @@ class EditVideo extends Component {
           language,
           id: audioId,
           // source: audioSource,
-          source: secureUrl,
+          source: secureUrl || oldAudioSource,
           duration: audioDuration,
           title,
           description,
