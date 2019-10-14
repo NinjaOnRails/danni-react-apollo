@@ -1,5 +1,5 @@
-import { USER_QUERY } from '../../../graphql/query';
-import UserProfile from '../../../components/Authentication/UserProfile';
+import { USER_QUERY } from '../../graphql/query';
+import UserProfile from '../../components/Authentication/UserProfile';
 
 const User = ({ user, id }) => <UserProfile user={user} userId={id} />;
 
