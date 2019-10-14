@@ -18,7 +18,7 @@ export const VideoItemStyles = styled.div`
   }
   .ui.label {
     position: absolute;
-    bottom: 0.3rem;
+    top: 73px;
     right: 0.3rem;
   }
 `;
