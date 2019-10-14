@@ -11,7 +11,7 @@ import AddVideoForm from './AddVideoForm';
 import youtube from '../../lib/youtube';
 import { defaultLanguage } from '../../lib/supportedLanguages';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
-import uploadFileData from '../../lib/cloudinaryUploadFileData';
+import { uploadAudio } from '../../lib/cloudinaryUpload';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { trackNewVideo } from '../../lib/mixpanel';
 import {
@@ -181,7 +181,7 @@ class AddVideo extends Component {
     }
   };
 
-  onUploadFileSubmit = async (cloudinaryAuth, id, e) => {
+  onUploadFileSubmit = async (cloudinaryAuthAudio, id, e) => {
     // Reset uploadError display and assign appropriate value to file
     this.setState({ uploadError: false, error: '' });
     const { audioSource, youtubeId, language, deleteToken } = this.state;
@@ -199,12 +199,12 @@ class AddVideo extends Component {
     });
 
     // Prepare cloudinary upload params
-    const { url, data } = uploadFileData(
+    const { url, data } = uploadAudio(
       file,
       youtubeId,
       language,
       id,
-      cloudinaryAuth
+      cloudinaryAuthAudio
     );
 
     // Upload file with post request

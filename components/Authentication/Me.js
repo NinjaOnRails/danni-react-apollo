@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Item, Loader } from 'semantic-ui-react';
+import { Container, Item, Loader, Button, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import RenderVideos from '../Video/RenderVideos';
 import VideoListStyles from '../styles/VideoListStyles';
@@ -7,6 +7,7 @@ import { user } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
+import UpdateAvatarModal from './UpdateAvatarModal';
 
 const Composed = adopt({
   user,
@@ -15,6 +16,7 @@ const Composed = adopt({
 class Me extends Component {
   state = {
     editMode: false,
+    showUpdateAvatarModal: false,
   };
 
   onUserInfoEditClick = () => {
@@ -25,8 +27,16 @@ class Me extends Component {
     this.setState({ editMode: false });
   };
 
+  openUpdateAvatarModal = () => {
+    this.setState({ showUpdateAvatarModal: true });
+  };
+
+  closeUpdateAvatarModal = () => {
+    this.setState({ showUpdateAvatarModal: false });
+  };
+
   render() {
-    const { editMode } = this.state;
+    const { editMode, showUpdateAvatarModal } = this.state;
     return (
       <Composed>
         {({ user: { currentUser } }) => {
@@ -36,18 +46,21 @@ class Me extends Component {
           return (
             <Container>
               <UserProfileStyles>
+                <UpdateAvatarModal
+                  showUpdateAvatarModal={showUpdateAvatarModal}
+                  closeUpdateAvatarModal={this.closeUpdateAvatarModal}
+                  currentUser={currentUser}
+                />
                 <Item.Group>
                   <Item>
-                    <Item.Image
-                      src={avatar}
-                      alt={displayName}
-                      label={{
-                        as: 'a',
-                        icon: 'write',
-                        size: 'big',
-                      }}
-                      size="medium"
-                    />
+                    <Button
+                      icon
+                      size="big"
+                      onClick={this.openUpdateAvatarModal}
+                    >
+                      <Icon name="write" />
+                    </Button>
+                    <Item.Image src={avatar} alt={displayName} size="medium" />
                     {editMode ? (
                       <UserInfoForm
                         currentUser={currentUser}

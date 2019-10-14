@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Item, Loader } from 'semantic-ui-react';
+import { Container, Item, Loader, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import { Query } from 'react-apollo';
@@ -10,6 +10,7 @@ import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
 import { USER_QUERY } from '../../graphql/query';
+import UpdateAvatarModal from './UpdateAvatarModal';
 
 const userQuery = ({ render, id }) => (
   <Query query={USER_QUERY} variables={{ id }}>
@@ -25,6 +26,7 @@ const Composed = adopt({
 class UserProfile extends Component {
   state = {
     editMode: false,
+    showUpdateAvatarModal: false,
   };
 
   onUserInfoEditClick = () => {
@@ -35,10 +37,18 @@ class UserProfile extends Component {
     this.setState({ editMode: false });
   };
 
+  openUpdateAvatarModal = () => {
+    this.setState({ showUpdateAvatarModal: true });
+  };
+
+  closeUpdateAvatarModal = () => {
+    this.setState({ showUpdateAvatarModal: false });
+  };
+
   render() {
     const { userId } = this.props;
     let { user } = this.props;
-    const { editMode } = this.state;
+    const { editMode, showUpdateAvatarModal } = this.state;
     return (
       <Composed id={userId}>
         {({ user: { currentUser }, userQuery: { data } }) => {
@@ -49,21 +59,25 @@ class UserProfile extends Component {
           return (
             <Container>
               <UserProfileStyles>
+                {currentUser && currentUser.id === userId && (
+                  <UpdateAvatarModal
+                    showUpdateAvatarModal={showUpdateAvatarModal}
+                    closeUpdateAvatarModal={this.closeUpdateAvatarModal}
+                    currentUser={currentUser}
+                  />
+                )}
                 <Item.Group>
                   <Item>
-                    <Item.Image
-                      src={avatar}
-                      alt={displayName}
-                      label={
-                        currentUser &&
-                        currentUser.id === userId && {
-                          as: 'a',
-                          icon: 'write',
-                          size: 'big',
-                        }
-                      }
-                      size="medium"
-                    />
+                    {currentUser && currentUser.id === userId && (
+                      <Button
+                        icon
+                        size="big"
+                        onClick={this.openUpdateAvatarModal}
+                      >
+                        <Icon name="write" />
+                      </Button>
+                    )}
+                    <Item.Image src={avatar} alt={displayName} size="medium" />
                     {editMode ? (
                       <UserInfoForm
                         currentUser={currentUser}

@@ -167,6 +167,15 @@ const UPDATE_USER_MUTATION = gql`
   }
 `;
 
+const UPDATE_AVATAR_MUTATION = gql`
+  mutation UPDATE_AVATAR_MUTATION($avatar: String!) {
+    updateAvatar(avatar: $avatar) {
+      id
+      avatar
+    }
+  }
+`;
+
 const CREATE_COMMENTREPLY_MUTATION = gql`
   mutation CREATE_COMMENTREPLY_MUTATION($comment: ID!, $text: String!) {
     createCommentReply(comment: $comment, text: $text) {
@@ -315,4 +324,5 @@ export {
   OPEN_AUTH_MODAL_MUTATION,
   FACEBOOK_LOGIN_MUTATION,
   UPDATE_USER_MUTATION,
+  UPDATE_AVATAR_MUTATION,
 };

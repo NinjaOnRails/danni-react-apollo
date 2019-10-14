@@ -89,9 +89,18 @@ const USER_QUERY = gql`
   }
 `;
 
-const CLOUDINARY_AUTH = gql`
-  query CLOUDINARY_AUTH($source: String!, $language: Language) {
-    cloudinaryAuth(source: $source, language: $language) {
+const CLOUDINARY_AUTH_AUDIO = gql`
+  query CLOUDINARY_AUTH_AUDIO($source: String!, $language: Language) {
+    cloudinaryAuthAudio(source: $source, language: $language) {
+      signature
+      timestamp
+    }
+  }
+`;
+
+const CLOUDINARY_AUTH_AVATAR = gql`
+  query {
+    cloudinaryAuthAvatar {
       signature
       timestamp
     }
@@ -246,7 +255,8 @@ const LOCAL_STATE_QUERY = gql`
 export {
   CURRENT_USER_QUERY,
   USER_QUERY,
-  CLOUDINARY_AUTH,
+  CLOUDINARY_AUTH_AUDIO,
+  CLOUDINARY_AUTH_AVATAR,
   ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
   CONTENT_LANGUAGE_QUERY,

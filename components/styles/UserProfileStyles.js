@@ -5,8 +5,6 @@ const UserProfileStyles = styled.div`
     width: 91.094px;
     text-align: right;
   }
-  .ui.checkbox {
-  }
   div.item {
     justify-content: center;
   }
@@ -16,13 +14,18 @@ const UserProfileStyles = styled.div`
   }
   a.ui.label {
     position: relative;
-    top: 29px;
-    left: 257px;
+    top: 28.81px;
   }
   @media (max-width: 767px) {
     a.ui.label {
       left: 207px;
     }
+  }
+  .ui.icon.button {
+    position: relative;
+    height: 35.34px;
+    left: 38.5px;
+    z-index: 1;
   }
 `;
 
