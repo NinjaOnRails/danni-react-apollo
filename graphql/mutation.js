@@ -1,11 +1,42 @@
 import gql from 'graphql-tag';
 
 const CREATE_VIDEO_MUTATION = gql`
-  mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
+  mutation CREATE_VIDEO_MUTATION($source: String!, $language: Language) {
     createVideo(source: $source, language: $language) {
       id
       originId
       duration
+    }
+  }
+`;
+
+const VIDEO_DELETE = gql`
+  mutation VIDEO_DELETE($id: ID!) {
+    deleteVideo(id: $id) {
+      id
+    }
+  }
+`;
+
+const UPDATE_VIDEO_MUTATION = gql`
+  mutation UPDATE_VIDEO_MUTATION(
+    $id: ID!
+    $source: String
+    $language: Language
+    $originThumbnailUrl: String
+    $originThumbnailUrlSd: String
+  ) {
+    updateVideo(
+      id: $id
+      data: {
+        source: $source
+        language: $language
+        originThumbnailUrl: $originThumbnailUrl
+        originThumbnailUrlSd: $originThumbnailUrlSd
+      }
+    ) {
+      id
+      originId
     }
   }
 `;
@@ -31,6 +62,37 @@ const CREATE_AUDIO_MUTATION = gql`
         duration: $duration
         defaultVolume: $defaultVolume
         video: $video
+      }
+    ) {
+      id
+      source
+      language
+      title
+    }
+  }
+`;
+
+const UPDATE_AUDIO_MUTATION = gql`
+  mutation UPDATE_AUDIO_MUTATION(
+    $id: ID!
+    $source: String
+    $language: Language
+    $title: String
+    $description: String
+    $tags: String
+    $duration: Int
+    $defaultVolume: Int
+  ) {
+    updateAudio(
+      id: $id
+      data: {
+        source: $source
+        language: $language
+        title: $title
+        description: $description
+        tags: $tags
+        duration: $duration
+        defaultVolume: $defaultVolume
       }
     ) {
       id
@@ -301,6 +363,9 @@ const CLOSE_AUTH_MODAL_MUTATION = gql`
 
 export {
   CREATE_AUDIO_MUTATION,
+  UPDATE_AUDIO_MUTATION,
+  VIDEO_DELETE,
+  UPDATE_VIDEO_MUTATION,
   CREATE_VIDEO_MUTATION,
   SIGNUP_MUTATION,
   SIGNIN_MUTATION,
