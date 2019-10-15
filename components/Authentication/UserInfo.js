@@ -26,7 +26,7 @@ const UserInfo = ({
           <Icon name="video" /> {uploadsTotal} Uploads
         </Item.Meta>
       )}
-      {name !== displayName && (
+      {name && name !== displayName && (
         <Item.Description>
           <p>
             {me && (
