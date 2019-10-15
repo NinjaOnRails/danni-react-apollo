@@ -59,19 +59,25 @@ class Me extends Component {
                 />
                 <Item.Group>
                   <Item>
-                    <Popup
-                      trigger={
-                        <Button
-                          icon
-                          size="big"
-                          onClick={this.openUpdateAvatarModal}
-                        >
-                          <Icon name="write" />
-                        </Button>
-                      }
-                      content="Thay đổi avatar"
-                    />
-                    <Item.Image src={avatar} alt={displayName} size="medium" />
+                    <Icon.Group size="big">
+                      <Item.Image
+                        src={avatar}
+                        alt={displayName}
+                        size="medium"
+                      />
+                      <Popup
+                        trigger={
+                          <Icon
+                            corner="top left"
+                            name="write"
+                            bordered
+                            link
+                            onClick={this.openUpdateAvatarModal}
+                          />
+                        }
+                        content="Thay đổi avatar"
+                      />
+                    </Icon.Group>
                     {editMode ? (
                       <UserInfoForm
                         currentUser={currentUser}
