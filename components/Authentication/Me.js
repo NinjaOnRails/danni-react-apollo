@@ -52,14 +52,21 @@ class Me extends Component {
                 />
                 <Item.Group>
                   <Item>
-                    <Button
-                      icon
-                      size="big"
-                      onClick={this.openUpdateAvatarModal}
-                    >
-                      <Icon name="write" />
-                    </Button>
-                    <Item.Image src={avatar} alt={displayName} size="medium" />
+                    <Icon.Group size="big">
+                      <Item.Image
+                        src={avatar}
+                        alt={displayName}
+                        size="medium"
+                      />
+                      <Icon
+                        corner="top left"
+                        name="write"
+                        bordered
+                        link
+                        onClick={this.openUpdateAvatarModal}
+                      />
+                    </Icon.Group>
+
                     {editMode ? (
                       <UserInfoForm
                         currentUser={currentUser}
@@ -77,6 +84,7 @@ class Me extends Component {
                   </Item>
                 </Item.Group>
               </UserProfileStyles>
+
               <h1>Uploads:</h1>
               <VideoListStyles>
                 <RenderVideos

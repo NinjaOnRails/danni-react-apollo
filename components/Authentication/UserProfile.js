@@ -74,7 +74,24 @@ class UserProfile extends Component {
                 )}
                 <Item.Group>
                   <Item>
-                    {currentUser && currentUser.id === userId && (
+                    <Icon.Group size="big">
+                      <Item.Image
+                        src={avatar}
+                        alt={displayName}
+                        size="medium"
+                      />
+                      {currentUser && currentUser.id === userId && (
+                        <Icon
+                          corner="top left"
+                          name="write"
+                          bordered
+                          link
+                          onClick={this.openUpdateAvatarModal}
+                        />
+                      )}
+                    </Icon.Group>
+
+                    {/* {currentUser && currentUser.id === userId && (
                       <Button
                         className="avatar-edit-button"
                         icon
@@ -84,7 +101,7 @@ class UserProfile extends Component {
                         <Icon name="write" />
                       </Button>
                     )}
-                    <Item.Image src={avatar} alt={displayName} size="medium" />
+                    <Item.Image src={avatar} alt={displayName} size="medium" /> */}
                     {editMode && currentUser ? (
                       <UserInfoForm
                         currentUser={currentUser}
