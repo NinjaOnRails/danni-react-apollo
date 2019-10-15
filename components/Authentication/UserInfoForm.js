@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Checkbox, Item, Form, Loader, Button, Icon } from 'semantic-ui-react';
+import { Checkbox, Item, Form, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { UPDATE_USER_MUTATION } from '../../graphql/mutation';
@@ -25,12 +25,6 @@ class UserInfoForm extends Component {
 
   render() {
     const { currentUser, onCancelClick } = this.props;
-    if (!currentUser)
-      return (
-        <Item.Content verticalAlign="middle">
-          <Loader active inline="centered" />
-        </Item.Content>
-      );
     const { password, confirmPassword } = this.state;
     const {
       id,

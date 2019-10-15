@@ -76,6 +76,7 @@ class UserProfile extends Component {
                   <Item>
                     {currentUser && currentUser.id === userId && (
                       <Button
+                        className="avatar-edit-button"
                         icon
                         size="big"
                         onClick={this.openUpdateAvatarModal}
@@ -84,7 +85,7 @@ class UserProfile extends Component {
                       </Button>
                     )}
                     <Item.Image src={avatar} alt={displayName} size="medium" />
-                    {editMode ? (
+                    {editMode && currentUser ? (
                       <UserInfoForm
                         currentUser={currentUser}
                         onCancelClick={this.onCancelClick}
