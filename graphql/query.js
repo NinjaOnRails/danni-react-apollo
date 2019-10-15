@@ -126,12 +126,9 @@ const VIDEO_QUERY = gql`
         avatar
       }
       language
-<<<<<<< HEAD
       originTags {
         text
       }
-=======
->>>>>>> master
       audio(where: { id: $audioId }) {
         id
         source
@@ -146,12 +143,9 @@ const VIDEO_QUERY = gql`
         defaultVolume
         startAt
         duration
-<<<<<<< HEAD
         tags {
           text
         }
-=======
->>>>>>> master
       }
     }
   }
