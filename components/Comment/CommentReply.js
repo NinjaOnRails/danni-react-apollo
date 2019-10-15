@@ -4,6 +4,7 @@ import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
+import Link from 'next/link'
 import Error from '../UI/ErrorMessage';
 import {
   UPDATE_COMMENTREPLY_MUTATION,
@@ -282,8 +283,10 @@ class CommentReply extends React.Component {
               }
             />
             <Comment.Content>
-              <Comment.Author as="a">
-                {author ? author.displayName : 'deleted user'}
+              <Comment.Author>
+                <Link href={{ pathname: '/user', query: { id: author.id } }}>
+                  <a>{author ? author.displayName : <i>deleted user</i>}</a>
+                </Link>
               </Comment.Author>
               <Comment.Metadata>
                 <div>{this.formatTime(createdAt)}</div>

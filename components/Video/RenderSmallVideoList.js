@@ -50,7 +50,7 @@ const renderVideoItem = (
         </a>
       </Link>
       <AuthorStyles>
-        <Link href="user/[id]" as={`user/${author.id}`}>
+        <Link href={{ pathname: '/user', query: { id: author.id } }}>
           <a className="author">
             <Icon name="user" />
             {author ? author.displayName : 'deleted user'}

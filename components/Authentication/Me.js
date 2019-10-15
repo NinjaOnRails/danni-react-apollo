@@ -42,7 +42,6 @@ class Me extends Component {
         {({ user: { currentUser } }) => {
           if (!currentUser) return <Loader active inline="centered" />;
           const { audio, video, avatar, displayName } = currentUser;
-          const uploadsTotal = audio.length + video.length;
           return (
             <Container>
               <UserProfileStyles>
@@ -72,7 +71,7 @@ class Me extends Component {
                         userId={currentUser.id}
                         currentUser={currentUser}
                         onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={uploadsTotal}
+                        uploadsTotal={audio.length}
                       />
                     )}
                   </Item>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from 'semantic-ui-react';
 import youtube from '../../lib/youtube';
 
 export default class YoutubeViews extends Component {
@@ -33,7 +34,7 @@ export default class YoutubeViews extends Component {
   };
 
   render() {
-    return <div>{this.state.youtubeViews} lượt xem</div>;
+    return <>{this.state.youtubeViews || <Loader active inline />} lượt xem</>;
   }
 }
 

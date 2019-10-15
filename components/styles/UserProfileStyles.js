@@ -12,15 +12,15 @@ const UserProfileStyles = styled.div`
     text-align: center;
     max-width: 350px;
   }
-  @media (max-width: 767px) {
-    .ui.big.icon.button {
+  /* @media (max-width: 767px) {
+    .avatar-edit-button {
       position: relative;
       left: 211px;
       top: 35.34px;
       width: 35.34px;
       z-index: 1;
     }
-  }
+  } */
   .ui.icon.button {
     position: relative;
     height: 35.34px;

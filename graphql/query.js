@@ -123,6 +123,7 @@ const VIDEO_QUERY = gql`
       addedBy {
         id
         displayName
+        avatar
       }
       language
       originTags {
@@ -134,6 +135,7 @@ const VIDEO_QUERY = gql`
         author {
           id
           displayName
+          avatar
         }
         language
         title
