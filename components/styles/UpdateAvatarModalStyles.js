@@ -26,13 +26,12 @@ const UpdateAvatarModalStyles = styled(Modal)`
     top: 25.69px;
     z-index: 1;
   }
+  .ui.horizontal.list:not(.celled) > .item:first-child,
+  .ui.horizontal.list > .item:last-child,
   .ui.horizontal.list > .item {
+    padding: 5px !important;
     width: 90px;
     height: 90px;
-  }
-  .ui.horizontal.list:not(.celled) > .item:first-child,
-  .ui.horizontal.list > .item:last-child {
-    padding: 5px !important;
   }
 `;
 
