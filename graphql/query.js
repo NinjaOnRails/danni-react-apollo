@@ -7,13 +7,100 @@ const CURRENT_USER_QUERY = gql`
       displayName
       permissions
       contentLanguage
+      avatar
+      name
+      email
+      location
+      bio
+      showName
+      showEmail
+      showBio
+      showLocation
+      video {
+        id
+        originTitle
+        originAuthor
+        originThumbnailUrl
+        duration
+        addedBy {
+          id
+        }
+        audio {
+          id
+        }
+      }
+      audio {
+        id
+        title
+        video {
+          id
+          originTitle
+          originAuthor
+          originThumbnailUrl
+          duration
+        }
+        author {
+          id
+        }
+      }
     }
   }
 `;
 
-const CLOUDINARY_AUTH = gql`
-  query CLOUDINARY_AUTH($source: String!, $language: Language) {
-    cloudinaryAuth(source: $source, language: $language) {
+const USER_QUERY = gql`
+  query USER_QUERY($id: ID!) {
+    user(id: $id) {
+      createdAt
+      displayName
+      contentLanguage
+      avatar
+      name
+      email
+      location
+      bio
+      video {
+        id
+        originTitle
+        originAuthor
+        originThumbnailUrl
+        duration
+        addedBy {
+          id
+        }
+        audio {
+          id
+        }
+      }
+      audio {
+        id
+        title
+        video {
+          id
+          originTitle
+          originAuthor
+          originThumbnailUrl
+          duration
+        }
+        author {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const CLOUDINARY_AUTH_AUDIO = gql`
+  query CLOUDINARY_AUTH_AUDIO($source: String!, $language: Language) {
+    cloudinaryAuthAudio(source: $source, language: $language) {
+      signature
+      timestamp
+    }
+  }
+`;
+
+const CLOUDINARY_AUTH_AVATAR = gql`
+  query {
+    cloudinaryAuthAvatar {
       signature
       timestamp
     }
@@ -34,17 +121,24 @@ const VIDEO_QUERY = gql`
       originThumbnailUrlSd
       duration
       addedBy {
+        id
         displayName
+        avatar
       }
       language
+<<<<<<< HEAD
       originTags {
         text
       }
+=======
+>>>>>>> master
       audio(where: { id: $audioId }) {
         id
         source
         author {
+          id
           displayName
+          avatar
         }
         language
         title
@@ -52,9 +146,12 @@ const VIDEO_QUERY = gql`
         defaultVolume
         startAt
         duration
+<<<<<<< HEAD
         tags {
           text
         }
+=======
+>>>>>>> master
       }
     }
   }
@@ -71,12 +168,14 @@ const ALL_VIDEOS_QUERY = gql`
       originAuthor
       originViewCount
       addedBy {
+        id
         displayName
       }
       audio {
         id
         title
         author {
+          id
           displayName
         }
       }
@@ -90,6 +189,7 @@ const ALL_AUDIOS_QUERY = gql`
       id
       title
       author {
+        id
         displayName
       }
       video {
@@ -168,7 +268,9 @@ const LOCAL_STATE_QUERY = gql`
 
 export {
   CURRENT_USER_QUERY,
-  CLOUDINARY_AUTH,
+  USER_QUERY,
+  CLOUDINARY_AUTH_AUDIO,
+  CLOUDINARY_AUTH_AVATAR,
   ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
   CONTENT_LANGUAGE_QUERY,

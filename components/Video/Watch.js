@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import { Container, Grid, Loader } from 'semantic-ui-react';
+import { Container, Loader } from 'semantic-ui-react';
 import SmallVideoList from './SmallVideoList';
 import CommentSection from '../Comment/CommentSection';
 import VideoInfo from './VideoInfo';
 import VideoHeader from './VideoHeader';
 import Error from '../UI/ErrorMessage';
-import { StyledContainer, YoutubeStyle } from '../styles/WatchStyles';
+import { WatchPageStyles, YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,
   trackPlayFinish,
@@ -181,39 +181,35 @@ class Watch extends Component {
     return (
       <>
         <VideoHeader video={video} url={url} />
-        <StyledContainer>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column mobile={16} tablet={16} computer={11}>
-                {this.renderVideoPlayer(video)}
-                <Container fluid>
-                  <VideoInfo
-                    {...this.props}
-                    video={video}
-                    url={url}
-                    showFullDescription={showFullDescription}
-                    toggleFullDescription={this.toggleFullDescription}
-                  />
-                  {video.audio[0] &&
-                    readyYoutube &&
-                    this.renderFilePlayer(video.audio)}
-                  <CommentSection
-                    videoId={id}
-                    videoLanguage={video.language}
-                    client={client}
-                  />
-                </Container>
-              </Grid.Column>
-              <Grid.Column mobile={16} tablet={16} computer={5}>
-                <SmallVideoList
-                  {...this.props}
-                  currentWatchingLanguage={currentWatchingLanguage}
-                  onVideoItemClick={() => this.onVideoItemClick(client)}
-                />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </StyledContainer>
+        <WatchPageStyles>
+          <div className="main">
+            {this.renderVideoPlayer(video)}
+            <Container fluid className="tablet-padding">
+              <VideoInfo
+                {...this.props}
+                video={video}
+                url={url}
+                showFullDescription={showFullDescription}
+                toggleFullDescription={this.toggleFullDescription}
+              />
+              {video.audio[0] &&
+                readyYoutube &&
+                this.renderFilePlayer(video.audio)}
+              <CommentSection
+                videoId={id}
+                videoLanguage={video.language}
+                client={client}
+              />
+            </Container>
+          </div>
+          <div className="list tablet-padding">
+            <SmallVideoList
+              {...this.props}
+              currentWatchingLanguage={currentWatchingLanguage}
+              onVideoItemClick={() => this.onVideoItemClick(client)}
+            />
+          </div>
+        </WatchPageStyles>
       </>
     );
   }

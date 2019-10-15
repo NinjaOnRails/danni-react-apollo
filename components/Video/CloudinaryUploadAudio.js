@@ -4,12 +4,12 @@ import { Loader, Progress, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
-import { CLOUDINARY_AUTH } from '../../graphql/query';
+import { CLOUDINARY_AUTH_AUDIO } from '../../graphql/query';
 import { user } from '../UI/ContentLanguage';
 
-const cloudinaryAuth = ({ source, language, render }) => (
+const cloudinaryAuthAudio = ({ source, language, render }) => (
   <Query
-    query={CLOUDINARY_AUTH}
+    query={CLOUDINARY_AUTH_AUDIO}
     variables={{
       source,
       language,
@@ -20,11 +20,11 @@ const cloudinaryAuth = ({ source, language, render }) => (
 );
 
 const Composed = adopt({
-  cloudinaryAuth,
+  cloudinaryAuthAudio,
   user,
 });
 
-class CloudinaryUpload extends Component {
+class CloudinaryUploadAudio extends Component {
   state = {
     startingUpload: false,
   };
@@ -47,7 +47,7 @@ class CloudinaryUpload extends Component {
     return (
       <Composed source={source} language={language}>
         {({
-          cloudinaryAuth: { loading, error, data },
+          cloudinaryAuthAudio: { loading, error, data },
           user: { currentUser, loading: loadingUser },
         }) => {
           if (loading || loadingUser)
@@ -93,7 +93,11 @@ class CloudinaryUpload extends Component {
                         accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
                         onChange={async e => {
                           this.setState({ startingUpload: true });
-                          await onUploadFileSubmit(data.cloudinaryAuth, id, e);
+                          await onUploadFileSubmit(
+                            data.cloudinaryAuthAudio,
+                            id,
+                            e
+                          );
                           this.setState({ startingUpload: false });
                         }}
                       />
@@ -104,10 +108,13 @@ class CloudinaryUpload extends Component {
                       <Button
                         type="button"
                         floated="right"
-                        primary
+                        positive
                         onClick={async () => {
                           this.setState({ startingUpload: true });
-                          await onUploadFileSubmit(data.cloudinaryAuth, id);
+                          await onUploadFileSubmit(
+                            data.cloudinaryAuthAudio,
+                            id
+                          );
                           this.setState({ startingUpload: false });
                         }}
                       >
@@ -131,7 +138,7 @@ class CloudinaryUpload extends Component {
   }
 }
 
-CloudinaryUpload.propTypes = {
+CloudinaryUploadAudio.propTypes = {
   source: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
   deleteToken: PropTypes.string.isRequired,
@@ -145,4 +152,4 @@ CloudinaryUpload.propTypes = {
   audioSource: PropTypes.string.isRequired,
 };
 
-export default CloudinaryUpload;
+export default CloudinaryUploadAudio;

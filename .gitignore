@@ -8,3 +8,4 @@ layout.md
 config/
 now.json
 bundles/
+.env.build

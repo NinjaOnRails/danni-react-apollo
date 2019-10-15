@@ -86,7 +86,7 @@ const onFacebookLoginClick = ({
           if (firstLogin) {
             trackSignUp(user);
           } else {
-            trackSignIn(user.displayName);
+            trackSignIn(user.id);
           }
           if (!closeSideDrawer) {
             Router.push(
@@ -142,7 +142,7 @@ class Signin extends Component {
                       email: '',
                       password: '',
                     });
-                  if (data) trackSignIn(data.signin.displayName);
+                  if (data) trackSignIn(data.signin.id);
                 }}
               >
                 <Error error={error} />

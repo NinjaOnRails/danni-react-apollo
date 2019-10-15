@@ -32,6 +32,8 @@ module.exports = {
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
     CLOUDINARY_UPLOAD_PRESET_AUDIO: process.env.CLOUDINARY_UPLOAD_PRESET_AUDIO,
+    CLOUDINARY_UPLOAD_PRESET_AVATAR:
+      process.env.CLOUDINARY_UPLOAD_PRESET_AVATAR,
   },
   ...withBundleAnalyzer(nextConfig),
 };

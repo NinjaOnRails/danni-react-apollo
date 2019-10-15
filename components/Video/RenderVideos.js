@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Card, Icon, Image } from 'semantic-ui-react';
+import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import Link from 'next/link';
 
 const formatDuration = duration => {
@@ -11,6 +11,8 @@ const formatDuration = duration => {
 };
 
 const renderVideoItem = (
+  currentUser,
+  hideAuthor,
   id,
   originThumbnailUrl,
   originThumbnailUrlSd,
@@ -35,6 +37,7 @@ const renderVideoItem = (
         <a>
           <Card fluid>
             <Image
+              fluid
               src={originThumbnailUrl || originThumbnailUrlSd}
               alt={title}
               label={{
@@ -46,19 +49,35 @@ const renderVideoItem = (
             <Card.Content>
               <Card.Header>{title}</Card.Header>
               <Card.Meta>{originAuthor}</Card.Meta>
-              <Card.Description>
-                <Icon name="user" />
-                {author ? author.displayName : 'deleted user'}
-              </Card.Description>
+              {hideAuthor && currentUser && currentUser.id === author.id && (
+                <Card.Description textAlign="center">
+                  <Button icon labelPosition="left">
+                    <Icon name="write" />
+                    Sửa
+                  </Button>
+                  <Button icon labelPosition="left" color="red">
+                    <Icon name="trash" />
+                    Xoá
+                  </Button>
+                </Card.Description>
+              )}
             </Card.Content>
           </Card>
         </a>
       </Link>
+      {!hideAuthor && (
+        <Link href={{ pathname: '/user', query: { id: author.id } }}>
+          <a className="author">
+            <Icon name="user" />
+            {author ? author.displayName : 'deleted user'}
+          </a>
+        </Link>
+      )}
     </div>
   );
 };
 
-const RenderVideos = ({ dataAudios, dataVideos }) => (
+const RenderVideos = ({ dataAudios, dataVideos, hideAuthor, currentUser }) => (
   <>
     {dataAudios.audios.map(
       ({
@@ -75,6 +94,8 @@ const RenderVideos = ({ dataAudios, dataVideos }) => (
       }) => {
         const displayDuration = formatDuration(duration);
         return renderVideoItem(
+          currentUser,
+          hideAuthor,
           id,
           originThumbnailUrl,
           originThumbnailUrlSd,
@@ -101,6 +122,8 @@ const RenderVideos = ({ dataAudios, dataVideos }) => (
         const displayDuration = formatDuration(duration);
         if (audio.length === 0) {
           return renderVideoItem(
+            currentUser,
+            hideAuthor,
             id,
             originThumbnailUrl,
             originThumbnailUrlSd,
@@ -119,6 +142,13 @@ const RenderVideos = ({ dataAudios, dataVideos }) => (
 RenderVideos.propTypes = {
   dataAudios: PropTypes.object.isRequired,
   dataVideos: PropTypes.object.isRequired,
+  currentUser: PropTypes.object,
+  hideAuthor: PropTypes.bool,
+};
+
+RenderVideos.defaultProps = {
+  hideAuthor: false,
+  currentUser: null,
 };
 
 export default RenderVideos;

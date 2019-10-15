@@ -195,7 +195,7 @@ class Signup extends Component {
           return (
             <StyledForm
               method="post"
-              onSubmit={async e =>
+              onSubmit={e =>
                 this.onSubmit({
                   e,
                   signup,

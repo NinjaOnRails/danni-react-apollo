@@ -88,7 +88,7 @@ const onFacebookLoginClick = ({
           if (firstLogin) {
             trackSignUp(user);
           } else {
-            trackSignIn(user.displayName);
+            trackSignIn(user.id);
           }
           if (closeSideDrawer) {
             closeSideDrawer();
@@ -187,11 +187,10 @@ class Signin extends Component {
           password: { ...password, value: '', valid: false, modified: false },
         },
       });
-      trackSignIn(data.signin.displayName);
+      trackSignIn(data.signin.id);
       if (this.props.modal) {
         closeAuthModal();
       } else {
-        console.log(localStorage.getItem('previousPage'));
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );

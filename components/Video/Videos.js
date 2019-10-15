@@ -4,9 +4,9 @@ import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { ALL_AUDIOS_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
-import VideosLoading from './VideosLoading';
+import VideosLoading from './VideoLoading';
 import RenderVideos from './RenderVideos';
-import VideosListStyles from '../styles/VideosListStyles';
+import VideoListStyles from '../styles/VideoListStyles';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 
 const LanguageMenuStyles = styled.div`
@@ -49,34 +49,32 @@ const Videos = ({
       contentLanguageQuery: { contentLanguage },
       audios: { loading: loadingAudios, error: errorAudios, data: dataAudios },
       videos: { loading: loadingVideos, errorVideos, data: dataVideos },
-    }) => {
-      return (
-        <>
-          <LanguageMenuStyles>
-            <ContentLanguage loadingData={loadingAudios || loadingVideos} />
-          </LanguageMenuStyles>
-          <VideosListStyles>
-            {(!contentLanguage.length &&
-              (!initialVideoData || !initialAudioData)) ||
-            (contentLanguage.length &&
-              (loadingAudios ||
-                loadingVideos ||
-                (!dataVideos && !dataAudios))) ? (
-              <VideosLoading />
-            ) : errorAudios ? (
-              <Error>Error: {errorAudios.message}</Error>
-            ) : errorVideos ? (
-              <Error>Error: {errorVideos.message}</Error>
-            ) : (
-              <RenderVideos
-                dataAudios={dataAudios || initialAudioData}
-                dataVideos={dataVideos || initialVideoData}
-              />
-            )}
-          </VideosListStyles>
-        </>
-      );
-    }}
+    }) => (
+      <>
+        <LanguageMenuStyles>
+          <ContentLanguage loadingData={loadingAudios || loadingVideos} />
+        </LanguageMenuStyles>
+        <VideoListStyles>
+          {(!contentLanguage.length &&
+            (!initialVideoData || !initialAudioData)) ||
+          (contentLanguage.length &&
+            (loadingAudios ||
+              loadingVideos ||
+              (!dataVideos && !dataAudios))) ? (
+            <VideosLoading />
+          ) : errorAudios ? (
+            <Error>Error: {errorAudios.message}</Error>
+          ) : errorVideos ? (
+            <Error>Error: {errorVideos.message}</Error>
+          ) : (
+            <RenderVideos
+              dataAudios={dataAudios || initialAudioData}
+              dataVideos={dataVideos || initialVideoData}
+            />
+          )}
+        </VideoListStyles>
+      </>
+    )}
   </Composed>
 );
 

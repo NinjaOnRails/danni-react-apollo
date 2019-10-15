@@ -4,6 +4,7 @@ import { Comment, Icon, Form, Button, Loader } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import moment from 'moment';
 import { adopt } from 'react-adopt';
+import Link from 'next/link';
 import CommentReplyForm from './CommentReplyForm';
 import Error from '../UI/ErrorMessage';
 import {
@@ -269,12 +270,14 @@ class VideoComment extends React.Component {
               src={
                 author && author.avatar
                   ? author.avatar
-                  : 'https://react.semantic-ui.com/images/avatar/small/matt.jpg'
+                  : '/static/avatar/small/matt.jpg'
               }
             />
             <Comment.Content>
-              <Comment.Author as="a">
-                {author ? author.displayName : <i>deleted user</i>}
+              <Comment.Author>
+                <Link href={{ pathname: '/user', query: { id: author.id } }}>
+                  <a>{author ? author.displayName : <i>deleted user</i>}</a>
+                </Link>
               </Comment.Author>
               <Comment.Metadata>
                 <div>{this.formatTime(createdAt)}</div>
