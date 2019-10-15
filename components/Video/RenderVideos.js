@@ -93,7 +93,6 @@ const RenderVideos = ({ dataAudios, dataVideos, hideAuthor, currentUser }) => (
         },
       }) => {
         const displayDuration = formatDuration(duration);
-
         return renderVideoItem(
           currentUser,
           hideAuthor,
@@ -121,7 +120,6 @@ const RenderVideos = ({ dataAudios, dataVideos, hideAuthor, currentUser }) => (
         addedBy,
       }) => {
         const displayDuration = formatDuration(duration);
-
         if (audio.length === 0) {
           return renderVideoItem(
             currentUser,

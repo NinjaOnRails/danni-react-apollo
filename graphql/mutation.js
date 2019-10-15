@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 const CREATE_VIDEO_MUTATION = gql`
-  mutation CREATE_VIDEO_MUTATION($source: String!, $language: String) {
+  mutation CREATE_VIDEO_MUTATION($source: String!, $language: Language) {
     createVideo(source: $source, language: $language) {
       id
       originId
@@ -22,19 +22,17 @@ const UPDATE_VIDEO_MUTATION = gql`
   mutation UPDATE_VIDEO_MUTATION(
     $id: ID!
     $source: String
-    $titleVi: String
-    $descriptionVi: String
-    $tags: String
-    $defaultVolume: Int
+    $language: Language
+    $originThumbnailUrl: String
+    $originThumbnailUrlSd: String
   ) {
     updateVideo(
       id: $id
       data: {
         source: $source
-        originTitle: $titleVi
-        originDescription: $descriptionVi
-        originTags: $tags
-        defaultVolume: $defaultVolume
+        language: $language
+        originThumbnailUrl: $originThumbnailUrl
+        originThumbnailUrlSd: $originThumbnailUrlSd
       }
     ) {
       id
@@ -78,19 +76,29 @@ const UPDATE_AUDIO_MUTATION = gql`
   mutation UPDATE_AUDIO_MUTATION(
     $id: ID!
     $source: String
-    $author: String
     $language: Language
+    $title: String
+    $description: String
+    $tags: String
+    $duration: Int
+    $defaultVolume: Int
   ) {
     updateAudio(
       id: $id
-      data: { source: $source, author: $author, language: $language }
+      data: {
+        source: $source
+        language: $language
+        title: $title
+        description: $description
+        tags: $tags
+        duration: $duration
+        defaultVolume: $defaultVolume
+      }
     ) {
       id
       source
       language
-      video {
-        id
-      }
+      title
     }
   }
 `;
