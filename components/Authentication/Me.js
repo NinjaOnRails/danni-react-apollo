@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Item, Loader, Button, Icon } from 'semantic-ui-react';
+import {
+  Container,
+  Item,
+  Loader,
+  Button,
+  Icon,
+  Popup,
+} from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import RenderVideos from '../Video/RenderVideos';
 import VideoListStyles from '../styles/VideoListStyles';
@@ -52,13 +59,18 @@ class Me extends Component {
                 />
                 <Item.Group>
                   <Item>
-                    <Button
-                      icon
-                      size="big"
-                      onClick={this.openUpdateAvatarModal}
-                    >
-                      <Icon name="write" />
-                    </Button>
+                    <Popup
+                      trigger={
+                        <Button
+                          icon
+                          size="big"
+                          onClick={this.openUpdateAvatarModal}
+                        >
+                          <Icon name="write" />
+                        </Button>
+                      }
+                      content="Thay đổi avatar"
+                    />
                     <Item.Image src={avatar} alt={displayName} size="medium" />
                     {editMode ? (
                       <UserInfoForm
@@ -72,6 +84,7 @@ class Me extends Component {
                         currentUser={currentUser}
                         onUserInfoEditClick={this.onUserInfoEditClick}
                         uploadsTotal={audio.length}
+                        me
                       />
                     )}
                   </Item>

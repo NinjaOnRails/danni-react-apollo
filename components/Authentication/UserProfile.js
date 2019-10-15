@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Item, Loader, Button, Icon } from 'semantic-ui-react';
+import {
+  Container,
+  Item,
+  Loader,
+  Button,
+  Icon,
+  Popup,
+} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import { Query } from 'react-apollo';
@@ -75,14 +82,18 @@ class UserProfile extends Component {
                 <Item.Group>
                   <Item>
                     {currentUser && currentUser.id === userId && (
-                      <Button
-                        className="avatar-edit-button"
-                        icon
-                        size="big"
-                        onClick={this.openUpdateAvatarModal}
-                      >
-                        <Icon name="write" />
-                      </Button>
+                      <Popup
+                        trigger={
+                          <Button
+                            icon
+                            size="big"
+                            onClick={this.openUpdateAvatarModal}
+                          >
+                            <Icon name="write" />
+                          </Button>
+                        }
+                        content="Thay đổi avatar"
+                      />
                     )}
                     <Item.Image src={avatar} alt={displayName} size="medium" />
                     {editMode && currentUser ? (

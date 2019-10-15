@@ -30,8 +30,9 @@ const UpdateAvatarModalStyles = styled(Modal)`
     width: 90px;
     height: 90px;
   }
-  .ui.horizontal.list:not(.celled) > .item:first-child {
-    padding-left: 5px !important;
+  .ui.horizontal.list:not(.celled) > .item:first-child,
+  .ui.horizontal.list > .item:last-child {
+    padding: 5px !important;
   }
 `;
 
