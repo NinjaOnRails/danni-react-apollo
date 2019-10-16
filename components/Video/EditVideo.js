@@ -18,7 +18,7 @@ import youtube from '../../lib/youtube';
 import { createAudioMutation } from './AddVideo';
 import EditVideoForm from './EditVideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
-import uploadFileData from '../../lib/cloudinaryUploadFileData';
+import { uploadAudio } from '../../lib/cloudinaryUpload';
 
 /* eslint-disable */
 const videoQuery = ({ render, id, audioId }) => (
@@ -73,7 +73,7 @@ const Composed = adopt({
 class EditVideo extends Component {
   state = {
     isDescription: true,
-    isAudioSource: true,
+    // isAudioSource: true,
     isTags: true,
     isDefaultVolume: true,
     fetchingYoutube: false,
@@ -205,7 +205,7 @@ class EditVideo extends Component {
       secureUrl: '',
     });
     // Prepare cloudinary upload params
-    const { url, data } = uploadFileData(
+    const { url, data } = uploadAudio(
       file,
       youtubeId || oldOriginId,
       language || oldLanguage,
@@ -504,6 +504,7 @@ class EditVideo extends Component {
                 <EditVideoForm
                   {...this.state}
                   {...oldValuesObject}
+                  audioId={audioId}
                   loadingUpdateVideo={loadingUpdateVideo}
                   loadingCreateAudio={loadingCreateAudio}
                   loadingUpdateAudio={loadingUpdateAudio}
