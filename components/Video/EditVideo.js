@@ -18,7 +18,7 @@ import youtube from '../../lib/youtube';
 import { createAudioMutation } from './AddVideo';
 import EditVideoForm from './EditVideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
-import uploadFileData from '../../lib/cloudinaryUploadFileData';
+import { uploadAudio } from '../../lib/cloudinaryUpload';
 
 /* eslint-disable */
 const videoQuery = ({ render, id, audioId }) => (
@@ -59,7 +59,6 @@ const deleteVideoMutation = ({ render }) => (
     }
   </Mutation>
 );
-
 /* eslint-enable */
 
 const Composed = adopt({
@@ -205,7 +204,7 @@ class EditVideo extends Component {
       secureUrl: '',
     });
     // Prepare cloudinary upload params
-    const { url, data } = uploadFileData(
+    const { url, data } = uploadAudio(
       file,
       youtubeId || oldOriginId,
       language || oldLanguage,
