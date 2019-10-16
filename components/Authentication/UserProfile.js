@@ -81,21 +81,27 @@ class UserProfile extends Component {
                 )}
                 <Item.Group>
                   <Item>
-                    {currentUser && currentUser.id === userId && (
-                      <Popup
-                        trigger={
-                          <Button
-                            icon
-                            size="big"
-                            onClick={this.openUpdateAvatarModal}
-                          >
-                            <Icon name="write" />
-                          </Button>
-                        }
-                        content="Thay đổi avatar"
+                    <Icon.Group size="big">
+                      <Item.Image
+                        src={avatar}
+                        alt={displayName}
+                        size="medium"
                       />
-                    )}
-                    <Item.Image src={avatar} alt={displayName} size="medium" />
+                      {currentUser && currentUser.id === userId && (
+                        <Popup
+                          trigger={
+                            <Icon
+                              corner="top left"
+                              name="write"
+                              bordered
+                              link
+                              onClick={this.openUpdateAvatarModal}
+                            />
+                          }
+                          content="Thay đổi avatar"
+                        />
+                      )}
+                    </Icon.Group>
                     {editMode && currentUser ? (
                       <UserInfoForm
                         currentUser={currentUser}
