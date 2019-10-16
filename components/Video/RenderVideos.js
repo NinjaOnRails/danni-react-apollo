@@ -64,17 +64,17 @@ const renderVideoItem = (
         currentUser &&
         currentUser.id === author.id && (
           <div className="buttons">
-            <Link
+            {/* <Link
               href={{
                 pathname: '/edit',
                 query,
               }}
-            >
+            > */}
               <Button icon labelPosition="left">
                 <Icon name="write" />
                 Sửa
               </Button>
-            </Link>
+            {/* </Link> */}
             <Button icon labelPosition="left" color="red">
               <Icon name="trash" />
               Xoá
