@@ -127,98 +127,92 @@ const EditVideoForm = ({
           audioSource={audioSource}
           onAudioLoadedMetadata={onAudioLoadedMetadata}
         />
-        <label htmlFor="title">
-          Tiêu đề:
-          <input
-            type="text"
-            id="title"
-            name="title"
-            required
-            maxLength="100"
-            defaultValue={oldTitleVi}
-            onChange={handleChange}
-          />
-        </label>
-        <label htmlFor="description">
-          <input
-            id="description"
-            name="isDescription"
-            type="checkbox"
-            checked={isDescription}
-            onChange={handleChange}
-          />
-          Nội dung:
-        </label>
-        {isDescription && (
-          <label htmlFor="description">
-            <textarea
-              name="description"
-              maxLength="5000"
-              rows="10"
-              defaultValue={oldDescriptionVi}
-              onChange={handleChange}
-            />
-          </label>
-        )}
-        <label htmlFor="defaultVolume">
-          <input
-            id="defaultVolume"
-            name="isDefaultVolume"
-            type="checkbox"
-            checked={isDefaultVolume}
-            onChange={handleChange}
-          />
-          Âm lượng (%):
-        </label>
-        {isDefaultVolume && (
-          <input
-            type="number"
-            name="defaultVolume"
-            min="0"
-            max="100"
-            defaultValue={oldDefaultVolume}
-            onChange={handleChange}
-          />
-        )}
-        <label htmlFor="tags">
-          <input
-            id="tags"
-            name="isTags"
-            type="checkbox"
-            checked={isTags}
-            onChange={handleChange}
-          />
-          Tags:
-        </label>
-        {isTags && (
+        {(secureUrl || audioSource || audioId) && (
           <>
-            <input
-              type="text"
-              name="tags"
-              maxLength="500"
-              defaultValue={oldTags.trim()}
-              onChange={handleChange}
-            />
-            <Segment>
-              <p>Current YouTube tags:</p>
-              {originTags.join(' ') ||
-                oldOriginTags.reduce(
-                  (tagString, tag) => tagString + ' ' + tag.text,
-                  ' '
-                )}
-            </Segment>
+            <label htmlFor="title">
+              Tiêu đề:
+              <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                maxLength="100"
+                defaultValue={oldTitleVi}
+                onChange={handleChange}
+              />
+            </label>
+            <label htmlFor="description">
+              <input
+                id="description"
+                name="isDescription"
+                type="checkbox"
+                checked={isDescription}
+                onChange={handleChange}
+              />
+              Nội dung:
+            </label>
+            {isDescription && (
+              <label htmlFor="description">
+                <textarea
+                  name="description"
+                  maxLength="5000"
+                  rows="10"
+                  defaultValue={oldDescriptionVi}
+                  onChange={handleChange}
+                />
+              </label>
+            )}
+            <label htmlFor="defaultVolume">
+              <input
+                id="defaultVolume"
+                name="isDefaultVolume"
+                type="checkbox"
+                checked={isDefaultVolume}
+                onChange={handleChange}
+              />
+              Âm lượng (%):
+            </label>
+            {isDefaultVolume && (
+              <input
+                type="number"
+                name="defaultVolume"
+                min="0"
+                max="100"
+                defaultValue={oldDefaultVolume}
+                onChange={handleChange}
+              />
+            )}
+            <label htmlFor="tags">
+              <input
+                id="tags"
+                name="isTags"
+                type="checkbox"
+                checked={isTags}
+                onChange={handleChange}
+              />
+              Tags:
+            </label>
+            {isTags && (
+              <>
+                <input
+                  type="text"
+                  name="tags"
+                  maxLength="500"
+                  defaultValue={oldTags.trim()}
+                  onChange={handleChange}
+                />
+                <Segment>
+                  <p>Current YouTube tags:</p>
+                  {originTags.join(' ') ||
+                    oldOriginTags.reduce(
+                      (tagString, tag) => tagString + ' ' + tag.text,
+                      ' '
+                    )}
+                </Segment>
+              </>
+            )}
           </>
         )}
-        <label htmlFor="audioSource">
-          <input
-            id="audioSource"
-            name="isAudioSource"
-            type="checkbox"
-            checked={isAudioSource}
-            onChange={handleChange}
-          />
-          Nguồn Audio:
-        </label>
 
         <label htmlFor="audioAuthor">
           Người đọc:
@@ -245,7 +239,7 @@ EditVideoForm.defaultProps = {
   language: '',
   audioSource: '',
   audioId: '',
-  isAudioSource: false,
+  // isAudioSource: false,
 };
 
 EditVideoForm.propTypes = {
@@ -254,7 +248,7 @@ EditVideoForm.propTypes = {
   isDescription: PropTypes.bool.isRequired,
   isTags: PropTypes.bool.isRequired,
   isDefaultVolume: PropTypes.bool.isRequired,
-  isAudioSource: PropTypes.bool,
+  isAudioSource: PropTypes.bool.isRequired,
   fetchingYoutube: PropTypes.bool.isRequired,
   youtubeIdStatus: PropTypes.string.isRequired,
   image: PropTypes.string,

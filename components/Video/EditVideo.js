@@ -73,7 +73,7 @@ const Composed = adopt({
 class EditVideo extends Component {
   state = {
     isDescription: true,
-    // isAudioSource: true,
+    isAudioSource: false,
     isTags: true,
     isDefaultVolume: true,
     fetchingYoutube: false,
@@ -273,24 +273,18 @@ class EditVideo extends Component {
         originTitle: oldOriginTitle,
         originAuthor: oldOriginChannel,
         originTags: oldOriginTags,
+        addedBy: { displayName: oldAuthor },
       },
     } = data;
-    let oldTitleVi;
-    let oldDescriptionVi;
+    let oldTitleVi = '';
+    let oldDescriptionVi = '';
     let oldDefaultVolume = 30;
-    let oldTagsObj;
+    let oldTagsObj = '';
     let oldAudioSource = '';
-    let oldAuthor;
     let oldLanguage;
     if (!audioId) {
       ({
-        video: {
-          originTitle: oldTitleVi,
-          originDescription: oldDescriptionVi,
-          originTags: oldTagsObj,
-          addedBy: { displayName: oldAuthor },
-          language: oldLanguage,
-        },
+        video: { language: oldLanguage },
       } = data);
     } else {
       const {
@@ -304,11 +298,11 @@ class EditVideo extends Component {
           description: oldDescriptionVi,
           tags: oldTagsObj,
           defaultVolume: oldDefaultVolume,
-          author: { displayName: oldAuthor },
           language: oldLanguage,
         },
       ] = audio.filter(audioFile => audioFile.id === audioId);
     }
+    console.log(oldLanguage);
     let oldTags = '';
     Object.values(oldTagsObj).forEach(val => {
       oldTags = oldTags + val.text + ' ';
