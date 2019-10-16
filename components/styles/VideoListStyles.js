@@ -9,6 +9,12 @@ const VideoListStyles = styled.div`
   justify-content: center;
   padding: 0;
 
+  .buttons {
+    position: relative;
+    bottom: 35px;
+    text-align: center;
+  }
+
   .ui.large.label {
     position: absolute;
     bottom: 0.2rem;

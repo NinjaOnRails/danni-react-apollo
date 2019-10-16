@@ -26,8 +26,8 @@ const UserInfo = ({
           <Icon name="video" /> {uploadsTotal} Uploads
         </Item.Meta>
       )}
-      {name && name !== displayName && (
-        <Item.Description>
+      <Item.Description>
+        {name && name !== displayName && (
           <p>
             {me && (
               <Popup
@@ -39,21 +39,21 @@ const UserInfo = ({
             )}
             {name}
           </p>
-          {bio && (
-            <p>
-              {me && (
-                <Popup
-                  content={currentUser.showBio ? 'Hiển thị' : 'Giấu'}
-                  trigger={
-                    <Icon name={currentUser.showBio ? 'eye' : 'eye slash'} />
-                  }
-                />
-              )}
-              {bio}
-            </p>
-          )}
-        </Item.Description>
-      )}
+        )}
+        {bio && (
+          <p>
+            {me && (
+              <Popup
+                content={currentUser.showBio ? 'Hiển thị' : 'Giấu'}
+                trigger={
+                  <Icon name={currentUser.showBio ? 'eye' : 'eye slash'} />
+                }
+              />
+            )}
+            {bio}
+          </p>
+        )}
+      </Item.Description>
       <Item.Extra>
         {location && (
           <p>

@@ -3,7 +3,7 @@ import { Dropdown, Loader, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import DropDownForm from '../styles/VideoFormStyles';
-import CloudinaryUpload from './CloudinaryUploadAudio';
+import CloudinaryUploadAudio from './CloudinaryUploadAudio';
 
 const EditVideoForm = ({
   audioId,
@@ -114,7 +114,7 @@ const EditVideoForm = ({
             </audio>
           </>
         )}
-        <CloudinaryUpload
+        <CloudinaryUploadAudio
           onUploadFileSubmit={onUploadFileSubmit}
           source={youtubeId || oldOriginId}
           language={language || oldLanguage}

@@ -59,7 +59,6 @@ const deleteVideoMutation = ({ render }) => (
     }
   </Mutation>
 );
-
 /* eslint-enable */
 
 const Composed = adopt({
