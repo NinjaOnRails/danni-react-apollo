@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
-import Router, { withRouter } from 'next/router';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { Loader, Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
@@ -260,11 +260,7 @@ class EditVideo extends Component {
   };
 
   getDefaultValues = data => {
-    const {
-      router: {
-        query: { audioId },
-      },
-    } = this.props;
+    const { audioId } = this.props;
     const {
       video: {
         originId: oldOriginId,
@@ -272,7 +268,6 @@ class EditVideo extends Component {
         originTitle: oldOriginTitle,
         originAuthor: oldOriginChannel,
         originTags: oldOriginTags,
-        addedBy: { displayName: oldAuthor },
       },
     } = data;
     let oldTitleVi = '';
@@ -301,7 +296,6 @@ class EditVideo extends Component {
         },
       ] = audio.filter(audioFile => audioFile.id === audioId);
     }
-    console.log(oldLanguage);
     let oldTags = '';
     Object.values(oldTagsObj).forEach(val => {
       oldTags = oldTags + val.text + ' ';
@@ -313,7 +307,6 @@ class EditVideo extends Component {
       oldDefaultVolume,
       oldTags,
       oldAudioSource,
-      oldAuthor,
       oldLanguage,
       oldImage,
       oldOriginTitle,
@@ -331,11 +324,7 @@ class EditVideo extends Component {
   ) => {
     // Stop form from submitting
     e.preventDefault();
-    const {
-      router: {
-        query: { id, audioId },
-      },
-    } = this.props;
+    const { id, audioId } = this.props;
     const {
       source,
       title,
@@ -361,7 +350,7 @@ class EditVideo extends Component {
       oldLanguage,
     } = oldValuesObject;
     let redirectAudioParam;
-    // Call createAudio mutation
+    // Call updateVideo mutation
     if (
       (!audioId && !audioSource && (language || source)) ||
       (audioId && source)
@@ -371,8 +360,6 @@ class EditVideo extends Component {
           id,
           source,
           language,
-          originThumbnailUrl: image,
-          originThumbnailUrlSd: image,
         },
       });
       redirectAudioParam = audioId;
@@ -431,11 +418,7 @@ class EditVideo extends Component {
   };
 
   render() {
-    const {
-      router: {
-        query: { id, audioId },
-      },
-    } = this.props;
+    const { id, audioId } = this.props;
     return (
       <Composed id={id} audioId={audioId}>
         {({
@@ -524,7 +507,12 @@ class EditVideo extends Component {
 }
 
 EditVideo.propTypes = {
-  router: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  audioId: PropTypes.string,
 };
 
-export default withRouter(EditVideo);
+EditVideo.defaultProps = {
+  audioId: null,
+};
+
+export default EditVideo;

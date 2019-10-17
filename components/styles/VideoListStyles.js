@@ -67,6 +67,9 @@ const VideoListStyles = styled.div`
       width: 320px;
       height: 180px;
     }
+    .buttons {
+      bottom: 10px;
+    }
   }
   @media (min-width: 480px) {
     grid-gap: 42px 14px;

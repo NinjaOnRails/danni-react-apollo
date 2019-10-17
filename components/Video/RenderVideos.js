@@ -70,7 +70,7 @@ const renderVideoItem = (
                 query,
               }}
             >
-              <Button icon labelPosition="left" disabled>
+              <Button icon labelPosition="left">
                 <Icon name="write" />
                 Sửa
               </Button>

@@ -23,18 +23,8 @@ const UPDATE_VIDEO_MUTATION = gql`
     $id: ID!
     $source: String
     $language: Language
-    $originThumbnailUrl: String
-    $originThumbnailUrlSd: String
   ) {
-    updateVideo(
-      id: $id
-      data: {
-        source: $source
-        language: $language
-        originThumbnailUrl: $originThumbnailUrl
-        originThumbnailUrlSd: $originThumbnailUrlSd
-      }
-    ) {
+    updateVideo(id: $id, source: $source, language: $language) {
       id
       originId
     }

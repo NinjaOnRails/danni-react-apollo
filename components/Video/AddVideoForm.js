@@ -152,10 +152,12 @@ const AddVideoForm = ({
                     value={tags}
                     onChange={handleChange}
                   />
-                  <Segment>
-                    <p>Current YouTube tags:</p>
-                    {originTags.join(' ')}
-                  </Segment>
+                  {originTags && (
+                    <Segment>
+                      <p>Current YouTube tags:</p>
+                      {originTags.join(' ')}
+                    </Segment>
+                  )}
                 </>
               )}
               <label htmlFor="defaultVolume">
@@ -208,7 +210,7 @@ AddVideoForm.propTypes = {
   isDescription: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,
   isTags: PropTypes.bool.isRequired,
-  originTags: PropTypes.array.isRequired,
+  originTags: PropTypes.array,
   tags: PropTypes.string.isRequired,
   isDefaultVolume: PropTypes.bool.isRequired,
   defaultVolume: PropTypes.number.isRequired,
@@ -219,6 +221,10 @@ AddVideoForm.propTypes = {
   onUploadFileSubmit: PropTypes.func.isRequired,
   onDeleteFileSubmit: PropTypes.func.isRequired,
   onAudioLoadedMetadata: PropTypes.func.isRequired,
+};
+
+AddVideoForm.defaultProps = {
+  originTags: null,
 };
 
 export default AddVideoForm;

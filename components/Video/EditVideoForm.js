@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Loader, Segment } from 'semantic-ui-react';
+import { Dropdown, Loader, Segment, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import DropDownForm from '../styles/VideoFormStyles';
@@ -15,7 +15,6 @@ const EditVideoForm = ({
   oldTags,
   oldAudioSource,
   oldLanguage,
-  oldAuthor,
   oldImage,
   oldOriginTitle,
   oldOriginChannel,
@@ -102,7 +101,7 @@ const EditVideoForm = ({
     )}
     {(audioId || isAudioSource) && (
       <>
-        {oldAudioSource && (
+        {!secureUrl && oldAudioSource && (
           <>
             <p>Current Audio:</p>
             <audio
@@ -114,6 +113,13 @@ const EditVideoForm = ({
             </audio>
           </>
         )}
+        <p>Upload New Audio:</p>
+        <Message warning>
+          <p>
+            Uploading a new audio file will immediately permanently replace the
+            old one
+          </p>
+        </Message>
         <CloudinaryUploadAudio
           onUploadFileSubmit={onUploadFileSubmit}
           source={youtubeId || oldOriginId}
@@ -162,6 +168,37 @@ const EditVideoForm = ({
                 />
               </label>
             )}
+            <label htmlFor="tags">
+              <input
+                id="tags"
+                name="isTags"
+                type="checkbox"
+                checked={isTags}
+                onChange={handleChange}
+              />
+              Tags:
+            </label>
+            {isTags && (
+              <>
+                <input
+                  type="text"
+                  name="tags"
+                  maxLength="500"
+                  defaultValue={oldTags.trim()}
+                  onChange={handleChange}
+                />
+                {originTags && (
+                  <Segment>
+                    <p>Current YouTube tags:</p>
+                    {originTags.join(' ') ||
+                      oldOriginTags.reduce(
+                        (tagString, tag) => tagString + ' ' + tag.text,
+                        ' '
+                      )}
+                  </Segment>
+                )}
+              </>
+            )}
             <label htmlFor="defaultVolume">
               <input
                 id="defaultVolume"
@@ -182,47 +219,8 @@ const EditVideoForm = ({
                 onChange={handleChange}
               />
             )}
-            <label htmlFor="tags">
-              <input
-                id="tags"
-                name="isTags"
-                type="checkbox"
-                checked={isTags}
-                onChange={handleChange}
-              />
-              Tags:
-            </label>
-            {isTags && (
-              <>
-                <input
-                  type="text"
-                  name="tags"
-                  maxLength="500"
-                  defaultValue={oldTags.trim()}
-                  onChange={handleChange}
-                />
-                <Segment>
-                  <p>Current YouTube tags:</p>
-                  {originTags.join(' ') ||
-                    oldOriginTags.reduce(
-                      (tagString, tag) => tagString + ' ' + tag.text,
-                      ' '
-                    )}
-                </Segment>
-              </>
-            )}
           </>
         )}
-
-        <label htmlFor="audioAuthor">
-          Người đọc:
-          <input
-            type="text"
-            name="audioAuthor"
-            defaultValue={oldAuthor}
-            onChange={handleChange}
-          />
-        </label>
       </>
     )}
     <button type="submit">Save Changes</button>
@@ -270,7 +268,6 @@ EditVideoForm.propTypes = {
   oldOriginId: PropTypes.string.isRequired,
   oldTags: PropTypes.string.isRequired,
   oldAudioSource: PropTypes.string.isRequired,
-  oldAuthor: PropTypes.string.isRequired,
   oldLanguage: PropTypes.string,
   oldImage: PropTypes.string.isRequired,
   oldOriginTitle: PropTypes.string.isRequired,
