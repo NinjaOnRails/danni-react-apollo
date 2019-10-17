@@ -338,7 +338,6 @@ class EditVideo extends Component {
       isDefaultVolume,
       audioSource,
       secureUrl,
-      image,
     } = this.state;
     // if fields unchanged, use default values
     const {

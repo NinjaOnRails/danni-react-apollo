@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
-import { Segment, Header, Image } from 'semantic-ui-react';
+import { Segment, Header, Image, Button, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import YoutubeViews from './YoutubeViews';
+import User from '../Authentication/User';
 
 const VideoInfoStyles = styled.div`
   margin-bottom: 2rem;
@@ -75,90 +76,115 @@ export default class VideoInfo extends Component {
       url,
       showFullDescription,
       toggleFullDescription,
+      id,
+      audioId,
     } = this.props;
 
     const { descriptionOverflow } = this.state;
 
+    const query = { id };
+    if (audioId) query.audioId = audioId;
+
     return (
-      <VideoInfoStyles>
-        <div className="basic-info">
-          <Header>
-            <h1>{audio[0] ? audio[0].title : originTitle}</h1>
-          </Header>
-          <div className="views-social">
-            <YoutubeViews originId={originId} />
-            <div>
-              <FacebookShareButton className="fb-share-button" url={url}>
-                <FacebookIcon size={32} round />
-              </FacebookShareButton>
-            </div>
-          </div>
-        </div>
-        <Segment>
-          <Header>
-            <h2>Tác giả: {originAuthor}</h2>
-          </Header>
-          {(audio[0] && (
-            <Header>
-              <h3>
-                <Link
-                  href={{
-                    pathname: '/user',
-                    query: { id: audio[0].author.id },
+      <User>
+        {({ data }) => {
+          const currentUser = data ? data.currentUser : null;
+          return (
+            <VideoInfoStyles>
+              <div className="basic-info">
+                {currentUser && currentUser.id === addedBy.id && (
+                  <Link
+                    href={{
+                      pathname: '/edit',
+                      query,
+                    }}
+                  >
+                    <Button icon labelPosition="left" floated="right">
+                      <Icon name="write" />
+                      Sửa
+                    </Button>
+                  </Link>
+                )}
+                <Header>
+                  <h1>{audio[0] ? audio[0].title : originTitle}</h1>
+                </Header>
+                <div className="views-social">
+                  <YoutubeViews originId={originId} />
+                  <div>
+                    <FacebookShareButton className="fb-share-button" url={url}>
+                      <FacebookIcon size={32} round />
+                    </FacebookShareButton>
+                  </div>
+                </div>
+              </div>
+              <Segment>
+                <Header>
+                  <h2>Tác giả: {originAuthor}</h2>
+                </Header>
+                {(audio[0] && (
+                  <Header>
+                    <h3>
+                      <Link
+                        href={{
+                          pathname: '/user',
+                          query: { id: audio[0].author.id },
+                        }}
+                      >
+                        <a>
+                          <Image avatar src={audio[0].author.avatar} />
+                          {audio[0].author
+                            ? audio[0].author.displayName
+                            : 'deleted user'}
+                        </a>
+                      </Link>
+                    </h3>
+                  </Header>
+                )) || (
+                  <Header>
+                    <h3>
+                      <Link
+                        href={{
+                          pathname: '/user',
+                          query: { id: addedBy.id },
+                        }}
+                      >
+                        <a>
+                          <Image avatar src={addedBy.avatar} />
+                          {addedBy ? addedBy.displayName : 'deleted user'}
+                        </a>
+                      </Link>
+                    </h3>
+                  </Header>
+                )}
+                <div
+                  ref={descriptionDiv => {
+                    this.descriptionDiv = descriptionDiv;
                   }}
+                  className={
+                    showFullDescription
+                      ? 'description'
+                      : `description description-preview`
+                  }
                 >
-                  <a>
-                    <Image avatar src={audio[0].author.avatar} />
-                    {audio[0].author
-                      ? audio[0].author.displayName
-                      : 'deleted user'}
-                  </a>
-                </Link>
-              </h3>
-            </Header>
-          )) || (
-            <Header>
-              <h3>
-                <Link
-                  href={{
-                    pathname: '/user',
-                    query: { id: addedBy.id },
-                  }}
-                >
-                  <a>
-                    <Image avatar src={addedBy.avatar} />
-                    {addedBy ? addedBy.displayName : 'deleted user'}
-                  </a>
-                </Link>
-              </h3>
-            </Header>
-          )}
-          <div
-            ref={descriptionDiv => {
-              this.descriptionDiv = descriptionDiv;
-            }}
-            className={
-              showFullDescription
-                ? 'description'
-                : `description description-preview`
-            }
-          >
-            {(audio[0] && audio[0].description && (
-              <>{audio[0].description}</>
-            )) ||
-              (originDescription && <>{originDescription}</>)}
-          </div>
-          {descriptionOverflow && (
-            <button
-              type="button"
-              onClick={() => toggleFullDescription()}
-              className="ui button"
-            >
-              {showFullDescription ? 'Đóng' : 'Tiếp'}
-            </button>
-          )}
-        </Segment>
-      </VideoInfoStyles>
+                  {(audio[0] && audio[0].description && (
+                    <>{audio[0].description}</>
+                  )) ||
+                    (originDescription && <>{originDescription}</>)}
+                </div>
+                {descriptionOverflow && (
+                  <button
+                    type="button"
+                    onClick={() => toggleFullDescription()}
+                    className="ui button"
+                  >
+                    {showFullDescription ? 'Đóng' : 'Tiếp'}
+                  </button>
+                )}
+              </Segment>
+            </VideoInfoStyles>
+          );
+        }}
+      </User>
     );
   }
 }
