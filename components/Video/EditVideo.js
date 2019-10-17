@@ -301,7 +301,6 @@ class EditVideo extends Component {
         },
       ] = audio.filter(audioFile => audioFile.id === audioId);
     }
-    console.log(oldLanguage);
     let oldTags = '';
     Object.values(oldTagsObj).forEach(val => {
       oldTags = oldTags + val.text + ' ';
