@@ -1,12 +1,24 @@
 import styled from 'styled-components';
 
 const UserProfileStyles = styled.div`
+  .ui.form .field .ui.input input,
+  .ui.form .fields .field .ui.input input {
+    width: 160px;
+  }
+  .ui.large.form {
+    width: 320px;
+    text-align: center;
+  }
+  .ui.form .inline.fields .field {
+    padding-right: 7px;
+  }
   .display-hide-password {
     cursor: pointer;
   }
   .ui.form .inline.fields .field > label {
-    width: 73.64px;
+    width: 80px;
     text-align: right;
+    margin-right: 7px;
   }
   div.item {
     justify-content: center;
