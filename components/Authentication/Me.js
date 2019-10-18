@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Container,
-  Item,
-  Loader,
-  Button,
-  Icon,
-  Popup,
-} from 'semantic-ui-react';
+import { Container, Item, Loader, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import RenderVideos from '../Video/RenderVideos';
 import VideoListStyles from '../styles/VideoListStyles';

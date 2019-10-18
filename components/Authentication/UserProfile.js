@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Container,
-  Item,
-  Loader,
-  Button,
-  Icon,
-  Popup,
-} from 'semantic-ui-react';
+import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import { Query } from 'react-apollo';
@@ -70,7 +63,7 @@ class UserProfile extends Component {
           const user = data ? data.user : initialData.user;
           const { audio, video, avatar, displayName } = user;
           return (
-            <Container>
+            <>
               <UserProfileStyles>
                 {currentUser && currentUser.id === userId && (
                   <UpdateAvatarModal
@@ -123,7 +116,7 @@ class UserProfile extends Component {
                   currentUser={currentUser}
                 />
               </VideoListStyles>
-            </Container>
+            </>
           );
         }}
       </Composed>
