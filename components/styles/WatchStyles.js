@@ -5,6 +5,9 @@ export const WatchPageStyles = styled.div`
   .filePlayer {
     display: none; /* Hide audio File Player */
   }
+  div.ui.active.centered.inline.loader {
+    margin-top: 50px;
+  }
   @media (max-width: 991px) {
     .tablet-padding {
       padding: 0 1rem;
