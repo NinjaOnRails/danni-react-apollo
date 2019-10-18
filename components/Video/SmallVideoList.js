@@ -52,7 +52,7 @@ const SmallVideoList = props => {
             (loadingAudios ||
               loadingVideos ||
               (!dataVideos && !dataAudios))) ? (
-            <Loader active />
+            <Loader active inline="centered" />
           ) : errorAudios ? (
             <Error>Error: {errorAudios.message}</Error>
           ) : errorVideos ? (
