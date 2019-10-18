@@ -40,8 +40,19 @@ const NavStyles = styled.div`
       width: 0;
       position: absolute;
       transform: translateX(-50%);
-      transition: width 0.4s;
+      /* transition: width 0.4s; */
+      transition-property: width;
+      transition-duration: 0.4s;
       transition-timing-function: cubic-bezier(1, -0.65, 0, 2.31);
+      /* -webkit-transtition: width 0.4s; */
+      -webkit-transform: translateX(-50%);
+      -webkit-transition-property: width;
+      -webkit-transition-duration: 0.4s;
+      -webkit-transition-timing-function: cubic-bezier(1, -0.65, 0, 2.31);
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      -webkit-transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden;
       left: 50%;
       margin-top: 2rem;
     }
