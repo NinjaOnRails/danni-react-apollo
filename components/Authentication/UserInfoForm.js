@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Checkbox, Item, Form, Button, Icon } from 'semantic-ui-react';
+import { Checkbox, Item, Form, Button, Icon, Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { UPDATE_USER_MUTATION } from '../../graphql/mutation';
@@ -9,7 +9,10 @@ import Error from '../UI/ErrorMessage';
 class UserInfoForm extends Component {
   state = {
     password: '',
+    newPassword: '',
     confirmPassword: '',
+    showPasswordChange: false,
+    displayPassword: false,
   };
 
   handleChange = (e, { type, name, value, checked }) => {
@@ -25,7 +28,13 @@ class UserInfoForm extends Component {
 
   render() {
     const { currentUser, onCancelClick } = this.props;
-    const { password, confirmPassword } = this.state;
+    const {
+      password,
+      newPassword,
+      confirmPassword,
+      showPasswordChange,
+      displayPassword,
+    } = this.state;
     const {
       id,
       displayName,
@@ -83,7 +92,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Hiển thị"
+                  label="Công khai"
                   name="showName"
                   defaultChecked={showName}
                   onChange={this.handleChange}
@@ -99,7 +108,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Hiển thị"
+                  label="Công khai"
                   name="showBio"
                   defaultChecked={showBio}
                   onChange={this.handleChange}
@@ -115,7 +124,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Hiển thị"
+                  label="Công khai"
                   name="showLocation"
                   defaultChecked={showLocation}
                   onChange={this.handleChange}
@@ -132,33 +141,69 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Hiển thị"
+                  label="Công khai"
                   name="showEmail"
                   defaultChecked={showEmail}
                   onChange={this.handleChange}
                 />
               </Form.Group>
-              <Form.Group inline>
-                <Form.Input
-                  label="Đổi mật khẩu"
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={this.handleChange}
-                  autoComplete="new-password"
-                />
-              </Form.Group>
-              <Form.Group inline>
-                <Form.Input
-                  label="Xác nhận mật khẩu"
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={confirmPassword}
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
+              {(showPasswordChange && (
+                <>
+                  <Form.Group inline>
+                    <Form.Input
+                      label="M.khẩu hiện tại"
+                      type={displayPassword ? 'text' : 'password'}
+                      id="password"
+                      name="password"
+                      value={password}
+                      onChange={this.handleChange}
+                    />
+                    <Popup
+                      content={
+                        displayPassword ? 'Giấu mật khẩu' : 'Hiển thị mật khẩu'
+                      }
+                      trigger={
+                        <Icon
+                          className="display-hide-password"
+                          name={displayPassword ? 'eye' : 'eye slash'}
+                          onClick={() =>
+                            this.setState({ displayPassword: !displayPassword })
+                          }
+                        />
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group inline>
+                    <Form.Input
+                      label="M.khẩu mới"
+                      type={displayPassword ? 'text' : 'password'}
+                      id="newPassword"
+                      name="newPassword"
+                      value={newPassword}
+                      onChange={this.handleChange}
+                      autoComplete="new-password"
+                    />
+                  </Form.Group>
+                  <Form.Group inline>
+                    <Form.Input
+                      label="Lặp lại m.khẩu mới"
+                      type={displayPassword ? 'text' : 'password'}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={confirmPassword}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Group>
+                </>
+              )) || (
+                <p>
+                  <Button
+                    onClick={() => this.setState({ showPasswordChange: true })}
+                  >
+                    Đổi mật khẩu
+                  </Button>
+                </p>
+              )}
               <Error error={error} />
               <Button
                 type="submit"

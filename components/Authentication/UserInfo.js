@@ -31,7 +31,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showName ? 'Hiển thị' : 'Giấu'}
+                content={currentUser.showName ? 'Công khai' : 'Giấu'}
                 trigger={
                   <Icon name={currentUser.showName ? 'eye' : 'eye slash'} />
                 }
@@ -44,7 +44,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showBio ? 'Hiển thị' : 'Giấu'}
+                content={currentUser.showBio ? 'Công khai' : 'Giấu'}
                 trigger={
                   <Icon name={currentUser.showBio ? 'eye' : 'eye slash'} />
                 }
@@ -59,7 +59,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showLocation ? 'Hiển thị' : 'Giấu'}
+                content={currentUser.showLocation ? 'Công khai' : 'Giấu'}
                 trigger={
                   <Icon name={currentUser.showLocation ? 'eye' : 'eye slash'} />
                 }
@@ -72,7 +72,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showEmail ? 'Hiển thị' : 'Giấu'}
+                content={currentUser.showEmail ? 'Công khai' : 'Giấu'}
                 trigger={
                   <Icon name={currentUser.showEmail ? 'eye' : 'eye slash'} />
                 }

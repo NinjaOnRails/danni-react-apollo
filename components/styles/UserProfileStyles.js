@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 const UserProfileStyles = styled.div`
+  .display-hide-password {
+    cursor: pointer;
+  }
   .ui.form .inline.fields .field > label {
-    width: 91.094px;
+    width: 90.31px;
     text-align: right;
   }
   div.item {

@@ -192,6 +192,7 @@ const UPDATE_USER_MUTATION = gql`
     $location: String
     $email: String
     $password: String
+    $newPassword: String
     $confirmPassword: String
     $showName: Boolean
     $showEmail: Boolean
@@ -206,6 +207,7 @@ const UPDATE_USER_MUTATION = gql`
         location: $location
         email: $email
         password: $password
+        newPassword: $newPassword
         confirmPassword: $confirmPassword
         showName: $showName
         showEmail: $showEmail
