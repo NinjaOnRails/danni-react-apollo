@@ -6,7 +6,7 @@ const UserProfileStyles = styled.div`
     width: 160px;
   }
   .ui.large.form {
-    width: 315px;
+    width: 320px;
     text-align: center;
   }
   .ui.form .inline.fields .field {
@@ -16,7 +16,7 @@ const UserProfileStyles = styled.div`
     cursor: pointer;
   }
   .ui.form .inline.fields .field > label {
-    width: 73.64px;
+    width: 80px;
     text-align: right;
     margin-right: 7px;
   }
