@@ -84,6 +84,7 @@ class EditVideo extends Component {
     deleteToken: '',
     error: '',
     audioDuration: 0,
+    showUpload: false,
   };
 
   handleChange = ({ target: { name, type, value, checked } }) => {
@@ -315,6 +316,8 @@ class EditVideo extends Component {
     };
   };
 
+  onShowUpload = () => this.setState({ showUpload: true });
+
   onSubmit = async (
     e,
     updateVideo,
@@ -495,6 +498,7 @@ class EditVideo extends Component {
                   }
                   onDeleteFileSubmit={this.onDeleteFileSubmit}
                   onAudioLoadedMetadata={this.onAudioLoadedMetadata}
+                  onShowUpload={this.onShowUpload}
                 />
               </Form>
             </Container>
