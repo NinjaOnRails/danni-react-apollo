@@ -65,17 +65,12 @@ class Me extends Component {
                         alt={displayName}
                         size="medium"
                       />
-                      <Popup
-                        trigger={
-                          <Icon
-                            corner="top left"
-                            name="write"
-                            bordered
-                            link
-                            onClick={this.openUpdateAvatarModal}
-                          />
-                        }
-                        content="Thay đổi avatar"
+                      <Icon
+                        corner="top left"
+                        name="write"
+                        bordered
+                        link
+                        onClick={this.openUpdateAvatarModal}
                       />
                     </Icon.Group>
                     {editMode ? (

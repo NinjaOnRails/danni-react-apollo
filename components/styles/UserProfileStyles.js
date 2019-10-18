@@ -5,7 +5,7 @@ const UserProfileStyles = styled.div`
     cursor: pointer;
   }
   .ui.form .inline.fields .field > label {
-    width: 90.31px;
+    width: 73.64px;
     text-align: right;
   }
   div.item {

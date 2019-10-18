@@ -88,17 +88,12 @@ class UserProfile extends Component {
                         size="medium"
                       />
                       {currentUser && currentUser.id === userId && (
-                        <Popup
-                          trigger={
-                            <Icon
-                              corner="top left"
-                              name="write"
-                              bordered
-                              link
-                              onClick={this.openUpdateAvatarModal}
-                            />
-                          }
-                          content="Thay đổi avatar"
+                        <Icon
+                          corner="top left"
+                          name="write"
+                          bordered
+                          link
+                          onClick={this.openUpdateAvatarModal}
                         />
                       )}
                     </Icon.Group>

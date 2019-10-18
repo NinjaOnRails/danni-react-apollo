@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Loader, Segment, Message } from 'semantic-ui-react';
+import { Dropdown, Loader, Segment, Message, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import DropDownForm from '../styles/VideoFormStyles';
@@ -35,12 +35,14 @@ const EditVideoForm = ({
   isAudioSource,
   isTags,
   isDefaultVolume,
+  showUpload,
   // methods
   handleChange,
   handleDropdown,
   onUploadFileSubmit,
   onDeleteFileSubmit,
   onAudioLoadedMetadata,
+  onShowUpload,
   // thumbnail
   image,
   originTitle,
@@ -114,25 +116,30 @@ const EditVideoForm = ({
           </>
         )}
         <p>Upload New Audio:</p>
-        <Message warning>
-          <p>
-            Uploading a new audio file will immediately permanently replace the
-            old one
-          </p>
-        </Message>
-        <CloudinaryUploadAudio
-          onUploadFileSubmit={onUploadFileSubmit}
-          source={youtubeId || oldOriginId}
-          language={language || oldLanguage}
-          uploadProgress={uploadProgress}
-          uploadError={uploadError}
-          deleteToken={deleteToken}
-          onDeleteFileSubmit={onDeleteFileSubmit}
-          secureUrl={secureUrl}
-          handleChange={handleChange}
-          audioSource={audioSource}
-          onAudioLoadedMetadata={onAudioLoadedMetadata}
-        />
+
+        {(showUpload && (
+          <CloudinaryUploadAudio
+            onUploadFileSubmit={onUploadFileSubmit}
+            source={youtubeId || oldOriginId}
+            language={language || oldLanguage}
+            uploadProgress={uploadProgress}
+            uploadError={uploadError}
+            deleteToken={deleteToken}
+            onDeleteFileSubmit={onDeleteFileSubmit}
+            secureUrl={secureUrl}
+            handleChange={handleChange}
+            audioSource={audioSource}
+            onAudioLoadedMetadata={onAudioLoadedMetadata}
+          />
+        )) || (
+          <Message warning>
+            <p>
+              Uploading a new audio file will immediately permanently replace
+              the old one.{' '}
+              <Button onClick={() => onShowUpload()}>Continue</Button>
+            </p>
+          </Message>
+        )}
         {(secureUrl || audioSource || audioId) && (
           <>
             <label htmlFor="title">
@@ -252,6 +259,7 @@ EditVideoForm.propTypes = {
   image: PropTypes.string,
   channelTitle: PropTypes.string,
   originTitle: PropTypes.string,
+  showUpload: PropTypes.bool.isRequired,
   // tags: PropTypes.string,
   originTags: PropTypes.array,
   language: PropTypes.string,
@@ -283,6 +291,7 @@ EditVideoForm.propTypes = {
   onUploadFileSubmit: PropTypes.func.isRequired,
   onDeleteFileSubmit: PropTypes.func.isRequired,
   onAudioLoadedMetadata: PropTypes.func.isRequired,
+  onShowUpload: PropTypes.func.isRequired,
 };
 
 export default EditVideoForm;

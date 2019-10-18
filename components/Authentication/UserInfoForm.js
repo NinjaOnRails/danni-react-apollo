@@ -151,7 +151,7 @@ class UserInfoForm extends Component {
                 <>
                   <Form.Group inline>
                     <Form.Input
-                      label="M.khẩu hiện tại"
+                      label="Mật khẩu cũ"
                       type={displayPassword ? 'text' : 'password'}
                       id="password"
                       name="password"
@@ -175,7 +175,7 @@ class UserInfoForm extends Component {
                   </Form.Group>
                   <Form.Group inline>
                     <Form.Input
-                      label="M.khẩu mới"
+                      label="Mật khẩu mới"
                       type={displayPassword ? 'text' : 'password'}
                       id="newPassword"
                       name="newPassword"
@@ -186,7 +186,7 @@ class UserInfoForm extends Component {
                   </Form.Group>
                   <Form.Group inline>
                     <Form.Input
-                      label="Lặp lại m.khẩu mới"
+                      label="Lặp lại m/k mới"
                       type={displayPassword ? 'text' : 'password'}
                       id="confirmPassword"
                       name="confirmPassword"
