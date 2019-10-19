@@ -123,7 +123,7 @@ class Signin extends Component {
         },
         modified: false,
         valid: false,
-        value: '@',
+        value: '',
       },
       password: {
         inputConfig: {
