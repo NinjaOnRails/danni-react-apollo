@@ -65,7 +65,7 @@ class Signup extends Component {
         },
         modified: false,
         valid: false,
-        value: '@',
+        value: '',
       },
       password: {
         inputConfig: {
