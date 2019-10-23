@@ -10,9 +10,13 @@ const VideoListStyles = styled.div`
   padding: 0;
 
   .buttons {
-    position: relative;
+    /* position: relative;
     bottom: 35px;
-    text-align: center;
+    text-align: center; */
+    position: relative;
+    bottom: 32px;
+    text-align: right;
+    margin-right: 5px;
   }
 
   .ui.large.label {
