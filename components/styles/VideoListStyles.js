@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const VideoListStyles = styled.div`
+  width: 80%;
   font-size: 1.1rem;
   display: grid;
   grid-template-columns: 210px 210px 210px 210px 210px;
@@ -8,7 +9,9 @@ const VideoListStyles = styled.div`
   margin: 0 auto;
   justify-content: center;
   padding: 0;
-
+  /* h1 {
+    margin-left: 5%;
+  } */
   .buttons {
     /* position: relative;
     bottom: 35px;
