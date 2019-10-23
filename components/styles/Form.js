@@ -110,6 +110,7 @@ font-family: ${props => props.theme.font};
     margin: 16px;
     text-align: center;
   }
+
   @media(max-width: 639px){
     fieldset {
     width:  ${props => (props.modal ? '90%' : '70%')};

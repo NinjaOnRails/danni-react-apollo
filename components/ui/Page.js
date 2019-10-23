@@ -75,7 +75,7 @@ class Page extends Component {
                 />
                 <Header />
                 <SideDrawer />
-                <AuthModal />
+                {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
               </StyledPage>
             </ThemeProvider>
