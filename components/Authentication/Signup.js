@@ -89,6 +89,7 @@ class Signup extends Component {
       },
     },
     formValid: false,
+    displayPassword: false,
   };
 
   componentDidMount() {
@@ -130,6 +131,10 @@ class Signup extends Component {
     });
   };
 
+  onShowPasswordToggle = () => {
+    this.setState({ displayPassword: !this.state.displayPassword });
+  };
+
   onSubmit = async ({ e, signup, previousPage, client, closeAuthModal }) => {
     const {
       signupForm: { password, email, displayName },
@@ -163,7 +168,7 @@ class Signup extends Component {
   };
 
   render() {
-    const { signupForm } = this.state;
+    const { signupForm, displayPassword } = this.state;
     const { modal } = this.props;
     const variables = {};
     const formElArr = [];
@@ -224,6 +229,8 @@ class Signup extends Component {
                     saveToState={e => this.inputChangeHandler(e, id)}
                     touched={input.modified}
                     autoComplete="new-password"
+                    displayPassword={displayPassword}
+                    onShowPasswordToggle={this.onShowPasswordToggle}
                   />
                 ))}
                 <div className="center">
