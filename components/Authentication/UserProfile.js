@@ -107,15 +107,20 @@ class UserProfile extends Component {
                   </Item>
                 </Item.Group>
               </UserProfileStyles>
-              <h1>Uploads:</h1>
-              <VideoListStyles>
-                <RenderVideos
-                  dataAudios={{ audios: audio }}
-                  dataVideos={{ videos: video }}
-                  hideAuthor
-                  currentUser={currentUser}
-                />
-              </VideoListStyles>
+              <div
+                className="upload-container"
+                style={{ width: '80%', margin: '3.75rem auto 0 auto' }}
+              >
+                <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
+                <VideoListStyles>
+                  <RenderVideos
+                    dataAudios={{ audios: audio }}
+                    dataVideos={{ videos: video }}
+                    hideAuthor
+                    currentUser={currentUser}
+                  />
+                </VideoListStyles>
+              </div>
             </>
           );
         }}
