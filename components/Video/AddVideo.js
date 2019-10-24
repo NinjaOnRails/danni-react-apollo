@@ -6,7 +6,7 @@ import { Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
-import { ALL_VIDEOS_QUERY } from '../../graphql/query';
+import { ALL_VIDEOS_QUERY, ALL_AUDIOS_QUERY } from '../../graphql/query';
 import AddVideoForm from './AddVideoForm';
 import youtube from '../../lib/youtube';
 import { defaultLanguage } from '../../lib/supportedLanguages';
@@ -18,12 +18,18 @@ import {
   CREATE_AUDIO_MUTATION,
   CREATE_VIDEO_MUTATION,
 } from '../../graphql/mutation';
+import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 
 /* eslint-disable */
-const createAudioMutation = ({ render }) => (
+const createAudioMutation = ({
+  contentLanguageQuery: { contentLanguage },
+  render,
+}) => (
   <Mutation
     mutation={CREATE_AUDIO_MUTATION}
-    refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+    refetchQueries={[
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+    ]}
   >
     {(createAudio, createAudioResult) =>
       render({ createAudio, createAudioResult })
@@ -31,14 +37,22 @@ const createAudioMutation = ({ render }) => (
   </Mutation>
 );
 
-const createVideoMutation = ({ source, language, isAudioSource, render }) => (
+const createVideoMutation = ({
+  source,
+  language,
+  isAudioSource,
+  contentLanguageQuery: { contentLanguage },
+  render,
+}) => (
   <Mutation
     mutation={CREATE_VIDEO_MUTATION}
     variables={{
       source,
       language: isAudioSource ? null : language,
     }}
-    refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
+    refetchQueries={[
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
+    ]}
   >
     {(createVideo, createVideoResult) =>
       render({ createVideo, createVideoResult })
@@ -48,6 +62,7 @@ const createVideoMutation = ({ source, language, isAudioSource, render }) => (
 /* eslint-enable */
 
 const Composed = adopt({
+  contentLanguageQuery,
   createAudioMutation,
   createVideoMutation,
 });
