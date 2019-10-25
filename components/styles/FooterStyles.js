@@ -23,17 +23,22 @@ const FooterStyle = styled.footer`
     display: flex;
     flex-flow: row wrap;
   }
+  .footer-list-top p {
+    display: inline-block;
+  }
 
   .link-list-item {
     color: rgba(255, 255, 255, 0.5);
     font-size: 1.2em;
     font-family: 'Verdana';
   }
-  .footer-list-top p {
-    display: inline-block;
-  }
+
   .link-list-item:visited {
     color: #8db9ed;
+  }
+
+  #facebook-link:visited {
+    color: rgba(255, 255, 255, 0.5);
   }
   .link-list-item:hover {
     color: rgba(255, 255, 255, 0.9);

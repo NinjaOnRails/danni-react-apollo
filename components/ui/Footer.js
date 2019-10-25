@@ -16,6 +16,7 @@ const Footer = () => (
         <a
           href="https://www.facebook.com/danni.tvVietnam/"
           className="link-list-item"
+          id="facebook-link"
         >
           <Icon name="facebook" size="big" />
         </a>
@@ -26,17 +27,17 @@ const Footer = () => (
         <h4 className="footer-list-header">Về danni.tv</h4>
       </li>
       <li>
-        <a href="/about" className="link-list-item">
+        <a href="/notfound" className="link-list-item">
           MỤC ĐÍCH CỦA CHÚNG TÔI
         </a>
       </li>
       <li>
-        <a href="/about" className="link-list-item">
+        <a href="/notfound" className="link-list-item">
           PROMOS
         </a>
       </li>
       <li>
-        <a href="/about" className="link-list-item">
+        <a href="/notfound" className="link-list-item">
           THUYẾT MINH VIDEO
         </a>
       </li>
@@ -46,17 +47,17 @@ const Footer = () => (
         <h4 className="footer-list-header">Trợ giúp</h4>
       </li>
       <li>
-        <a href="/about" className="link-list-item">
+        <a href="/notfound" className="link-list-item">
           LIÊN LẠC
         </a>
       </li>
       <li>
-        <a href="/about" className="link-list-item">
+        <a href="/notfound" className="link-list-item">
           FAQ
         </a>
       </li>
       <li id="find-a-store">
-        <a href="/about" className="link-list-item">
+        <a href="/notfound" className="link-list-item">
           HƯỚNG DẪN SỬ DỤNG
         </a>
       </li>
@@ -67,11 +68,11 @@ const Footer = () => (
         <span className="footer-bottom-rights"> - All Rights Reserved </span>
       </div>
       <div className="footer-bottom-wrapper">
-        <a href="/about" className="terms-privacy" rel="nofollow">
+        <a href="/notfound" className="terms-privacy" rel="nofollow">
           ĐIỀU KHOẢN
         </a>{' '}
         |{' '}
-        <a href="/about" className="terms-privacy" rel="nofollow">
+        <a href="/notfound" className="terms-privacy" rel="nofollow">
           QUYỀN RIÊNG TƯ
         </a>
       </div>
