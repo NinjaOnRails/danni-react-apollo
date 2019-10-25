@@ -27,10 +27,10 @@ const Jumbotron = styled.div`
 
 const Home = props => (
   <>
-    <Jumbotron>
+    {/* <Jumbotron>
       <Header as="h1">Video do các bạn tự nguyện dịch và lồng tiếng</Header>
       <img src="/static/GettyImages-682732546.jpg" alt="bridge" />
-    </Jumbotron>
+    </Jumbotron> */}
     <Videos {...props} />
   </>
 );
