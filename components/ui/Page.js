@@ -3,6 +3,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Header from './Header';
+import Footer from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 
@@ -77,6 +78,7 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
+                <Footer />
               </StyledPage>
             </ThemeProvider>
           );
