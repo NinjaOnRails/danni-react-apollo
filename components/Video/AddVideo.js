@@ -18,7 +18,7 @@ import {
   CREATE_AUDIO_MUTATION,
   CREATE_VIDEO_MUTATION,
 } from '../../graphql/mutation';
-import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
+import { contentLanguageQuery } from '../UI/ContentLanguage';
 
 /* eslint-disable */
 const createAudioMutation = ({
