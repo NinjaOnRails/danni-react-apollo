@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const VideoListStyles = styled.div`
-  width: 80%;
+  /* width: 80%; */
   font-size: 1.1rem;
   display: grid;
   grid-template-columns: 210px 210px 210px 210px 210px;
