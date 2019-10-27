@@ -10,7 +10,7 @@ const Footer = () => (
         <Logo footer />
       </li>
       <li>
-        <p className="link-list-item">info@dannitv@gmail.com</p>
+        <p className="link-list-item">info.dannitv@gmail.com</p>
       </li>
       <li>
         <a
