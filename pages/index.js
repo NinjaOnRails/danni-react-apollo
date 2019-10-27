@@ -40,13 +40,14 @@ const Jumbotron = styled.div`
 
 const Home = props => (
   <>
-    <Jumbotron>
+    {/* <Jumbotron>
       <div className="intro">
         <Header as="h1">Video dịch và lồng tiếng bởi cộng đồng</Header>
         <Button primary size="big">
           Tìm hiểu thêm <Icon name="right arrow" />
         </Button>
       </div>
+    </Jumbotron> */}
     <Videos {...props} />
   </>
 );
