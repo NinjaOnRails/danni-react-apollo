@@ -47,8 +47,6 @@ const Home = props => (
           Tìm hiểu thêm <Icon name="right arrow" />
         </Button>
       </div>
-      <img src="/static/GettyImages-682732546.jpg" alt="bridge" />
-    </Jumbotron>
     <Videos {...props} />
   </>
 );

@@ -16,7 +16,7 @@ const Meta = () => (
     <meta
       key="description"
       name="description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ."
+      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
     />
     <meta
       name="keywords"
@@ -44,7 +44,7 @@ const Meta = () => (
     /> */}
     <meta
       property="og:description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ."
+      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
       key="og:description"
     />
 
