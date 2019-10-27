@@ -29,8 +29,8 @@ const LogoStyles = styled.h1`
     font-size: 2rem;
   }
   @media (max-width: 639px) {
-    font-size: 1.5rem;
-    transform: none;
+    font-size:  ${props => (props.footer ? '2.5rem' : '1.5rem')};
+    transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')};
     margin: 0;
   }
 `;
