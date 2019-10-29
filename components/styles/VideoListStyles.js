@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const VideoListStyles = styled.div`
-  /* width: 80%; */
   font-size: 1.1rem;
   display: grid;
   grid-template-columns: 210px 210px 210px 210px 210px;
@@ -9,9 +8,6 @@ const VideoListStyles = styled.div`
   margin: 0 auto;
   justify-content: center;
   padding: 0;
-  /* h1 {
-    margin-left: 5%;
-  } */
 
   .ui.large.label {
     position: absolute;
@@ -32,22 +28,13 @@ const VideoListStyles = styled.div`
   }
 
   .author {
-    /* position: relative;
-    top: -10px;
-    left: 11px; */
     max-width: 188px;
     line-height: 22px;
     max-height: 44px;
-    /* display: inline; */
     overflow: hidden;
   }
 
   .buttons {
-    /* position: relative;
-    bottom: 35px;
-    text-align: center; 
-    position: relative;
-    */
     bottom: 32px;
     text-align: right;
     margin: 5px 5px 0 0;
@@ -97,10 +84,6 @@ const VideoListStyles = styled.div`
     div.ui.fluid.card {
       height: 214.11px;
     }
-    /* 
-    .author {
-      top: -30px;
-    } */
   }
   @media (min-width: 720px) {
     grid-template-columns: 210px 210px 210px;

@@ -16,7 +16,6 @@ const JumbotronStyles = styled.div`
   }
   figure img {
     display: block; /*remove inline-block spaces*/
-    width: 100%; /*make image streatch*/
     margin: -15% -25%;
     width: 157%;
   }
