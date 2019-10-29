@@ -12,15 +12,6 @@ const VideoListStyles = styled.div`
   /* h1 {
     margin-left: 5%;
   } */
-  .buttons {
-    /* position: relative;
-    bottom: 35px;
-    text-align: center; */
-    position: relative;
-    bottom: 32px;
-    text-align: right;
-    margin-right: 5px;
-  }
 
   .ui.large.label {
     position: absolute;
@@ -41,14 +32,25 @@ const VideoListStyles = styled.div`
   }
 
   .author {
-    position: relative;
+    /* position: relative;
     top: -10px;
-    left: 11px;
+    left: 11px; */
     max-width: 188px;
     line-height: 22px;
     max-height: 44px;
     /* display: inline; */
     overflow: hidden;
+  }
+
+  .buttons {
+    /* position: relative;
+    bottom: 35px;
+    text-align: center; 
+    position: relative;
+    */
+    bottom: 32px;
+    text-align: right;
+    margin: 5px 5px 0 0;
   }
 
   .author-detail {
@@ -95,9 +97,10 @@ const VideoListStyles = styled.div`
     div.ui.fluid.card {
       height: 214.11px;
     }
+    /* 
     .author {
       top: -30px;
-    }
+    } */
   }
   @media (min-width: 720px) {
     grid-template-columns: 210px 210px 210px;
