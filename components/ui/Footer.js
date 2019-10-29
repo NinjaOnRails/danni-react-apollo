@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
+import Link from 'next/link';
 import Logo from './Logo';
 import FooterStyle from '../styles/FooterStyles';
 
@@ -27,7 +28,9 @@ const Footer = () => (
         <h4 className="footer-list-header">Về danni.tv</h4>
       </li>
       <li>
-        <a className="link-list-item">MỤC ĐÍCH CỦA CHÚNG TÔI</a>
+        <Link href="/about">
+          <a className="link-list-item">MỤC ĐÍCH CỦA CHÚNG TÔI</a>
+        </Link>
       </li>
       <li>
         <a className="link-list-item">PROMOS</a>
@@ -41,13 +44,19 @@ const Footer = () => (
         <h4 className="footer-list-header">Trợ giúp</h4>
       </li>
       <li>
-        <a className="link-list-item">LIÊN LẠC</a>
+        <Link href="/about">
+          <a className="link-list-item">LIÊN LẠC</a>
+        </Link>
       </li>
       <li>
-        <a className="link-list-item">FAQ</a>
+        <Link href="/about">
+          <a className="link-list-item">FAQ</a>
+        </Link>
       </li>
       <li id="find-a-store">
-        <a className="link-list-item">HƯỚNG DẪN SỬ DỤNG</a>
+        <Link href="/about">
+          <a className="link-list-item">HƯỚNG DẪN SỬ DỤNG</a>
+        </Link>
       </li>
     </ul>
     <section className="footer-bottom-section flex-rw">

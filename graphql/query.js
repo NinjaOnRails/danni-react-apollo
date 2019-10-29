@@ -164,6 +164,7 @@ const ALL_VIDEOS_QUERY = gql`
       addedBy {
         id
         displayName
+        avatar
       }
       audio {
         id
@@ -171,6 +172,7 @@ const ALL_VIDEOS_QUERY = gql`
         author {
           id
           displayName
+          avatar
         }
       }
     }
@@ -185,6 +187,7 @@ const ALL_AUDIOS_QUERY = gql`
       author {
         id
         displayName
+        avatar
       }
       video {
         id

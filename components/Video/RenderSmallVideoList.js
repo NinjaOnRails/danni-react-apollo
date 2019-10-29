@@ -52,7 +52,7 @@ const renderVideoItem = (
       <AuthorStyles>
         <Link href={{ pathname: '/user', query: { id: author.id } }}>
           <a className="author">
-            <Icon name="user" />
+            <Image avatar src={author.avatar} />
             {author ? author.displayName : 'deleted user'}
           </a>
         </Link>

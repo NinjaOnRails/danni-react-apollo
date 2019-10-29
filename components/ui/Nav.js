@@ -12,16 +12,10 @@ const Nav = () => (
       return (
         <NavStyles data-test="nav">
           <Link href="/">
-            <a>
-              Trang chủ
-              {/* <Icon name="home" size="large" /> */}
-            </a>
+            <a>Trang chủ</a>
           </Link>
           <Link href="/new">
             <a>Thêm video</a>
-          </Link>
-          <Link href="/about">
-            <a>Giới thiệu</a>
           </Link>
           <Link href="/me">
             <a>Tài khoản</a>

@@ -42,9 +42,9 @@ const Home = props => (
   <>
     <Jumbotron>
       <div className="intro">
-        <Header as="h1">Video dịch và lồng tiếng bởi cộng đồng</Header>
+        <Header as="h1">Video dịch và thuyết minh bởi cộng đồng</Header>
         <Button primary size="big">
-          Tìm hiểu thêm <Icon name="right arrow" />
+          Thêm Video <Icon name="right arrow" />
         </Button>
       </div>
       <img src="/static/GettyImages-682732546.jpg" alt="bridge" />

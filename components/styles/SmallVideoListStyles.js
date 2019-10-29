@@ -61,8 +61,8 @@ export const AuthorStyles = styled.div`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-  line-height: 17px;
-  max-height: 17px;
+  line-height: 26px;
+  max-height: 26px;
   a {
     font-family: ${props => props.theme.font};
   }

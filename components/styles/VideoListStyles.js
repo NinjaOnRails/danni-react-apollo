@@ -45,6 +45,8 @@ const VideoListStyles = styled.div`
     top: -10px;
     left: 11px;
     max-width: 188px;
+    line-height: 22px;
+    max-height: 44px;
   }
 
   .ui.card > .content > .header {
