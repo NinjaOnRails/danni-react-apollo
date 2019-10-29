@@ -47,7 +47,7 @@ const Home = props => (
           Thêm Video <Icon name="right arrow" />
         </Button>
       </div>
-      <img src="/static/GettyImages-682732546.jpg" alt="bridge" />
+      <img src="/static/GettyImages-1064233426.jpg" alt="bridge" />
     </Jumbotron>
     <Videos {...props} />
   </>
