@@ -54,12 +54,14 @@ const renderVideoItem = (
         </a>
       </Link>
       {!hideAuthor ? (
-        <Link href={{ pathname: '/user', query: { id: author.id } }}>
-          <a className="author">
-            <Image avatar src={author.avatar} />
-            {author ? author.displayName : 'deleted user'}
-          </a>
-        </Link>
+        <div className="author">
+          <Link href={{ pathname: '/user', query: { id: author.id } }}>
+            <a className="author-detail">
+              <Image avatar src={author.avatar} />
+              <span>{author ? author.displayName : 'deleted user'}</span>
+            </a>
+          </Link>
+        </div>
       ) : (
         currentUser &&
         currentUser.id === author.id && (

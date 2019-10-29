@@ -47,6 +47,12 @@ const VideoListStyles = styled.div`
     max-width: 188px;
     line-height: 22px;
     max-height: 44px;
+    /* display: inline; */
+    overflow: hidden;
+  }
+
+  .author-detail {
+    display: inline;
   }
 
   .ui.card > .content > .header {
