@@ -25,10 +25,12 @@ const StyledPage = styled.div`
 
 const Inner = styled.div`
   padding: 24px 0;
-  width: 100%;
+  width: 80%;
   margin: auto;
   @media (max-width: 479px) {
     padding: 0;
+    width: 100%;
+
   }
 `;
 

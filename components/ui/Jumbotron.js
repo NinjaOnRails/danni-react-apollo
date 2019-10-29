@@ -6,7 +6,7 @@ const JumbotronStyles = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  width: 80%;
+  width: 100%;
   margin: 20px auto;
 
   figure {
@@ -24,6 +24,9 @@ const JumbotronStyles = styled.div`
     width: 50%;
     max-width: 500px;
     max-height: 100%;
+  }
+  @media (max-width: 480px) {
+    padding-left: 10px;
   }
 `;
 const Jumbotron = () => (
