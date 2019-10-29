@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const VideoListStyles = styled.div`
   font-size: 1.1rem;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 5px;
   margin: 0 auto;
   justify-content: center;
@@ -64,7 +64,7 @@ const VideoListStyles = styled.div`
     padding-top: 0;
   }
   @media (max-width: 479px) {
-    grid-template-columns: auto;
+    /* grid-template-columns: auto; */
     .ui.card {
       box-shadow: none;
     }
@@ -76,13 +76,23 @@ const VideoListStyles = styled.div`
       bottom: 10px;
     }
   }
+  
   @media (min-width: 480px) {
+    grid-gap: 42px 14px;
+    div.header {
+    height: 3.2rem;
+    }
+
+  }
+
+  }
+  /* @media (min-width: 480px) {
     grid-gap: 42px 14px;
     grid-template-columns: repeat(2, 1fr);
     div.header {
       height: 3.2rem;
     }
-    div.ui.fluid.card {
+    div.ui.fluid.card {x
       height: 214.11px;
     }
   }
@@ -100,7 +110,7 @@ const VideoListStyles = styled.div`
   }
   @media (min-width: 1920px) {
     grid-template-columns: repeat(7, 1fr);
-  }
+  } */
 `;
 
 export default VideoListStyles;

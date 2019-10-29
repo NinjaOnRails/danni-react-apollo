@@ -16,17 +16,25 @@ const JumbotronStyles = styled.div`
   }
   figure img {
     display: block; /*remove inline-block spaces*/
-    margin: -15% -25%;
-    width: 157%;
+    margin: -10% -15%;
+    width: 118%;
   }
 
   .intro {
     width: 50%;
     max-width: 500px;
     max-height: 100%;
+    text-align: center;
   }
   @media (max-width: 480px) {
-    padding-left: 10px;
+    .intro {
+      padding-left: 5px;
+      text-align: left;
+    }
+    figure img {
+      margin: -15% -25%;
+      width: 157%;
+    }
   }
 `;
 const Jumbotron = () => (
