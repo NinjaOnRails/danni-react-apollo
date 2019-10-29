@@ -62,7 +62,7 @@ const Footer = () => (
     <section className="footer-bottom-section flex-rw">
       <div className="footer-bottom-wrapper">
         &copy; 2019 Danni.tv
-        <span className="footer-bottom-rights"> - All Rights Reserved </span>
+        <span className="footer-bottom-rights"> - All Rights Reserved - </span>
       </div>
       <div className="footer-bottom-wrapper">
         <a className="terms-privacy" rel="nofollow">
