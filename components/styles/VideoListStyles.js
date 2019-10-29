@@ -32,6 +32,7 @@ const VideoListStyles = styled.div`
     line-height: 22px;
     max-height: 44px;
     overflow: hidden;
+    margin-top: 0.5em;
   }
 
   .buttons {

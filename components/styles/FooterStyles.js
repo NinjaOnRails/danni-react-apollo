@@ -132,6 +132,9 @@ const FooterStyle = styled.footer`
       width: 100%;
       margin-top: 10px;
     }
+    .footer-list-top:not(:first-child) > li {
+      margin-left: 20px;
+    }
   }
   @media only screen and (max-width: 480px) {
     .footer-social-overlap > a:not(:first-child) {
