@@ -1,26 +1,13 @@
 import styled from 'styled-components';
 
 const VideoListStyles = styled.div`
-  /* width: 80%; */
   font-size: 1.1rem;
   display: grid;
-  grid-template-columns: 210px 210px 210px 210px 210px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 5px;
   margin: 0 auto;
   justify-content: center;
   padding: 0;
-  /* h1 {
-    margin-left: 5%;
-  } */
-  .buttons {
-    /* position: relative;
-    bottom: 35px;
-    text-align: center; */
-    position: relative;
-    bottom: 32px;
-    text-align: right;
-    margin-right: 5px;
-  }
 
   .ui.large.label {
     position: absolute;
@@ -41,12 +28,21 @@ const VideoListStyles = styled.div`
   }
 
   .author {
-    position: relative;
-    top: -10px;
-    left: 11px;
     max-width: 188px;
     line-height: 22px;
     max-height: 44px;
+    overflow: hidden;
+    margin-top: 0.5em;
+  }
+
+  .buttons {
+    bottom: 32px;
+    text-align: right;
+    margin: 5px 5px 0 0;
+  }
+
+  .author-detail {
+    display: inline;
   }
 
   .ui.card > .content > .header {
@@ -68,7 +64,7 @@ const VideoListStyles = styled.div`
     padding-top: 0;
   }
   @media (max-width: 479px) {
-    grid-template-columns: auto;
+    /* grid-template-columns: auto; */
     .ui.card {
       box-shadow: none;
     }
@@ -80,34 +76,41 @@ const VideoListStyles = styled.div`
       bottom: 10px;
     }
   }
+  
   @media (min-width: 480px) {
     grid-gap: 42px 14px;
-    grid-template-columns: 210px 210px;
+    div.header {
+    height: 3.2rem;
+    }
+
+  }
+
+  }
+  /* @media (min-width: 480px) {
+    grid-gap: 42px 14px;
+    grid-template-columns: repeat(2, 1fr);
     div.header {
       height: 3.2rem;
     }
-    div.ui.fluid.card {
+    div.ui.fluid.card {x
       height: 214.11px;
-    }
-    .author {
-      top: -30px;
     }
   }
   @media (min-width: 720px) {
-    grid-template-columns: 210px 210px 210px;
+    grid-template-columns: repeat(3, 1fr);
   }
   @media (min-width: 992px) {
-    grid-template-columns: 210px 210px 210px 210px;
+    grid-template-columns: repeat(4, 1fr);
   }
   @media (min-width: 1200px) {
-    grid-template-columns: 210px 210px 210px 210px 210px;
+    grid-template-columns: repeat(5, 1fr);
   }
   @media (min-width: 1600px) {
-    grid-template-columns: 210px 210px 210px 210px 210px 210px;
+    grid-template-columns: repeat(6, 1fr);
   }
   @media (min-width: 1920px) {
-    grid-template-columns: 210px 210px 210px 210px 210px 210px 210px;
-  }
+    grid-template-columns: repeat(7, 1fr);
+  } */
 `;
 
 export default VideoListStyles;
