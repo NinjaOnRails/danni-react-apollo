@@ -6,7 +6,7 @@ const JumbotronStyles = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  width: 100%;
+  width: 80%;
   margin: 20px auto;
 
   figure {
@@ -27,6 +27,8 @@ const JumbotronStyles = styled.div`
     text-align: center;
   }
   @media (max-width: 480px) {
+    width: 100%;
+
     .intro {
       padding-left: 5px;
       text-align: left;

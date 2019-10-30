@@ -21,16 +21,17 @@ const theme = {
 const StyledPage = styled.div`
   background: white;
   color: ${props => props.theme.black};
+  position: relative;
 `;
 
 const Inner = styled.div`
-  padding: 24px 0;
-  width: 80%;
+  padding: 24px 0 10% 0;
   margin: auto;
+
   @media (max-width: 479px) {
     padding: 0;
+    padding-bottom: 10%;
     width: 100%;
-
   }
 `;
 
@@ -45,11 +46,14 @@ const GlobalStyle = createGlobalStyle`
   body {
     padding: 0;
     margin: 0;
+    width: 100%;
+    height: 100%;
     font-size: 1.5rem;
     line-height: 2;
     font-family: ${props => props.theme.font};
     overflow: ${props =>
       props.showSide || props.showAuthModal ? 'hidden' : 'scroll'};
+      /* position: relative; */
   }
   
   a {
@@ -57,6 +61,10 @@ const GlobalStyle = createGlobalStyle`
     color: ${theme.black};
     font-family: "Verdana";
   }
+  /* #__next{
+    height: 100%;
+    position: relative;
+  } */
   button {  font-family: "Verdana"; }
 `;
 

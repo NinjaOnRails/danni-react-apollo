@@ -1,15 +1,23 @@
 import styled from 'styled-components';
 
 const FooterStyle = styled.footer`
-  font-size: 11px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #1b1c1d;
-  margin-top: auto;
+  display: block;
   width: 100%;
-  display: flex;
-  flex-flow: row wrap;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2.5rem;
 
+  .footer-container {
+    /* margin-top: auto; */
+    font-size: 11px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #1b1c1d;
+    display: flex;
+    flex-flow: row wrap;
+  }
   ul {
     list-style: none;
     padding-left: 5px;
