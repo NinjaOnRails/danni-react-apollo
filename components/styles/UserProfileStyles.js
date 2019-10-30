@@ -12,6 +12,10 @@ const UserProfileStyles = styled.div`
   .ui.form .inline.fields .field {
     padding-right: 7px;
   }
+  .ui.image img,
+  .ui.image svg {
+    border-radius: 0.28571429rem;
+  }
   .display-hide-password {
     cursor: pointer;
   }
@@ -31,7 +35,7 @@ const UserProfileStyles = styled.div`
   }
   i.icons .top.left.corner.icon {
     background: #e0e1e2 none;
-    border-radius: 0.28571429rem;
+    border-radius: 0.28571429rem 0 0 0;
   }
   i.icons .top.left.corner.icon:hover {
     background: #cacbcd;
