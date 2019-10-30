@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Loader, Popup, Icon } from 'semantic-ui-react';
+import { Loader, Popup, Statistic } from 'semantic-ui-react';
 import youtube from '../../lib/youtube';
 
 export default class YoutubeViews extends Component {
@@ -36,11 +36,17 @@ export default class YoutubeViews extends Component {
   render() {
     return (
       <div>
-        {this.state.youtubeViews || <Loader active inline />} lượt xem
         <Popup
           wide
           hoverable
-          trigger={<Icon name="question circle" />}
+          trigger={
+            <Statistic size="mini" horizontal>
+              {<Statistic.Value>{this.state.youtubeViews}</Statistic.Value> || (
+                <Loader active inline />
+              )}
+              <Statistic.Label>lượt xem</Statistic.Label>
+            </Statistic>
+          }
           content={
             <>
               Nguồn:{' '}
