@@ -41,9 +41,9 @@ export default class YoutubeViews extends Component {
           hoverable
           trigger={
             <Statistic size="mini" horizontal>
-              {<Statistic.Value>{this.state.youtubeViews}</Statistic.Value> || (
-                <Loader active inline />
-              )}
+              <Statistic.Value>
+                {this.state.youtubeViews || <Loader active inline />}
+              </Statistic.Value>
               <Statistic.Label>lượt xem</Statistic.Label>
             </Statistic>
           }
