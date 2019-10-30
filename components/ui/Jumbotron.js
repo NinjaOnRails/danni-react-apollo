@@ -9,6 +9,10 @@ const JumbotronStyles = styled.div`
   width: 100%;
   margin: 20px auto;
 
+  h1.ui.header {
+    font-family: ${props => props.theme.font};
+  }
+
   figure {
     width: 50%;
     overflow: hidden; /*hide bounds of image */
