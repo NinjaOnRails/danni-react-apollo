@@ -1,4 +1,4 @@
-import AddVideo from '../components/Video/AddVideo';
+import AddVideo from '../components/Video/AddVideoo';
 import PleaseSignIn from '../components/Authentication/PleaseSignIn';
 
 const New = () => (
