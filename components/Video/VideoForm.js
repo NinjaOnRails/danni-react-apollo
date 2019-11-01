@@ -103,8 +103,8 @@ export default class VideoForm extends Component {
           name="language"
         />
         <Form.Input
-          label="YouTube link hoặc ID"
-          placeholder="youtube.com/watch?v=36A5bOSP334 hoặc 36A5bOSP334"
+          label="YouTube ID hoặc đường link (URL)  "
+          placeholder="36A5bOSP334 hoặc www.youtube.com/watch?v=36A5bOSP334"
           value={source}
           onChange={this.handleChange}
           name="source"

@@ -154,7 +154,7 @@ export default class AudioForm extends Component {
                 }}
               >
                 <Radio value="upload" checked={isAudioSource} />
-                File thuyết minh riêng
+                Tải file thuyết minh lên
               </Header>
               <Segment attached>
                 {(uploadProgress > 0 && uploadProgress < 100 && (
@@ -194,7 +194,7 @@ export default class AudioForm extends Component {
                           }}
                           value={audioUrl}
                           name="audioUrl"
-                          label="Đường link URL"
+                          label="Đường link (URL)"
                           placeholder="spotify.com/audiofile.mp3"
                         />
                         <Button
@@ -253,7 +253,7 @@ export default class AudioForm extends Component {
                   }}
                 >
                   <Radio value="upload" checked={!isAudioSource} />
-                  Video đã có thuyết minh
+                  Video đã có sẵn thuyết minh
                 </Header>
               </Segment>
 
