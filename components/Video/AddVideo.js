@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Form, Loader } from 'semantic-ui-react';
+import { Segment, Form, Loader, Header } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
 import Router from 'next/router';
@@ -232,6 +232,7 @@ class AddVideo extends Component {
           },
         }) => (
           <AddVideoStyles>
+            <Header>Thêm Video/Thuyết Minh</Header>
             <AddVideoSteps activeStep={activeStep} />
             <Segment>
               <Error error={errorCreateAudio} />

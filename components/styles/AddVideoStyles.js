@@ -9,7 +9,10 @@ export default styled.div`
   }
 
   form.ui.form {
-    height: 500px;
+    height: 525.69px;
+    @media (max-width: 375px) {
+      height: 400px;
+    }
   }
 
   div.buttons {
@@ -56,12 +59,6 @@ export default styled.div`
       position: absolute;
       top: 0;
       left: 0;
-    }
-  }
-
-  @media (max-width: 567px) {
-    .ui.fluid.steps {
-      display: none;
     }
   }
 `;
