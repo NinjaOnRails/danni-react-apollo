@@ -18,31 +18,35 @@ const DisplayError = ({ error }) => {
   ) {
     return error.networkError.result.errors.map((error, i) => (
       <Message negative key={i}>
-        <StyledMessage>Ôi trời!</StyledMessage>
         <audio
           autoPlay
           src="https://res.cloudinary.com/danni/video/upload/v1566550191/iam2kigyc7gwxrjkmi8j.mp3"
         >
           <track kind="captions" />
         </audio>
-        <p data-test="graphql-error">
-          {error.message.replace('GraphQL error: ', '')}
-        </p>
+        <StyledMessage>
+          Ôi trời!
+          <p data-test="graphql-error">
+            {error.message.replace('GraphQL error: ', '')}
+          </p>
+        </StyledMessage>
       </Message>
     ));
   }
   return (
     <Message negative>
-      {/* <StyledMessage>Holy Moly!</StyledMessage> */}
       <audio
         autoPlay
         src="https://res.cloudinary.com/danni/video/upload/v1566550191/iam2kigyc7gwxrjkmi8j.mp3"
       >
         <track kind="captions" />
       </audio>
-      <p data-test="graphql-error">
-        {error.message.replace('GraphQL error: ', '')}
-      </p>
+      <StyledMessage>
+        Ôi trời!
+        <p data-test="graphql-error">
+          {error.message.replace('GraphQL error: ', '')}
+        </p>
+      </StyledMessage>
     </Message>
   );
 };

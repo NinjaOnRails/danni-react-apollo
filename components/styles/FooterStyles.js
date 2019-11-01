@@ -42,9 +42,9 @@ const FooterStyle = styled.footer`
     font-family: 'Verdana';
   }
 
-  .link-list-item:visited {
+  /* .link-list-item:visited {
     color: #8db9ed;
-  }
+  } */
 
   #facebook-link:visited {
     color: rgba(255, 255, 255, 0.5);

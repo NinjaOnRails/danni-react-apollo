@@ -73,6 +73,7 @@ const Composed = adopt({
 
 class EditVideo extends Component {
   state = {
+    redirecting: false,
     isDescription: true,
     isAudioSource: false,
     isTags: true,
@@ -414,6 +415,8 @@ class EditVideo extends Component {
       }));
     }
 
+    this.setState({ redirecting: true });
+
     // Redirect to newly updated Video watch page
     Router.push({
       pathname: '/watch',
@@ -423,6 +426,13 @@ class EditVideo extends Component {
 
   render() {
     const { id, audioId } = this.props;
+    const { redirecting } = this.state;
+    if (redirecting)
+      return (
+        <Loader indeterminate active>
+          Đang chuyển trang...
+        </Loader>
+      );
     return (
       <Composed id={id} audioId={audioId}>
         {({

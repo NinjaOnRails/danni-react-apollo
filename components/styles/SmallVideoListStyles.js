@@ -8,7 +8,7 @@ export const SmallVideoListStyles = styled.div`
 export const VideoItemStyles = styled.div`
   display: flex;
   align-items: top;
-  height: 78px;
+  height: 68px;
   cursor: pointer;
   .content {
     padding-left: 0.5rem;
@@ -61,8 +61,8 @@ export const AuthorStyles = styled.div`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-  line-height: 26px;
-  max-height: 26px;
+  line-height: 28px;
+  max-height: 28px;
   a {
     font-family: ${props => props.theme.font};
   }

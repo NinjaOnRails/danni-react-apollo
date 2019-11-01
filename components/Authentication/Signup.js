@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import generateName from 'sillyname';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Loader } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
 import {
@@ -54,6 +54,7 @@ const Composed = adopt({
 
 class Signup extends Component {
   state = {
+    redirecting: false,
     signupForm: {
       email: {
         inputConfig: {
@@ -158,6 +159,7 @@ class Signup extends Component {
       if (this.props.modal) {
         closeAuthModal();
       } else {
+        this.setState({ redirecting: true });
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );
@@ -168,7 +170,7 @@ class Signup extends Component {
   };
 
   render() {
-    const { signupForm, displayPassword } = this.state;
+    const { signupForm, displayPassword, redirecting } = this.state;
     const { modal } = this.props;
     const variables = {};
     const formElArr = [];
@@ -179,6 +181,12 @@ class Signup extends Component {
         input: signupForm[key],
       });
     });
+    if (redirecting)
+      return (
+        <Loader indeterminate active>
+          Đang chuyển trang...
+        </Loader>
+      );
     return (
       <Composed variables={variables}>
         {({
