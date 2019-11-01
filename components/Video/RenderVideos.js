@@ -49,43 +49,41 @@ const renderVideoItem = (
             <Card.Content>
               <Card.Header>{title}</Card.Header>
               <Card.Meta>{originAuthor}</Card.Meta>
-              {!hideAuthor ? (
-                <div className="author">
-                  <Link href={{ pathname: '/user', query: { id: author.id } }}>
-                    <a className="author-detail">
-                      <Image avatar src={author.avatar} />
-                      <span>
-                        {author ? author.displayName : 'deleted user'}
-                      </span>
-                    </a>
-                  </Link>
-                </div>
-              ) : (
-                currentUser &&
-                currentUser.id === author.id && (
-                  <div className="buttons">
-                    <Link
-                      href={{
-                        pathname: '/edit',
-                        query,
-                      }}
-                    >
-                      <Button icon labelPosition="left">
-                        <Icon name="write" />
-                        Sửa
-                      </Button>
-                    </Link>
-                    <Button icon labelPosition="left" color="red">
-                      <Icon name="trash" />
-                      Xoá
-                    </Button>
-                  </div>
-                )
-              )}
             </Card.Content>
           </Card>
         </a>
       </Link>
+      {!hideAuthor ? (
+        <div className="author">
+          <Link href={{ pathname: '/user', query: { id: author.id } }}>
+            <a>
+              <Image avatar src={author.avatar} />
+              <span>{author ? author.displayName : 'deleted user'}</span>
+            </a>
+          </Link>
+        </div>
+      ) : (
+        currentUser &&
+        currentUser.id === author.id && (
+          <div className="buttons">
+            <Link
+              href={{
+                pathname: '/edit',
+                query,
+              }}
+            >
+              <Button icon labelPosition="left">
+                <Icon name="write" />
+                Sửa
+              </Button>
+            </Link>
+            <Button icon labelPosition="left" color="red">
+              <Icon name="trash" />
+              Xoá
+            </Button>
+          </div>
+        )
+      )}
     </div>
   );
 };
