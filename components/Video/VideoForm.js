@@ -140,6 +140,7 @@ export default class VideoForm extends Component {
         <Error error={error} />
         <div className="buttons">
           <Button
+            size="big"
             disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
             type="button"
             icon

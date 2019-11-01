@@ -27,10 +27,10 @@ const Inner = styled.div`
   padding: 24px 0;
   width: 80%;
   margin: auto;
+  min-height: 420px;
   @media (max-width: 479px) {
     padding: 0;
     width: 100%;
-
   }
 `;
 

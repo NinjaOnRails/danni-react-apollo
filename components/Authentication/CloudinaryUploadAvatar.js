@@ -38,6 +38,8 @@ class CloudinaryUploadAudio extends Component {
     uploadImageUrl: '',
   };
 
+  fileInputRef = React.createRef();
+
   handleChange = ({ target: { name, value } }) => {
     // Controlled set state
     this.setState({ [name]: value });
@@ -123,7 +125,7 @@ class CloudinaryUploadAudio extends Component {
         }) => {
           if (loading || loadingUser)
             return <Loader inline="centered" active />;
-          if (error) return <Error>Error: {error.message}</Error>;
+          if (error) return <Error error={error} />;
           const { id } = currentUser;
 
           return (
@@ -157,8 +159,21 @@ class CloudinaryUploadAudio extends Component {
                         Lỗi mạng hoặc ảnh có vấn đề. Vui lòng thử sau.
                       </Progress>
                     )}
-                    <Header as="h3">Chọn ảnh trong máy:</Header>
-                    <Input
+                    <Button
+                      type="button"
+                      positive
+                      size="huge"
+                      className="choose-file-button"
+                      content="Chọn ảnh trong máy"
+                      labelPosition="left"
+                      icon="file image"
+                      onClick={() => {
+                        this.fileInputRef.current.click();
+                      }}
+                    />
+                    <input
+                      hidden
+                      ref={this.fileInputRef}
                       onClick={() => chooseUpload()}
                       type="file"
                       id="file"
@@ -174,6 +189,7 @@ class CloudinaryUploadAudio extends Component {
                         this.setState({ startingUpload: false });
                       }}
                     />
+                    <Header>hoặc</Header>
                     <Header as="h3">Tải từ đường link:</Header>
                     <div className="uploadImageUrl">
                       <Input

@@ -14,7 +14,7 @@ export default function AddVideoSteps({ activeStep }) {
 
       <Step
         active={activeStep === 'audio'}
-        completed={activeStep === 'publish'}
+        completed={activeStep === 'details'}
         disabled={activeStep === 'video'}
       >
         <Icon name="volume up" />
@@ -24,12 +24,12 @@ export default function AddVideoSteps({ activeStep }) {
       </Step>
 
       <Step
-        active={activeStep === 'publish'}
-        disabled={activeStep !== 'publish'}
+        active={activeStep === 'details'}
+        disabled={activeStep !== 'details'}
       >
         <Icon name="info" />
         <Step.Content>
-          <Step.Title>Xác nhận</Step.Title>
+          <Step.Title>Chi tiết</Step.Title>
         </Step.Content>
       </Step>
     </Step.Group>

@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { Icon, Segment, Form, Button, Loader } from 'semantic-ui-react';
-import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
 import Router from 'next/router';
-import axios from 'axios';
 import { defaultLanguage } from '../../lib/supportedLanguages';
 import Error from '../UI/ErrorMessage';
 import { ALL_VIDEOS_QUERY, ALL_AUDIOS_QUERY } from '../../graphql/query';
 import VideoForm from './VideoForm';
-import { uploadAudio } from '../../lib/cloudinaryUpload';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { trackNewVideo } from '../../lib/mixpanel';
 import {
@@ -19,31 +16,7 @@ import {
 import { contentLanguageQuery } from '../UI/ContentLanguage';
 import AddVideoSteps from './AddVideoSteps';
 import AudioForm from './AudioForm';
-
-const AddVideoStyles = styled.div`
-  max-width: 600px;
-  margin: auto;
-
-  .ui.steps .step .title {
-    font-family: ${props => props.theme.font};
-  }
-
-  form.ui.form {
-    height: 525.69px;
-  }
-
-  div.buttons {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-  }
-
-  @media (max-width: 567px) {
-    .ui.fluid.steps {
-      display: none;
-    }
-  }
-`;
+import AddVideoStyles from '../styles/AddVideoStyles';
 
 /* eslint-disable */
 const createAudioMutation = ({
@@ -103,16 +76,15 @@ export default class AddVideo extends Component {
     title: '',
     description: '',
     isDescription: true,
-    audioSource: '',
+    audioUrl: '',
     tags: '',
-    isAudioSource: false,
+    isAudioSource: true,
     isTags: true,
     secureUrl: '',
-    uploadProgress: 0,
-    uploadError: false,
     deleteToken: '',
     error: '',
     audioDuration: 0,
+    redirecting: false,
   };
 
   handleChange = (e, { name, value }) => {
@@ -121,58 +93,6 @@ export default class AddVideo extends Component {
   };
 
   setAddVideoState = state => this.setState(state);
-
-  onUploadFileSubmit = async (cloudinaryAuthAudio, id, e) => {
-    // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false, error: '' });
-    const { audioSource, youtubeId, language, deleteToken } = this.state;
-    const file = e ? e.target.files[0] : audioSource;
-
-    if (!file) return; // Do nothing if no file selected
-
-    if (deleteToken) await this.onDeleteFileSubmit();
-
-    // More initial state reset
-    this.setState({
-      uploadProgress: 0,
-      deleteToken: '',
-      secureUrl: '',
-    });
-
-    // Prepare cloudinary upload params
-    const { url, data } = uploadAudio(
-      file,
-      youtubeId,
-      language,
-      id,
-      cloudinaryAuthAudio
-    );
-    // Upload file with post request
-    try {
-      const {
-        data: { secure_url: secureUrl, delete_token: newDeleteToken },
-      } = await axios({
-        method: 'post',
-        url,
-        data,
-        onUploadProgress: p => {
-          // Show upload progress
-          this.setState({
-            uploadProgress: Math.floor((p.loaded / p.total) * 100),
-          });
-        },
-      });
-      this.setState({
-        secureUrl,
-        deleteToken: newDeleteToken,
-        audioSource: '',
-      });
-    } catch (err) {
-      this.setState({
-        uploadError: true,
-      });
-    }
-  };
 
   onDeleteFileSubmit = async () => {
     const { deleteToken } = this.state;
@@ -254,6 +174,8 @@ export default class AddVideo extends Component {
         },
       });
 
+      this.setState({ redirecting: true });
+
       // Mixpanel send stat
       trackNewVideo(language);
 
@@ -263,6 +185,7 @@ export default class AddVideo extends Component {
         query: { id, audioId },
       });
     }
+    this.setState({ redirecting: true });
     if (deleteToken) this.onDeleteFileSubmit();
 
     // Mixpanel send stat
@@ -282,8 +205,18 @@ export default class AddVideo extends Component {
       source,
       youtubeId,
       isAudioSource,
-      videoValid
+      videoValid,
+      audioUrl,
+      secureUrl,
+      deleteToken,
+      redirecting,
     } = this.state;
+    if (redirecting)
+      return (
+        <Loader indeterminate active>
+          Đang chuyển trang...
+        </Loader>
+      );
     return (
       <Composed
         youtubeId={youtubeId}
@@ -313,6 +246,7 @@ export default class AddVideo extends Component {
               <Error error={errorCreateVideo} />
               <Error error={{ message: error }} />
               <Form
+                loading={loadingCreateAudio || loadingCreateVideo}
                 size="big"
                 onSubmit={async e =>
                   this.onFormSubmit(e, createAudio, createVideo)
@@ -327,7 +261,17 @@ export default class AddVideo extends Component {
                     videoValid={videoValid}
                   />
                 ) : activeStep === 'audio' ? (
-                  <AudioForm setAddVideoState={this.setAddVideoState}/>
+                  <AudioForm
+                    setAddVideoState={this.setAddVideoState}
+                    isAudioSource={isAudioSource}
+                    audioUrl={audioUrl}
+                    secureUrl={secureUrl}
+                    deleteToken={deleteToken}
+                    language={language}
+                    source={source}
+                    onDeleteFileSubmit={this.onDeleteFileSubmit}
+                    youtubeId={youtubeId}
+                  />
                 ) : (
                   <>
                     <Form.Input
@@ -335,11 +279,12 @@ export default class AddVideo extends Component {
                       placeholder="youtube.com/watch?v=36A5bOSP334 hoặc 36A5bOSP334"
                     />
                     <Button
+                      type="button"
                       icon
                       labelPosition="right"
                       primary
                       onClick={() => {
-                        this.setState({ activeStep: 'info' });
+                        this.setState({ activeStep: 'details' });
                       }}
                     >
                       Tiếp
