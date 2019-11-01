@@ -86,7 +86,7 @@ class Page extends Component {
                   showSide={data.showSide}
                   showAuthModal={data.showAuthModal}
                 />
-                <GDPR />
+                {/* <GDPR /> */}
                 <Header />
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
