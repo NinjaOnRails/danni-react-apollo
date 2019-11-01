@@ -266,7 +266,7 @@ export default class AudioForm extends Component {
                   labelPosition="left"
                   onClick={() => setAddVideoState({ activeStep: 'video' })}
                 >
-                  Bước trước
+                  Quay lại
                   <Icon name="left arrow" />
                 </Button>
                 {isAudioSource ? (

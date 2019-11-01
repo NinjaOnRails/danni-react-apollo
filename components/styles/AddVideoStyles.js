@@ -9,7 +9,7 @@ export default styled.div`
   }
 
   form.ui.form {
-    height: 525.69px;
+    height: 500px;
   }
 
   div.buttons {

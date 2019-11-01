@@ -48,7 +48,7 @@ const DetailsForm = ({
           labelPosition="left"
           onClick={() => setAddVideoState({ activeStep: 'audio' })}
         >
-          Bước trước
+          Quay lại
           <Icon name="left arrow" />
         </Button>
         <Button type="submit" size="big" icon labelPosition="right" primary>
