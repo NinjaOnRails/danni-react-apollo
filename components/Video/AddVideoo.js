@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Segment, Form, Button, Loader } from 'semantic-ui-react';
+import { Segment, Form, Loader } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
 import Router from 'next/router';
@@ -17,6 +17,7 @@ import { contentLanguageQuery } from '../UI/ContentLanguage';
 import AddVideoSteps from './AddVideoSteps';
 import AudioForm from './AudioForm';
 import AddVideoStyles from '../styles/AddVideoStyles';
+import DetailsForm from './DetailsForm';
 
 /* eslint-disable */
 const createAudioMutation = ({
@@ -75,11 +76,9 @@ export default class AddVideo extends Component {
     youtubeId: '',
     title: '',
     description: '',
-    isDescription: true,
     audioUrl: '',
     tags: '',
     isAudioSource: true,
-    isTags: true,
     secureUrl: '',
     deleteToken: '',
     error: '',
@@ -97,7 +96,6 @@ export default class AddVideo extends Component {
   onDeleteFileSubmit = async () => {
     const { deleteToken } = this.state;
     this.setState({
-      uploadProgress: 0,
       secureUrl: '',
       error: '',
     });
@@ -121,12 +119,8 @@ export default class AddVideo extends Component {
       title,
       description,
       isAudioSource,
-      defaultVolume,
-      isDefaultVolume,
       secureUrl,
       audioDuration,
-      isDescription,
-      isTags,
       deleteToken,
     } = this.state;
 
@@ -143,7 +137,7 @@ export default class AddVideo extends Component {
     // Call createVideo mutation
     const {
       data: {
-        createVideo: { id, duration },
+        createVideo: { id },
       },
     } = await createVideo();
 
@@ -168,9 +162,8 @@ export default class AddVideo extends Component {
           duration: audioDuration,
           language,
           title,
-          description: isDescription ? description : undefined,
-          tags: isTags ? tags : undefined,
-          defaultVolume: isDefaultVolume ? defaultVolume : undefined,
+          description,
+          tags,
         },
       });
 
@@ -210,6 +203,10 @@ export default class AddVideo extends Component {
       secureUrl,
       deleteToken,
       redirecting,
+      title,
+      description,
+      tags,
+      originTags,
     } = this.state;
     if (redirecting)
       return (
@@ -273,24 +270,13 @@ export default class AddVideo extends Component {
                     youtubeId={youtubeId}
                   />
                 ) : (
-                  <>
-                    <Form.Input
-                      label="YouTube link hoặc ID"
-                      placeholder="youtube.com/watch?v=36A5bOSP334 hoặc 36A5bOSP334"
-                    />
-                    <Button
-                      type="button"
-                      icon
-                      labelPosition="right"
-                      primary
-                      onClick={() => {
-                        this.setState({ activeStep: 'details' });
-                      }}
-                    >
-                      Tiếp
-                      <Icon name="right arrow" />
-                    </Button>
-                  </>
+                  <DetailsForm
+                    setAddVideoState={this.setAddVideoState}
+                    title={title}
+                    description={description}
+                    tags={tags}
+                    originTags={originTags}
+                  />
                 )}
               </Form>
             </Segment>

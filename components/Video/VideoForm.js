@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Button, Icon, Loader } from 'semantic-ui-react';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import youtube from '../../lib/youtube';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import Error from '../UI/ErrorMessage';
-
-const YouTubePlayerStyles = styled.div`
-  position: relative;
-  padding-top: 56.25% /* Player ratio: 100 / (1280 / 720) */;
-  margin: 20px;
-
-  .react-player {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-`;
 
 export default class VideoForm extends Component {
   state = {
@@ -126,7 +113,7 @@ export default class VideoForm extends Component {
           active={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
         />
         {youtubeId && (
-          <YouTubePlayerStyles>
+          <div className="youtube-player">
             <YouTubePlayer
               url={`https://www.youtube.com/embed/${source}`}
               controls
@@ -135,7 +122,7 @@ export default class VideoForm extends Component {
               className="react-player"
               onReady={() => setAddVideoState({ videoValid: true })}
             />
-          </YouTubePlayerStyles>
+          </div>
         )}
         <Error error={error} />
         <div className="buttons">

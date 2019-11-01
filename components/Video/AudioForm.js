@@ -19,12 +19,12 @@ import { user } from '../UI/ContentLanguage';
 import { uploadAudio } from '../../lib/cloudinaryUpload';
 
 /* eslint-disable */
-const cloudinaryAuthAudioQuery = ({ source, language, render }) => (
+const cloudinaryAuthAudioQuery = ({ youtubeId, language, render }) => (
   /* eslint-enable */
   <Query
     query={CLOUDINARY_AUTH_AUDIO}
     variables={{
-      source,
+      source: youtubeId,
       language,
     }}
   >
@@ -126,7 +126,7 @@ export default class AudioForm extends Component {
       isAudioSource,
       audioUrl,
       language,
-      source,
+      youtubeId,
       secureUrl,
       onDeleteFileSubmit,
       deleteToken,
@@ -135,7 +135,7 @@ export default class AudioForm extends Component {
     const { uploadError, uploadProgress, startingUpload, error } = this.state;
 
     return (
-      <Composed source={source} language={language}>
+      <Composed youtubeId={youtubeId} language={language}>
         {({
           cloudinaryAuthAudioQuery: { loading, error: queryError, data },
           user: { currentUser, loading: loadingUser },
@@ -271,6 +271,10 @@ export default class AudioForm extends Component {
                 </Button>
                 {isAudioSource ? (
                   <Button
+                    disabled={
+                      startingUpload ||
+                      (uploadProgress > 0 && uploadProgress < 100)
+                    }
                     type="button"
                     size="big"
                     icon

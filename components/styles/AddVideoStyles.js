@@ -47,6 +47,18 @@ export default styled.div`
     margin-top: 10px;
   }
 
+  .youtube-player {
+    position: relative;
+    padding-top: 56.25% /* Player ratio: 100 / (1280 / 720) */;
+    margin: 20px;
+
+    .react-player {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
   @media (max-width: 567px) {
     .ui.fluid.steps {
       display: none;
