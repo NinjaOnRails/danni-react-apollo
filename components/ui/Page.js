@@ -6,6 +6,7 @@ import Header from './Header';
 import Footer from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 import AuthModal, { localData } from '../Authentication/AuthModal';
+import GDPR from './GDPR';
 
 const theme = {
   red: '#FF0000',
@@ -56,7 +57,10 @@ const GlobalStyle = createGlobalStyle`
     color: ${theme.black};
     font-family: "Verdana";
   }
-  button {  font-family: "Verdana"; }
+  
+  button {
+    font-family: 'Verdana';
+  }
 `;
 
 const Composed = adopt({
@@ -77,6 +81,7 @@ class Page extends Component {
                   showSide={data.showSide}
                   showAuthModal={data.showAuthModal}
                 />
+                <GDPR />
                 <Header />
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
