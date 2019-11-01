@@ -66,7 +66,7 @@ const Composed = adopt({
   createVideoMutation,
 });
 
-export default class AddVideo extends Component {
+class AddVideo extends Component {
   state = {
     activeStep: 'video',
     language: defaultLanguage,
@@ -281,3 +281,6 @@ export default class AddVideo extends Component {
     );
   }
 }
+
+export default AddVideo;
+export { createAudioMutation, createVideoMutation };
