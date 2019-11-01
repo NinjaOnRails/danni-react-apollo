@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
@@ -112,6 +112,7 @@ const onFacebookLoginClick = ({
 
 class Signin extends Component {
   state = {
+    redirecting: false,
     signinForm: {
       email: {
         inputConfig: {
@@ -191,6 +192,7 @@ class Signin extends Component {
       if (this.props.modal) {
         closeAuthModal();
       } else {
+        this.setState({ redirecting: true });
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );
@@ -202,7 +204,7 @@ class Signin extends Component {
 
   render() {
     const { modal } = this.props;
-    const { formValid, signinForm } = this.state;
+    const { formValid, signinForm, redirecting } = this.state;
     const variables = {};
     const formElArr = [];
     Object.keys(signinForm).forEach(key => {
@@ -212,6 +214,12 @@ class Signin extends Component {
         input: signinForm[key],
       });
     });
+    if (redirecting)
+      return (
+        <Loader indeterminate active>
+          Đang chuyển trang...
+        </Loader>
+      );
     return (
       <Composed variables={variables}>
         {({
@@ -292,7 +300,8 @@ class Signin extends Component {
                     })
                   }
                 >
-                  <Icon name="facebook" />Facebook
+                  <Icon name="facebook" />
+                  Facebook
                 </Button>
               </div>
               {/* <button type="submit">Sign{loading && 'ing'} In</button> */}

@@ -22,7 +22,7 @@ const DetailsForm = ({
         maxLength="100"
       />
       <Form.TextArea
-        label="Chi tiết"
+        label="Giới thiệu"
         value={description}
         onChange={handleChange}
         name="description"
@@ -48,7 +48,7 @@ const DetailsForm = ({
           labelPosition="left"
           onClick={() => setAddVideoState({ activeStep: 'audio' })}
         >
-          Quay lại
+          Bước trước
           <Icon name="left arrow" />
         </Button>
         <Button type="submit" size="big" icon labelPosition="right" primary>

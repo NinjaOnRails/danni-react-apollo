@@ -3,6 +3,7 @@ import { Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
+import { Loader } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
@@ -13,6 +14,7 @@ import validateInput from './utils';
 
 class Reset extends Component {
   state = {
+    redirecting: false,
     resetForm: {
       password: {
         inputConfig: {
@@ -114,13 +116,14 @@ class Reset extends Component {
           },
           formValid: false,
         });
+        this.setState({ redirecting: true });
         router.push('/');
       }
     }
   };
 
   render() {
-    const { formValid, resetForm, passwordsMatch } = this.state;
+    const { formValid, resetForm, passwordsMatch, redirecting } = this.state;
     const variables = {};
     const formElArr = [];
     Object.keys(resetForm).forEach(key => {
@@ -132,6 +135,14 @@ class Reset extends Component {
     });
 
     const { router } = this.props;
+
+    if (redirecting)
+      return (
+        <Loader indeterminate active>
+          Đang chuyển trang...
+        </Loader>
+      );
+
     return (
       <Mutation
         mutation={RESET_PASSWORD_MUTATION}
