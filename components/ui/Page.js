@@ -25,14 +25,14 @@ const defaultTheme = {
 const StyledPage = styled.div`
   background: white;
   color: ${props => props.theme.black};
+  position: relative;
+  height: 100%;
+  margin-bottom: 10%;
 `;
 
 const Inner = styled.div`
-  /* padding: 24px 0 10% 0; */
   padding: 0;
-  padding-bottom: 10%;
   margin: auto;
-
   @media (max-width: 991px) {
     width: 100%;
   }
@@ -50,7 +50,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     width: 100%;
-    height: 100%;
     font-size: 1.5rem;
     line-height: 2;
     font-family: ${props => props.theme.font};
@@ -70,7 +69,6 @@ const GlobalStyle = createGlobalStyle`
 
   #__next {
     height: 100%;
-    position: relative;
   }
 `;
 
@@ -97,8 +95,8 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
-                <Footer />
               </StyledPage>
+              <Footer />
             </ThemeProvider>
           );
         }}
