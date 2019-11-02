@@ -20,7 +20,7 @@ export const SideDrawerStyles = styled.div`
     right: 0;
     top: 0;
     z-index: 200;
-    background-color: ${props => props.theme.lightBlack};
+    background-color: ${props => props.theme.darkGrey};
     box-sizing: border-box;
     transition: transform 0.3s ease-out;
   }

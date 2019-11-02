@@ -11,7 +11,7 @@ const FooterStyle = styled.footer`
     font-size: 11px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: ${props => props.theme.lightBlack};
+    background-color: ${props => props.theme.darkGrey};
     display: flex;
     flex-flow: row wrap;
   }

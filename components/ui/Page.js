@@ -10,10 +10,9 @@ import GDPR from './GDPR';
 
 const defaultTheme = {
   white: ' #fff',
-  offWhite: '#EDEDED',
   pureBlack: '#000',
   black: '#393939',
-  lightBlack: '#1b1c1d',
+  darkGrey: '#1b1c1d',
   grey: '#808080',
   lightGrey: '#E1E1E1',
   red: '#FF0000',
