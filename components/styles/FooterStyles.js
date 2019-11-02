@@ -10,11 +10,10 @@ const FooterStyle = styled.footer`
   height: 2.5rem;
 
   .footer-container {
-    /* margin-top: auto; */
     font-size: 11px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #1b1c1d;
+    background-color: ${props => props.theme.lightBlack};
     display: flex;
     flex-flow: row wrap;
   }
@@ -37,7 +36,8 @@ const FooterStyle = styled.footer`
   }
 
   .link-list-item {
-    color: rgba(255, 255, 255, 0.5);
+    color: ${props => props.theme.white};
+    opacity: 0.5;
     font-size: 1em;
     font-family: 'Verdana';
   }
@@ -47,10 +47,12 @@ const FooterStyle = styled.footer`
   } */
 
   #facebook-link:visited {
-    color: rgba(255, 255, 255, 0.5);
+    color: ${props => props.theme.lightGrey};
   }
+
   .link-list-item:hover {
-    color: rgba(255, 255, 255, 0.9);
+    color: ${props => props.theme.white};
+    opacity: 0.9;
   }
 
   .terms-privacy {
@@ -94,7 +96,7 @@ const FooterStyle = styled.footer`
 
   .footer-bottom-wrapper {
     font-size: 1em;
-    color: #fff;
+    color: ${props => props.theme.white};
   }
 
   @media only screen and (max-width: 768px) {

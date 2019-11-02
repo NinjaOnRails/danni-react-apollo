@@ -17,7 +17,7 @@ const StyledModal = styled.div`
     height: 100%;
     width: 100%;
     border-radius: 16px;
-    background-color: #fff;
+    background-color: ${props => props.theme.white};
     align-items: center;
     display: flex;
     flex-flow: column;
@@ -37,7 +37,7 @@ const StyledModal = styled.div`
     top: -25px;
     padding: 0.5rem 1rem;
     background: ${props => props.theme.red};
-    color: white;
+    color: ${props => props.theme.white};
     text-transform: uppercase;
     text-decoration: none;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -58,8 +58,8 @@ const StyledModal = styled.div`
     text-align: center;
     margin: auto;
     cursor: pointer;
-    background: lightgrey;
-    color: grey;
+    background: ${props => props.theme.lightGrey};
+    color: ${props => props.theme.grey};
     border-radius: 24px;
     font-size: 1.5rem;
     padding: 6px 16px;
@@ -69,7 +69,6 @@ const StyledModal = styled.div`
   }
   .auth-mode:hover {
     background-color: #bfbfbf;
-    /* color: #fff; */
   }
   a:active,
   a:focus {
@@ -79,7 +78,7 @@ const StyledModal = styled.div`
 
   .auth-modes .active {
     background-color: ${props => props.theme.red};
-    color: #fff;
+    color: ${props => props.theme.white};
   }
   .auth-modes .active:hover {
     background-color: #cc0000;
@@ -90,6 +89,8 @@ const StyledModal = styled.div`
     position: absolute;
     right: -5%;
     font-size: 2em;
+    opacity: 1;
+    color: ${props => props.theme.lightGrey};
   }
   @media (max-width: 639px) {
     .Modal {
@@ -121,7 +122,7 @@ const StyledModal = styled.div`
       right: 0;
     }
     i.inverted.icon {
-      color: #808080;
+      color: ${props => props.theme.grey};
     }
   }
 `;

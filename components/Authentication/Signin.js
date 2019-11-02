@@ -259,18 +259,6 @@ class Signin extends Component {
             >
               <Error error={error} />
               <Error error={fbLoginError} />
-              {/* {signinFields.map(({ type, name, label }) => (
-                <div className="auth-input" key={name}>
-                  <input
-                    type={type}
-                    name={name}
-                    value={this.state[name]}
-                    onChange={this.saveToState}
-                    data-empty={!this.state[name]}
-                  />
-                  <label htmlFor={name}>{label}</label>
-                </div>
-              ))} */}
               {formElArr.map(({ id, input }) => (
                 <AuthForm
                   key={id}
@@ -304,8 +292,6 @@ class Signin extends Component {
                   Facebook
                 </Button>
               </div>
-              {/* <button type="submit">Sign{loading && 'ing'} In</button> */}
-
               <div className="auth-links">
                 {!modal && (
                   <Link href="/signup">

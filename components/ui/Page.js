@@ -8,12 +8,15 @@ import SideDrawer from './Mobile/SideDrawer';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 
-const theme = {
-  red: '#FF0000',
-  black: '#393939',
-  grey: '#3A3A3A',
-  lightgrey: '#E1E1E1',
+const defaultTheme = {
+  white: ' #fff',
   offWhite: '#EDEDED',
+  pureBlack: '#000',
+  black: '#393939',
+  lightBlack: '#1b1c1d',
+  grey: '#808080',
+  lightGrey: '#E1E1E1',
+  red: '#FF0000',
   maxWidth: '1000px',
   bs: '0 12px 24px 0 rgba(0, 0, 0, 0.09)',
   font: 'Roboto',
@@ -59,7 +62,7 @@ const GlobalStyle = createGlobalStyle`
   
   a {
     text-decoration: none;
-    color: ${theme.black};
+    color: ${props => props.theme.black};
     font-family: "Verdana";
   }
 
@@ -80,7 +83,7 @@ class Page extends Component {
         {({ localData: { data } }) => {
           if (!data) return <div>Loading...</div>;
           return (
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={defaultTheme}>
               <StyledPage>
                 <GlobalStyle
                   showSide={data.showSide}

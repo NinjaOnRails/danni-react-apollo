@@ -25,7 +25,7 @@ const NavStyles = styled.div`
     &:before {
       content: '';
       width: 2px;
-      background: ${props => props.theme.lightgrey};
+      background: ${props => props.theme.lightGrey};
       height: 100%;
       left: 0;
       position: absolute;
