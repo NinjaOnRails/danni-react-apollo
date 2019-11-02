@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
-import styled from 'styled-components';
 import { adopt } from 'react-adopt';
 import { onSignout } from '../../Authentication/Signout';
 import BackDrop from './Backdrop';
@@ -14,27 +13,7 @@ import {
 } from '../../../graphql/mutation';
 import { localData } from '../../Authentication/AuthModal';
 import { openAuthModal } from '../../Authentication/PleaseSignIn';
-
-const LanguageMenuStyles = styled.div`
-  button.ui.button {
-    font-family: Verdana;
-    text-align: left;
-  }
-  .ui.basic.buttons .button {
-    font-size: 10px;
-    color: #fff !important;
-  }
-  /* Turn off default background color change on hover */
-  .ui.basic.buttons .button:hover {
-    background-color: transparent !important;
-  }
-  .ui.toggle.buttons .active.button:hover {
-    background-color: #21ba45 !important;
-  }
-  @media (min-width: 640px) {
-    display: none;
-  }
-`;
+import LanguageMenuStyles from '../../styles/LanguageMenuStyles';
 
 /* eslint-disable */
 const signout = ({ render }) => (
@@ -55,6 +34,13 @@ const Composed = adopt({
   openAuthModal,
 });
 
+const sidebarItems = [
+  { linkName: 'Trang Chủ', link: '/', icon: 'home' },
+  { linkName: 'Thêm Video', link: '/new', icon: 'video' },
+  { linkName: 'Giới Thiệu', link: '/about', icon: 'info' },
+  { linkName: 'Tài Khoản', link: '/me', icon: 'user' },
+];
+
 const SideDrawer = () => {
   return (
     <Composed>
@@ -72,7 +58,17 @@ const SideDrawer = () => {
             {/* <Logo inDrawer /> */}
             <div className="links">
               <Menu vertical icon="labeled" inverted>
-                <Link href="/">
+                {sidebarItems.map(({ linkName, link, icon }) => (
+                  <Link href={link}>
+                    <MenuItem as="a" onClick={closeSideDrawer}>
+                      <div className="link-container">
+                        <Icon name={icon} size="large" />
+                        <span className="link-name">{linkName}</span>
+                      </div>
+                    </MenuItem>
+                  </Link>
+                ))}
+                {/* <Link href="/">
                   <MenuItem as="a" onClick={closeSideDrawer}>
                     <div className="link-container">
                       <Icon name="home" size="large" />
@@ -106,7 +102,7 @@ const SideDrawer = () => {
                       <span className="link-name">Tài Khoản</span>
                     </div>
                   </MenuItem>
-                </Link>
+                </Link> */}
                 {currentUser && (
                   <MenuItem
                     as="a"
