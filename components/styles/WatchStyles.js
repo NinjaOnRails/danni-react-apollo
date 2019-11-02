@@ -2,29 +2,37 @@ import styled from 'styled-components';
 
 export const WatchPageStyles = styled.div`
   display: grid;
+
   .filePlayer {
     display: none; /* Hide audio File Player */
   }
+
   div.ui.active.centered.inline.loader {
     margin-top: 50px;
   }
+
   @media (max-width: 991px) {
     .tablet-padding {
       padding: 0 1rem;
     }
   }
+
   @media (min-width: 992px) {
     grid-template-columns: auto 350px;
     margin: 0 1rem;
+
     .main {
       padding-right: 1rem;
     }
   }
+
   @media (min-width: 1200px) {
     grid-template-columns: auto 402px;
+
     .main {
       padding-right: 24px;
     }
+
     margin: 0 24px;
   }
 `;

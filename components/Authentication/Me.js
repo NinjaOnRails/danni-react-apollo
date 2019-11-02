@@ -3,10 +3,15 @@ import { Container, Item, Loader, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
-import { CURRENT_USER_QUERY, USER_QUERY } from '../../graphql/query';
+import {
+  CURRENT_USER_QUERY,
+  USER_QUERY,
+  ALL_AUDIOS_QUERY,
+  ALL_VIDEOS_QUERY,
+} from '../../graphql/query';
 import RenderVideos from '../Video/RenderVideos';
 import VideoListStyles from '../styles/VideoListStyles';
-import { user } from '../UI/ContentLanguage';
+import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
@@ -19,6 +24,7 @@ const deleteAudVidMutation = ({
   user: {
     currentUser: { id },
   },
+  contentLanguageQuery: { contentLanguage },
 }) => (
   /* eslint-enable */
   <Mutation
@@ -26,6 +32,8 @@ const deleteAudVidMutation = ({
     refetchQueries={[
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id } },
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
     ]}
   >
     {(deleteAudVid, deleteAudVidResult) =>
@@ -36,6 +44,7 @@ const deleteAudVidMutation = ({
 
 const Composed = adopt({
   user,
+  contentLanguageQuery,
   deleteAudVidMutation,
 });
 

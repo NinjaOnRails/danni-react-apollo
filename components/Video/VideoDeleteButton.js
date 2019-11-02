@@ -29,8 +29,8 @@ export default class VideoDeleteButton extends Component {
             this.setState({ openConfirm: false });
           }}
           cancelButton="Huỷ"
-          confirmButton="Xoá vĩnh viễn"
-          content={`Bạn có thật sự muốn xoá video: ${title}?`}
+          confirmButton="Xác nhận"
+          content={`Xác nhận xoá Video: ${title}`}
           header="Chú ý!"
         />
       </>

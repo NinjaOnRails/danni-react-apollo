@@ -1,49 +1,56 @@
 import React, { Component } from 'react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
-import { Segment, Header, Image, Button, Icon } from 'semantic-ui-react';
-import styled from 'styled-components';
+import {
+  Segment,
+  Header,
+  Image,
+  Button,
+  Icon,
+  Loader,
+} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { adopt } from 'react-adopt';
 import Link from 'next/link';
+import { Mutation } from 'react-apollo';
+import Router from 'next/router';
 import YoutubeViews from './YoutubeViews';
-import User from '../Authentication/User';
+import VideoDeleteButton from './VideoDeleteButton';
+import VideoInfoStyles from '../styles/VideoInfoStyles';
+import { user, contentLanguageQuery } from '../UI/ContentLanguage';
+import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
+import {
+  CURRENT_USER_QUERY,
+  ALL_VIDEOS_QUERY,
+  ALL_AUDIOS_QUERY,
+} from '../../graphql/query';
+import Error from '../UI/ErrorMessage';
 
-const VideoInfoStyles = styled.div`
-  margin-bottom: 2rem;
-  line-height: 2rem;
-  h1,
-  h2,
-  h3,
-  .ui.statistic > .label,
-  .description {
-    font-family: ${props => props.theme.font};
-    word-break: break-word;
-  }
-  .fb-share-button {
-    float: right;
-    cursor: pointer;
-  }
-  .basic-info {
-    margin-top: 10px;
-  }
-  .views-social {
-    display: flex;
-    justify-content: space-between;
-  }
-  .description-preview {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* Show only first 2 lines */
-    /* Implement for browsers with no support for webkit */
-    max-height: 2rem; /* This is line height X no. of lines to show */
-  }
+/* eslint-disable */
+const deleteAudVidMutation = ({
+  contentLanguageQuery: { contentLanguage },
+  render,
+}) => (
+  /* eslint-enable */
+  <Mutation
+    mutation={DELETE_AUDVID_MUTATION}
+    refetchQueries={[
+      { query: CURRENT_USER_QUERY },
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
+    ]}
+    onCompleted={() => Router.push('/')}
+  >
+    {(deleteAudVid, deleteAudVidResult) =>
+      render({ deleteAudVid, deleteAudVidResult })
+    }
+  </Mutation>
+);
 
-  .ui.statistic > .label {
-    font-size: 12px;
-    text-transform: none;
-  }
-`;
+const Composed = adopt({
+  user,
+  contentLanguageQuery,
+  deleteAudVidMutation,
+});
 
 export default class VideoInfo extends Component {
   state = {
@@ -87,33 +94,55 @@ export default class VideoInfo extends Component {
     } = this.props;
 
     const { descriptionOverflow } = this.state;
-
     const query = { id };
+    const title = audio[0] ? audio[0].title : originTitle;
     if (audioId) query.audioId = audioId;
 
     return (
-      <User>
-        {({ data }) => {
-          const currentUser = data ? data.currentUser : null;
+      <Composed>
+        {({
+          user: { currentUser },
+          deleteAudVidMutation: {
+            deleteAudVid,
+            deleteAudVidResult: { loading, error },
+          },
+        }) => {
           return (
             <VideoInfoStyles>
               <div className="basic-info">
-                {currentUser && currentUser.id === addedBy.id && (
-                  <Link
-                    href={{
-                      pathname: '/edit',
-                      query,
-                    }}
-                  >
-                    <Button icon labelPosition="left" floated="right">
-                      <Icon name="write" />
-                      Sửa
-                    </Button>
-                  </Link>
-                )}
                 <Header>
-                  <h1>{audio[0] ? audio[0].title : originTitle}</h1>
+                  <h1>{title}</h1>
                 </Header>
+                <Error error={error} />
+                {currentUser && currentUser.id === addedBy.id && (
+                  <div className="buttons">
+                    {loading ? (
+                      <Loader active inline="centered">
+                        Đang xoá video...
+                      </Loader>
+                    ) : (
+                      <>
+                        <Link
+                          href={{
+                            pathname: '/edit',
+                            query,
+                          }}
+                        >
+                          <Button icon labelPosition="left">
+                            <Icon name="write" />
+                            Sửa
+                          </Button>
+                        </Link>
+                        <VideoDeleteButton
+                          id={id}
+                          audioId={audioId}
+                          title={title}
+                          deleteAudVid={deleteAudVid}
+                        />
+                      </>
+                    )}
+                  </div>
+                )}
                 <div className="views-social">
                   <YoutubeViews originId={originId} />
                   <div>
@@ -190,7 +219,7 @@ export default class VideoInfo extends Component {
             </VideoInfoStyles>
           );
         }}
-      </User>
+      </Composed>
     );
   }
 }

@@ -5,11 +5,16 @@ import { adopt } from 'react-adopt';
 import { Query, Mutation } from 'react-apollo';
 import RenderVideos from '../Video/RenderVideos';
 import VideoListStyles from '../styles/VideoListStyles';
-import { user } from '../UI/ContentLanguage';
+import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
-import { USER_QUERY, CURRENT_USER_QUERY } from '../../graphql/query';
+import {
+  USER_QUERY,
+  CURRENT_USER_QUERY,
+  ALL_AUDIOS_QUERY,
+  ALL_VIDEOS_QUERY,
+} from '../../graphql/query';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import UpdateAvatarModal from './UpdateAvatarModal';
 import Error from '../UI/ErrorMessage';
@@ -20,13 +25,19 @@ const userQuery = ({ render, id }) => (
     {render}
   </Query>
 );
-const deleteAudVidMutation = ({ render, id }) => (
+const deleteAudVidMutation = ({
+  render,
+  id,
+  contentLanguageQuery: { contentLanguage },
+}) => (
   /* eslint-enable */
   <Mutation
     mutation={DELETE_AUDVID_MUTATION}
     refetchQueries={[
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id } },
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
     ]}
   >
     {(deleteAudVid, deleteAudVidResult) =>
@@ -38,6 +49,7 @@ const deleteAudVidMutation = ({ render, id }) => (
 const Composed = adopt({
   userQuery,
   user,
+  contentLanguageQuery,
   deleteAudVidMutation,
 });
 
