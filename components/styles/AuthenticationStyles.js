@@ -3,7 +3,7 @@ import { Message } from 'semantic-ui-react';
 
 export const StyledMessage = styled.div`
   max-width: ${props => props.theme.maxWidth};
-  margin: 0 auto;
+  margin: 24px auto;
 `;
 
 export const StyledHeader = styled(Message.Header)`

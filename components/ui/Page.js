@@ -25,16 +25,15 @@ const defaultTheme = {
 const StyledPage = styled.div`
   background: white;
   color: ${props => props.theme.black};
-  position: relative;
 `;
 
 const Inner = styled.div`
-  padding: 24px 0 10% 0;
+  /* padding: 24px 0 10% 0; */
+  padding: 0;
+  padding-bottom: 10%;
   margin: auto;
 
-  @media (max-width: 479px) {
-    padding: 0;
-    padding-bottom: 10%;
+  @media (max-width: 991px) {
     width: 100%;
   }
 `;
@@ -57,7 +56,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: ${props => props.theme.font};
     overflow: ${props =>
       props.showSide || props.showAuthModal ? 'hidden' : 'scroll'};
-      /* position: relative; */
   }
   
   a {
@@ -68,6 +66,11 @@ const GlobalStyle = createGlobalStyle`
 
   button {
     font-family: 'Verdana';
+  }
+
+  #__next {
+    height: 100%;
+    position: relative;
   }
 `;
 
