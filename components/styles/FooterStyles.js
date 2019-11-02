@@ -3,11 +3,9 @@ import styled from 'styled-components';
 const FooterStyle = styled.footer`
   display: block;
   width: 100%;
-  /* position: absolute;
-  right: 0;
+  position: absolute;
   bottom: 0;
-  left: 0;
-  height: 2.5rem; */
+  height: 2.5rem;
 
   .footer-container {
     font-size: 11px;

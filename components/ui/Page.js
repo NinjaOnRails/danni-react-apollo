@@ -26,13 +26,13 @@ const StyledPage = styled.div`
   background: white;
   color: ${props => props.theme.black};
   position: relative;
-  height: 100%;
-  margin-bottom: 10%;
+  min-height: 100vh;
 `;
 
 const Inner = styled.div`
   padding: 0;
   margin: auto;
+  padding-bottom: 2.5rem;
   @media (max-width: 991px) {
     width: 100%;
   }
@@ -66,10 +66,6 @@ const GlobalStyle = createGlobalStyle`
   button {
     font-family: 'Verdana';
   }
-
-  #__next {
-    height: 100%;
-  }
 `;
 
 const Composed = adopt({
@@ -95,8 +91,8 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
+                <Footer />
               </StyledPage>
-              <Footer />
             </ThemeProvider>
           );
         }}
