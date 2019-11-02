@@ -93,6 +93,16 @@ const UPDATE_AUDIO_MUTATION = gql`
   }
 `;
 
+const DELETE_AUDVID_MUTATION = gql`
+  mutation DELETE_AUDVID_MUTATION($id: ID!, $audioId: ID) {
+    deleteAudVid(id: $id, audioId: $audioId) {
+      addedBy {
+        id
+      }
+    }
+  }
+`;
+
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
     $name: String
@@ -358,6 +368,7 @@ export {
   UPDATE_AUDIO_MUTATION,
   VIDEO_DELETE,
   UPDATE_VIDEO_MUTATION,
+  DELETE_AUDVID_MUTATION,
   CREATE_VIDEO_MUTATION,
   SIGNUP_MUTATION,
   SIGNIN_MUTATION,
