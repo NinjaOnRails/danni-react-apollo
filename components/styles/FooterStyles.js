@@ -77,7 +77,7 @@ const FooterStyle = styled.footer`
   }
   .footer-list-header {
     padding: 10px 0 5px 0;
-    color: #fff;
+    color: ${props => props.theme.white};
     font-size: 1.5vw;
   }
 
