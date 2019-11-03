@@ -11,7 +11,7 @@ const formatDuration = duration => {
   }`;
 };
 
-const RenderVideos = ({
+const RenderVideoList = ({
   dataAudios,
   dataVideos,
   hideAuthor,
@@ -157,7 +157,7 @@ const RenderVideos = ({
   );
 };
 
-RenderVideos.propTypes = {
+RenderVideoList.propTypes = {
   dataAudios: PropTypes.object.isRequired,
   dataVideos: PropTypes.object.isRequired,
   deleteAudVid: PropTypes.func,
@@ -165,10 +165,10 @@ RenderVideos.propTypes = {
   hideAuthor: PropTypes.bool,
 };
 
-RenderVideos.defaultProps = {
+RenderVideoList.defaultProps = {
   deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
 };
 
-export default RenderVideos;
+export default RenderVideoList;

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { ALL_AUDIOS_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
 import VideosLoading from './VideoLoading';
-import RenderVideos from './RenderVideos';
+import RenderVideoList from './RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 
@@ -67,7 +67,7 @@ const Videos = ({
           ) : errorVideos ? (
             <Error>Error: {errorVideos.message}</Error>
           ) : (
-            <RenderVideos
+            <RenderVideoList
               dataAudios={dataAudios || initialAudioData}
               dataVideos={dataVideos || initialVideoData}
             />

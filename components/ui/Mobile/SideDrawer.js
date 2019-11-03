@@ -59,7 +59,7 @@ const SideDrawer = () => {
             <div className="links">
               <Menu vertical icon="labeled" inverted>
                 {sidebarItems.map(({ linkName, link, icon }) => (
-                  <Link href={link}>
+                  <Link href={link} key={icon}>
                     <MenuItem as="a" onClick={closeSideDrawer}>
                       <div className="link-container">
                         <Icon name={icon} size="large" />
