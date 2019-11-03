@@ -8,12 +8,14 @@ import SideDrawer from './Mobile/SideDrawer';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 
-const theme = {
-  red: '#FF0000',
+const defaultTheme = {
+  white: ' #fff',
+  pureBlack: '#000',
   black: '#393939',
-  grey: '#3A3A3A',
-  lightgrey: '#E1E1E1',
-  offWhite: '#EDEDED',
+  darkGrey: '#1b1c1d',
+  grey: '#808080',
+  lightGrey: '#E1E1E1',
+  red: '#FF0000',
   maxWidth: '1000px',
   bs: '0 12px 24px 0 rgba(0, 0, 0, 0.09)',
   font: 'Roboto',
@@ -23,15 +25,14 @@ const StyledPage = styled.div`
   background: white;
   color: ${props => props.theme.black};
   position: relative;
+  min-height: 100vh;
 `;
 
 const Inner = styled.div`
-  padding: 24px 0 10% 0;
+  padding: 0;
   margin: auto;
-
-  @media (max-width: 479px) {
-    padding: 0;
-    padding-bottom: 10%;
+  padding-bottom: 2.5rem;
+  @media (max-width: 991px) {
     width: 100%;
   }
 `;
@@ -48,18 +49,16 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     width: 100%;
-    height: 100%;
     font-size: 1.5rem;
     line-height: 2;
     font-family: ${props => props.theme.font};
     overflow: ${props =>
       props.showSide || props.showAuthModal ? 'hidden' : 'scroll'};
-      /* position: relative; */
   }
   
   a {
     text-decoration: none;
-    color: ${theme.black};
+    color: ${props => props.theme.black};
     font-family: "Verdana";
   }
 
@@ -80,7 +79,7 @@ class Page extends Component {
         {({ localData: { data } }) => {
           if (!data) return <div>Loading...</div>;
           return (
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={defaultTheme}>
               <StyledPage>
                 <GlobalStyle
                   showSide={data.showSide}

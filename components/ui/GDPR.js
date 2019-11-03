@@ -8,7 +8,7 @@ const StyledContainer = styled.div`
   -webkit-font-smoothing: antialiased;
   text-align: center;
   font-size: 11px;
-  background-color: #393939;
+  background-color: ${props => props.theme.black};
   color: #bebebe;
   box-shadow: 0 0 20px 0 #000;
   min-height: 42px;
@@ -24,23 +24,13 @@ const StyledContainer = styled.div`
   }
 
   a {
-    color: white;
+    color: ${props => props.theme.white};
     text-decoration: underline;
   }
 
-  /* button {
-    display: block;
-    height: 14px;
-    margin-top: -7px;
-    position: absolute;
-    right: 7px;
-    top: 50%;
-    width: 14px;
-  } */
-
   .ui.button {
     display: block;
-    background-color: #393939;
+    background-color: ${props => props.theme.black};
     color: #bebebe;
     position: absolute;
     right: 0;

@@ -15,7 +15,8 @@ const Form = styled.form`
   margin: 0 auto;
   box-shadow: ${props =>
     props.modal ? 'none' : '0 0 5px 3px rgba(0, 0, 0, 0.05);'};
-  background: ${props => (props.modal ? '#ffffff' : 'rgba(0, 0, 0, 0.02)')};
+  background: ${props =>
+    props.modal ? props.theme.white : 'rgba(0, 0, 0, 0.02)'};
   border: ${props => (props.modal ? 'none' : '5px solid white')};
   padding: ${props => (props.modal ? 0 : '20px')};
   font-size: 1.5rem;

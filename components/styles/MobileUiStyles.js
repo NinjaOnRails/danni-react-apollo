@@ -7,7 +7,8 @@ export const BackdropStyles = styled.div`
   z-index: 100;
   left: 0;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: ${props => props.theme.pureBlack};
+  opacity: 0.7;
 `;
 
 export const SideDrawerStyles = styled.div`
@@ -19,12 +20,11 @@ export const SideDrawerStyles = styled.div`
     right: 0;
     top: 0;
     z-index: 200;
-    background-color: #1b1c1d /*rgb(35, 35, 35, 0.9)*/;
+    background-color: ${props => props.theme.darkGrey};
     box-sizing: border-box;
     transition: transform 0.3s ease-out;
   }
   .links {
-    /* border-top: solid 4px white; */
     .ui.vertical.icon.menu {
       width: 100%;
     }

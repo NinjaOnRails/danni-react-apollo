@@ -7,10 +7,10 @@ const ModalStyles = styled.div`
   .Modal {
     position: fixed;
     z-index: 500;
-    background-color: #ffffff;
+    background-color: ${props => props.theme.white};
     width: 70%;
     /* border: 1px solid #ccc; */
-    box-shadow: 1px 1px 1px black;
+    box-shadow: 1px 1px 1px ${props => props.theme.pureBlack};
     /* padding: 16px; */
     padding: 0 0 16px 0;
     left: 15%;
@@ -42,7 +42,7 @@ const ModalStyles = styled.div`
   @media (max-width: 639px) {
     .Modal {
       height: 90vh;
-      overflow-y: scroll
+      overflow-y: scroll;
     }
   }
 `;

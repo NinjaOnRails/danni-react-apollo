@@ -5,7 +5,7 @@ const DropdownForm = styled.div`
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
-    border: 1px solid black;
+    border: 1px solid ${props => props.theme.pureBlack};
     margin-bottom: 1rem;
     &:focus {
       outline: 0;
