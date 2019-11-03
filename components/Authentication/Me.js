@@ -9,7 +9,7 @@ import {
   ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
 } from '../../graphql/query';
-import RenderVideos from '../Video/RenderVideos';
+import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
@@ -131,7 +131,7 @@ class Me extends Component {
                 <Loader active inline="centered" />
               ) : (
                 <VideoListStyles>
-                  <RenderVideos
+                  <RenderVideoList
                     dataAudios={{ audios: audio }}
                     dataVideos={{ videos: video }}
                     hideAuthor

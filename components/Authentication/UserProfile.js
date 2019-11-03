@@ -3,7 +3,7 @@ import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import { Query, Mutation } from 'react-apollo';
-import RenderVideos from '../Video/RenderVideos';
+import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
@@ -156,7 +156,7 @@ class UserProfile extends Component {
                   <Loader active inline="centered" />
                 ) : (
                   <VideoListStyles>
-                    <RenderVideos
+                    <RenderVideoList
                       dataAudios={{ audios: audio }}
                       dataVideos={{ videos: video }}
                       hideAuthor
