@@ -15,7 +15,7 @@ const StyledHeader = styled.header`
     position: sticky;
     top: 0;
     .bar {
-      grid-template-columns: 1fr;
+      grid-template-columns: auto auto;
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
     }

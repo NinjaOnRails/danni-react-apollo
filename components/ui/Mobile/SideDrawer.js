@@ -36,7 +36,7 @@ const Composed = adopt({
 
 const sidebarItems = [
   { linkName: 'Trang Chủ', link: '/', icon: 'home' },
-  { linkName: 'Thêm Video', link: '/new', icon: 'video' },
+  { linkName: 'Thêm Video', link: '/new', icon: 'video', miniIcon: true },
   { linkName: 'Giới Thiệu', link: '/about', icon: 'info' },
   { linkName: 'Tài Khoản', link: '/me', icon: 'user' },
 ];
@@ -58,51 +58,21 @@ const SideDrawer = () => {
             {/* <Logo inDrawer /> */}
             <div className="links">
               <Menu vertical icon="labeled" inverted>
-                {sidebarItems.map(({ linkName, link, icon }) => (
+                {sidebarItems.map(({ linkName, link, icon, miniIcon }) => (
                   <Link href={link}>
                     <MenuItem as="a" onClick={closeSideDrawer}>
                       <div className="link-container">
-                        <Icon name={icon} size="large" />
+                        <Icon.Group size="large">
+                          <Icon name={icon} />
+                          {miniIcon && (
+                            <Icon color="black" name="plus" size="tiny" />
+                          )}
+                        </Icon.Group>
                         <span className="link-name">{linkName}</span>
                       </div>
                     </MenuItem>
                   </Link>
                 ))}
-                {/* <Link href="/">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="home" size="large" />
-                      <span className="link-name">Trang Chủ</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/new">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon.Group size="large">
-                        <Icon name="video" />
-                        <Icon color="black" name="plus" size="tiny" />
-                      </Icon.Group>
-                      <span className="link-name">Thêm Video</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/about">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="info" size="large" />
-                      <span className="link-name">Giới Thiệu</span>
-                    </div>
-                  </MenuItem>
-                </Link>
-                <Link href="/me">
-                  <MenuItem as="a" onClick={closeSideDrawer}>
-                    <div className="link-container">
-                      <Icon name="user" size="large" />
-                      <span className="link-name">Tài Khoản</span>
-                    </div>
-                  </MenuItem>
-                </Link> */}
                 {currentUser && (
                   <MenuItem
                     as="a"

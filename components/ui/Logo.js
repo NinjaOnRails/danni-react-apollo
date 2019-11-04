@@ -20,6 +20,9 @@ const LogoStyles = styled.h1`
     text-transform: uppercase;
     text-decoration: none;
   }
+  i.icon {
+    margin: 0;
+  }
   @media (max-width: 1279px) {
     font-size: 2.5rem;
   }
