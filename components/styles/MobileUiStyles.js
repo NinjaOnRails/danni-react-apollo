@@ -46,7 +46,12 @@ export const SideDrawerStyles = styled.div`
       padding: 2rem 0;
       width: 100%;
     }
+    i.large.icon,
+    i.large.icons {
+      width: 20px;
+    }
   }
+
   .Open {
     transform: translateX(0);
   }
@@ -81,6 +86,13 @@ export const DrawerToggleStyles = styled.div`
   display: flex;
   justify-content: center;
   margin: auto 0;
+  i.icon {
+    margin: 0;
+  }
+  i.large.icon,
+  i.large.icons {
+    font-size: 2.5em;
+  }
   @media (min-width: 640px) {
     display: none;
   }

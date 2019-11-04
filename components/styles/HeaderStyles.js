@@ -18,6 +18,7 @@ const StyledHeader = styled.header`
       grid-template-columns: auto auto;
       grid-auto-flow: column;
       border-bottom: 4px solid ${props => props.theme.black};
+      height: 45px;
     }
   }
 `;
