@@ -111,6 +111,9 @@ const FooterStyle = styled.footer`
     }
   }
   @media only screen and (max-width: 568px) {
+    ul {
+      padding: 0;
+    }
     main {
       font-size: 5em;
     }
