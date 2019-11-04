@@ -2,26 +2,55 @@ import React, { Component } from 'react';
 import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
-import { Query } from 'react-apollo';
-import RenderVideos from '../Video/RenderVideos';
+import { Query, Mutation } from 'react-apollo';
+import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
-import { user } from '../UI/ContentLanguage';
+import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
-import { USER_QUERY } from '../../graphql/query';
+import {
+  USER_QUERY,
+  CURRENT_USER_QUERY,
+  ALL_AUDIOS_QUERY,
+  ALL_VIDEOS_QUERY,
+} from '../../graphql/query';
+import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import UpdateAvatarModal from './UpdateAvatarModal';
 import Error from '../UI/ErrorMessage';
 
+/* eslint-disable */
 const userQuery = ({ render, id }) => (
   <Query query={USER_QUERY} variables={{ id }}>
     {render}
   </Query>
 );
+const deleteAudVidMutation = ({
+  render,
+  id,
+  contentLanguageQuery: { contentLanguage },
+}) => (
+  /* eslint-enable */
+  <Mutation
+    mutation={DELETE_AUDVID_MUTATION}
+    refetchQueries={[
+      { query: CURRENT_USER_QUERY },
+      { query: USER_QUERY, variables: { id } },
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
+    ]}
+  >
+    {(deleteAudVid, deleteAudVidResult) =>
+      render({ deleteAudVid, deleteAudVidResult })
+    }
+  </Mutation>
+);
 
 const Composed = adopt({
   userQuery,
   user,
+  contentLanguageQuery,
+  deleteAudVidMutation,
 });
 
 class UserProfile extends Component {
@@ -57,7 +86,17 @@ class UserProfile extends Component {
 
     return (
       <Composed id={userId}>
-        {({ user: { currentUser }, userQuery: { data, loading, error } }) => {
+        {({
+          user: { currentUser },
+          userQuery: { data, loading, error },
+          deleteAudVidMutation: {
+            deleteAudVid,
+            deleteAudVidResult: {
+              loading: deleteAudVidLoading,
+              error: deleteAudVidError,
+            },
+          },
+        }) => {
           if (loading) return <Loader active inline="centered" />;
           if (error) return <Error error={error} />;
           const user = data ? data.user : initialData.user;
@@ -112,14 +151,20 @@ class UserProfile extends Component {
                 style={{ width: '80%', margin: '3.75rem auto 0 auto' }}
               >
                 <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
-                <VideoListStyles>
-                  <RenderVideos
-                    dataAudios={{ audios: audio }}
-                    dataVideos={{ videos: video }}
-                    hideAuthor
-                    currentUser={currentUser}
-                  />
-                </VideoListStyles>
+                <Error error={deleteAudVidError} />
+                {deleteAudVidLoading ? (
+                  <Loader active inline="centered" />
+                ) : (
+                  <VideoListStyles>
+                    <RenderVideoList
+                      dataAudios={{ audios: audio }}
+                      dataVideos={{ videos: video }}
+                      hideAuthor
+                      currentUser={currentUser}
+                      deleteAudVid={deleteAudVid}
+                    />
+                  </VideoListStyles>
+                )}
               </div>
             </>
           );
@@ -140,3 +185,4 @@ UserProfile.defaultProps = {
 };
 
 export default UserProfile;
+export { userQuery };

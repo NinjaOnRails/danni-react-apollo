@@ -5,7 +5,7 @@ import JumbotronStyles from '../styles/JumbotronStyles';
 const Jumbotron = () => (
   <JumbotronStyles>
     <div className="intro">
-      <Header as="h1">Video thuyết minh bởi cộng đồng</Header>
+      <Header as="h1">Thư viện video thuyết minh bởi cộng đồng</Header>
       <Link href="/new">
         <Button primary size="big">
           Thêm Video <Icon name="right arrow" />

@@ -5,7 +5,12 @@ import { Mutation } from 'react-apollo';
 import Router from 'next/router';
 import { defaultLanguage } from '../../lib/supportedLanguages';
 import Error from '../UI/ErrorMessage';
-import { ALL_VIDEOS_QUERY, ALL_AUDIOS_QUERY } from '../../graphql/query';
+import {
+  ALL_VIDEOS_QUERY,
+  ALL_AUDIOS_QUERY,
+  CURRENT_USER_QUERY,
+  USER_QUERY,
+} from '../../graphql/query';
 import VideoForm from './VideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { trackNewVideo } from '../../lib/mixpanel';
@@ -13,7 +18,7 @@ import {
   CREATE_AUDIO_MUTATION,
   CREATE_VIDEO_MUTATION,
 } from '../../graphql/mutation';
-import { contentLanguageQuery } from '../UI/ContentLanguage';
+import { contentLanguageQuery, user } from '../UI/ContentLanguage';
 import AddVideoSteps from './AddVideoSteps';
 import AudioForm from './AudioForm';
 import AddVideoStyles from '../styles/AddVideoStyles';
@@ -21,6 +26,9 @@ import DetailsForm from './DetailsForm';
 
 /* eslint-disable */
 const createAudioMutation = ({
+  user: {
+    currentUser: { id },
+  },
   contentLanguageQuery: { contentLanguage },
   render,
 }) => (
@@ -28,6 +36,8 @@ const createAudioMutation = ({
     mutation={CREATE_AUDIO_MUTATION}
     refetchQueries={[
       { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: CURRENT_USER_QUERY },
+      { query: USER_QUERY, variables: { id } },
     ]}
   >
     {(createAudio, createAudioResult) =>
@@ -41,6 +51,9 @@ const createVideoMutation = ({
   language,
   isAudioSource,
   contentLanguageQuery: { contentLanguage },
+  user: {
+    currentUser: { id },
+  },
   render,
 }) => (
   <Mutation
@@ -51,6 +64,8 @@ const createVideoMutation = ({
     }}
     refetchQueries={[
       { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
+      { query: CURRENT_USER_QUERY },
+      { query: USER_QUERY, variables: { id } },
     ]}
   >
     {(createVideo, createVideoResult) =>
@@ -61,6 +76,7 @@ const createVideoMutation = ({
 /* eslint-enable */
 
 const Composed = adopt({
+  user,
   contentLanguageQuery,
   createAudioMutation,
   createVideoMutation,

@@ -19,7 +19,7 @@ import { createAudioMutation } from './AddVideo';
 import EditVideoForm from './EditVideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { uploadAudio } from '../../lib/cloudinaryUpload';
-import { contentLanguageQuery } from '../UI/ContentLanguage';
+import { contentLanguageQuery, user } from '../UI/ContentLanguage';
 
 /* eslint-disable */
 const videoQuery = ({ render, id, audioId }) => (
@@ -63,6 +63,7 @@ const deleteVideoMutation = ({ render }) => (
 /* eslint-enable */
 
 const Composed = adopt({
+  user,
   contentLanguageQuery,
   videoQuery,
   createAudioMutation,
