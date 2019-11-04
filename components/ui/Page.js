@@ -53,7 +53,7 @@ const GlobalStyle = createGlobalStyle`
     line-height: 2;
     font-family: ${props => props.theme.font};
     overflow: ${props =>
-      props.showSide || props.showAuthModal ? 'hidden' : 'scroll'};
+      props.showSide || props.showAuthModal ? 'hidden' : 'scroll'};      
   }
   
   a {

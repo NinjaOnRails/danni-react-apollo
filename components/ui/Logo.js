@@ -11,7 +11,7 @@ const LogoStyles = styled.h1`
   transform: skew(-7deg);
   width: auto;
   justify-content: start;
-  display: ${props => (props.footer ? 'block' : 'grid')};
+  display: ${props => (props.footer ? 'inline-block' : 'grid')};
   /* padding: ${props => (props.footer ? 'block' : 'grid')} */
   a {
     padding: 0.5rem 1rem;
