@@ -15,7 +15,6 @@ const LogoStyles = styled.h1`
   /* padding: ${props => (props.footer ? 'block' : 'grid')} */
   a {
     padding: 0.5rem 1rem;
-    background: ${props => props.theme.red};
     color: white;
     text-transform: uppercase;
     text-decoration: none;
@@ -36,7 +35,7 @@ const LogoStyles = styled.h1`
     transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')};
     margin: 0;
     padding: 5px;
-    background: ${props => props.theme.red}
+    background-color: ${props => props.theme.red}
   }
 `;
 

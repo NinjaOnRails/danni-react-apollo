@@ -22,7 +22,7 @@ const defaultTheme = {
 };
 
 const StyledPage = styled.div`
-  background: white;
+  background-color: white;
   color: ${props => props.theme.black};
   position: relative;
   min-height: 100vh;
