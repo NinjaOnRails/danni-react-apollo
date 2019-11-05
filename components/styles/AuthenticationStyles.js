@@ -6,9 +6,6 @@ export const StyledMessage = styled.div`
   margin: 24px auto;
   text-align: center;
   width: 80%;
-  /* @media (max-width: 480px) {
-    margin: 0 auto;
-  } */
 `;
 
 export const StyledHeader = styled(Message.Header)`

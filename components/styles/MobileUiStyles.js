@@ -23,6 +23,8 @@ export const SideDrawerStyles = styled.div`
     background-color: ${props => props.theme.darkGrey};
     box-sizing: border-box;
     transition: transform 0.3s ease-out;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .links {
     .ui.vertical.icon.menu {
@@ -31,20 +33,15 @@ export const SideDrawerStyles = styled.div`
     .link-container {
       display: flex;
       margin-left: 1.5rem;
-      align-items: center;
     }
     .link-name {
       margin-left: 2rem;
-      text-align: left;
-      width: 60%;
       text-transform: uppercase;
-      height: 100%;
       font-size: 1rem;
     }
 
     .ui.menu .item {
       padding: 2rem 0;
-      width: 100%;
     }
     i.large.icon,
     i.large.icons {
@@ -57,11 +54,6 @@ export const SideDrawerStyles = styled.div`
   }
   .Close {
     transform: translateX(100%);
-  }
-  @media (min-width: 640px) {
-    .SideDrawer {
-      display: none;
-    }
   }
 `;
 
@@ -91,7 +83,7 @@ export const DrawerToggleStyles = styled.div`
   }
   i.large.icon,
   i.large.icons {
-    font-size: 2.5em;
+    font-size: 2em;
   }
   @media (min-width: 640px) {
     display: none;

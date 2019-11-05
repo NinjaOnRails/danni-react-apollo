@@ -19,7 +19,7 @@ const StyledHeader = styled.header`
       grid-auto-flow: column;
       border-bottom: 
       /* 0; */ 2px solid ${props => props.theme.black};
-      height: 45px;
+      height: 35px;
     }
   }
 `;

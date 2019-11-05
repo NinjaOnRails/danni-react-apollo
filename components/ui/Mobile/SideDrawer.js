@@ -14,7 +14,6 @@ import {
 import { localData } from '../../Authentication/AuthModal';
 import { openAuthModal } from '../../Authentication/PleaseSignIn';
 import LanguageMenuStyles from '../../styles/LanguageMenuStyles';
-
 /* eslint-disable */
 const signout = ({ render }) => (
   <Mutation mutation={SIGN_OUT_MUTATION}>{render}</Mutation>
@@ -59,7 +58,7 @@ const SideDrawer = () => {
             <div className="links">
               <Menu vertical icon="labeled" inverted>
                 {sidebarItems.map(({ linkName, link, icon, miniIcon }) => (
-                  <Link href={link}>
+                  <Link href={link} key={icon}>
                     <MenuItem as="a" onClick={closeSideDrawer}>
                       <div className="link-container">
                         <Icon.Group size="large">

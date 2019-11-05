@@ -43,4 +43,4 @@ const JumbotronStyles = styled.div`
   }
 `;
 
-export default JumbotronStyles
+export default JumbotronStyles;
