@@ -29,11 +29,11 @@ const StyledPage = styled.div`
 `;
 
 const Inner = styled.div`
-  padding: 0;
   margin: auto;
-  padding-bottom: 2.5rem;
+  padding: 3.5rem 0;
   @media (max-width: 991px) {
     width: 100%;
+    padding-top: 0;
   }
 `;
 
