@@ -3,6 +3,7 @@ import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import { Query, Mutation } from 'react-apollo';
+import Head from 'next/head';
 import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import { user, contentLanguageQuery } from '../UI/ContentLanguage';
@@ -103,6 +104,14 @@ class UserProfile extends Component {
           const { audio, video, avatar, displayName } = user;
           return (
             <>
+              <Head>
+                <title key="title">{user.displayName} | Danni TV</title>
+                <meta
+                  key="metaTitle"
+                  name="title"
+                  content={`${user.displayName} | Danni TV`}
+                />
+              </Head>
               <UserProfileStyles>
                 {currentUser && currentUser.id === userId && (
                   <UpdateAvatarModal

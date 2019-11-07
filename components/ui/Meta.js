@@ -2,8 +2,8 @@ import Head from 'next/head';
 
 const Meta = () => (
   <Head>
-    <title key="title">Danni TV</title>
-    <meta key="metaTitle" name="title" content="Danni TV" />
+    <title key="title">Danni TV - Trang chủ</title>
+    <meta key="metaTitle" name="title" content="Danni TV - Trang chủ" />
     {/* <meta
       key="description"
       name="description"
@@ -35,6 +35,10 @@ const Meta = () => (
 
     <meta property="fb:app_id" content="398428117464454" />
     <meta property="og:title" content="Danni TV" key="og:title" />
+    <meta
+      property="og:image"
+      content="https://res.cloudinary.com/danni/image/upload/v1573162609/btluys8ednhxpolg868s.jpg"
+    />
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
     {/* <meta

@@ -5,6 +5,7 @@ import Router from 'next/router';
 import { Button, Icon, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
+import Head from 'next/head';
 import Error from '../UI/ErrorMessage';
 import { signinFields } from './fieldTypes';
 import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
@@ -239,75 +240,85 @@ class Signin extends Component {
           },
           closeAuthModal,
         }) => (
-          <StyledForm
-            method="post"
-            onSubmit={e =>
-              this.onSubmit({
-                e,
-                signin,
-                data,
-                client,
-                closeAuthModal,
-              })
-            }
-            modal={modal}
-          >
-            <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
-            <fieldset
-              disabled={loading || fbLoginLoading}
-              aria-busy={loading || fbLoginLoading}
+          <>
+            <Head>
+              <title key="title">Danni TV - Đăng nhập</title>
+              <meta
+                key="metaTitle"
+                name="title"
+                content="Danni TV - Đăng nhập"
+              />
+            </Head>
+            <StyledForm
+              method="post"
+              onSubmit={e =>
+                this.onSubmit({
+                  e,
+                  signin,
+                  data,
+                  client,
+                  closeAuthModal,
+                })
+              }
+              modal={modal}
             >
-              <Error error={error} />
-              <Error error={fbLoginError} />
-              {formElArr.map(({ id, input }) => (
-                <AuthForm
-                  key={id}
-                  value={input.value}
-                  config={input.inputConfig}
-                  shouldValidate={input.validation}
-                  invalid={!input.valid}
-                  saveToState={e => this.inputchangeHandler(e, id)}
-                  touched={input.modified}
-                />
-              ))}
-              <div className="center">
-                <button type="submit" disabled={loading || fbLoginLoading}>
-                  {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
-                </button>
-                <p className="or">hoặc dùng</p>
-                <Button
-                  type="button"
-                  color="facebook"
-                  onClick={() =>
-                    onFacebookLoginClick({
-                      facebookLogin,
-                      contentLanguage,
-                      client,
-                      data,
-                      closeAuthModal: modal && closeAuthModal,
-                    })
-                  }
-                >
-                  <Icon name="facebook" />
-                  Facebook
-                </Button>
-              </div>
-              <div className="auth-links">
-                {!modal && (
-                  <Link href="/signup">
-                    <a>Tạo tài khoản mới</a>
+              <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
+              <fieldset
+                disabled={loading || fbLoginLoading}
+                aria-busy={loading || fbLoginLoading}
+              >
+                <Error error={error} />
+                <Error error={fbLoginError} />
+                {formElArr.map(({ id, input }) => (
+                  <AuthForm
+                    key={id}
+                    value={input.value}
+                    config={input.inputConfig}
+                    shouldValidate={input.validation}
+                    invalid={!input.valid}
+                    saveToState={e => this.inputchangeHandler(e, id)}
+                    touched={input.modified}
+                  />
+                ))}
+                <div className="center">
+                  <button type="submit" disabled={loading || fbLoginLoading}>
+                    {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
+                  </button>
+                  <p className="or">hoặc dùng</p>
+                  <Button
+                    type="button"
+                    color="facebook"
+                    onClick={() =>
+                      onFacebookLoginClick({
+                        facebookLogin,
+                        contentLanguage,
+                        client,
+                        data,
+                        closeAuthModal: modal && closeAuthModal,
+                      })
+                    }
+                  >
+                    <Icon name="facebook" />
+                    Facebook
+                  </Button>
+                </div>
+                <div className="auth-links">
+                  {!modal && (
+                    <Link href="/signup">
+                      <a>Tạo tài khoản mới</a>
+                    </Link>
+                  )}
+                  <Link href="/requestReset">
+                    <a>
+                      <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                        Quên mật khẩu?
+                      </span>
+                    </a>
                   </Link>
-                )}
-                <Link href="/requestReset">
-                  <a>
-                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Quên mật khẩu?
-                    </span>
-                  </a>
-                </Link>
-              </div>
-            </fieldset>
-          </StyledForm>
+                </div>
+              </fieldset>
+            </StyledForm>
+          </>
         )}
       </Composed>
     );

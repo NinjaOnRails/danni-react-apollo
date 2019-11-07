@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import propTypes from 'prop-types';
 
-const LogoStyles = styled.h1`
+const LogoStyles = styled.h2`
   font-size: 3rem;
   margin-left: ${props => (props.footer ? '0' : '2rem')};
   position: relative;

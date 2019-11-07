@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { Loader } from 'semantic-ui-react';
+import Head from 'next/head';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
@@ -151,40 +152,50 @@ class Reset extends Component {
       >
         {(resetPassword, { error, loading }) => {
           return (
-            <Form
-              method="post"
-              onSubmit={async e => {
-                this.onSubmit({ e, resetPassword, router });
-              }}
-            >
-              <p className="auth-title">Tạo mật khẩu mới</p>
-              <fieldset disabled={loading} aria-busy={loading}>
-                <Error error={error} />
-                <Error error={passwordsMatch} />
-                {formElArr.map(({ id, input }) => (
-                  <AuthForm
-                    key={id}
-                    value={input.value}
-                    config={input.inputConfig}
-                    shouldValidate={input.validation}
-                    invalid={!input.valid}
-                    saveToState={e => this.inputchangeHandler(e, id)}
-                    touched={input.modified}
-                    autoComplete="new-password"
-                  />
-                ))}
-                <div className="center">
-                  <button type="submit" disabled={loading}>
-                    Đặt mật khẩu mới
-                  </button>
+            <>
+              <Head>
+                <title key="title">Danni TV - Lập mật khẩu mới</title>
+                <meta
+                  key="metaTitle"
+                  name="title"
+                  content="Danni TV - Lập mật khẩu mới"
+                />
+              </Head>
+              <Form
+                method="post"
+                onSubmit={async e => {
+                  this.onSubmit({ e, resetPassword, router });
+                }}
+              >
+                <p className="auth-title">Lập mật khẩu mới</p>
+                <fieldset disabled={loading} aria-busy={loading}>
+                  <Error error={error} />
+                  <Error error={passwordsMatch} />
+                  {formElArr.map(({ id, input }) => (
+                    <AuthForm
+                      key={id}
+                      value={input.value}
+                      config={input.inputConfig}
+                      shouldValidate={input.validation}
+                      invalid={!input.valid}
+                      saveToState={e => this.inputchangeHandler(e, id)}
+                      touched={input.modified}
+                      autoComplete="new-password"
+                    />
+                  ))}
+                  <div className="center">
+                    <button type="submit" disabled={loading}>
+                      Xác nhận
+                    </button>
+                  </div>
+                </fieldset>
+                <div className="auth-links">
+                  <Link href="/requestReset">
+                    <a>Gửi lại yêu cầu đổi mật khẩu</a>
+                  </Link>
                 </div>
-              </fieldset>
-              <div className="auth-links">
-                <Link href="/requestReset">
-                  <a>Gửi lại yêu cầu đổi mật khẩu</a>
-                </Link>
-              </div>
-            </Form>
+              </Form>
+            </>
           );
         }}
       </Mutation>

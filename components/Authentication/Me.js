@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Item, Loader, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
+import Head from 'next/head';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import {
   CURRENT_USER_QUERY,
@@ -84,63 +85,73 @@ class Me extends Component {
           if (!currentUser) return <Loader active inline="centered" />;
           const { audio, video, avatar, displayName } = currentUser;
           return (
-            <Container>
-              <UserProfileStyles>
-                <UpdateAvatarModal
-                  showUpdateAvatarModal={showUpdateAvatarModal}
-                  closeUpdateAvatarModal={this.closeUpdateAvatarModal}
-                  currentUser={currentUser}
+            <>
+              <Head>
+                <title key="title">Danni TV - Tài khoản</title>
+                <meta
+                  key="metaTitle"
+                  name="title"
+                  content="Danni TV - Tài khoản"
                 />
-                <Item.Group>
-                  <Item>
-                    <Icon.Group size="big">
-                      <Item.Image
-                        src={avatar}
-                        alt={displayName}
-                        size="medium"
-                      />
-                      <Icon
-                        corner="top left"
-                        name="write"
-                        bordered
-                        link
-                        onClick={this.openUpdateAvatarModal}
-                      />
-                    </Icon.Group>
-                    {editMode ? (
-                      <UserInfoForm
-                        currentUser={currentUser}
-                        onCancelClick={this.onCancelClick}
-                      />
-                    ) : (
-                      <UserInfo
-                        user={currentUser}
-                        userId={currentUser.id}
-                        currentUser={currentUser}
-                        onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={audio.length}
-                        me
-                      />
-                    )}
-                  </Item>
-                </Item.Group>
-              </UserProfileStyles>
-              <h1>Uploads:</h1>
-              <Error error={error} />
-              {loading ? (
-                <Loader active inline="centered" />
-              ) : (
-                <VideoListStyles>
-                  <RenderVideoList
-                    dataAudios={{ audios: audio }}
-                    dataVideos={{ videos: video }}
-                    hideAuthor
+              </Head>
+              <Container>
+                <UserProfileStyles>
+                  <UpdateAvatarModal
+                    showUpdateAvatarModal={showUpdateAvatarModal}
+                    closeUpdateAvatarModal={this.closeUpdateAvatarModal}
                     currentUser={currentUser}
-                    deleteAudVid={deleteAudVid}
                   />
-                </VideoListStyles>
-              )}
-            </Container>
+                  <Item.Group>
+                    <Item>
+                      <Icon.Group size="big">
+                        <Item.Image
+                          src={avatar}
+                          alt={displayName}
+                          size="medium"
+                        />
+                        <Icon
+                          corner="top left"
+                          name="write"
+                          bordered
+                          link
+                          onClick={this.openUpdateAvatarModal}
+                        />
+                      </Icon.Group>
+                      {editMode ? (
+                        <UserInfoForm
+                          currentUser={currentUser}
+                          onCancelClick={this.onCancelClick}
+                        />
+                      ) : (
+                        <UserInfo
+                          user={currentUser}
+                          userId={currentUser.id}
+                          currentUser={currentUser}
+                          onUserInfoEditClick={this.onUserInfoEditClick}
+                          uploadsTotal={audio.length}
+                          me
+                        />
+                      )}
+                    </Item>
+                  </Item.Group>
+                </UserProfileStyles>
+                <h1>Uploads:</h1>
+                <Error error={error} />
+                {loading ? (
+                  <Loader active inline="centered" />
+                ) : (
+                  <VideoListStyles>
+                    <RenderVideoList
+                      dataAudios={{ audios: audio }}
+                      dataVideos={{ videos: video }}
+                      hideAuthor
+                      currentUser={currentUser}
+                      deleteAudVid={deleteAudVid}
+                    />
+                  </VideoListStyles>
+                )}
+              </Container>
+            </>
           );
         }}
       </Composed>

@@ -3,6 +3,7 @@ import { Segment, Form, Loader, Header } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
 import Router from 'next/router';
+import Head from 'next/head';
 import { defaultLanguage } from '../../lib/supportedLanguages';
 import Error from '../UI/ErrorMessage';
 import {
@@ -247,52 +248,62 @@ class AddVideo extends Component {
             },
           },
         }) => (
-          <AddVideoStyles>
-            <Header>Thêm Video/Thuyết Minh</Header>
-            <AddVideoSteps activeStep={activeStep} />
-            <Segment>
-              <Error error={errorCreateAudio} />
-              <Error error={errorCreateVideo} />
-              <Error error={{ message: error }} />
-              <Form
-                loading={loadingCreateAudio || loadingCreateVideo}
-                size="big"
-                onSubmit={async e =>
-                  this.onFormSubmit(e, createAudio, createVideo)
-                }
-              >
-                {activeStep === 'video' ? (
-                  <VideoForm
-                    setAddVideoState={this.setAddVideoState}
-                    language={language}
-                    source={source}
-                    youtubeId={youtubeId}
-                    videoValid={videoValid}
-                  />
-                ) : activeStep === 'audio' ? (
-                  <AudioForm
-                    setAddVideoState={this.setAddVideoState}
-                    isAudioSource={isAudioSource}
-                    audioUrl={audioUrl}
-                    secureUrl={secureUrl}
-                    deleteToken={deleteToken}
-                    language={language}
-                    source={source}
-                    onDeleteFileSubmit={this.onDeleteFileSubmit}
-                    youtubeId={youtubeId}
-                  />
-                ) : (
-                  <DetailsForm
-                    setAddVideoState={this.setAddVideoState}
-                    title={title}
-                    description={description}
-                    tags={tags}
-                    originTags={originTags}
-                  />
-                )}
-              </Form>
-            </Segment>
-          </AddVideoStyles>
+          <>
+            <Head>
+              <title key="title">Danni TV - Thêm Video</title>
+              <meta
+                key="metaTitle"
+                name="title"
+                content="Danni TV - Thêm Video"
+              />
+            </Head>
+            <AddVideoStyles>
+              <Header>Thêm Video/Thuyết Minh</Header>
+              <AddVideoSteps activeStep={activeStep} />
+              <Segment>
+                <Error error={errorCreateAudio} />
+                <Error error={errorCreateVideo} />
+                <Error error={{ message: error }} />
+                <Form
+                  loading={loadingCreateAudio || loadingCreateVideo}
+                  size="big"
+                  onSubmit={async e =>
+                    this.onFormSubmit(e, createAudio, createVideo)
+                  }
+                >
+                  {activeStep === 'video' ? (
+                    <VideoForm
+                      setAddVideoState={this.setAddVideoState}
+                      language={language}
+                      source={source}
+                      youtubeId={youtubeId}
+                      videoValid={videoValid}
+                    />
+                  ) : activeStep === 'audio' ? (
+                    <AudioForm
+                      setAddVideoState={this.setAddVideoState}
+                      isAudioSource={isAudioSource}
+                      audioUrl={audioUrl}
+                      secureUrl={secureUrl}
+                      deleteToken={deleteToken}
+                      language={language}
+                      source={source}
+                      onDeleteFileSubmit={this.onDeleteFileSubmit}
+                      youtubeId={youtubeId}
+                    />
+                  ) : (
+                    <DetailsForm
+                      setAddVideoState={this.setAddVideoState}
+                      title={title}
+                      description={description}
+                      tags={tags}
+                      originTags={originTags}
+                    />
+                  )}
+                </Form>
+              </Segment>
+            </AddVideoStyles>
+          </>
         )}
       </Composed>
     );

@@ -68,7 +68,7 @@ class AuthModal extends React.Component {
               />
               <div className="Modal">
                 <div className="modal-container">
-                  <h1 className="Logo">danni.tv</h1>
+                  <h2 className="Logo">danni.tv</h2>
                   <div className="auth-modes">
                     <a
                       className={`auth-mode ${
