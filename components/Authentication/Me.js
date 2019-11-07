@@ -93,7 +93,7 @@ const Me = () => {
                       user={currentUser}
                       userId={currentUser.id}
                       currentUser={currentUser}
-                      onUserInfoEditClick={() => setEditMode(false)}
+                      onUserInfoEditClick={() => setEditMode(true)}
                       uploadsTotal={audio.length}
                       me
                     />

@@ -152,13 +152,13 @@ const Signin = ({ modal }) => {
     if (data) {
       setSigninForm({
         email: {
-          ...signinForm.email,
+          ...email,
           value: '',
           valid: false,
           modified: false,
         },
         password: {
-          ...signinForm.password,
+          ...password,
           value: '',
           valid: false,
           modified: false,

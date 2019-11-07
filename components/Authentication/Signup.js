@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -90,14 +90,13 @@ const Signup = ({ modal }) => {
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [displayPassword, setdisplayPassword] = useState(false);
-
-  // const componentDidMount = () => {
-  //   const { displayName } = signupForm;
-  //   setSignupForm({
-  //     ...signupForm,
-  //     displayName: { ...displayName, value: generateName(), valid: true },
-  //   });
-  // };
+  useEffect(() => {
+    const { displayName } = signupForm;
+    setSignupForm({
+      ...signupForm,
+      displayName: { ...displayName, value: generateName(), valid: true },
+    });
+  }, []);
 
   const onSubmit = async ({
     e,

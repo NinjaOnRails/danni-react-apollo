@@ -52,12 +52,12 @@ const Reset = ({ router }) => {
     if (password.value !== confirmPassword.value) {
       setResetForm({
         password: {
-          ...resetForm.password,
+          ...password,
           value: '',
           valid: false,
         },
         confirmPassword: {
-          ...resetForm.confirmPassword,
+          ...confirmPassword,
           value: '',
           valid: false,
         },
@@ -72,13 +72,13 @@ const Reset = ({ router }) => {
       if (data) {
         setResetForm({
           pasword: {
-            ...resetForm.password,
+            ...password,
             value: '',
             valid: false,
             modified: false,
           },
           confirmPassword: {
-            ...resetForm.confirmPassword,
+            ...confirmPassword,
             value: '',
             valid: false,
             modified: false,
