@@ -480,14 +480,14 @@ class EditVideo extends Component {
             <>
               <Head>
                 <title key="title">
-                  {audioId ? data.video.audio.title : data.video.originTitle} |
-                  Danni TV - Sửa video
+                  {audioId ? data.video.audio[0].title : data.video.originTitle}{' '}
+                  | Danni TV - Sửa video
                 </title>
                 <meta
                   key="metaTitle"
                   name="title"
                   content={`${
-                    audioId ? data.video.audio.title : data.video.originTitle
+                    audioId ? data.video.audio[0].title : data.video.originTitle
                   } | Danni TV - Sửa video`}
                 />
               </Head>
