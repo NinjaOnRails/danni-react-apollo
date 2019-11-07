@@ -56,7 +56,7 @@ const Videos = ({
         </LanguageMenuStyles>
         <VideoListStyles>
           {(!contentLanguage.length &&
-            (!initialVideoData || !initialAudioData)) ||
+            (!initialVideoData && !initialAudioData)) ||
           (contentLanguage.length &&
             (loadingAudios ||
               loadingVideos ||

@@ -169,7 +169,7 @@ class Watch extends Component {
       client,
     } = this.props;
     const { readyYoutube, showFullDescription } = this.state;
-    const url = `https://danni.tv${asPath}
+    const url = `https://www.danni.tv${asPath}
     `;
     if (error) return <Error error={error} />;
     if (loading) return <Loader active inline="centered" />;
