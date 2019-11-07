@@ -20,7 +20,7 @@ import {
 } from '../../graphql/mutation';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import {validateInput} from './utils';
+import { inputChangeHandler } from './utils';
 
 /* eslint-disable */
 const signinMutation = ({ render, variables }) => (
@@ -139,29 +139,6 @@ const Signin = ({ modal }) => {
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
 
-  const inputChangeHandler = (e, input) => {
-    const eventValue = e.target.value;
-    const updatedForm = {
-      ...signinForm,
-    };
-    const updatedElement = {
-      ...updatedForm[input],
-    };
-    updatedElement.value = eventValue;
-    updatedElement.valid = validateInput(
-      updatedElement.value,
-      updatedElement.validation
-    );
-    updatedElement.modified = true;
-    updatedForm[input] = updatedElement;
-    let isFormValid = true;
-    Object.keys(updatedForm).forEach(key => {
-      isFormValid = updatedForm[key].valid && isFormValid;
-    });
-    setSigninForm(updatedForm);
-    setFormValid(isFormValid);
-  };
-
   const onSubmit = async ({
     e,
     signin,
@@ -259,7 +236,15 @@ const Signin = ({ modal }) => {
                 config={input.inputConfig}
                 shouldValidate={input.validation}
                 invalid={!input.valid}
-                saveToState={e => inputChangeHandler(e, id)}
+                saveToState={e =>
+                  inputChangeHandler(
+                    e,
+                    id,
+                    signinForm,
+                    setSigninForm,
+                    setFormValid
+                  )
+                }
                 touched={input.modified}
               />
             ))}

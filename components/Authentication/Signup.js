@@ -99,29 +99,6 @@ const Signup = ({ modal }) => {
   //   });
   // };
 
-  // const inputChangeHandler = (e, input) => {
-  //   const eventValue = e.target.value;
-  //   const updatedForm = {
-  //     ...signupForm,
-  //   };
-  //   const updatedElement = {
-  //     ...updatedForm[input],
-  //   };
-  //   updatedElement.value = eventValue;
-  //   updatedElement.valid = validateInput(
-  //     updatedElement.value,
-  //     updatedElement.validation
-  //   );
-  //   updatedElement.modified = true;
-  //   updatedForm[input] = updatedElement;
-  //   let isFormValid = true;
-  //   Object.keys(updatedForm).forEach(key => {
-  //     isFormValid = updatedForm[key].valid && isFormValid;
-  //   });
-  //   setSignupForm(updatedForm);
-  //   setFormValid(isFormValid);
-  // };
-
   const onSubmit = async ({
     e,
     signup,

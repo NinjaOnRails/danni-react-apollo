@@ -5,7 +5,7 @@ import Form from '../styles/Form';
 import { signupFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { REQUEST_RESET_MUTATION } from '../../graphql/mutation';
-import {validateInput} from './utils';
+import { inputChangeHandler } from './utils';
 
 const RequestReset = () => {
   const [requestResetForm, setRequestResetForm] = useState({
@@ -23,29 +23,6 @@ const RequestReset = () => {
     },
   });
   const [formValid, setFormValid] = useState(false);
-
-  const inputChangeHandler = (e, input) => {
-    const eventValue = e.target.value;
-    const updatedForm = {
-      ...requestResetForm,
-    };
-    const updatedElement = {
-      ...updatedForm[input],
-    };
-    updatedElement.value = eventValue;
-    updatedElement.valid = validateInput(
-      updatedElement.value,
-      updatedElement.validation
-    );
-    updatedElement.modified = true;
-    updatedForm[input] = updatedElement;
-    let isFormValid = true;
-    Object.keys(updatedForm).forEach(key => {
-      isFormValid = updatedForm[key].valid && isFormValid;
-    });
-    setRequestResetForm(updatedForm);
-    setFormValid(isFormValid);
-  };
 
   const {
     email: { value, inputConfig, modified, valid, validation },
@@ -84,7 +61,15 @@ const RequestReset = () => {
                 config={inputConfig}
                 shouldValidate={validation}
                 invalid={!valid}
-                saveToState={e => inputChangeHandler(e, 'email')}
+                saveToState={e =>
+                  inputChangeHandler(
+                    e,
+                    'email',
+                    requestResetForm,
+                    setRequestResetForm,
+                    setFormValid
+                  )
+                }
                 touched={modified}
               />
               <div className="center">

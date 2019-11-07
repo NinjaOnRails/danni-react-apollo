@@ -10,7 +10,7 @@ import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
 import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
-import {validateInput} from './utils';
+import { inputChangeHandler } from './utils';
 
 const Reset = ({ router }) => {
   const [resetForm, setResetForm] = useState({
@@ -42,29 +42,6 @@ const Reset = ({ router }) => {
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(null);
-
-  const inputChangeHandler = (e, input) => {
-    const eventValue = e.target.value;
-    const updatedForm = {
-      ...resetForm,
-    };
-    const updatedElement = {
-      ...updatedForm[input],
-    };
-    updatedElement.value = eventValue;
-    updatedElement.valid = validateInput(
-      updatedElement.value,
-      updatedElement.validation
-    );
-    updatedElement.modified = true;
-    updatedForm[input] = updatedElement;
-    let isFormValid = true;
-    Object.keys(updatedForm).forEach(key => {
-      isFormValid = updatedForm[key].valid && isFormValid;
-    });
-    setResetForm(updatedForm);
-    setFormValid(isFormValid);
-  };
 
   const onSubmit = async ({ e, resetPassword, router }) => {
     const { password, confirmPassword } = resetForm;
@@ -157,7 +134,15 @@ const Reset = ({ router }) => {
                   config={input.inputConfig}
                   shouldValidate={input.validation}
                   invalid={!input.valid}
-                  saveToState={e => inputChangeHandler(e, id)}
+                  saveToState={e =>
+                    inputChangeHandler(
+                      e,
+                      id,
+                      resetForm,
+                      setResetForm,
+                      setFormValid
+                    )
+                  }
                   touched={input.modified}
                   autoComplete="new-password"
                 />

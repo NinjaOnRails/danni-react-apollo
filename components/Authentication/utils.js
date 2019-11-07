@@ -19,7 +19,13 @@ const validateInput = (value, rule) => {
   return isValid;
 };
 
-const inputChangeHandler = (e, input, authForm, setAuthForm, setFormValid) => {
+export const inputChangeHandler = (
+  e,
+  input,
+  authForm,
+  setAuthForm,
+  setFormValid
+) => {
   const eventValue = e.target.value;
   const updatedForm = {
     ...authForm,
@@ -41,5 +47,3 @@ const inputChangeHandler = (e, input, authForm, setAuthForm, setFormValid) => {
   setAuthForm(updatedForm);
   setFormValid(isFormValid);
 };
-
-export { validateInput, inputChangeHandler };
