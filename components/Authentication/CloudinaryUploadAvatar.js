@@ -28,7 +28,7 @@ const Composed = adopt({
   user,
 });
 
-const CloudinaryUploadAudio = ({ chooseUpload, setSecureUrl }) => {
+const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
   const [startingUpload, setStartingUpload] = useState(false);
   const [uploadError, setUploadError] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -65,7 +65,6 @@ const CloudinaryUploadAudio = ({ chooseUpload, setSecureUrl }) => {
     setSecureUrlState('');
     // Prepare cloudinary upload params
     const { url, data } = uploadAvatar(file, id, cloudinaryAuthAvatar);
-
     // Upload file with post request
     try {
       const {
@@ -188,9 +187,9 @@ const CloudinaryUploadAudio = ({ chooseUpload, setSecureUrl }) => {
   );
 };
 
-CloudinaryUploadAudio.propTypes = {
+CloudinaryUploadAvatar.propTypes = {
   setSecureUrl: PropTypes.func.isRequired,
   chooseUpload: PropTypes.func.isRequired,
 };
 
-export default CloudinaryUploadAudio;
+export default CloudinaryUploadAvatar;
