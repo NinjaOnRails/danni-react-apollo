@@ -1,4 +1,4 @@
-export default (value, rule) => {
+const validateInput = (value, rule) => {
   let isValid = true;
   if (!rule) {
     return true;
@@ -18,3 +18,28 @@ export default (value, rule) => {
   }
   return isValid;
 };
+
+const inputChangeHandler = (e, input, authForm, setAuthForm, setFormValid) => {
+  const eventValue = e.target.value;
+  const updatedForm = {
+    ...authForm,
+  };
+  const updatedElement = {
+    ...updatedForm[input],
+  };
+  updatedElement.value = eventValue;
+  updatedElement.valid = validateInput(
+    updatedElement.value,
+    updatedElement.validation
+  );
+  updatedElement.modified = true;
+  updatedForm[input] = updatedElement;
+  let isFormValid = true;
+  Object.keys(updatedForm).forEach(key => {
+    isFormValid = updatedForm[key].valid && isFormValid;
+  });
+  setAuthForm(updatedForm);
+  setFormValid(isFormValid);
+};
+
+export { validateInput, inputChangeHandler };

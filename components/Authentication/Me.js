@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Container, Item, Loader, Icon } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
@@ -48,105 +48,80 @@ const Composed = adopt({
   deleteAudVidMutation,
 });
 
-class Me extends Component {
-  state = {
-    editMode: false,
-    showUpdateAvatarModal: false,
-  };
+const Me = () => {
+  const [editMode, setEditMode] = useState(false);
+  const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
-  onUserInfoEditClick = () => {
-    this.setState({ editMode: true });
-  };
-
-  onCancelClick = () => {
-    this.setState({ editMode: false });
-  };
-
-  openUpdateAvatarModal = () => {
-    this.setState({ showUpdateAvatarModal: true });
-  };
-
-  closeUpdateAvatarModal = () => {
-    this.setState({ showUpdateAvatarModal: false });
-  };
-
-  render() {
-    const { editMode, showUpdateAvatarModal } = this.state;
-    return (
-      <Composed>
-        {({
-          user: { currentUser },
-          deleteAudVidMutation: {
-            deleteAudVid,
-            deleteAudVidResult: { loading, error },
-          },
-        }) => {
-          if (!currentUser) return <Loader active inline="centered" />;
-          const { audio, video, avatar, displayName } = currentUser;
-          return (
-            <Container>
-              <UserProfileStyles>
-                <UpdateAvatarModal
-                  showUpdateAvatarModal={showUpdateAvatarModal}
-                  closeUpdateAvatarModal={this.closeUpdateAvatarModal}
+  return (
+    <Composed>
+      {({
+        user: { currentUser },
+        deleteAudVidMutation: {
+          deleteAudVid,
+          deleteAudVidResult: { loading, error },
+        },
+      }) => {
+        if (!currentUser) return <Loader active inline="centered" />;
+        const { audio, video, avatar, displayName } = currentUser;
+        return (
+          <Container>
+            <UserProfileStyles>
+              <UpdateAvatarModal
+                showUpdateAvatarModal={showUpdateAvatarModal}
+                closeUpdateAvatarModal={() => setShowUpdateAvatarModal(false)}
+                currentUser={currentUser}
+              />
+              <Item.Group>
+                <Item>
+                  <Icon.Group size="big">
+                    <Item.Image src={avatar} alt={displayName} size="medium" />
+                    <Icon
+                      corner="top left"
+                      name="write"
+                      bordered
+                      link
+                      onClick={() => setShowUpdateAvatarModal(true)}
+                    />
+                  </Icon.Group>
+                  {editMode ? (
+                    <UserInfoForm
+                      currentUser={currentUser}
+                      onCancelClick={() => setEditMode(false)}
+                    />
+                  ) : (
+                    <UserInfo
+                      user={currentUser}
+                      userId={currentUser.id}
+                      currentUser={currentUser}
+                      onUserInfoEditClick={() => setEditMode(false)}
+                      uploadsTotal={audio.length}
+                      me
+                    />
+                  )}
+                </Item>
+              </Item.Group>
+            </UserProfileStyles>
+            <h1>Uploads:</h1>
+            <Error error={error} />
+            {loading ? (
+              <Loader active inline="centered" />
+            ) : (
+              <VideoListStyles>
+                <RenderVideoList
+                  dataAudios={{ audios: audio }}
+                  dataVideos={{ videos: video }}
+                  hideAuthor
                   currentUser={currentUser}
+                  deleteAudVid={deleteAudVid}
                 />
-                <Item.Group>
-                  <Item>
-                    <Icon.Group size="big">
-                      <Item.Image
-                        src={avatar}
-                        alt={displayName}
-                        size="medium"
-                      />
-                      <Icon
-                        corner="top left"
-                        name="write"
-                        bordered
-                        link
-                        onClick={this.openUpdateAvatarModal}
-                      />
-                    </Icon.Group>
-                    {editMode ? (
-                      <UserInfoForm
-                        currentUser={currentUser}
-                        onCancelClick={this.onCancelClick}
-                      />
-                    ) : (
-                      <UserInfo
-                        user={currentUser}
-                        userId={currentUser.id}
-                        currentUser={currentUser}
-                        onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={audio.length}
-                        me
-                      />
-                    )}
-                  </Item>
-                </Item.Group>
-              </UserProfileStyles>
-              <h1>Uploads:</h1>
-              <Error error={error} />
-              {loading ? (
-                <Loader active inline="centered" />
-              ) : (
-                <VideoListStyles>
-                  <RenderVideoList
-                    dataAudios={{ audios: audio }}
-                    dataVideos={{ videos: video }}
-                    hideAuthor
-                    currentUser={currentUser}
-                    deleteAudVid={deleteAudVid}
-                  />
-                </VideoListStyles>
-              )}
-            </Container>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+              </VideoListStyles>
+            )}
+          </Container>
+        );
+      }}
+    </Composed>
+  );
+};
 
 export default Me;
 export { deleteAudVidMutation };

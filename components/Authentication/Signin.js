@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -20,7 +20,7 @@ import {
 } from '../../graphql/mutation';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import validateInput from './utils';
+import {validateInput} from './utils';
 
 /* eslint-disable */
 const signinMutation = ({ render, variables }) => (
@@ -110,89 +110,88 @@ const onFacebookLoginClick = ({
   );
 };
 
-class Signin extends Component {
-  state = {
-    redirecting: false,
-    signinForm: {
-      email: {
-        inputConfig: {
-          ...signinFields.email,
-        },
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        modified: false,
-        valid: false,
-        value: '',
+const Signin = ({ modal }) => {
+  const [signinForm, setSigninForm] = useState({
+    email: {
+      inputConfig: {
+        ...signinFields.email,
       },
-      password: {
-        inputConfig: {
-          ...signinFields.password,
-        },
-        validation: {
-          required: true,
-        },
-        modified: false,
-        valid: false,
-        value: '',
+      validation: {
+        required: true,
+        isEmail: true,
       },
+      modified: false,
+      valid: false,
+      value: '',
     },
-    formValid: false,
-  };
+    password: {
+      inputConfig: {
+        ...signinFields.password,
+      },
+      validation: {
+        required: true,
+      },
+      modified: false,
+      valid: false,
+      value: '',
+    },
+  });
+  const [formValid, setFormValid] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
-  saveToState = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  inputchangeHandler = (e, input) => {
+  const inputChangeHandler = (e, input) => {
     const eventValue = e.target.value;
-    this.setState(prevState => {
-      const updatedForm = {
-        ...prevState.signinForm,
-      };
-      const updatedInput = {
-        ...updatedForm[input],
-      };
-      updatedInput.value = eventValue;
-      updatedInput.valid = validateInput(
-        updatedInput.value,
-        updatedInput.validation
-      );
-      updatedInput.modified = true;
-      updatedForm[input] = updatedInput;
-      let formValid = true;
-      Object.keys(updatedForm).forEach(key => {
-        formValid = updatedForm[key].valid && formValid;
-      });
-      return { signinForm: updatedForm, formValid };
+    const updatedForm = {
+      ...signinForm,
+    };
+    const updatedElement = {
+      ...updatedForm[input],
+    };
+    updatedElement.value = eventValue;
+    updatedElement.valid = validateInput(
+      updatedElement.value,
+      updatedElement.validation
+    );
+    updatedElement.modified = true;
+    updatedForm[input] = updatedElement;
+    let isFormValid = true;
+    Object.keys(updatedForm).forEach(key => {
+      isFormValid = updatedForm[key].valid && isFormValid;
     });
+    setSigninForm(updatedForm);
+    setFormValid(isFormValid);
   };
 
-  onSubmit = async ({
+  const onSubmit = async ({
     e,
     signin,
     data: { previousPage },
     client,
     closeAuthModal,
   }) => {
-    const {
-      signinForm: { password, email },
-    } = this.state;
+    const { password, email } = signinForm;
     e.preventDefault();
     const { data } = await signin();
     if (data) {
-      this.setState({
-        signinForm: {
-          email: { ...email, value: '', valid: false, modified: false },
-          password: { ...password, value: '', valid: false, modified: false },
+      setSigninForm({
+        email: {
+          ...signinForm.email,
+          value: '',
+          valid: false,
+          modified: false,
+        },
+        password: {
+          ...signinForm.password,
+          value: '',
+          valid: false,
+          modified: false,
         },
       });
       trackSignIn(data.signin.id);
-      if (this.props.modal) {
+      if (modal) {
         closeAuthModal();
       } else {
-        this.setState({ redirecting: true });
+        setRedirecting(true);
         Router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );
@@ -202,117 +201,110 @@ class Signin extends Component {
     }
   };
 
-  render() {
-    const { modal } = this.props;
-    const { formValid, signinForm, redirecting } = this.state;
-    const variables = {};
-    const formElArr = [];
-    Object.keys(signinForm).forEach(key => {
-      variables[key] = signinForm[key].value;
-      formElArr.push({
-        id: key,
-        input: signinForm[key],
-      });
+  const variables = {};
+  const formElArr = [];
+  Object.keys(signinForm).forEach(key => {
+    variables[key] = signinForm[key].value;
+    formElArr.push({
+      id: key,
+      input: signinForm[key],
     });
-    if (redirecting)
-      return (
-        <Loader indeterminate active>
-          Đang chuyển trang...
-        </Loader>
-      );
+  });
+  if (redirecting)
     return (
-      <Composed variables={variables}>
-        {({
-          client,
-          localState: { data },
-          facebookLoginMutation: {
-            facebookLogin,
-            facebookLoginResult: {
-              error: fbLoginError,
-              loading: fbLoginLoading,
-            },
-          },
-          contentLanguageQuery: { contentLanguage },
-          signinMutation: {
-            signin,
-            signinResult: { error, loading },
-          },
-          closeAuthModal,
-        }) => (
-          <StyledForm
-            method="post"
-            onSubmit={e =>
-              this.onSubmit({
-                e,
-                signin,
-                data,
-                client,
-                closeAuthModal,
-              })
-            }
-            modal={modal}
-          >
-            <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
-            <fieldset
-              disabled={loading || fbLoginLoading}
-              aria-busy={loading || fbLoginLoading}
-            >
-              <Error error={error} />
-              <Error error={fbLoginError} />
-              {formElArr.map(({ id, input }) => (
-                <AuthForm
-                  key={id}
-                  value={input.value}
-                  config={input.inputConfig}
-                  shouldValidate={input.validation}
-                  invalid={!input.valid}
-                  saveToState={e => this.inputchangeHandler(e, id)}
-                  touched={input.modified}
-                />
-              ))}
-              <div className="center">
-                <button type="submit" disabled={loading || fbLoginLoading}>
-                  {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
-                </button>
-                <p className="or">hoặc dùng</p>
-                <Button
-                  type="button"
-                  color="facebook"
-                  onClick={() =>
-                    onFacebookLoginClick({
-                      facebookLogin,
-                      contentLanguage,
-                      client,
-                      data,
-                      closeAuthModal: modal && closeAuthModal,
-                    })
-                  }
-                >
-                  <Icon name="facebook" />
-                  Facebook
-                </Button>
-              </div>
-              <div className="auth-links">
-                {!modal && (
-                  <Link href="/signup">
-                    <a>Tạo tài khoản mới</a>
-                  </Link>
-                )}
-                <Link href="/requestReset">
-                  <a>
-                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Quên mật khẩu?
-                    </span>
-                  </a>
-                </Link>
-              </div>
-            </fieldset>
-          </StyledForm>
-        )}
-      </Composed>
+      <Loader indeterminate active>
+        Đang chuyển trang...
+      </Loader>
     );
-  }
-}
+  return (
+    <Composed variables={variables}>
+      {({
+        client,
+        localState: { data },
+        facebookLoginMutation: {
+          facebookLogin,
+          facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
+        },
+        contentLanguageQuery: { contentLanguage },
+        signinMutation: {
+          signin,
+          signinResult: { error, loading },
+        },
+        closeAuthModal,
+      }) => (
+        <StyledForm
+          method="post"
+          onSubmit={e =>
+            onSubmit({
+              e,
+              signin,
+              data,
+              client,
+              closeAuthModal,
+            })
+          }
+          modal={modal}
+        >
+          <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
+          <fieldset
+            disabled={loading || fbLoginLoading}
+            aria-busy={loading || fbLoginLoading}
+          >
+            <Error error={error} />
+            <Error error={fbLoginError} />
+            {formElArr.map(({ id, input }) => (
+              <AuthForm
+                key={id}
+                value={input.value}
+                config={input.inputConfig}
+                shouldValidate={input.validation}
+                invalid={!input.valid}
+                saveToState={e => inputChangeHandler(e, id)}
+                touched={input.modified}
+              />
+            ))}
+            <div className="center">
+              <button type="submit" disabled={loading || fbLoginLoading}>
+                {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
+              </button>
+              <p className="or">hoặc dùng</p>
+              <Button
+                type="button"
+                color="facebook"
+                onClick={() =>
+                  onFacebookLoginClick({
+                    facebookLogin,
+                    contentLanguage,
+                    client,
+                    data,
+                    closeAuthModal: modal && closeAuthModal,
+                  })
+                }
+              >
+                <Icon name="facebook" />
+                Facebook
+              </Button>
+            </div>
+            <div className="auth-links">
+              {!modal && (
+                <Link href="/signup">
+                  <a>Tạo tài khoản mới</a>
+                </Link>
+              )}
+              <Link href="/requestReset">
+                <a>
+                  <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                    Quên mật khẩu?
+                  </span>
+                </a>
+              </Link>
+            </div>
+          </fieldset>
+        </StyledForm>
+      )}
+    </Composed>
+  );
+};
 
 Signin.propTypes = {
   modal: PropTypes.bool,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
@@ -10,187 +10,175 @@ import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
 import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
-import validateInput from './utils';
+import {validateInput} from './utils';
 
-class Reset extends Component {
-  state = {
-    redirecting: false,
-    resetForm: {
-      password: {
-        inputConfig: {
-          ...resetFields.password,
-        },
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        modified: false,
-        valid: false,
-        value: '',
+const Reset = ({ router }) => {
+  const [resetForm, setResetForm] = useState({
+    password: {
+      inputConfig: {
+        ...resetFields.password,
       },
-      confirmPassword: {
-        inputConfig: {
-          ...resetFields.confirmPassword,
-        },
-        modified: false,
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        valid: false,
-        value: '',
+      validation: {
+        required: true,
+        minLength: 6,
       },
+      modified: false,
+      valid: false,
+      value: '',
     },
-    formValid: false,
-    passwordsMatch: null,
-  };
+    confirmPassword: {
+      inputConfig: {
+        ...resetFields.confirmPassword,
+      },
+      modified: false,
+      validation: {
+        required: true,
+        minLength: 6,
+      },
+      valid: false,
+      value: '',
+    },
+  });
+  const [formValid, setFormValid] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(null);
 
-  saveToState = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  inputchangeHandler = (e, input) => {
+  const inputChangeHandler = (e, input) => {
     const eventValue = e.target.value;
-    this.setState(prevState => {
-      const updatedForm = {
-        ...prevState.resetForm,
-      };
-      const updatedInput = {
-        ...updatedForm[input],
-      };
-      updatedInput.value = eventValue;
-      updatedInput.valid = validateInput(
-        updatedInput.value,
-        updatedInput.validation
-      );
-      updatedInput.modified = true;
-      updatedForm[input] = updatedInput;
-      let formValid = true;
-      Object.keys(updatedForm).forEach(key => {
-        formValid = updatedForm[key].valid && formValid;
-      });
-      return { resetForm: updatedForm, formValid };
+    const updatedForm = {
+      ...resetForm,
+    };
+    const updatedElement = {
+      ...updatedForm[input],
+    };
+    updatedElement.value = eventValue;
+    updatedElement.valid = validateInput(
+      updatedElement.value,
+      updatedElement.validation
+    );
+    updatedElement.modified = true;
+    updatedForm[input] = updatedElement;
+    let isFormValid = true;
+    Object.keys(updatedForm).forEach(key => {
+      isFormValid = updatedForm[key].valid && isFormValid;
     });
+    setResetForm(updatedForm);
+    setFormValid(isFormValid);
   };
 
-  onSubmit = async ({ e, resetPassword, router }) => {
-    const {
-      resetForm: { password, confirmPassword },
-    } = this.state;
+  const onSubmit = async ({ e, resetPassword, router }) => {
+    const { password, confirmPassword } = resetForm;
+
     e.preventDefault();
+    setPasswordsMatch(null);
+
     if (password.value !== confirmPassword.value) {
-      this.setState({
-        resetForm: {
-          password: { ...password, value: '', valid: false },
-          confirmPassword: {
-            ...confirmPassword,
-            value: '',
-            valid: false,
-          },
+      setResetForm({
+        password: {
+          ...resetForm.password,
+          value: '',
+          valid: false,
         },
-        passwordsMatch: {
-          message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+        confirmPassword: {
+          ...resetForm.confirmPassword,
+          value: '',
+          valid: false,
         },
-        formValid: false,
       });
+      setPasswordsMatch({
+        message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+      });
+      setFormValid(false);
     } else {
-      this.setState({
-        passwordsMatch: null,
-      });
+      setPasswordsMatch(null);
       const { data } = await resetPassword();
       if (data) {
-        this.setState({
-          resetForm: {
-            confirmPassword: {
-              ...confirmPassword,
-              value: '',
-              valid: false,
-              modified: false,
-            },
-            password: {
-              ...password,
-              value: '',
-              valid: false,
-              modified: false,
-            },
+        setResetForm({
+          pasword: {
+            ...resetForm.password,
+            value: '',
+            valid: false,
+            modified: false,
           },
-          formValid: false,
+          confirmPassword: {
+            ...resetForm.confirmPassword,
+            value: '',
+            valid: false,
+            modified: false,
+          },
         });
-        this.setState({ redirecting: true });
+        setFormValid(false);
+        setRedirecting(true);
+
         router.push('/');
       }
     }
   };
 
-  render() {
-    const { formValid, resetForm, passwordsMatch, redirecting } = this.state;
-    const variables = {};
-    const formElArr = [];
-    Object.keys(resetForm).forEach(key => {
-      variables[key] = resetForm[key].value;
-      formElArr.push({
-        id: key,
-        input: resetForm[key],
-      });
+  const variables = {};
+  const formElArr = [];
+  Object.keys(resetForm).forEach(key => {
+    variables[key] = resetForm[key].value;
+    formElArr.push({
+      id: key,
+      input: resetForm[key],
     });
+  });
 
-    const { router } = this.props;
-
-    if (redirecting)
-      return (
-        <Loader indeterminate active>
-          Đang chuyển trang...
-        </Loader>
-      );
-
+  if (redirecting)
     return (
-      <Mutation
-        mutation={RESET_PASSWORD_MUTATION}
-        variables={{ resetToken: router.query.resetToken, ...variables }}
-        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-      >
-        {(resetPassword, { error, loading }) => {
-          return (
-            <Form
-              method="post"
-              onSubmit={async e => {
-                this.onSubmit({ e, resetPassword, router });
-              }}
-            >
-              <p className="auth-title">Tạo mật khẩu mới</p>
-              <fieldset disabled={loading} aria-busy={loading}>
-                <Error error={error} />
-                <Error error={passwordsMatch} />
-                {formElArr.map(({ id, input }) => (
-                  <AuthForm
-                    key={id}
-                    value={input.value}
-                    config={input.inputConfig}
-                    shouldValidate={input.validation}
-                    invalid={!input.valid}
-                    saveToState={e => this.inputchangeHandler(e, id)}
-                    touched={input.modified}
-                    autoComplete="new-password"
-                  />
-                ))}
-                <div className="center">
-                  <button type="submit" disabled={loading}>
-                    Đặt mật khẩu mới
-                  </button>
-                </div>
-              </fieldset>
-              <div className="auth-links">
-                <Link href="/requestReset">
-                  <a>Gửi lại yêu cầu đổi mật khẩu</a>
-                </Link>
-              </div>
-            </Form>
-          );
-        }}
-      </Mutation>
+      <Loader indeterminate active>
+        Đang chuyển trang...
+      </Loader>
     );
-  }
-}
+
+  return (
+    <Mutation
+      mutation={RESET_PASSWORD_MUTATION}
+      variables={{ resetToken: router.query.resetToken, ...variables }}
+      refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+    >
+      {(resetPassword, { error, loading }) => {
+        return (
+          <Form
+            method="post"
+            onSubmit={async e => {
+              onSubmit({ e, resetPassword, router });
+            }}
+          >
+            <p className="auth-title">Tạo mật khẩu mới</p>
+            <fieldset disabled={loading} aria-busy={loading}>
+              <Error error={error} />
+              <Error error={passwordsMatch} />
+              {formElArr.map(({ id, input }) => (
+                <AuthForm
+                  key={id}
+                  value={input.value}
+                  config={input.inputConfig}
+                  shouldValidate={input.validation}
+                  invalid={!input.valid}
+                  saveToState={e => inputChangeHandler(e, id)}
+                  touched={input.modified}
+                  autoComplete="new-password"
+                />
+              ))}
+              <div className="center">
+                <button type="submit" disabled={loading}>
+                  Đặt mật khẩu mới
+                </button>
+              </div>
+            </fieldset>
+            <div className="auth-links">
+              <Link href="/requestReset">
+                <a>Gửi lại yêu cầu đổi mật khẩu</a>
+              </Link>
+            </div>
+          </Form>
+        );
+      }}
+    </Mutation>
+  );
+};
 
 Reset.propTypes = {
   router: PropTypes.object.isRequired,

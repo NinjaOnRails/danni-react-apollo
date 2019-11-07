@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import {
   Loader,
@@ -28,41 +28,41 @@ const Composed = adopt({
   user,
 });
 
-class CloudinaryUploadAudio extends Component {
-  state = {
-    startingUpload: false,
-    uploadError: false,
-    uploadProgress: 0,
-    secureUrl: '',
-    deleteToken: '',
-    uploadImageUrl: '',
+const CloudinaryUploadAudio = ({ chooseUpload, setSecureUrl }) => {
+  const [startingUpload, setStartingUpload] = useState(false);
+  const [uploadError, setUploadError] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [secureUrlState, setSecureUrlState] = useState('');
+  const [deleteToken, setDeleteToken] = useState('');
+  const [uploadImageUrl, setUploadImageUrl] = useState('');
+
+  const fileInputRef = React.createRef();
+
+  const onDeleteFileSubmit = async () => {
+    setUploadProgress(0);
+    setSecureUrlState('');
+
+    const res = await deleteFile(deleteToken);
+
+    if (res.status === 200) {
+      setDeleteToken('');
+    }
   };
 
-  fileInputRef = React.createRef();
-
-  handleChange = ({ target: { name, value } }) => {
-    // Controlled set state
-    this.setState({ [name]: value });
-  };
-
-  onUploadFileSubmit = async (cloudinaryAuthAvatar, id, e) => {
-    const { setSecureUrl, chooseUpload } = this.props;
+  const onUploadFileSubmit = async (cloudinaryAuthAvatar, id, e) => {
     // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false });
-    const { deleteToken, uploadImageUrl } = this.state;
+    setUploadError(false);
+
     const file = e ? e.target.files[0] : uploadImageUrl;
 
     if (!file) return; // Do nothing if no file selected
 
-    if (deleteToken) await this.onDeleteFileSubmit();
+    if (deleteToken) await onDeleteFileSubmit();
 
     // More initial state reset
-    this.setState({
-      uploadProgress: 0,
-      deleteToken: '',
-      secureUrl: '',
-    });
-
+    setUploadProgress(0);
+    setDeleteToken('');
+    setSecureUrlState('');
     // Prepare cloudinary upload params
     const { url, data } = uploadAvatar(file, id, cloudinaryAuthAvatar);
 
@@ -76,155 +76,117 @@ class CloudinaryUploadAudio extends Component {
         data,
         onUploadProgress: p => {
           // Show upload progress
-          this.setState({
-            uploadProgress: Math.floor((p.loaded / p.total) * 100),
-          });
+          setUploadProgress(Math.floor((p.loaded / p.total) * 100));
         },
       });
       chooseUpload();
       setSecureUrl(secureUrl, newDeleteToken);
-      this.setState({
-        secureUrl,
-        deleteToken: newDeleteToken,
-      });
+      setSecureUrlState(secureUrl);
+      setDeleteToken(newDeleteToken);
     } catch {
-      this.setState({
-        uploadError: true,
-      });
+      setUploadError(true);
     }
   };
 
-  onDeleteFileSubmit = async () => {
-    const { deleteToken } = this.state;
-    this.setState({
-      uploadProgress: 0,
-      secureUrl: '',
-    });
+  return (
+    <Composed>
+      {({
+        cloudinaryAuthAvatar: { loading, error, data },
+        user: { currentUser, loading: loadingUser },
+      }) => {
+        if (loading || loadingUser) return <Loader inline="centered" active />;
+        if (error) return <Error error={error} />;
+        const { id } = currentUser;
 
-    const res = await deleteFile(deleteToken);
-    if (res.status === 200) {
-      this.setState({
-        deleteToken: '',
-      });
-    }
-  };
-
-  render() {
-    const {
-      uploadProgress,
-      uploadError,
-      secureUrl,
-      startingUpload,
-    } = this.state;
-    const { chooseUpload } = this.props;
-    return (
-      <Composed>
-        {({
-          cloudinaryAuthAvatar: { loading, error, data },
-          user: { currentUser, loading: loadingUser },
-        }) => {
-          if (loading || loadingUser)
-            return <Loader inline="centered" active />;
-          if (error) return <Error error={error} />;
-          const { id } = currentUser;
-
-          return (
-            <Segment
-              attached
-              loading={
-                startingUpload &&
-                !uploadError &&
-                !(uploadProgress > 0 && uploadProgress < 100)
-              }
-            >
-              {(!uploadError && uploadProgress > 0 && uploadProgress < 100 && (
-                <Progress percent={uploadProgress} progress success />
-              )) ||
-                (secureUrl && (
-                  <>
-                    <Header as="h3">Ảnh được tải lên:</Header>
-                    <Button
-                      negative
-                      onClick={this.onDeleteFileSubmit}
-                      type="button"
-                    >
-                      Xoá
-                    </Button>
-                    <Image src={secureUrl} />
-                  </>
-                )) || (
-                  <>
-                    {uploadError && (
-                      <Progress percent={100} error>
-                        Lỗi mạng hoặc ảnh có vấn đề. Vui lòng thử sau.
-                      </Progress>
-                    )}
-                    <Button
-                      type="button"
-                      positive
-                      size="huge"
-                      className="choose-file-button"
-                      content="Chọn ảnh trong máy"
-                      labelPosition="left"
-                      icon="file image"
-                      onClick={() => {
-                        this.fileInputRef.current.click();
-                      }}
-                    />
-                    <input
-                      hidden
-                      ref={this.fileInputRef}
+        return (
+          <Segment
+            attached
+            loading={
+              startingUpload &&
+              !uploadError &&
+              !(uploadProgress > 0 && uploadProgress < 100)
+            }
+          >
+            {(!uploadError && uploadProgress > 0 && uploadProgress < 100 && (
+              <Progress percent={uploadProgress} progress success />
+            )) ||
+              (secureUrlState && (
+                <>
+                  <Header as="h3">Ảnh được tải lên:</Header>
+                  <Button negative onClick={onDeleteFileSubmit} type="button">
+                    Xoá
+                  </Button>
+                  <Image src={secureUrlState} />
+                </>
+              )) || (
+                <>
+                  {uploadError && (
+                    <Progress percent={100} error>
+                      Lỗi mạng hoặc ảnh có vấn đề. Vui lòng thử sau.
+                    </Progress>
+                  )}
+                  <Button
+                    type="button"
+                    positive
+                    size="huge"
+                    className="choose-file-button"
+                    content="Chọn ảnh trong máy"
+                    labelPosition="left"
+                    icon="file image"
+                    onClick={() => {
+                      fileInputRef.current.click();
+                    }}
+                  />
+                  <input
+                    hidden
+                    ref={fileInputRef}
+                    onClick={() => chooseUpload()}
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept=".jpg,.png"
+                    onChange={async e => {
+                      setStartingUpload(true);
+                      await onUploadFileSubmit(
+                        data.cloudinaryAuthAvatar,
+                        id,
+                        e
+                      );
+                      setStartingUpload(false);
+                    }}
+                  />
+                  <Header>hoặc</Header>
+                  <Header as="h3">Tải từ đường link:</Header>
+                  <div className="uploadImageUrl">
+                    <Input
                       onClick={() => chooseUpload()}
-                      type="file"
-                      id="file"
-                      name="file"
-                      accept=".jpg,.png"
-                      onChange={async e => {
-                        this.setState({ startingUpload: true });
-                        await this.onUploadFileSubmit(
-                          data.cloudinaryAuthAvatar,
-                          id,
-                          e
-                        );
-                        this.setState({ startingUpload: false });
-                      }}
+                      label="URL"
+                      placeholder="file.jpg"
+                      type="text"
+                      id="uploadImageUrl"
+                      name="uploadImageUrl"
+                      onChange={e => setUploadImageUrl(e.target.value)}
                     />
-                    <Header>hoặc</Header>
-                    <Header as="h3">Tải từ đường link:</Header>
-                    <div className="uploadImageUrl">
-                      <Input
-                        onClick={() => chooseUpload()}
-                        label="URL"
-                        placeholder="file.jpg"
-                        type="text"
-                        id="uploadImageUrl"
-                        name="uploadImageUrl"
-                        onChange={this.handleChange}
-                      />
-                      <Button
-                        positive
-                        onClick={async () => {
-                          this.setState({ startingUpload: true });
-                          await this.onUploadFileSubmit(
-                            data.cloudinaryAuthAvatar,
-                            id
-                          );
-                          this.setState({ startingUpload: false });
-                        }}
-                      >
-                        <Icon name="upload" />
-                        Tải lên
-                      </Button>
-                    </div>
-                  </>
-                )}
-            </Segment>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+                    <Button
+                      positive
+                      onClick={async () => {
+                        setStartingUpload(true);
+                        await onUploadFileSubmit(data.cloudinaryAuthAvatar, id);
+                        setStartingUpload(false);
+                      }}
+                    >
+                      <Icon name="upload" />
+                      Tải lên
+                    </Button>
+                  </div>
+                </>
+              )}
+          </Segment>
+        );
+      }}
+    </Composed>
+  );
+};
 
 CloudinaryUploadAudio.propTypes = {
   setSecureUrl: PropTypes.func.isRequired,
