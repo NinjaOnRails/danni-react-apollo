@@ -4,9 +4,9 @@ const StyledModal = styled.div`
   .Modal {
     position: fixed;
     z-index: 500;
-    width: 40%;
-    left: 30%;
-    top: 10%;
+    width: 35%;
+    left: 32.5%;
+    top: 15%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     transform: ${props =>
@@ -26,6 +26,7 @@ const StyledModal = styled.div`
   .auth-section {
     width: 100%;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .Logo {
     cursor: default;
@@ -43,7 +44,6 @@ const StyledModal = styled.div`
     font-family: Verdana, Geneva, Tahoma, sans-serif;
   }
   .auth-modes {
-    position: initial;
     display: flex;
     padding: 10px;
     width: auto;
@@ -51,17 +51,12 @@ const StyledModal = styled.div`
   }
   .auth-mode:last-child {
     margin-left: 10px;
-    margin-top: 0;
   }
   .auth-mode {
-    display: block;
-    text-align: center;
-    margin: auto;
     cursor: pointer;
     background: ${props => props.theme.lightGrey};
     color: ${props => props.theme.grey};
     border-radius: 24px;
-    font-size: 1.5rem;
     padding: 6px 16px;
     font-weight: 700;
     text-decoration: none;
@@ -87,12 +82,12 @@ const StyledModal = styled.div`
   i.large.icons {
     top: -30px;
     position: absolute;
-    right: -5%;
+    right: -7.5%;
     font-size: 2em;
     opacity: 1;
     color: ${props => props.theme.lightGrey};
   }
-  @media (max-width: 639px) {
+  @media (max-width: 736px) {
     .Modal {
       height: 100vh;
       display: flex;
@@ -116,6 +111,7 @@ const StyledModal = styled.div`
     }
     .auth-modes {
       margin-top: 0;
+      padding: 0;
     }
     i.large.icon {
       top: 10px;

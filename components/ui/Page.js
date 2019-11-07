@@ -5,6 +5,7 @@ import { adopt } from 'react-adopt';
 import Header from './Header';
 import Footer from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
+// import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 
@@ -22,18 +23,18 @@ const defaultTheme = {
 };
 
 const StyledPage = styled.div`
-  background: white;
+  background-color: white;
   color: ${props => props.theme.black};
   position: relative;
   min-height: 100vh;
 `;
 
 const Inner = styled.div`
-  padding: 0;
   margin: auto;
-  padding-bottom: 2.5rem;
+  padding: 3.5rem 0;
   @media (max-width: 991px) {
     width: 100%;
+    padding-top: 0;
   }
 `;
 
@@ -81,6 +82,7 @@ class Page extends Component {
           return (
             <ThemeProvider theme={defaultTheme}>
               <StyledPage>
+                {/* <SideDrawer> */}
                 <GlobalStyle
                   showSide={data.showSide}
                   showAuthModal={data.showAuthModal}
@@ -91,6 +93,7 @@ class Page extends Component {
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
                 <Footer />
+                {/* </SideDrawer> */}
               </StyledPage>
             </ThemeProvider>
           );

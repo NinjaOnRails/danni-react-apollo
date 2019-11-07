@@ -13,9 +13,9 @@ const LogoStyles = styled.h1`
   justify-content: start;
   display: ${props => (props.footer ? 'inline-block' : 'grid')};
   /* padding: ${props => (props.footer ? 'block' : 'grid')} */
+  background-color: ${props => props.theme.red};
   a {
     padding: 0.5rem 1rem;
-    background: ${props => props.theme.red};
     color: white;
     text-transform: uppercase;
     text-decoration: none;
@@ -35,8 +35,7 @@ const LogoStyles = styled.h1`
     font-size:  ${props => (props.footer ? '2.5rem' : '1.8rem')};
     transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')};
     margin: 0;
-    padding: 5px;
-    background: ${props => props.theme.red}
+    background-color: ${props => props.theme.red}
   }
 `;
 

@@ -17,8 +17,9 @@ const StyledHeader = styled.header`
     .bar {
       grid-template-columns: auto auto;
       grid-auto-flow: column;
-      border-bottom: 4px solid ${props => props.theme.black};
-      height: 45px;
+      border-bottom: 
+      /* 0; */ 2px solid ${props => props.theme.black};
+      height: 35px;
     }
   }
 `;
