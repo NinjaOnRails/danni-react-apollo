@@ -39,7 +39,11 @@ class UpdateAvatarModal extends Component {
             this.setState({ activeItem: avatar, choiceType: 'list' })
           }
         >
-          <Image src={`../../static/avatar/large/${avatar}`} size="tiny" />
+          <Image
+            src={`../../static/avatar/large/${avatar}`}
+            size="tiny"
+            alt={avatar}
+          />
         </List.Item>
       ))}
     </List>
