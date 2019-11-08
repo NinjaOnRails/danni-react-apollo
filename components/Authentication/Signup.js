@@ -54,38 +54,7 @@ const Composed = adopt({
 
 const Signup = ({ modal }) => {
   const [signupForm, setSignupForm] = useState({
-    email: {
-      inputConfig: {
-        ...signupFields.email,
-      },
-      validation: {
-        required: true,
-        isEmail: true,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
-    password: {
-      inputConfig: {
-        ...signupFields.password,
-      },
-      validation: {
-        required: true,
-        minLength: 6,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
-    displayName: {
-      inputConfig: {
-        ...signupFields.displayName,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
+    ...signupFields,
   });
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);

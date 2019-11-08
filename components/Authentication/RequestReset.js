@@ -2,25 +2,14 @@ import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
 import { Message } from 'semantic-ui-react';
 import Form from '../styles/Form';
-import { signupFields } from './fieldTypes';
+import { requestResetFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { REQUEST_RESET_MUTATION } from '../../graphql/mutation';
 import { inputChangeHandler } from './utils';
 
 const RequestReset = () => {
   const [requestResetForm, setRequestResetForm] = useState({
-    email: {
-      inputConfig: {
-        ...signupFields.email,
-      },
-      validation: {
-        required: true,
-        isEmail: true,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
+    ...requestResetFields,
   });
   const [formValid, setFormValid] = useState(false);
 

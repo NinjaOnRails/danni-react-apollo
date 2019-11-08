@@ -112,29 +112,7 @@ const onFacebookLoginClick = ({
 
 const Signin = ({ modal }) => {
   const [signinForm, setSigninForm] = useState({
-    email: {
-      inputConfig: {
-        ...signinFields.email,
-      },
-      validation: {
-        required: true,
-        isEmail: true,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
-    password: {
-      inputConfig: {
-        ...signinFields.password,
-      },
-      validation: {
-        required: true,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
+    ...signinFields,
   });
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);

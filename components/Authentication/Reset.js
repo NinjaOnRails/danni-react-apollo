@@ -14,30 +14,7 @@ import { inputChangeHandler } from './utils';
 
 const Reset = ({ router }) => {
   const [resetForm, setResetForm] = useState({
-    password: {
-      inputConfig: {
-        ...resetFields.password,
-      },
-      validation: {
-        required: true,
-        minLength: 6,
-      },
-      modified: false,
-      valid: false,
-      value: '',
-    },
-    confirmPassword: {
-      inputConfig: {
-        ...resetFields.confirmPassword,
-      },
-      modified: false,
-      validation: {
-        required: true,
-        minLength: 6,
-      },
-      valid: false,
-      value: '',
-    },
+    ...resetFields,
   });
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
