@@ -25,6 +25,10 @@ const CURRENT_USER_QUERY = gql`
         addedBy {
           id
         }
+        audio {
+          id
+        }
+        language
       }
       audio {
         id
@@ -59,6 +63,10 @@ const USER_QUERY = gql`
         originThumbnailUrl
         duration
         addedBy {
+          id
+        }
+        language
+        audio {
           id
         }
       }

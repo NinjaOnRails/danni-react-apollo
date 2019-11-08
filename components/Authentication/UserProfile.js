@@ -99,21 +99,25 @@ class UserProfile extends Component {
           if (loading) return <Loader active inline="centered" />;
           if (error) return <Error error={error} />;
           const user = data ? data.user : initialData.user;
-          const { audio, avatar, displayName } = user;
-          let { video } = user;
+          const { audio, video, avatar, displayName } = user;
 
-          video.forEach((el, i) => {
-            video[i].audio = [];
+          // Only display videos added by user intentionally, ie language is specified
+          const videosWithLang = video.filter(el => el.language);
+
+          // To be displayed by RenderVideoList component they need to satisty this condition
+          videosWithLang.forEach((el, i) => {
+            videosWithLang[i].audio = [];
           });
+
+          // Create video objects from user's audio uploads
           const videosWithAudio = [];
-          audio.forEach(({ audioId, title }, i) => {
+          audio.forEach(({ id: audioId, title }, i) => {
             audio[i].video.audio = [
               { id: audioId, title, author: { id: userId, displayName } },
             ];
-            videosWithAudio.push(audio[i].video);
+            videosWithAudio.push({ ...audio[i].video });
           });
-
-          video = [...video, ...videosWithAudio];
+          const videos = [...videosWithAudio, ...videosWithLang];
 
           return (
             <>
@@ -162,7 +166,7 @@ class UserProfile extends Component {
                         userId={userId}
                         currentUser={currentUser}
                         onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={video.length}
+                        uploadsTotal={videos.length}
                       />
                     )}
                   </Item>
@@ -179,7 +183,7 @@ class UserProfile extends Component {
                 ) : (
                   <VideoListStyles>
                     <RenderVideoList
-                      dataVideos={{ videos: video }}
+                      dataVideos={{ videos }}
                       hideAuthor
                       currentUser={currentUser}
                       deleteAudVid={deleteAudVid}

@@ -81,21 +81,25 @@ class Me extends Component {
           },
         }) => {
           if (!currentUser) return <Loader active inline="centered" />;
-          const { id, audio, avatar, displayName } = currentUser;
-          let { video } = currentUser;
+          const { id, video, audio, avatar, displayName } = currentUser;
 
-          video.forEach((el, i) => {
-            video[i].audio = [];
+          // Only display videos added by user intentionally, ie language is specified
+          const videosWithLang = video.filter(el => el.language);
+
+          // To be displayed by RenderVideoList component they need to satisty this condition
+          videosWithLang.forEach((el, i) => {
+            videosWithLang[i].audio = [];
           });
+
+          // Create video objects from user's audio uploads
           const videosWithAudio = [];
-          audio.forEach(({ audioId, title }, i) => {
+          audio.forEach(({ id: audioId, title }, i) => {
             audio[i].video.audio = [
               { id: audioId, title, author: { id, displayName } },
             ];
-            videosWithAudio.push(audio[i].video);
+            videosWithAudio.push({ ...audio[i].video });
           });
-
-          video = [...video, ...videosWithAudio];
+          const videos = [...videosWithAudio, ...videosWithLang];
 
           return (
             <>
@@ -141,7 +145,7 @@ class Me extends Component {
                           userId={currentUser.id}
                           currentUser={currentUser}
                           onUserInfoEditClick={this.onUserInfoEditClick}
-                          uploadsTotal={video.length}
+                          uploadsTotal={videos.length}
                           me
                         />
                       )}
@@ -155,7 +159,7 @@ class Me extends Component {
                 ) : (
                   <VideoListStyles>
                     <RenderVideoList
-                      dataVideos={{ videos: video }}
+                      dataVideos={{ videos }}
                       hideAuthor
                       currentUser={currentUser}
                       deleteAudVid={deleteAudVid}
