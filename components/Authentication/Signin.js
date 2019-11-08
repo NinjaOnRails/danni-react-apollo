@@ -20,7 +20,7 @@ import {
 } from '../../graphql/mutation';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import { inputChangeHandler } from './utils';
+import { inputChangeHandler, clearForm } from './utils';
 
 /* eslint-disable */
 const signinMutation = ({ render, variables }) => (
@@ -124,24 +124,10 @@ const Signin = ({ modal }) => {
     client,
     closeAuthModal,
   }) => {
-    const { password, email } = signinForm;
     e.preventDefault();
     const { data } = await signin();
     if (data) {
-      setSigninForm({
-        email: {
-          ...email,
-          value: '',
-          valid: false,
-          modified: false,
-        },
-        password: {
-          ...password,
-          value: '',
-          valid: false,
-          modified: false,
-        },
-      });
+      clearForm(signinFields, setSigninForm, setFormValid);
       trackSignIn(data.signin.id);
       if (modal) {
         closeAuthModal();

@@ -47,3 +47,8 @@ export const inputChangeHandler = (
   setAuthForm(updatedForm);
   setFormValid(isFormValid);
 };
+
+export const clearForm = (initialForm, setInitialForm, setFormInvalid) => {
+  setInitialForm({ ...initialForm });
+  setFormInvalid(false);
+};

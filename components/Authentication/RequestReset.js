@@ -16,6 +16,18 @@ const RequestReset = () => {
   const {
     email: { value, inputConfig, modified, valid, validation },
   } = requestResetForm;
+
+  const clearRequestResetForm = () => {
+    setRequestResetForm({
+      email: {
+        ...requestResetForm.email,
+        modified: false,
+        valid: false,
+        value: '',
+      },
+    });
+    setFormValid(false);
+  };
   return (
     <Mutation mutation={REQUEST_RESET_MUTATION} variables={{ email: value }}>
       {(requestReset, { error, loading, called }) => {
@@ -25,15 +37,7 @@ const RequestReset = () => {
             onSubmit={async e => {
               e.preventDefault();
               await requestReset();
-              setRequestResetForm({
-                email: {
-                  ...requestResetForm.email,
-                  modified: false,
-                  valid: false,
-                  value: '',
-                },
-              });
-              setFormValid(false);
+              clearRequestResetForm();
             }}
           >
             <fieldset

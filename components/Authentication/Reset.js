@@ -10,7 +10,7 @@ import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
 import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
-import { inputChangeHandler } from './utils';
+import { inputChangeHandler, clearForm } from './utils';
 
 const Reset = ({ router }) => {
   const [resetForm, setResetForm] = useState({
@@ -20,50 +20,22 @@ const Reset = ({ router }) => {
   const [redirecting, setRedirecting] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(null);
 
-  const onSubmit = async ({ e, resetPassword, router }) => {
-    const { password, confirmPassword } = resetForm;
+  const { password, confirmPassword } = resetForm;
 
+  const onSubmit = async ({ e, resetPassword, router }) => {
     e.preventDefault();
-    setPasswordsMatch(null);
 
     if (password.value !== confirmPassword.value) {
-      setResetForm({
-        password: {
-          ...password,
-          value: '',
-          valid: false,
-        },
-        confirmPassword: {
-          ...confirmPassword,
-          value: '',
-          valid: false,
-        },
-      });
+      clearForm(resetFields, setResetForm, setFormValid);
       setPasswordsMatch({
         message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
       });
-      setFormValid(false);
     } else {
       setPasswordsMatch(null);
       const { data } = await resetPassword();
       if (data) {
-        setResetForm({
-          pasword: {
-            ...password,
-            value: '',
-            valid: false,
-            modified: false,
-          },
-          confirmPassword: {
-            ...confirmPassword,
-            value: '',
-            valid: false,
-            modified: false,
-          },
-        });
-        setFormValid(false);
+        clearForm(resetFields, setResetForm, setFormValid);
         setRedirecting(true);
-
         router.push('/');
       }
     }
@@ -125,7 +97,7 @@ const Reset = ({ router }) => {
                 />
               ))}
               <div className="center">
-                <button type="submit" disabled={loading}>
+                <button type="submit" disabled={loading || !formValid}>
                   Đặt mật khẩu mới
                 </button>
               </div>

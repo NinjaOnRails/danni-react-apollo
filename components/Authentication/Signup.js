@@ -23,7 +23,7 @@ import {
 
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import { inputChangeHandler } from './utils';
+import { inputChangeHandler, clearForm } from './utils';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
@@ -74,20 +74,22 @@ const Signup = ({ modal }) => {
     client,
     closeAuthModal,
   }) => {
-    const { password, email, displayName } = signupForm;
     e.preventDefault();
     const { data } = await signup();
     if (data) {
-      setSignupForm({
-        email: { ...email, value: '', valid: false, modified: false },
-        displayName: {
-          ...displayName,
-          value: generateName(),
-          modified: false,
+      clearForm(
+        {
+          ...signupFields,
+          displayName: {
+            ...signupFields.displayName,
+            value: generateName(),
+            valid: true,
+          },
         },
-        password: { ...password, value: '', valid: false, modified: false },
-      });
-      setFormValid(false);
+        setSignupForm,
+        setFormValid
+      );
+
       trackSignUp(data.signup);
       if (modal) {
         closeAuthModal();

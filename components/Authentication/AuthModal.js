@@ -37,7 +37,6 @@ const AuthModal = () => {
       </div>
     );
   };
-
   return (
     <Composed>
       {({
