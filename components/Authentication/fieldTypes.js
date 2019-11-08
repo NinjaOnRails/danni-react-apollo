@@ -90,24 +90,24 @@ const userInfoFields = {
       label: 'Họ và tên',
       name: 'name',
       type: 'text',
-      boxName: 'showName',
     },
+    boxName: 'showName',
   },
   bio: {
     inputConfig: {
       label: 'Giới thiệu',
       name: 'bio',
       type: 'text',
-      boxName: 'showBio',
     },
+    boxName: 'showBio',
   },
   location: {
     inputConfig: {
       label: 'Nơi sống',
       name: 'location',
       type: 'text',
-      boxName: 'showLocation',
     },
+    boxName: 'showLocation',
   },
   email: {
     inputConfig: { ...signinFields.email.inputConfig, boxName: 'showEmail' },

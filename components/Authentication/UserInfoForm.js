@@ -6,7 +6,7 @@ import { UPDATE_USER_MUTATION } from '../../graphql/mutation';
 import { USER_QUERY, CURRENT_USER_QUERY } from '../../graphql/query';
 import Error from '../UI/ErrorMessage';
 import { userInfoFields, userPasswordFields } from './fieldTypes';
-import { inputChangeHandler, clearForm, validateInput } from './utils';
+import { validateInput } from './utils';
 
 class UserInfoForm extends Component {
   state = {
@@ -72,8 +72,9 @@ class UserInfoForm extends Component {
       });
     });
     Object.keys(userInfoFields).forEach(key => {
-      if (userInfoFields[key].inputConfig.boxName) {
-        variables[boxName] = this.state[key];
+      const boxName = userInfoFields[key].boxName;
+      if (boxName) {
+        variables[boxName] = this.state[boxName];
       }
       variables[key] = this.state[key];
       formElArr.push({
@@ -81,7 +82,6 @@ class UserInfoForm extends Component {
         input: userInfoFields[key],
       });
     });
-    console.log(variables);
     return (
       <Mutation
         mutation={UPDATE_USER_MUTATION}
@@ -110,7 +110,8 @@ class UserInfoForm extends Component {
                 ({
                   id,
                   input: {
-                    inputConfig: { label, type, name, boxName },
+                    boxName,
+                    inputConfig: { label, type, name },
                   },
                 }) => (
                   <Form.Group inline key={id}>

@@ -82,12 +82,13 @@ const UserProfileStyles = styled.div`
       margin-left: auto;
       margin-right: auto;
       width: fit-content;
+      max-width: 300px;
     }
     .ui.medium.image,
     .ui.medium.images .image,
     .ui.medium.images img,
     .ui.medium.images svg {
-      width: 100%;
+      width: fit-content;
     }
     .ui.items > .item > .content {
       padding-left: 0;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
@@ -53,126 +53,100 @@ const Composed = adopt({
   deleteAudVidMutation,
 });
 
-class UserProfile extends Component {
-  state = {
-    editMode: false,
-    showUpdateAvatarModal: false,
-  };
+const UserProfile = ({
+  userId,
+  payload: { data: initialData, loading: initialLoading, error },
+}) => {
+  const [editMode, setEditMode] = useState(false);
+  const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
-  onUserInfoEditClick = () => {
-    this.setState({ editMode: true });
-  };
+  if (initialLoading || !userId) return <Loader active inline="centered" />;
+  if (error) return <Error error={error} />;
 
-  onCancelClick = () => {
-    this.setState({ editMode: false });
-  };
-
-  openUpdateAvatarModal = () => {
-    this.setState({ showUpdateAvatarModal: true });
-  };
-
-  closeUpdateAvatarModal = () => {
-    this.setState({ showUpdateAvatarModal: false });
-  };
-
-  render() {
-    const {
-      userId,
-      payload: { data: initialData, loading: initialLoading, error },
-    } = this.props;
-    const { editMode, showUpdateAvatarModal } = this.state;
-    if (initialLoading || !userId) return <Loader active inline="centered" />;
-    if (error) return <Error error={error} />;
-
-    return (
-      <Composed id={userId}>
-        {({
-          user: { currentUser },
-          userQuery: { data, loading, error },
-          deleteAudVidMutation: {
-            deleteAudVid,
-            deleteAudVidResult: {
-              loading: deleteAudVidLoading,
-              error: deleteAudVidError,
-            },
+  return (
+    <Composed id={userId}>
+      {({
+        user: { currentUser },
+        userQuery: { data, loading, error },
+        deleteAudVidMutation: {
+          deleteAudVid,
+          deleteAudVidResult: {
+            loading: deleteAudVidLoading,
+            error: deleteAudVidError,
           },
-        }) => {
-          if (loading) return <Loader active inline="centered" />;
-          if (error) return <Error error={error} />;
-          const user = data ? data.user : initialData.user;
-          const { audio, video, avatar, displayName } = user;
-          return (
-            <>
-              <UserProfileStyles>
-                {currentUser && currentUser.id === userId && (
-                  <UpdateAvatarModal
-                    showUpdateAvatarModal={showUpdateAvatarModal}
-                    closeUpdateAvatarModal={this.closeUpdateAvatarModal}
-                    currentUser={currentUser}
-                  />
-                )}
-                <Item.Group>
-                  <Item>
-                    <Icon.Group size="big">
-                      <Item.Image
-                        src={avatar}
-                        alt={displayName}
-                        size="medium"
-                      />
-                      {currentUser && currentUser.id === userId && (
-                        <Icon
-                          corner="top left"
-                          name="write"
-                          bordered
-                          link
-                          onClick={this.openUpdateAvatarModal}
-                        />
-                      )}
-                    </Icon.Group>
-                    {editMode && currentUser ? (
-                      <UserInfoForm
-                        currentUser={currentUser}
-                        onCancelClick={this.onCancelClick}
-                      />
-                    ) : (
-                      <UserInfo
-                        user={user}
-                        userId={userId}
-                        currentUser={currentUser}
-                        onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={audio.length}
+        },
+      }) => {
+        if (loading) return <Loader active inline="centered" />;
+        if (error) return <Error error={error} />;
+        const fetchedUser = data ? data.user : initialData.user;
+        const { audio, video, avatar, displayName } = fetchedUser;
+        return (
+          <>
+            <UserProfileStyles>
+              {currentUser && currentUser.id === userId && (
+                <UpdateAvatarModal
+                  showUpdateAvatarModal={showUpdateAvatarModal}
+                  closeUpdateAvatarModal={() => setShowUpdateAvatarModal(false)}
+                  currentUser={currentUser}
+                />
+              )}
+              <Item.Group>
+                <Item>
+                  <Icon.Group size="big">
+                    <Item.Image src={avatar} alt={displayName} size="medium" />
+                    {currentUser && currentUser.id === userId && (
+                      <Icon
+                        corner="top left"
+                        name="write"
+                        bordered
+                        link
+                        onClick={() => setShowUpdateAvatarModal(true)}
                       />
                     )}
-                  </Item>
-                </Item.Group>
-              </UserProfileStyles>
-              <div
-                className="upload-container"
-                style={{ width: '80%', margin: '3.75rem auto 0 auto' }}
-              >
-                <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
-                <Error error={deleteAudVidError} />
-                {deleteAudVidLoading ? (
-                  <Loader active inline="centered" />
-                ) : (
-                  <VideoListStyles>
-                    <RenderVideoList
-                      dataAudios={{ audios: audio }}
-                      dataVideos={{ videos: video }}
-                      hideAuthor
+                  </Icon.Group>
+                  {editMode && currentUser ? (
+                    <UserInfoForm
                       currentUser={currentUser}
-                      deleteAudVid={deleteAudVid}
+                      onCancelClick={() => setEditMode(false)}
                     />
-                  </VideoListStyles>
-                )}
-              </div>
-            </>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+                  ) : (
+                    <UserInfo
+                      user={fetchedUser}
+                      userId={userId}
+                      currentUser={currentUser}
+                      onUserInfoEditClick={() => setEditMode(true)}
+                      uploadsTotal={audio.length}
+                    />
+                  )}
+                </Item>
+              </Item.Group>
+            </UserProfileStyles>
+            <div
+              className="upload-container"
+              style={{ width: '80%', margin: '3.75rem auto 0 auto' }}
+            >
+              <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
+              <Error error={deleteAudVidError} />
+              {deleteAudVidLoading ? (
+                <Loader active inline="centered" />
+              ) : (
+                <VideoListStyles>
+                  <RenderVideoList
+                    dataAudios={{ audios: audio }}
+                    dataVideos={{ videos: video }}
+                    hideAuthor
+                    currentUser={currentUser}
+                    deleteAudVid={deleteAudVid}
+                  />
+                </VideoListStyles>
+              )}
+            </div>
+          </>
+        );
+      }}
+    </Composed>
+  );
+};
 
 UserProfile.propTypes = {
   payload: PropTypes.object,
