@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
@@ -6,7 +6,7 @@ import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
 import { CREATE_COMMENTREPLY_MUTATION } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
-
+import { clearForm, onCommentFormChange } from './utils';
 /* eslint-disable */
 
 const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
@@ -29,53 +29,40 @@ const Composed = adopt({
   createCommentReplyMutation,
 });
 
-class CommentReplyForm extends React.Component {
-  state = {
-    replyFormValid: false,
-    replyInput: '',
-  };
+const CommentReplyForm = ({ id, videoId, closeReplyInput }) => {
+  const [replyFormValid, setReplyFormValid] = useState(false);
+  const [replyInput, setReplyInput] = useState('');
 
-  onTextChange = e => {
-    const { value, name } = e.target;
-    const form =
-      name === 'updateInput' ? 'updateCommentFormValid' : 'replyFormValid';
-
-    this.setState({ [name]: value, [form]: value.length > 0 });
-  };
-
-  onReplySubmit = async createCommentReply => {
-    const { closeReplyInput } = this.props;
+  const onReplySubmit = async createCommentReply => {
     const { data } = await createCommentReply();
     if (data) {
-      this.setState({
-        replyInput: '',
-        replyFormValid: false,
-      });
+      clearForm(setReplyInput, setReplyFormValid);
       closeReplyInput();
     }
   };
 
-  renderReplyForm = ({
+  const renderReplyForm = ({
     createCommentReply,
     createCommentReplyResult: {
       error: createCommentReplyError,
       loading: createReplyLoading,
     },
   }) => {
-    const { replyFormValid, replyInput } = this.state;
     return (
       <Form
         loading={createReplyLoading}
         reply
         onSubmit={() => {
-          this.onReplySubmit(createCommentReply);
+          onReplySubmit(createCommentReply);
         }}
         autoComplete="off"
       >
         <Form.Input
           name="replyInput"
           placeholder="Viết trả lời..."
-          onChange={this.onTextChange}
+          onChange={e =>
+            onCommentFormChange(e, setReplyInput, setReplyFormValid)
+          }
           value={replyInput}
           autoComplete="off"
         />
@@ -85,18 +72,14 @@ class CommentReplyForm extends React.Component {
     );
   };
 
-  render() {
-    const { replyInput } = this.state;
-    const { id, videoId } = this.props;
-    return (
-      <Composed replyInput={replyInput} id={id} videoId={videoId}>
-        {({ createCommentReplyMutation }) => {
-          return this.renderReplyForm(createCommentReplyMutation);
-        }}
-      </Composed>
-    );
-  }
-}
+  return (
+    <Composed replyInput={replyInput} id={id} videoId={videoId}>
+      {({ createCommentReplyMutation }) => {
+        return renderReplyForm(createCommentReplyMutation);
+      }}
+    </Composed>
+  );
+};
 
 CommentReplyForm.propTypes = {
   id: PropTypes.string.isRequired,

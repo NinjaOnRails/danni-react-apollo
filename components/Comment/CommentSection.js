@@ -25,9 +25,8 @@ const Composed = adopt({
   openAuthModal,
 });
 
-class CommentSection extends React.Component {
-  renderComments = (data, currentUser, openAuthModal) => {
-    const { videoId, client } = this.props;
+const CommentSection = ({ videoId, client }) => {
+  const renderComments = (data, currentUser, openAuthModal) => {
     return (
       <CommentSectionStyles>
         <Comment.Group size="large">
@@ -52,32 +51,29 @@ class CommentSection extends React.Component {
     );
   };
 
-  render() {
-    const { videoId } = this.props;
-    return (
-      <Composed videoId={videoId}>
-        {({
-          user: { currentUser },
-          videoComments: {
-            error: commentsLoadingError,
-            loading: commentsLoading,
-            data,
-          },
-          openAuthModal,
-        }) => (
-          <>
-            <Error error={commentsLoadingError} />
-            {commentsLoading ? (
-              <Loader active inline="centered" />
-            ) : (
-              this.renderComments(data, currentUser, openAuthModal)
-            )}
-          </>
-        )}
-      </Composed>
-    );
-  }
-}
+  return (
+    <Composed videoId={videoId}>
+      {({
+        user: { currentUser },
+        videoComments: {
+          error: commentsLoadingError,
+          loading: commentsLoading,
+          data,
+        },
+        openAuthModal,
+      }) => (
+        <>
+          <Error error={commentsLoadingError} />
+          {commentsLoading ? (
+            <Loader active inline="centered" />
+          ) : (
+            renderComments(data, currentUser, openAuthModal)
+          )}
+        </>
+      )}
+    </Composed>
+  );
+};
 
 CommentSection.propTypes = {
   videoId: PropTypes.string.isRequired,

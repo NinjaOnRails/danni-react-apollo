@@ -96,7 +96,6 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
         if (loading || loadingUser) return <Loader inline="centered" active />;
         if (error) return <Error error={error} />;
         const { id } = currentUser;
-
         return (
           <Segment
             attached
