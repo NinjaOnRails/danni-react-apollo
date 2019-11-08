@@ -25,9 +25,6 @@ const CURRENT_USER_QUERY = gql`
         addedBy {
           id
         }
-        audio {
-          id
-        }
       }
       audio {
         id
@@ -38,9 +35,6 @@ const CURRENT_USER_QUERY = gql`
           originAuthor
           originThumbnailUrl
           duration
-        }
-        author {
-          id
         }
       }
     }
@@ -67,9 +61,6 @@ const USER_QUERY = gql`
         addedBy {
           id
         }
-        audio {
-          id
-        }
       }
       audio {
         id
@@ -80,9 +71,6 @@ const USER_QUERY = gql`
           originAuthor
           originThumbnailUrl
           duration
-        }
-        author {
-          id
         }
       }
     }

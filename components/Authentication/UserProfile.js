@@ -99,7 +99,22 @@ class UserProfile extends Component {
           if (loading) return <Loader active inline="centered" />;
           if (error) return <Error error={error} />;
           const user = data ? data.user : initialData.user;
-          const { audio, video, avatar, displayName } = user;
+          const { audio, avatar, displayName } = user;
+          let { video } = user;
+
+          video.forEach((el, i) => {
+            video[i].audio = [];
+          });
+          const videosWithAudio = [];
+          audio.forEach(({ audioId, title }, i) => {
+            audio[i].video.audio = [
+              { id: audioId, title, author: { id: userId, displayName } },
+            ];
+            videosWithAudio.push(audio[i].video);
+          });
+
+          video = [...video, ...videosWithAudio];
+
           return (
             <>
               <Head>
@@ -147,7 +162,7 @@ class UserProfile extends Component {
                         userId={userId}
                         currentUser={currentUser}
                         onUserInfoEditClick={this.onUserInfoEditClick}
-                        uploadsTotal={audio.length}
+                        uploadsTotal={video.length}
                       />
                     )}
                   </Item>

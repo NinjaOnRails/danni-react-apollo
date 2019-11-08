@@ -81,7 +81,22 @@ class Me extends Component {
           },
         }) => {
           if (!currentUser) return <Loader active inline="centered" />;
-          const { audio, video, avatar, displayName } = currentUser;
+          const { id, audio, avatar, displayName } = currentUser;
+          let { video } = currentUser;
+
+          video.forEach((el, i) => {
+            video[i].audio = [];
+          });
+          const videosWithAudio = [];
+          audio.forEach(({ audioId, title }, i) => {
+            audio[i].video.audio = [
+              { id: audioId, title, author: { id, displayName } },
+            ];
+            videosWithAudio.push(audio[i].video);
+          });
+
+          video = [...video, ...videosWithAudio];
+
           return (
             <>
               <Head>
@@ -126,7 +141,7 @@ class Me extends Component {
                           userId={currentUser.id}
                           currentUser={currentUser}
                           onUserInfoEditClick={this.onUserInfoEditClick}
-                          uploadsTotal={audio.length}
+                          uploadsTotal={video.length}
                           me
                         />
                       )}
