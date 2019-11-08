@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Mutation, Query } from 'react-apollo';
-import { ALL_AUDIOS_QUERY } from '../../graphql/query';
+import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 
 const UPDATE_AUDIO_DURATION_MUTATION = gql`
   mutation UPDATE_AUDIO_DURATION_MUTATION($source: String!, $duration: Int!) {
@@ -25,7 +25,7 @@ class UpdateAudioDuration extends Component {
 
   render() {
     return (
-      <Query query={ALL_AUDIOS_QUERY}>
+      <Query query={ALL_VIDEOS_QUERY}>
         {({ loading, error, data }) => (
           <Mutation mutation={UPDATE_AUDIO_DURATION_MUTATION}>
             {(updateAudioDuration, { updateError, updateLoading }) => {
@@ -36,7 +36,7 @@ class UpdateAudioDuration extends Component {
 
               return (
                 <div>
-                  {data.audios.map(audio => (
+                  {data.videos.audio.map(audio => (
                     <div key={audio.source}>
                       <audio
                         controls

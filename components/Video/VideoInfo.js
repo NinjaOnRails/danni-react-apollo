@@ -18,11 +18,7 @@ import VideoDeleteButton from './VideoDeleteButton';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
 import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
-import {
-  CURRENT_USER_QUERY,
-  ALL_VIDEOS_QUERY,
-  ALL_AUDIOS_QUERY,
-} from '../../graphql/query';
+import { CURRENT_USER_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
 import Error from '../UI/ErrorMessage';
 
 /* eslint-disable */
@@ -35,7 +31,6 @@ const deleteAudVidMutation = ({
     mutation={DELETE_AUDVID_MUTATION}
     refetchQueries={[
       { query: CURRENT_USER_QUERY },
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
       { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
     ]}
     onCompleted={() => Router.push('/')}

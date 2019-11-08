@@ -13,7 +13,6 @@ import UserInfoForm from './UserInfoForm';
 import {
   USER_QUERY,
   CURRENT_USER_QUERY,
-  ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
 } from '../../graphql/query';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
@@ -37,7 +36,6 @@ const deleteAudVidMutation = ({
     refetchQueries={[
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id } },
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
       { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
     ]}
   >
@@ -166,7 +164,6 @@ class UserProfile extends Component {
                 ) : (
                   <VideoListStyles>
                     <RenderVideoList
-                      dataAudios={{ audios: audio }}
                       dataVideos={{ videos: video }}
                       hideAuthor
                       currentUser={currentUser}

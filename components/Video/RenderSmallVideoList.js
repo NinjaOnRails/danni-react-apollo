@@ -1,4 +1,4 @@
-import { List, Image, Icon } from 'semantic-ui-react';
+import { List, Image } from 'semantic-ui-react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {
@@ -70,7 +70,6 @@ const formatDuration = duration => {
 };
 
 const RenderSmallVideoList = ({
-  dataAudios: { audios },
   dataVideos: { videos },
   id,
   audioId,
@@ -79,30 +78,6 @@ const RenderSmallVideoList = ({
   return (
     <SmallVideoListStyles>
       <List divided relaxed>
-        {audios.map(audio => {
-          const {
-            id: videoId,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            originAuthor,
-            duration,
-          } = audio.video;
-          const displayDuration = formatDuration(duration);
-          if (audioId !== audio.id) {
-            return renderVideoItem(
-              onVideoItemClick,
-              videoId,
-              originThumbnailUrl,
-              originThumbnailUrlSd,
-              audio.title,
-              displayDuration,
-              originAuthor,
-              audio.author,
-              audio.id
-            );
-          }
-          return null;
-        })}
         {videos.map(
           ({
             audio,
@@ -127,7 +102,22 @@ const RenderSmallVideoList = ({
                 addedBy
               );
             }
-            return null;
+            return audio.map(el => {
+              if (audioId !== el.id) {
+                return renderVideoItem(
+                  onVideoItemClick,
+                  videoId,
+                  originThumbnailUrl,
+                  originThumbnailUrlSd,
+                  el.title,
+                  displayDuration,
+                  originAuthor,
+                  el.author,
+                  el.id
+                );
+              }
+              return null;
+            });
           }
         )}
       </List>
@@ -139,7 +129,6 @@ RenderSmallVideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
-  dataAudios: PropTypes.object.isRequired,
   dataVideos: PropTypes.object.isRequired,
 };
 

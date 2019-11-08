@@ -8,7 +8,6 @@ import { defaultLanguage } from '../../lib/supportedLanguages';
 import Error from '../UI/ErrorMessage';
 import {
   ALL_VIDEOS_QUERY,
-  ALL_AUDIOS_QUERY,
   CURRENT_USER_QUERY,
   USER_QUERY,
 } from '../../graphql/query';
@@ -36,7 +35,7 @@ const createAudioMutation = ({
   <Mutation
     mutation={CREATE_AUDIO_MUTATION}
     refetchQueries={[
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id } },
     ]}

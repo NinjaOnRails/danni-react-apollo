@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Error from '../UI/ErrorMessage';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 import RenderSmallVideoList from './RenderSmallVideoList';
-import { videos, audios } from './Videos';
+import { videos } from './Videos';
 
 const LanguageMenuStyles = styled.div`
   text-align: center;
@@ -19,47 +19,33 @@ const LanguageMenuStyles = styled.div`
 
 const Composed = adopt({
   contentLanguageQuery,
-  audios,
   videos,
 });
 
 const SmallVideoList = props => {
   const {
-    audios: { data: initialAudioData },
     videos: { data: initialVideoData },
   } = props;
   return (
     <Composed>
       {({
         contentLanguageQuery: { contentLanguage },
-        audios: {
-          loading: loadingAudios,
-          error: errorAudios,
-          data: dataAudios,
-        },
         videos: { loading: loadingVideos, errorVideos, data: dataVideos },
       }) => (
         <>
           <LanguageMenuStyles>
             <ContentLanguage
               currentWatchingLanguage={props.currentWatchingLanguage}
-              loadingData={loadingVideos || loadingAudios}
+              loadingData={loadingVideos}
             />
           </LanguageMenuStyles>
-          {(!contentLanguage.length &&
-            (!initialAudioData || !initialVideoData)) ||
-          (contentLanguage.length &&
-            (loadingAudios ||
-              loadingVideos ||
-              (!dataVideos && !dataAudios))) ? (
+          {(!contentLanguage.length && !initialVideoData) ||
+          (contentLanguage.length && (loadingVideos || !dataVideos)) ? (
             <Loader active inline="centered" />
-          ) : errorAudios ? (
-            <Error>Error: {errorAudios.message}</Error>
           ) : errorVideos ? (
             <Error>Error: {errorVideos.message}</Error>
           ) : (
             <RenderSmallVideoList
-              dataAudios={dataAudios || initialAudioData}
               dataVideos={dataVideos || initialVideoData}
               {...props}
             />
@@ -75,7 +61,6 @@ SmallVideoList.propTypes = {
   audioId: PropTypes.string,
   currentWatchingLanguage: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
-  audios: PropTypes.object.isRequired,
   videos: PropTypes.object.isRequired,
 };
 

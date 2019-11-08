@@ -1,7 +1,7 @@
 import Videos from '../components/Video/Videos';
 import Jumbotron from '../components/UI/Jumbotron';
 import { getSupportedLanguage } from '../lib/supportedLanguages';
-import fetchAudiosVideos from '../lib/fetchAudiosVideos';
+import fetchVideos from '../lib/fetchVideos';
 
 const Home = props => (
   <>
@@ -13,7 +13,7 @@ const Home = props => (
 Home.getInitialProps = ({ req, apolloClient }) => {
   // const contentLanguage = getSupportedLanguage(req.headers['accept-language']);
   const contentLanguage = ['VIETNAMESE'];
-  return fetchAudiosVideos({ client: apolloClient, contentLanguage });
+  return fetchVideos({ client: apolloClient, contentLanguage });
 };
 
 export default Home;

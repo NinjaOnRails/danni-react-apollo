@@ -7,7 +7,6 @@ import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import {
   CURRENT_USER_QUERY,
   USER_QUERY,
-  ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
 } from '../../graphql/query';
 import RenderVideoList from '../Video/RenderVideoList';
@@ -33,7 +32,6 @@ const deleteAudVidMutation = ({
     refetchQueries={[
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id } },
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
       { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
     ]}
   >
@@ -142,7 +140,6 @@ class Me extends Component {
                 ) : (
                   <VideoListStyles>
                     <RenderVideoList
-                      dataAudios={{ audios: audio }}
                       dataVideos={{ videos: video }}
                       hideAuthor
                       currentUser={currentUser}

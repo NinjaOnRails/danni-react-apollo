@@ -12,7 +12,6 @@ const formatDuration = duration => {
 };
 
 const RenderVideoList = ({
-  dataAudios,
   dataVideos,
   hideAuthor,
   currentUser,
@@ -100,32 +99,6 @@ const RenderVideoList = ({
 
   return (
     <>
-      {dataAudios.audios.map(
-        ({
-          title,
-          id: audioId,
-          author,
-          video: {
-            id,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            originAuthor,
-            duration,
-          },
-        }) => {
-          const displayDuration = formatDuration(duration);
-          return renderVideoItem(
-            id,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            title,
-            displayDuration,
-            originAuthor,
-            author,
-            audioId
-          );
-        }
-      )}
       {dataVideos.videos.map(
         ({
           originThumbnailUrl,
@@ -150,7 +123,18 @@ const RenderVideoList = ({
               addedBy
             );
           }
-          return null;
+          return audio.map(({ title, id: audioId, author }) => {
+            return renderVideoItem(
+              id,
+              originThumbnailUrl,
+              originThumbnailUrlSd,
+              title,
+              displayDuration,
+              originAuthor,
+              author,
+              audioId
+            );
+          });
         }
       )}
     </>
@@ -158,7 +142,6 @@ const RenderVideoList = ({
 };
 
 RenderVideoList.propTypes = {
-  dataAudios: PropTypes.object.isRequired,
   dataVideos: PropTypes.object.isRequired,
   deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,

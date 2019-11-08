@@ -6,7 +6,7 @@ import {
   flagOptions,
 } from '../../lib/supportedLanguages';
 import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
-import fetchAudiosVideos from '../../lib/fetchAudiosVideos';
+import fetchVideos from '../../lib/fetchVideos';
 
 class LanguageMenu extends Component {
   state = {
@@ -70,7 +70,7 @@ class LanguageMenu extends Component {
         },
       } = data;
 
-      await fetchAudiosVideos({ client, contentLanguage });
+      await fetchVideos({ client, contentLanguage });
 
       const { data: newData } = await client.query({
         query: CONTENT_LANGUAGE_QUERY,
@@ -124,7 +124,7 @@ class LanguageMenu extends Component {
       variables: { language: 'VIETNAMESE' },
     });
     if (data.addContentLanguage)
-      return fetchAudiosVideos({
+      return fetchVideos({
         client,
         contentLanguage: data.addContentLanguage.data.contentLanguage,
       });
@@ -170,7 +170,7 @@ class LanguageMenu extends Component {
     let contentLanguage = await this.updateLocalState(language);
 
     // Refetch data
-    await fetchAudiosVideos({ client, contentLanguage });
+    await fetchVideos({ client, contentLanguage });
 
     const { data } = await client.query({ query: CONTENT_LANGUAGE_QUERY });
 
