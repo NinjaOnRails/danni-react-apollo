@@ -53,12 +53,6 @@ const UserProfileStyles = styled.div`
   i.bordered.icon {
     box-shadow: none;
   }
-  /* .ui.medium.image,
-  .ui.medium.images .image,
-  .ui.medium.images img,
-  .ui.medium.images svg {
-    width: 100%;
-  } */
 
   i.big.icon,
   i.big.icons {
@@ -87,11 +81,20 @@ const UserProfileStyles = styled.div`
       display: block;
       margin-left: auto;
       margin-right: auto;
+      width: fit-content;
     }
-
+    .ui.medium.image,
+    .ui.medium.images .image,
+    .ui.medium.images img,
+    .ui.medium.images svg {
+      width: 100%;
+    }
     .ui.items > .item > .content {
       padding-left: 0;
     }
+  }
+  @media (max-width: 991px) {
+    margin-top: 3.5rem;
   }
 
   @media (max-width: 639px) {
