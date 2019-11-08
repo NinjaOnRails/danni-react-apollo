@@ -363,9 +363,20 @@ const CLOSE_AUTH_MODAL_MUTATION = gql`
   }
 `;
 
+const UPDATE_AUDIO_DURATION_MUTATION = gql`
+  mutation UPDATE_AUDIO_DURATION_MUTATION($source: String!, $duration: Int!) {
+    updateAudioDuration(source: $source, duration: $duration) {
+      id
+      source
+      duration
+    }
+  }
+`;
+
 export {
   CREATE_AUDIO_MUTATION,
   UPDATE_AUDIO_MUTATION,
+  UPDATE_AUDIO_DURATION_MUTATION,
   VIDEO_DELETE,
   UPDATE_VIDEO_MUTATION,
   DELETE_AUDVID_MUTATION,

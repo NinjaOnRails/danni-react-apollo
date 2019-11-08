@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Form,
@@ -37,29 +37,34 @@ const Composed = adopt({
   user,
 });
 
-export default class AudioForm extends Component {
-  state = {
-    uploadProgress: 0,
-    startingUpload: false,
-    uploadError: false,
-    error: null,
-  };
+const AudioForm = ({
+  setAddVideoState,
+  isAudioSource,
+  audioUrl,
+  language,
+  youtubeId,
+  secureUrl,
+  onDeleteFileSubmit,
+  deleteToken,
+}) => {
+  const [startingUpload, setStartingUpload] = useState(false);
+  const [uploadError, setUploadError] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [error, setError] = useState(null);
 
-  fileInputRef = React.createRef();
+  const fileInputRef = React.createRef();
 
-  onUploadFileSubmit = async (cloudinaryAuthAudio, id, e) => {
-    const { setAddVideoState, audioUrl, youtubeId, language } = this.props;
-
+  const onUploadFileSubmit = async (cloudinaryAuthAudio, id, e) => {
     // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false, error: null });
+    setUploadError(false);
+    setError(null);
     const file = e ? e.target.files[0] : audioUrl;
 
     if (!file) return; // Do nothing if no file selected
 
     // More initial state reset
-    this.setState({
-      uploadProgress: 0,
-    });
+    setUploadProgress(0);
+
     setAddVideoState({ deleteToken: '', secureUrl: '' });
 
     // Prepare cloudinary upload params
@@ -81,9 +86,7 @@ export default class AudioForm extends Component {
         data,
         onUploadProgress: p => {
           // Show upload progress
-          this.setState({
-            uploadProgress: Math.floor((p.loaded / p.total) * 100),
-          });
+          setUploadProgress(Math.floor((p.loaded / p.total) * 100));
         },
       });
       setAddVideoState({
@@ -92,219 +95,191 @@ export default class AudioForm extends Component {
         audioUrl: '',
       });
     } catch (err) {
-      this.setState({
-        uploadError: true,
-      });
+      setUploadError(true);
     }
   };
 
-  onUploadButtonClick = async (cloudinaryAuthAudio, id) => {
-    const { setAddVideoState } = this.props;
+  const onUploadButtonClick = async (cloudinaryAuthAudio, id) => {
     setAddVideoState({ isAudioSource: true });
-    this.setState({ startingUpload: true });
-    await this.onUploadFileSubmit(cloudinaryAuthAudio, id);
-    this.setState({ startingUpload: false });
+    setStartingUpload(true);
+    await onUploadFileSubmit(cloudinaryAuthAudio, id);
+    setStartingUpload(false);
   };
 
-  onNextButtonClick = () => {
-    const { setAddVideoState, secureUrl } = this.props;
+  const onNextButtonClick = () => {
     if (secureUrl) {
       setAddVideoState({ activeStep: 'details' });
     } else {
-      this.setState({
-        error: {
-          message:
-            'Vui lòng tải file thuyết minh lên hoặc chọn "Video đã có thuyết minh" để tiếp tục',
-        },
+      setError({
+        message:
+          'Vui lòng tải file thuyết minh lên hoặc chọn "Video đã có thuyết minh" để tiếp tục',
       });
     }
   };
 
-  render() {
-    const {
-      setAddVideoState,
-      isAudioSource,
-      audioUrl,
-      language,
-      youtubeId,
-      secureUrl,
-      onDeleteFileSubmit,
-      deleteToken,
-    } = this.props;
+  return (
+    <Composed youtubeId={youtubeId} language={language}>
+      {({
+        cloudinaryAuthAudioQuery: { loading, error: queryError, data },
+        user: { currentUser, loading: loadingUser },
+      }) => {
+        if (loading || loadingUser) return <Loader active />;
+        if (queryError) return <Error error={queryError} />;
+        const { id } = currentUser;
 
-    const { uploadError, uploadProgress, startingUpload, error } = this.state;
+        return (
+          <>
+            <Header
+              as="h2"
+              attached="top"
+              onClick={() => {
+                setAddVideoState({ isAudioSource: true });
+              }}
+            >
+              <Radio value="upload" checked={isAudioSource} />
+              Tải file thuyết minh lên
+            </Header>
+            <Segment attached>
+              {(uploadProgress > 0 && uploadProgress < 100 && (
+                <Progress percent={uploadProgress} progress success />
+              )) ||
+                (secureUrl && (
+                  <>
+                    <Header as="h3">File được tải lên:</Header>
+                    <audio controls src={secureUrl}>
+                      <track kind="captions" />
+                    </audio>
+                    <Button negative onClick={onDeleteFileSubmit} type="button">
+                      xoá
+                    </Button>
+                  </>
+                )) ||
+                ((startingUpload || deleteToken) && (
+                  <Loader inline="centered" active />
+                )) || (
+                  <>
+                    {uploadError && (
+                      <Progress percent={100} error>
+                        Lỗi mạng hoặc file không hợp lệ.
+                      </Progress>
+                    )}
+                    <div className="audioUrl">
+                      <Form.Input
+                        onClick={() =>
+                          setAddVideoState({ isAudioSource: true })
+                        }
+                        onChange={(e, { value }) => {
+                          setAddVideoState({ audioUrl: value });
+                        }}
+                        value={audioUrl}
+                        name="audioUrl"
+                        label="Đường link (URL)"
+                        placeholder="spotify.com/audiofile.mp3"
+                      />
+                      <Button
+                        positive
+                        onClick={() =>
+                          onUploadButtonClick(data.cloudinaryAuthAudio, id)
+                        }
+                      >
+                        <Icon name="upload" />
+                        Tải lên
+                      </Button>
+                    </div>
+                    <Header>hoặc</Header>
+                    <Button
+                      type="button"
+                      positive
+                      size="huge"
+                      className="choose-file-button"
+                      content="Chọn file trong máy"
+                      labelPosition="left"
+                      icon="file audio"
+                      onClick={() => {
+                        setAddVideoState({ isAudioSource: true });
+                        fileInputRef.current.click();
+                      }}
+                    />
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      id="file"
+                      name="file"
+                      accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
+                      hidden
+                      onChange={async e => {
+                        setStartingUpload(true);
+                        await onUploadFileSubmit(
+                          data.cloudinaryAuthAudio,
+                          id,
+                          e
+                        );
+                        setStartingUpload(false);
+                      }}
+                    />
+                  </>
+                )}
+            </Segment>
 
-    return (
-      <Composed youtubeId={youtubeId} language={language}>
-        {({
-          cloudinaryAuthAudioQuery: { loading, error: queryError, data },
-          user: { currentUser, loading: loadingUser },
-        }) => {
-          if (loading || loadingUser) return <Loader active />;
-          if (queryError) return <Error error={queryError} />;
-          const { id } = currentUser;
-
-          return (
-            <>
+            <Segment>
               <Header
                 as="h2"
-                attached="top"
                 onClick={() => {
-                  setAddVideoState({ isAudioSource: true });
+                  setAddVideoState({ isAudioSource: false });
                 }}
               >
-                <Radio value="upload" checked={isAudioSource} />
-                Tải file thuyết minh lên
+                <Radio value="upload" checked={!isAudioSource} />
+                Video đã có sẵn thuyết minh
               </Header>
-              <Segment attached>
-                {(uploadProgress > 0 && uploadProgress < 100 && (
-                  <Progress percent={uploadProgress} progress success />
-                )) ||
-                  (secureUrl && (
-                    <>
-                      <Header as="h3">File được tải lên:</Header>
-                      <audio controls src={secureUrl}>
-                        <track kind="captions" />
-                      </audio>
-                      <Button
-                        negative
-                        onClick={onDeleteFileSubmit}
-                        type="button"
-                      >
-                        xoá
-                      </Button>
-                    </>
-                  )) ||
-                  ((startingUpload || deleteToken) && (
-                    <Loader inline="centered" active />
-                  )) || (
-                    <>
-                      {uploadError && (
-                        <Progress percent={100} error>
-                          Lỗi mạng hoặc file không hợp lệ.
-                        </Progress>
-                      )}
-                      <div className="audioUrl">
-                        <Form.Input
-                          onClick={() =>
-                            setAddVideoState({ isAudioSource: true })
-                          }
-                          onChange={(e, { value }) => {
-                            setAddVideoState({ audioUrl: value });
-                          }}
-                          value={audioUrl}
-                          name="audioUrl"
-                          label="Đường link (URL)"
-                          placeholder="spotify.com/audiofile.mp3"
-                        />
-                        <Button
-                          positive
-                          onClick={() =>
-                            this.onUploadButtonClick(
-                              data.cloudinaryAuthAudio,
-                              id
-                            )
-                          }
-                        >
-                          <Icon name="upload" />
-                          Tải lên
-                        </Button>
-                      </div>
-                      <Header>hoặc</Header>
-                      <Button
-                        type="button"
-                        positive
-                        size="huge"
-                        className="choose-file-button"
-                        content="Chọn file trong máy"
-                        labelPosition="left"
-                        icon="file audio"
-                        onClick={() => {
-                          setAddVideoState({ isAudioSource: true });
-                          this.fileInputRef.current.click();
-                        }}
-                      />
-                      <input
-                        ref={this.fileInputRef}
-                        type="file"
-                        id="file"
-                        name="file"
-                        accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
-                        hidden
-                        onChange={async e => {
-                          this.setState({ startingUpload: true });
-                          await this.onUploadFileSubmit(
-                            data.cloudinaryAuthAudio,
-                            id,
-                            e
-                          );
-                          this.setState({ startingUpload: false });
-                        }}
-                      />
-                    </>
-                  )}
-              </Segment>
+            </Segment>
 
-              <Segment>
-                <Header
-                  as="h2"
-                  onClick={() => {
-                    setAddVideoState({ isAudioSource: false });
-                  }}
-                >
-                  <Radio value="upload" checked={!isAudioSource} />
-                  Video đã có sẵn thuyết minh
-                </Header>
-              </Segment>
+            <Error error={error} />
 
-              <Error error={error} />
-
-              <div className="buttons">
+            <div className="buttons">
+              <Button
+                size="big"
+                icon
+                labelPosition="left"
+                onClick={() => setAddVideoState({ activeStep: 'video' })}
+              >
+                Quay lại
+                <Icon name="left arrow" />
+              </Button>
+              {isAudioSource ? (
                 <Button
+                  disabled={
+                    startingUpload ||
+                    (uploadProgress > 0 && uploadProgress < 100)
+                  }
+                  type="button"
                   size="big"
                   icon
-                  labelPosition="left"
-                  onClick={() => setAddVideoState({ activeStep: 'video' })}
+                  labelPosition="right"
+                  primary
+                  onClick={onNextButtonClick}
                 >
-                  Quay lại
-                  <Icon name="left arrow" />
+                  Tiếp tục
+                  <Icon name="right arrow" />
                 </Button>
-                {isAudioSource ? (
-                  <Button
-                    disabled={
-                      startingUpload ||
-                      (uploadProgress > 0 && uploadProgress < 100)
-                    }
-                    type="button"
-                    size="big"
-                    icon
-                    labelPosition="right"
-                    primary
-                    onClick={() => this.onNextButtonClick()}
-                  >
-                    Tiếp tục
-                    <Icon name="right arrow" />
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    size="big"
-                    icon
-                    labelPosition="right"
-                    primary
-                  >
-                    Xác nhận
-                    <Icon name="check" />
-                  </Button>
-                )}
-              </div>
-            </>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+              ) : (
+                <Button
+                  type="submit"
+                  size="big"
+                  icon
+                  labelPosition="right"
+                  primary
+                >
+                  Xác nhận
+                  <Icon name="check" />
+                </Button>
+              )}
+            </div>
+          </>
+        );
+      }}
+    </Composed>
+  );
+};
 
 AudioForm.propTypes = {
   setAddVideoState: PropTypes.func.isRequired,
@@ -317,3 +292,5 @@ AudioForm.propTypes = {
   source: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
 };
+
+export default AudioForm;

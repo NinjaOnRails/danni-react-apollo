@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
-const VideoHeader = props => {
-  const {
-    video: {
-      audio,
-      originAuthor,
-      originTitle,
-      originThumbnailUrl,
-      originThumbnailUrlSd,
-      originLanguage,
-      originDescription,
-    },
-    url,
-  } = props;
+const VideoHeader = ({
+  video: {
+    audio,
+    originAuthor,
+    originTitle,
+    originThumbnailUrl,
+    originThumbnailUrlSd,
+    originLanguage,
+    originDescription,
+  },
+  url,
+}) => {
   return (
     <Head>
       <title key="title">

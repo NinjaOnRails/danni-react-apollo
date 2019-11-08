@@ -2,14 +2,7 @@ import PropTypes from 'prop-types';
 import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import Link from 'next/link';
 import VideoDeleteButton from './VideoDeleteButton';
-
-const formatDuration = duration => {
-  // Convert and format duration
-  const seconds = duration % 60;
-  return `${Math.round(duration / 60)}:${
-    seconds > 9 ? seconds : `0${seconds}`
-  }`;
-};
+import { formatDuration } from './utils';
 
 const RenderVideoList = ({
   dataAudios,

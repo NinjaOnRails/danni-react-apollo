@@ -9,12 +9,17 @@ export default class YoutubeViews extends Component {
   };
 
   componentDidMount() {
+    console.log('mount');
     this.fetchYoutubeViews(this.props.originId);
   }
 
   componentDidUpdate(prevProps) {
     const { originId } = this.props;
-    if (prevProps.originId !== originId) this.fetchYoutubeViews(originId);
+
+    if (prevProps.originId !== originId) {
+      console.log('update');
+      this.fetchYoutubeViews(originId);
+    }
   }
 
   fetchYoutubeViews = async id => {

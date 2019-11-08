@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Segment, Form, Loader, Header } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
@@ -82,8 +82,24 @@ const Composed = adopt({
   createVideoMutation,
 });
 
-class AddVideo extends Component {
-  state = {
+const AddVideo = () => {
+  // const [source, setSource] = useState('');
+  // const [youtubeId, setYoutubeId] = useState('');
+  // const [title, setTitle] = useState('');
+  // const [description, setDescription] = useState('');
+  // const [audioUrl, setAudioUrl] = useState('');
+  // const [tags, setTags] = useState('');
+  // const [secureUrl, setSecureUrl] = useState('');
+  // const [deleteToken, setDeleteToken] = useState('');
+  // const [error, setError] = useState('');
+  // const [activeStep, setActiveStep] = useState('video');
+  // const [language, setLanguage] = useState(defaultLanguage);
+  // const [videoValid, setVideoValid] = useState(false);
+  // const [isAudioSource, setIsAudioSource] = useState(true);
+  // const [redirecting, setRedirecting] = useState(false);
+  // const [audioDuration, setAudioDuration] = useState(0);
+
+  const [addVideoForm, setAddVideoForm] = useState({
     activeStep: 'video',
     language: defaultLanguage,
     source: '',
@@ -100,50 +116,48 @@ class AddVideo extends Component {
     error: '',
     audioDuration: 0,
     redirecting: false,
-  };
+  });
 
-  setAddVideoState = state => this.setState(state);
+  const {
+    deleteToken,
+    isAudioSource,
+    secureUrl,
+    language,
+    title,
+    description,
+    tags,
+    audioDuration,
+    redirecting,
+    youtubeId,
+    activeStep,
+    error,
+    source,
+    videoValid,
+    originTags,
+    audioUrl,
+  } = addVideoForm;
 
-  onDeleteFileSubmit = async () => {
-    const { deleteToken } = this.state;
-    this.setState({
-      secureUrl: '',
-      error: '',
-    });
+  const setAddVideoState = newState =>
+    setAddVideoForm(prevState => ({ ...prevState, ...newState }));
 
+  const onDeleteFileSubmit = async () => {
+    setAddVideoState({ secureUrl: '', error: '' });
     const res = await deleteFile(deleteToken);
     if (res.status === 200) {
-      this.setState({
-        deleteToken: '',
-      });
+      setAddVideoState({ deleteToken: '' });
     }
   };
 
-  onAudioLoadedMetadata = e => {
-    this.setState({ audioDuration: Math.round(e.target.duration) });
+  const onAudioLoadedMetadata = e => {
+    setAddVideoState({ audioDuration: Math.round(e.target.duration) });
   };
 
-  onFormSubmit = async (e, createAudio, createVideo) => {
-    const {
-      language,
-      tags,
-      title,
-      description,
-      isAudioSource,
-      secureUrl,
-      audioDuration,
-      deleteToken,
-    } = this.state;
-
+  const onFormSubmit = async (e, createAudio, createVideo) => {
     // Stop form from submitting
     e.preventDefault();
-
-    this.setState({ error: '' });
-
+    setAddVideoState({ error: '' });
     if (isAudioSource && !secureUrl)
-      return this.setState({
-        error: 'You have not uploaded an audio file yet',
-      });
+      setAddVideoState({ error: 'You have not uploaded an audio file yet' });
 
     // Call createVideo mutation
     const {
@@ -177,8 +191,7 @@ class AddVideo extends Component {
           tags,
         },
       });
-
-      this.setState({ redirecting: true });
+      setAddVideoState({ redirecting: true });
 
       // Mixpanel send stat
       trackNewVideo(language);
@@ -189,8 +202,8 @@ class AddVideo extends Component {
         query: { id, audioId },
       });
     }
-    this.setState({ redirecting: true });
-    if (deleteToken) this.onDeleteFileSubmit();
+    setAddVideoState({ redirecting: true });
+    if (deleteToken) onDeleteFileSubmit();
 
     // Mixpanel send stat
     trackNewVideo();
@@ -201,103 +214,97 @@ class AddVideo extends Component {
     });
   };
 
-  render() {
-    const {
-      activeStep,
-      error,
-      language,
-      source,
-      youtubeId,
-      isAudioSource,
-      videoValid,
-      audioUrl,
-      secureUrl,
-      deleteToken,
-      redirecting,
-      title,
-      description,
-      tags,
-      originTags,
-    } = this.state;
-    if (redirecting)
-      return (
-        <Loader indeterminate active>
-          Đang chuyển trang...
-        </Loader>
-      );
+  if (redirecting)
     return (
-      <Composed
-        youtubeId={youtubeId}
-        language={language}
-        isAudioSource={isAudioSource}
-      >
-        {({
-          createAudioMutation: {
-            createAudio,
-            createAudioResult: {
-              loading: loadingCreateAudio,
-              error: errorCreateAudio,
-            },
-          },
-          createVideoMutation: {
-            createVideo,
-            createVideoResult: {
-              loading: loadingCreateVideo,
-              error: errorCreateVideo,
-            },
-          },
-        }) => (
-          <AddVideoStyles>
-            <Header>Thêm Video/Thuyết Minh</Header>
-            <AddVideoSteps activeStep={activeStep} />
-            <Segment>
-              <Error error={errorCreateAudio} />
-              <Error error={errorCreateVideo} />
-              <Error error={{ message: error }} />
-              <Form
-                loading={loadingCreateAudio || loadingCreateVideo}
-                size="big"
-                onSubmit={async e =>
-                  this.onFormSubmit(e, createAudio, createVideo)
-                }
-              >
-                {activeStep === 'video' ? (
-                  <VideoForm
-                    setAddVideoState={this.setAddVideoState}
-                    language={language}
-                    source={source}
-                    youtubeId={youtubeId}
-                    videoValid={videoValid}
-                  />
-                ) : activeStep === 'audio' ? (
-                  <AudioForm
-                    setAddVideoState={this.setAddVideoState}
-                    isAudioSource={isAudioSource}
-                    audioUrl={audioUrl}
-                    secureUrl={secureUrl}
-                    deleteToken={deleteToken}
-                    language={language}
-                    source={source}
-                    onDeleteFileSubmit={this.onDeleteFileSubmit}
-                    youtubeId={youtubeId}
-                  />
-                ) : (
-                  <DetailsForm
-                    setAddVideoState={this.setAddVideoState}
-                    title={title}
-                    description={description}
-                    tags={tags}
-                    originTags={originTags}
-                  />
-                )}
-              </Form>
-            </Segment>
-          </AddVideoStyles>
-        )}
-      </Composed>
+      <Loader indeterminate active>
+        Đang chuyển trang...
+      </Loader>
     );
-  }
-}
+  return (
+    <Composed
+      youtubeId={youtubeId}
+      language={language}
+      isAudioSource={isAudioSource}
+    >
+      {({
+        createAudioMutation: {
+          createAudio,
+          createAudioResult: {
+            loading: loadingCreateAudio,
+            error: errorCreateAudio,
+          },
+        },
+        createVideoMutation: {
+          createVideo,
+          createVideoResult: {
+            loading: loadingCreateVideo,
+            error: errorCreateVideo,
+          },
+        },
+      }) => (
+        <AddVideoStyles>
+          <Header>Thêm Video/Thuyết Minh</Header>
+          <AddVideoSteps activeStep={activeStep} />
+          <Segment>
+            <Error error={errorCreateAudio} />
+            <Error error={errorCreateVideo} />
+            <Error error={{ message: error }} />
+            <Form
+              loading={loadingCreateAudio || loadingCreateVideo}
+              size="big"
+              onSubmit={async e => onFormSubmit(e, createAudio, createVideo)}
+            >
+              {activeStep === 'video' ? (
+                <VideoForm
+                  setAddVideoState={setAddVideoState}
+                  language={language}
+                  source={source}
+                  youtubeId={youtubeId}
+                  videoValid={videoValid}
+                  // language
+                  // originTags
+                  // youtubeId
+                  // videoValid
+                  // activeStep
+                />
+              ) : activeStep === 'audio' ? (
+                <AudioForm
+                  setAddVideoState={setAddVideoState}
+                  isAudioSource={isAudioSource}
+                  audioUrl={audioUrl}
+                  secureUrl={secureUrl}
+                  deleteToken={deleteToken}
+                  language={language}
+                  source={source}
+                  onDeleteFileSubmit={onDeleteFileSubmit}
+                  youtubeId={youtubeId}
+                  // deleteToken
+                  // secureUrl
+                  // deleteToken
+                  // isAudioSource
+                  // activeStep
+                  // audioUrl
+                />
+              ) : (
+                <DetailsForm
+                  setAddVideoState={setAddVideoState}
+                  title={title}
+                  description={description}
+                  tags={tags}
+                  originTags={originTags}
+                  // activeStep
+                  // tags
+                  // description
+                  // title
+                />
+              )}
+            </Form>
+          </Segment>
+        </AddVideoStyles>
+      )}
+    </Composed>
+  );
+};
 
 export default AddVideo;
 export { createAudioMutation, createVideoMutation };

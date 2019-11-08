@@ -1,20 +1,10 @@
-import React, { Component } from 'react';
-import gql from 'graphql-tag';
+import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { ALL_AUDIOS_QUERY } from '../../graphql/query';
+import { UPDATE_AUDIO_DURATION_MUTATION } from '../../graphql/mutation';
 
-const UPDATE_AUDIO_DURATION_MUTATION = gql`
-  mutation UPDATE_AUDIO_DURATION_MUTATION($source: String!, $duration: Int!) {
-    updateAudioDuration(source: $source, duration: $duration) {
-      id
-      source
-      duration
-    }
-  }
-`;
-
-class UpdateAudioDuration extends Component {
-  onAudioLoadedMetadata = async (e, source, updateAudioDuration) => {
+const UpdateAudioDuration = () => {
+  const onAudioLoadedMetadata = async (e, source, updateAudioDuration) => {
     await updateAudioDuration({
       variables: {
         source,
@@ -22,46 +12,39 @@ class UpdateAudioDuration extends Component {
       },
     });
   };
+  return (
+    <Query query={ALL_AUDIOS_QUERY}>
+      {({ loading, error, data }) => (
+        <Mutation mutation={UPDATE_AUDIO_DURATION_MUTATION}>
+          {(updateAudioDuration, { updateError, updateLoading }) => {
+            if (loading) return <div>Loading...</div>;
+            if (error) return <div>error!</div>;
+            if (updateLoading) return <div>Loading...</div>;
+            if (updateError) return <div>error!</div>;
 
-  render() {
-    return (
-      <Query query={ALL_AUDIOS_QUERY}>
-        {({ loading, error, data }) => (
-          <Mutation mutation={UPDATE_AUDIO_DURATION_MUTATION}>
-            {(updateAudioDuration, { updateError, updateLoading }) => {
-              if (loading) return <div>Loading...</div>;
-              if (error) return <div>error!</div>;
-              if (updateLoading) return <div>Loading...</div>;
-              if (updateError) return <div>error!</div>;
-
-              return (
-                <div>
-                  {data.audios.map(audio => (
-                    <div key={audio.source}>
-                      <audio
-                        controls
-                        src={audio.source}
-                        onLoadedMetadata={e => {
-                          if (!audio.duration)
-                            this.onAudioLoadedMetadata(
-                              e,
-                              audio.source,
-                              updateAudioDuration
-                            );
-                        }}
-                      >
-                        <track kind="captions" />
-                      </audio>
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          </Mutation>
-        )}
-      </Query>
-    );
-  }
-}
+            return (
+              <div>
+                {data.audios.map(({ source, duration }) => (
+                  <div key={source}>
+                    <audio
+                      controls
+                      src={source}
+                      onLoadedMetadata={e => {
+                        if (!duration)
+                          onAudioLoadedMetadata(e, source, updateAudioDuration);
+                      }}
+                    >
+                      <track kind="captions" />
+                    </audio>
+                  </div>
+                ))}
+              </div>
+            );
+          }}
+        </Mutation>
+      )}
+    </Query>
+  );
+};
 
 export default UpdateAudioDuration;

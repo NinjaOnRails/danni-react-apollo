@@ -1,73 +1,7 @@
-import { List, Image, Icon } from 'semantic-ui-react';
-import Link from 'next/link';
+import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {
-  VideoItemStyles,
-  ListDescriptionStyled,
-  ListHeaderStyled,
-  AuthorStyles,
-  SmallVideoListStyles,
-} from '../styles/SmallVideoListStyles';
-
-const renderVideoItem = (
-  onVideoItemClick,
-  id,
-  originThumbnailUrl,
-  originThumbnailUrlSd,
-  title,
-  displayDuration,
-  originAuthor,
-  author,
-  audioId = null
-) => {
-  const query = {
-    id,
-  };
-  if (audioId) query.audioId = audioId;
-  return (
-    <List.Item key={audioId || id} onClick={() => onVideoItemClick()}>
-      <Link
-        href={{
-          pathname: '/watch',
-          query,
-        }}
-      >
-        <a>
-          <VideoItemStyles>
-            <Image
-              src={originThumbnailUrl || originThumbnailUrlSd}
-              alt={title}
-              label={{
-                color: 'black',
-                content: displayDuration,
-              }}
-            />
-            <List.Content>
-              <ListHeaderStyled>{title}</ListHeaderStyled>
-              <ListDescriptionStyled>{originAuthor}</ListDescriptionStyled>
-            </List.Content>
-          </VideoItemStyles>
-        </a>
-      </Link>
-      <AuthorStyles>
-        <Link href={{ pathname: '/user', query: { id: author.id } }}>
-          <a className="author">
-            <Image avatar src={author.avatar} />
-            {author ? author.displayName : 'deleted user'}
-          </a>
-        </Link>
-      </AuthorStyles>
-    </List.Item>
-  );
-};
-
-const formatDuration = duration => {
-  // Convert and format duration
-  const seconds = duration % 60;
-  return `${Math.round(duration / 60)}:${
-    seconds > 9 ? seconds : `0${seconds}`
-  }`;
-};
+import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
+import VideoItem from './VideoItem';
 
 const RenderSmallVideoList = ({
   dataAudios: { audios },
@@ -79,26 +13,28 @@ const RenderSmallVideoList = ({
   return (
     <SmallVideoListStyles>
       <List divided relaxed>
-        {audios.map(audio => {
+        {audios.map(({ id, title, author, video }) => {
           const {
             id: videoId,
             originThumbnailUrl,
             originThumbnailUrlSd,
             originAuthor,
             duration,
-          } = audio.video;
-          const displayDuration = formatDuration(duration);
-          if (audioId !== audio.id) {
-            return renderVideoItem(
-              onVideoItemClick,
-              videoId,
-              originThumbnailUrl,
-              originThumbnailUrlSd,
-              audio.title,
-              displayDuration,
-              originAuthor,
-              audio.author,
-              audio.id
+          } = video;
+          if (audioId !== id) {
+            return (
+              <VideoItem
+                key={id || videoId}
+                onVideoItemClick={onVideoItemClick}
+                id={videoId}
+                originThumbnailUrl={originThumbnailUrl}
+                originThumbnailUrlSd={originThumbnailUrlSd}
+                duration={duration}
+                originAuthor={originAuthor}
+                title={title}
+                author={author}
+                audioId={id}
+              />
             );
           }
           return null;
@@ -114,17 +50,19 @@ const RenderSmallVideoList = ({
             originAuthor,
             duration,
           }) => {
-            const displayDuration = formatDuration(duration);
             if (audio.length === 0 && videoId !== id) {
-              return renderVideoItem(
-                onVideoItemClick,
-                videoId,
-                originThumbnailUrl,
-                originThumbnailUrlSd,
-                originTitle,
-                displayDuration,
-                originAuthor,
-                addedBy
+              return (
+                <VideoItem
+                  key={audio.id || videoId}
+                  onVideoItemClick={onVideoItemClick}
+                  id={videoId}
+                  originThumbnailUrl={originThumbnailUrl}
+                  originThumbnailUrlSd={originThumbnailUrlSd}
+                  duration={duration}
+                  originAuthor={originAuthor}
+                  title={originTitle}
+                  author={addedBy}
+                />
               );
             }
             return null;
