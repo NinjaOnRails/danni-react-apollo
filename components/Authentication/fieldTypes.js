@@ -30,7 +30,7 @@ const signupFields = {
   displayName: {
     inputConfig: {
       label: 'Tên hiển thị',
-      type: 'displayName',
+      type: 'text',
       name: 'displayName',
     },
     modified: false,
@@ -56,7 +56,7 @@ const resetFields = {
   confirmPassword: {
     ...signinFields.password,
     inputConfig: {
-      label: 'Lặp lại mật khẩu mới',
+      label: 'Lặp lại m/k mới',
       type: 'password',
       name: 'confirmPassword',
     },
@@ -65,53 +65,53 @@ const resetFields = {
 
 const userPasswordFields = {
   password: {
-    ...signinFields.password,
-    label: 'Mật khẩu cũ',
+    ...resetFields.password,
+    inputConfig: {
+      ...resetFields.password.inputConfig,
+      label: 'Mật khẩu cũ',
+    },
   },
   newPassword: {
     ...resetFields.password,
+    inputConfig: {
+      ...resetFields.password.inputConfig,
+      name: 'newPassword',
+    },
   },
   confirmPassword: { ...resetFields.confirmPassword },
 };
 
 const userInfoFields = {
   displayName: {
-    label: 'Tên hiển thị',
-    name: 'displayName',
-    type: 'text',
+    inputConfig: { ...signupFields.displayName.inputConfig },
   },
   name: {
-    label: 'Họ và tên',
-    name: 'name',
-    type: 'text',
-    boxName: 'showName',
+    inputConfig: {
+      label: 'Họ và tên',
+      name: 'name',
+      type: 'text',
+      boxName: 'showName',
+    },
   },
   bio: {
-    label: 'Giới thiệu',
-    name: 'bio',
-    type: 'text',
-    boxName: 'showBio',
+    inputConfig: {
+      label: 'Giới thiệu',
+      name: 'bio',
+      type: 'text',
+      boxName: 'showBio',
+    },
   },
   location: {
-    label: 'Nơi sống',
-    name: 'location',
-    type: 'text',
-    boxName: 'showLocation',
+    inputConfig: {
+      label: 'Nơi sống',
+      name: 'location',
+      type: 'text',
+      boxName: 'showLocation',
+    },
   },
   email: {
-    ...signinFields.email,
-    boxName: 'showEmail',
+    inputConfig: { ...signinFields.email.inputConfig, boxName: 'showEmail' },
   },
-  password: {
-    ...signinFields.password,
-    label: 'Mật khẩu cũ',
-    isPasswordField: true,
-  },
-  newPassword: {
-    ...resetFields.password,
-    isPasswordField: true,
-  },
-  confirmPassword: { ...resetFields.confirmPassword, isPasswordField: true },
 };
 
 export {

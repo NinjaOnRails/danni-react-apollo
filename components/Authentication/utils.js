@@ -1,4 +1,4 @@
-const validateInput = (value, rule) => {
+export const validateInput = (value, rule) => {
   let isValid = true;
   if (!rule) {
     return true;

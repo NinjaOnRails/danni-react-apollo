@@ -53,6 +53,12 @@ const UserProfileStyles = styled.div`
   i.bordered.icon {
     box-shadow: none;
   }
+  /* .ui.medium.image,
+  .ui.medium.images .image,
+  .ui.medium.images img,
+  .ui.medium.images svg {
+    width: 100%;
+  } */
 
   i.big.icon,
   i.big.icons {
