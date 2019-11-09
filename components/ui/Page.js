@@ -8,6 +8,7 @@ import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
+import CurrentUser from '../Authentication/currentUser';
 
 const defaultTheme = {
   white: ' #fff',

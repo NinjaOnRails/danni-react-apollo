@@ -6,7 +6,6 @@ import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
 import fetchAudiosVideos from '../../lib/fetchAudiosVideos';
 
 const LanguageMenu = (
-  props,
   {
     currentUser,
     contentLanguage: currentContentLanguage,
@@ -19,6 +18,7 @@ const LanguageMenu = (
     loadingUser,
     loadingData,
     toggleContentLanguage,
+    currentUser: { contentLanguage },
   }
 ) => {
   const [disabled, setDisabled] = useState(false);
@@ -28,9 +28,7 @@ const LanguageMenu = (
   // If currently watching video of new language, add it
 
   const initFromCurrentUser = () => {
-    const {
-      currentUser: { contentLanguage },
-    } = props;
+
     if (contentLanguage.length) {
       localStorage.setItem('contentLanguage', contentLanguage.join());
       client.writeData({

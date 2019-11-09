@@ -18,7 +18,7 @@ const VideoItem = ({
   deleteAudVid,
   query,
 }) => (
-  <>
+  <div>
     <Link
       href={{
         pathname: '/watch',
@@ -77,7 +77,7 @@ const VideoItem = ({
         </div>
       )
     )}
-  </>
+  </div>
 );
 
 VideoItem.propTypes = {
@@ -89,7 +89,7 @@ VideoItem.propTypes = {
   duration: PropTypes.number.isRequired,
   originAuthor: PropTypes.string.isRequired,
   author: PropTypes.object.isRequired,
-  query: PropTypes.string.isRequired,
+  query: PropTypes.object.isRequired,
   deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,

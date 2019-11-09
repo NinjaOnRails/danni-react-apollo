@@ -62,7 +62,7 @@ VideoItem.propTypes = {
   duration: PropTypes.number.isRequired,
   originAuthor: PropTypes.string.isRequired,
   author: PropTypes.object.isRequired,
-  query: PropTypes.string.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default VideoItem;

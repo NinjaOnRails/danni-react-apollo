@@ -59,6 +59,7 @@ const Signup = ({ modal }) => {
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [displayPassword, setdisplayPassword] = useState(false);
+
   useEffect(() => {
     const { displayName } = signupForm;
     setSignupForm({

@@ -60,7 +60,7 @@ const RenderSmallVideoList = ({
                 id: videoId,
               };
               return (
-                <VideoItem
+                <SmallVideoItem
                   key={videoId}
                   onVideoItemClick={onVideoItemClick}
                   id={videoId}

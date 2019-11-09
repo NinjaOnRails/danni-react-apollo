@@ -97,7 +97,6 @@ class LanguageMenu extends Component {
       client,
       currentUser: { contentLanguage },
     } = this.props;
-    console.log(contentLanguage);
 
     if (contentLanguage.length) {
       localStorage.setItem('contentLanguage', contentLanguage.join());
