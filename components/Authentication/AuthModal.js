@@ -2,26 +2,19 @@ import React, { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { Query } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { adopt } from 'react-adopt';
 import { LOCAL_STATE_QUERY } from '../../graphql/query';
 import { CLOSE_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import Signin from './Signin';
-import { user } from '../UI/ContentLanguage';
 import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
-import useCurrentUser from './currentUser';
+import { useCurrentUser } from './AuthHooks';
 
-// import currentUser from './currentUser';
 /* eslint-disable */
 const localData = ({ render }) => (
   <Query query={LOCAL_STATE_QUERY}>{render}</Query>
 );
 /* eslint-enable */
-
-// const Composed = adopt({
-//   user,
-// });
 
 const AuthModal = () => {
   const [mode, setMode] = useState('signup');
@@ -29,7 +22,7 @@ const AuthModal = () => {
     data: { showAuthModal },
   } = useQuery(LOCAL_STATE_QUERY);
   const [closeAuthModal] = useMutation(CLOSE_AUTH_MODAL_MUTATION);
-  const { currentUser, loading } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const renderForm = authMode => {
     if (authMode === 'signup') {
       return (

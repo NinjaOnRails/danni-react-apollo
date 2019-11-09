@@ -84,7 +84,7 @@ VideoItem.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
   originThumbnailUrl: PropTypes.string.isRequired,
-  originThumbnailUrlSd: PropTypes.string.isRequired,
+  originThumbnailUrlSd: PropTypes.string,
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   originAuthor: PropTypes.string.isRequired,
@@ -100,6 +100,7 @@ VideoItem.defaultProps = {
   deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
+  originThumbnailUrlSd: '',
 };
 
 export default VideoItem;

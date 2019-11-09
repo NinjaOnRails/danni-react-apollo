@@ -31,6 +31,7 @@ const RenderVideoList = ({
             <VideoItem
               key={audioId}
               id={id}
+              audioId={audioId}
               originThumbnailUrl={originThumbnailUrl}
               originThumbnailUrlSd={originThumbnailUrlSd}
               title={title}
