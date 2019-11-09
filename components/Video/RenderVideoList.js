@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
-import { Card, Icon, Image, Button } from 'semantic-ui-react';
-import Link from 'next/link';
-import VideoDeleteButton from './VideoDeleteButton';
-import { formatDuration } from './utils';
+import VideoItem from './VideoItem';
 
 const RenderVideoList = ({
   dataAudios,
@@ -11,86 +8,6 @@ const RenderVideoList = ({
   currentUser,
   deleteAudVid,
 }) => {
-  const renderVideoItem = (
-    id,
-    originThumbnailUrl,
-    originThumbnailUrlSd,
-    title,
-    displayDuration,
-    originAuthor,
-    author,
-    audioId = null
-  ) => {
-    const query = {
-      id,
-    };
-
-    if (audioId) query.audioId = audioId;
-
-    return (
-      <div key={audioId || id}>
-        <Link
-          href={{
-            pathname: '/watch',
-            query,
-          }}
-        >
-          <a>
-            <Card fluid>
-              <Image
-                fluid
-                src={originThumbnailUrl || originThumbnailUrlSd}
-                alt={title}
-                label={{
-                  color: 'black',
-                  content: displayDuration,
-                  size: 'large',
-                }}
-              />
-              <Card.Content>
-                <Card.Header>{title}</Card.Header>
-                <Card.Meta>{originAuthor}</Card.Meta>
-              </Card.Content>
-            </Card>
-          </a>
-        </Link>
-        {!hideAuthor ? (
-          <div className="author">
-            <Link href={{ pathname: '/user', query: { id: author.id } }}>
-              <a>
-                <Image avatar src={author.avatar} />
-                <span>{author ? author.displayName : 'deleted user'}</span>
-              </a>
-            </Link>
-          </div>
-        ) : (
-          currentUser &&
-          currentUser.id === author.id && (
-            <div className="buttons">
-              <Link
-                href={{
-                  pathname: '/edit',
-                  query,
-                }}
-              >
-                <Button icon labelPosition="left">
-                  <Icon name="write" />
-                  Sửa
-                </Button>
-              </Link>
-              <VideoDeleteButton
-                deleteAudVid={deleteAudVid}
-                id={id}
-                audioId={audioId}
-                title={title}
-              />
-            </div>
-          )
-        )}
-      </div>
-    );
-  };
-
   return (
     <>
       {dataAudios.audios.map(
@@ -106,16 +23,25 @@ const RenderVideoList = ({
             duration,
           },
         }) => {
-          const displayDuration = formatDuration(duration);
-          return renderVideoItem(
+          const query = {
             id,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            title,
-            displayDuration,
-            originAuthor,
-            author,
-            audioId
+            audioId,
+          };
+          return (
+            <VideoItem
+              key={audioId}
+              id={id}
+              originThumbnailUrl={originThumbnailUrl}
+              originThumbnailUrlSd={originThumbnailUrlSd}
+              title={title}
+              duration={duration}
+              originAuthor={originAuthor}
+              author={author}
+              hideAuthor={hideAuthor}
+              currentUser={currentUser}
+              deleteAudVid={deleteAudVid}
+              query={query}
+            />
           );
         }
       )}
@@ -131,16 +57,25 @@ const RenderVideoList = ({
           duration,
           addedBy,
         }) => {
-          const displayDuration = formatDuration(duration);
           if (audio.length === 0) {
-            return renderVideoItem(
+            const query = {
               id,
-              originThumbnailUrl,
-              originThumbnailUrlSd,
-              originTitle,
-              displayDuration,
-              originAuthor,
-              addedBy
+            };
+            return (
+              <VideoItem
+                key={id}
+                id={id}
+                originThumbnailUrl={originThumbnailUrl}
+                originThumbnailUrlSd={originThumbnailUrlSd}
+                title={originTitle}
+                duration={duration}
+                originAuthor={originAuthor}
+                author={addedBy}
+                hideAuthor={hideAuthor}
+                currentUser={currentUser}
+                deleteAudVid={deleteAudVid}
+                query={query}
+              />
             );
           }
           return null;

@@ -1,53 +1,36 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Flag } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {
-  getSupportedLanguage,
-  flagOptions,
-} from '../../lib/supportedLanguages';
+import { flagOptions } from '../../lib/supportedLanguages';
 import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
 import fetchAudiosVideos from '../../lib/fetchAudiosVideos';
 
-const LanguageMenu = ({
-  currentUser,
-  contentLanguage: currentContentLanguage,
-  currentWatchingLanguage,
-  addContentLanguage,
-  updateContentLanguage,
-  client,
-  currentUser: { contentLanguage },
-  loadingUpdate,
-  sideDrawer,
-  loadingUser,
-  loadingData,
-  toggleContentLanguage,
-}) => {
+const LanguageMenu = (
+  props,
+  {
+    currentUser,
+    contentLanguage: currentContentLanguage,
+    currentWatchingLanguage,
+    addContentLanguage,
+    updateContentLanguage,
+    client,
+    loadingUpdate,
+    sideDrawer,
+    loadingUser,
+    loadingData,
+    toggleContentLanguage,
+  }
+) => {
   const [disabled, setDisabled] = useState(false);
 
   const buttonWidth = sideDrawer ? 2 : 1;
 
-  const ref = useRef();
-  console.log(ref);
-  // useEffect(()=>{
-
-  // })
-  // componentDidUpdate(prevProps) {
-  //   // Update on sign in
-  //   if (
-  //     (currentUser && !prevProps.currentUser) ||
-  //     (currentUser &&
-  //       prevProps.currentUser &&
-  //       currentUser.id !== prevProps.currentUser.id)
-  //   )
-  //     this.initFromCurrentUser();
-
-  //   // Update on sign out
-  //   if (!currentUser && prevProps.currentUser) this.initFromBrowser();
-  // }
-
   // If currently watching video of new language, add it
 
   const initFromCurrentUser = () => {
+    const {
+      currentUser: { contentLanguage },
+    } = props;
     if (contentLanguage.length) {
       localStorage.setItem('contentLanguage', contentLanguage.join());
       client.writeData({
@@ -171,6 +154,7 @@ const LanguageMenu = ({
   };
 
   useEffect(() => {
+    console.log('effect');
     const languages = localStorage.getItem('contentLanguage');
     if (currentUser) {
       // Get user's content languages if signed in
@@ -184,10 +168,24 @@ const LanguageMenu = ({
       // Make browser's language default content language
       initFromBrowser().then(() => onCurrentWatchingLanguage());
     }
-  }, []);
+  }, [currentUser]);
 
-  useEffect(() => {});
+  // useEffect(() => {
+  //   console.log('effect');
+  //   if (
+  //     (currentUser && !prevProps.currentUser) ||
+  //     (currentUser &&
+  //       prevProps.currentUser &&
+  //       currentUser.id !== prevProps.currentUser.id)
+  //   )
+  //     initFromCurrentUser();
 
+  //   // Update on sign out
+  //   if (!currentUser && prevProps.currentUser) initFromBrowser();
+  // }, [currentUser]);
+  const {
+    currentUser: { contentLanguage },
+  } = props;
   return (
     <>
       <Button.Group

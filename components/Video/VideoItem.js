@@ -1,80 +1,105 @@
-import { List, Image } from 'semantic-ui-react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
-import {
-  VideoItemStyles,
-  ListDescriptionStyled,
-  ListHeaderStyled,
-  AuthorStyles,
-} from '../styles/SmallVideoListStyles';
+import { Card, Icon, Image, Button } from 'semantic-ui-react';
+import Link from 'next/link';
+import VideoDeleteButton from './VideoDeleteButton';
 import { formatDuration } from './utils';
 
 const VideoItem = ({
-  onVideoItemClick,
   id,
   originThumbnailUrl,
   originThumbnailUrlSd,
+  title,
   duration,
   originAuthor,
-  audioId,
-  title,
   author,
-}) => {
-  const query = {
-    id,
-  };
-  if (audioId) query.audioId = audioId;
-  return (
-    <List.Item onClick={() => onVideoItemClick()}>
-      <Link
-        href={{
-          pathname: '/watch',
-          query,
-        }}
-      >
-        <a>
-          <VideoItemStyles>
-            <Image
-              src={originThumbnailUrl || originThumbnailUrlSd}
-              alt={title}
-              label={{
-                color: 'black',
-                content: formatDuration(duration),
-              }}
-            />
-            <List.Content>
-              <ListHeaderStyled>{title}</ListHeaderStyled>
-              <ListDescriptionStyled>{originAuthor}</ListDescriptionStyled>
-            </List.Content>
-          </VideoItemStyles>
-        </a>
-      </Link>
-      <AuthorStyles>
+  audioId,
+  hideAuthor,
+  currentUser,
+  deleteAudVid,
+  query,
+}) => (
+  <div key={id}>
+    <Link
+      href={{
+        pathname: '/watch',
+        query,
+      }}
+    >
+      <a>
+        <Card fluid>
+          <Image
+            fluid
+            src={originThumbnailUrl || originThumbnailUrlSd}
+            alt={title}
+            label={{
+              color: 'black',
+              content: formatDuration(duration),
+              size: 'large',
+            }}
+          />
+          <Card.Content>
+            <Card.Header>{title}</Card.Header>
+            <Card.Meta>{originAuthor}</Card.Meta>
+          </Card.Content>
+        </Card>
+      </a>
+    </Link>
+    {!hideAuthor ? (
+      <div className="author">
         <Link href={{ pathname: '/user', query: { id: author.id } }}>
-          <a className="author">
+          <a>
             <Image avatar src={author.avatar} />
-            {author ? author.displayName : 'deleted user'}
+            <span>{author ? author.displayName : 'deleted user'}</span>
           </a>
         </Link>
-      </AuthorStyles>
-    </List.Item>
-  );
-};
+      </div>
+    ) : (
+      currentUser &&
+      currentUser.id === author.id && (
+        <div className="buttons">
+          <Link
+            href={{
+              pathname: '/edit',
+              query,
+            }}
+          >
+            <Button icon labelPosition="left">
+              <Icon name="write" />
+              Sửa
+            </Button>
+          </Link>
+          <VideoDeleteButton
+            deleteAudVid={deleteAudVid}
+            id={id}
+            audioId={audioId}
+            title={title}
+          />
+        </div>
+      )
+    )}
+  </div>
+);
 
 VideoItem.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
-  onVideoItemClick: PropTypes.func.isRequired,
   originThumbnailUrl: PropTypes.string.isRequired,
   originThumbnailUrlSd: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   originAuthor: PropTypes.string.isRequired,
   author: PropTypes.object.isRequired,
+  query: PropTypes.string.isRequired,
+  deleteAudVid: PropTypes.func,
+  currentUser: PropTypes.object,
+  hideAuthor: PropTypes.bool,
 };
 
 VideoItem.defaultProps = {
   audioId: '',
+  deleteAudVid: null,
+  hideAuthor: false,
+  currentUser: null,
 };
 
 export default VideoItem;

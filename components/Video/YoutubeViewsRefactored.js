@@ -19,14 +19,8 @@ const YoutubeViews = ({ originId }) => {
     );
   };
 
-  // useEffect(() => {
-  //   fetchYoutubeViews(originId);
-  //   console.log('mount');
-  // }, []);
-
   useEffect(() => {
     fetchYoutubeViews(originId);
-    console.log('update');
   }, [originId]);
 
   return (

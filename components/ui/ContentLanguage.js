@@ -1,6 +1,7 @@
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { adopt } from 'react-adopt';
 import ContentLanguageMenu from './ContentLanguageMenu';
+// import ContentLanguageMenu from './ContentLanguageMenuRefactored';
 import User from '../Authentication/User';
 import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
 import {

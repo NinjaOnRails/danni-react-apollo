@@ -9,7 +9,6 @@ export default class YoutubeViews extends Component {
   };
 
   componentDidMount() {
-    console.log('mount');
     this.fetchYoutubeViews(this.props.originId);
   }
 

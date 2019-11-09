@@ -1,7 +1,7 @@
 import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
-import VideoItem from './VideoItem';
+import VideoItem from './SmallVideoItem';
 
 const RenderSmallVideoList = ({
   dataAudios: { audios },
@@ -13,7 +13,7 @@ const RenderSmallVideoList = ({
   return (
     <SmallVideoListStyles>
       <List divided relaxed>
-        {audios.map(({ id, title, author, video }) => {
+        {audios.map(({id, title, author, video }) => {
           const {
             id: videoId,
             originThumbnailUrl,
@@ -22,9 +22,13 @@ const RenderSmallVideoList = ({
             duration,
           } = video;
           if (audioId !== id) {
+            const query = {
+              id: videoId,
+              audioId: id,
+            };
             return (
               <VideoItem
-                key={id || videoId}
+                key={id}
                 onVideoItemClick={onVideoItemClick}
                 id={videoId}
                 originThumbnailUrl={originThumbnailUrl}
@@ -34,6 +38,7 @@ const RenderSmallVideoList = ({
                 title={title}
                 author={author}
                 audioId={id}
+                query={query}
               />
             );
           }
@@ -51,9 +56,12 @@ const RenderSmallVideoList = ({
             duration,
           }) => {
             if (audio.length === 0 && videoId !== id) {
+              const query = {
+                id: videoId,
+              };
               return (
                 <VideoItem
-                  key={audio.id || videoId}
+                  key={videoId}
                   onVideoItemClick={onVideoItemClick}
                   id={videoId}
                   originThumbnailUrl={originThumbnailUrl}
@@ -62,6 +70,7 @@ const RenderSmallVideoList = ({
                   originAuthor={originAuthor}
                   title={originTitle}
                   author={addedBy}
+                  query={query}
                 />
               );
             }
