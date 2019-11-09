@@ -18,7 +18,7 @@ const VideoItem = ({
   deleteAudVid,
   query,
 }) => (
-  <div key={id}>
+  <>
     <Link
       href={{
         pathname: '/watch',
@@ -77,7 +77,7 @@ const VideoItem = ({
         </div>
       )
     )}
-  </div>
+  </>
 );
 
 VideoItem.propTypes = {

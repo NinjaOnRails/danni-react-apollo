@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createRef } from 'react';
 import { Query } from 'react-apollo';
 import {
   Loader,
@@ -36,7 +36,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
   const [deleteToken, setDeleteToken] = useState('');
   const [uploadImageUrl, setUploadImageUrl] = useState('');
 
-  const fileInputRef = React.createRef();
+  const fileInputRef = createRef();
 
   const onDeleteFileSubmit = async () => {
     setUploadProgress(0);

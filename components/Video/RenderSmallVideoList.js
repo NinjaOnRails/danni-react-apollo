@@ -1,7 +1,7 @@
 import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
-import VideoItem from './SmallVideoItem';
+import SmallVideoItem from './SmallVideoItem';
 
 const RenderSmallVideoList = ({
   dataAudios: { audios },
@@ -27,7 +27,7 @@ const RenderSmallVideoList = ({
               audioId: id,
             };
             return (
-              <VideoItem
+              <SmallVideoItem
                 key={id}
                 onVideoItemClick={onVideoItemClick}
                 id={videoId}
