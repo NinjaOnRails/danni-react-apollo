@@ -47,22 +47,16 @@ const Signin = ({ modal }) => {
     });
   });
 
-  const onSubmit = async ({
-    e,
-    signin: signinMutation,
-    previousPage,
-    client,
-    closeAuthModal: closeAuthModalMutation,
-  }) => {
+  const onSubmit = async ({ e, client }) => {
     e.preventDefault();
-    const { data } = await signinMutation({
+    const { data } = await signin({
       variables: { ...variables },
     });
     if (data) {
       clearForm(signinFields, setSigninForm, setFormValid);
       trackSignIn(data.signin.id);
       if (modal) {
-        closeAuthModalMutation();
+        closeAuthModal();
       } else {
         setRedirecting(true);
         Router.push(
@@ -88,10 +82,7 @@ const Signin = ({ modal }) => {
           onSubmit={e =>
             onSubmit({
               e,
-              signin,
-              previousPage,
               client,
-              closeAuthModal,
             })
           }
           modal={modal}

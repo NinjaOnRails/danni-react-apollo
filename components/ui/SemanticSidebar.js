@@ -4,7 +4,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { adopt } from 'react-adopt';
-import { onSignout } from '../Authentication/Signout';
+import { onSignout } from '../Authentication/utils';
 import ContentLanguage, { client, user } from './ContentLanguage';
 import {
   SIGN_OUT_MUTATION,

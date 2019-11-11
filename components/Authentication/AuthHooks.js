@@ -110,9 +110,10 @@ const useSignoutMutation = () => {
   return { signout, data };
 };
 
-const useSignupMutation = () => {
+const useSignupMutation = (contentLanguage, variables) => {
   const [signup, data] = useMutation(SIGNUP_MUTATION, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    variables: { ...variables, contentLanguage: contentLanguage || [] },
   });
   return { signup, data };
 };

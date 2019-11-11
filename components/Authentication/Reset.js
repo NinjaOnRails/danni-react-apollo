@@ -36,11 +36,7 @@ const Reset = ({ router }) => {
     });
   });
 
-  const onSubmit = async ({
-    e,
-    resetPassword: resetPasswordMutation,
-    router,
-  }) => {
+  const onSubmit = async e => {
     e.preventDefault();
 
     if (password.value !== confirmPassword.value) {
@@ -50,10 +46,7 @@ const Reset = ({ router }) => {
       });
     } else {
       setPasswordsMatch(null);
-      const { data } = await resetPasswordMutation(
-        router.query.resetToken,
-        variables
-      );
+      const { data } = await resetPassword(router.query.resetToken, variables);
       if (data) {
         clearForm(resetFields, setResetForm, setFormValid);
         setRedirecting(true);
@@ -70,12 +63,7 @@ const Reset = ({ router }) => {
     );
 
   return (
-    <Form
-      method="post"
-      onSubmit={async e => {
-        onSubmit({ e, resetPassword, router });
-      }}
-    >
+    <Form method="post" onSubmit={onSubmit}>
       <p className="auth-title">Tạo mật khẩu mới</p>
       <fieldset disabled={loading} aria-busy={loading}>
         <Error error={error} />

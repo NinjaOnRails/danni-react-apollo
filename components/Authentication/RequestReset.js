@@ -3,7 +3,7 @@ import { Message } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import { requestResetFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
-import { inputChangeHandler } from './utils';
+import { inputChangeHandler, clearForm } from './utils';
 import { useRequestReset } from './AuthHooks';
 
 const RequestReset = () => {
@@ -21,25 +21,13 @@ const RequestReset = () => {
     data: { error, loading, called },
   } = useRequestReset();
 
-  const clearRequestResetForm = () => {
-    setRequestResetForm({
-      email: {
-        ...requestResetForm.email,
-        modified: false,
-        valid: false,
-        value: '',
-      },
-    });
-    setFormValid(false);
-  };
-
   return (
     <Form
       method="post"
       onSubmit={async e => {
         e.preventDefault();
         await requestReset(value);
-        clearRequestResetForm();
+        clearForm(requestResetFields, setRequestResetForm, setFormValid);
       }}
     >
       <fieldset

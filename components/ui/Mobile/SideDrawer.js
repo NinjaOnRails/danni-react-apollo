@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import { adopt } from 'react-adopt';
-import { onSignout } from '../../Authentication/Signout';
+import { onSignout } from '../../Authentication/utils';
 import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
 import ContentLanguage, { client, user } from '../ContentLanguage';

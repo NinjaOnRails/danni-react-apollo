@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import generateName from 'sillyname';
 import { Button, Icon, Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
-import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
 import StyledForm from '../styles/Form';
@@ -27,26 +26,6 @@ const Signup = ({ modal }) => {
   const [redirecting, setRedirecting] = useState(false);
   const [displayPassword, setdisplayPassword] = useState(false);
 
-  const {
-    facebookLogin,
-    data: { error: fbLoginError, loading: fbLoginLoading },
-  } = useFacebookLoginMutation();
-  const { closeAuthModal } = useCloseAuthModalMutation();
-  const { contentLanguage, previousPage } = useLocalStateQuery();
-  console.log({ contentLanguage, previousPage });
-  const {
-    signup,
-    data: { error, loading },
-  } = useSignupMutation();
-
-  useEffect(() => {
-    const { displayName } = signupForm;
-    setSignupForm({
-      ...signupForm,
-      displayName: { ...displayName, value: generateName(), valid: true },
-    });
-  }, []);
-
   const variables = {};
   const formElArr = [];
   Object.keys(signupForm).forEach(key => {
@@ -57,11 +36,28 @@ const Signup = ({ modal }) => {
     });
   });
 
-  const onSubmit = async ({ e, signup, previousPage, client }) => {
-    e.preventDefault();
-    const { data } = await signup({
-      variables: { ...variables, contentLanguage: contentLanguage || [] },
+  const {
+    facebookLogin,
+    data: { error: fbLoginError, loading: fbLoginLoading },
+  } = useFacebookLoginMutation();
+  const { closeAuthModal } = useCloseAuthModalMutation();
+  const { contentLanguage, previousPage } = useLocalStateQuery();
+  const {
+    signup,
+    data: { error, loading },
+  } = useSignupMutation(contentLanguage, variables);
+
+  useEffect(() => {
+    const { displayName } = signupForm;
+    setSignupForm({
+      ...signupForm,
+      displayName: { ...displayName, value: generateName(), valid: true },
     });
+  }, []);
+
+  const onSubmit = async ({ e, client }) => {
+    e.preventDefault();
+    const { data } = await signup();
     if (data) {
       clearForm(
         {
@@ -105,10 +101,7 @@ const Signup = ({ modal }) => {
             onSubmit={e =>
               onSubmit({
                 e,
-                signup,
-                previousPage,
                 client,
-                closeAuthModal,
               })
             }
             modal={modal}

@@ -102,4 +102,18 @@ const onFacebookLoginClick = ({
   );
 };
 
-export { onFacebookLoginClick, clearForm, inputChangeHandler, validateInput };
+const onSignout = async ({ signout, client }) => {
+  await signout();
+  localStorage.clear();
+  await client.resetStore();
+  if (FB && FB.getAccessToken()) FB.logout();
+  return client.query({ query: CURRENT_USER_QUERY });
+};
+
+export {
+  onFacebookLoginClick,
+  clearForm,
+  inputChangeHandler,
+  validateInput,
+  onSignout,
+};
