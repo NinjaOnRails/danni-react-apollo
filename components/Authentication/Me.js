@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Item, Loader, Icon } from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
-import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
-import {
-  CURRENT_USER_QUERY,
-  USER_QUERY,
-  ALL_AUDIOS_QUERY,
-  ALL_VIDEOS_QUERY,
-} from '../../graphql/query';
 import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import UserInfo from './UserInfo';
@@ -18,46 +10,23 @@ import Error from '../UI/ErrorMessage';
 import {
   useCurrentUser,
   useDeleteAudVidMutation,
-  useContentLanguageQuery,
+  useLocalStateQuery,
 } from './AuthHooks';
-
-/* eslint-disable */
-const deleteAudVidMutation = ({
-  render,
-  user: {
-    currentUser: { id },
-  },
-  contentLanguageQuery: { contentLanguage },
-}) => (
-  /* eslint-enable */
-  <Mutation
-    mutation={DELETE_AUDVID_MUTATION}
-    refetchQueries={[
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
-      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
-    ]}
-  >
-    {(deleteAudVid, deleteAudVidResult) =>
-      render({ deleteAudVid, deleteAudVidResult })
-    }
-  </Mutation>
-);
 
 const Me = () => {
   const [editMode, setEditMode] = useState(false);
   const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
   const { currentUser } = useCurrentUser();
-  const { contentLanguage } = useContentLanguageQuery();
+  const { contentLanguage } = useLocalStateQuery();
   if (!currentUser) return <Loader active inline="centered" />;
   const { audio, video, avatar, displayName, id } = currentUser;
 
   const {
     deleteAudVid,
     data: { loading, error },
-  } = useDeleteAudVidMutation(id, contentLanguage);
+  } = useDeleteAudVidMutation(contentLanguage, id);
+
   return (
     <Container>
       <UserProfileStyles>
@@ -116,4 +85,3 @@ const Me = () => {
 };
 
 export default Me;
-export { deleteAudVidMutation };

@@ -10,14 +10,12 @@ import {
   Radio,
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Mutation } from 'react-apollo';
 import avatars from '../../lib/avatars';
 import CloudinaryUploadAvatar from './CloudinaryUploadAvatar';
 import UpdateAvatarModalStyles from '../styles/UpdateAvatarModalStyles';
-import { USER_QUERY, CURRENT_USER_QUERY } from '../../graphql/query';
-import { UPDATE_AVATAR_MUTATION } from '../../graphql/mutation';
 import Error from '../UI/ErrorMessage';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
+import { useUpdateAvatarMutation } from './AuthHooks';
 
 const UpdateAvatarModal = ({
   showUpdateAvatarModal,
@@ -28,6 +26,11 @@ const UpdateAvatarModal = ({
   const [activeItem, setActiveItem] = useState('');
   const [secureUrlState, setSecureUrlState] = useState('');
   const [deleteTokenState, setDeleteTokenState] = useState('');
+
+  const {
+    updateAvatar,
+    data: { loading, error },
+  } = useUpdateAvatarMutation(id);
 
   const setChoiceTypeList = () => setChoiceType('list');
 
@@ -52,7 +55,7 @@ const UpdateAvatarModal = ({
     </List>
   );
 
-  const onSubmit = async updateAvatar => {
+  const onSubmit = async () => {
     const avatar =
       choiceType === 'list'
         ? `/static/avatar/large/${activeItem}`
@@ -74,79 +77,69 @@ const UpdateAvatarModal = ({
   };
 
   return (
-    <Mutation
-      mutation={UPDATE_AVATAR_MUTATION}
-      refetchQueries={[
-        { query: USER_QUERY, variables: { id } },
-        { query: CURRENT_USER_QUERY },
-      ]}
+    <UpdateAvatarModalStyles
+      closeIcon
+      open={showUpdateAvatarModal}
+      onClose={closeUpdateAvatarModal}
     >
-      {(updateAvatar, { loading, error }) => (
-        <UpdateAvatarModalStyles
-          closeIcon
-          open={showUpdateAvatarModal}
-          onClose={closeUpdateAvatarModal}
+      <Modal.Header>Thay đổi avatar</Modal.Header>
+      <Modal.Content>
+        <Modal.Description>
+          <Header as="h2" attached="top" onClick={setChoiceTypeList}>
+            <Radio
+              name="choiceType"
+              value="list"
+              checked={choiceType === 'list'}
+              onChange={setChoiceTypeList}
+            />
+            Chọn avatar có sẵn
+          </Header>
+          <Segment attached>{renderAvatarList()}</Segment>
+          <Header as="h2" attached="top" onClick={setChoiceTypeUpload}>
+            <Radio
+              name="choiceType"
+              value="upload"
+              checked={choiceType === 'upload'}
+              onChange={setChoiceTypeUpload}
+            />
+            Tải ảnh mới lên
+          </Header>
+          <CloudinaryUploadAvatar
+            chooseUpload={setChoiceTypeUpload}
+            setSecureUrl={setSecureUrl}
+          />
+        </Modal.Description>
+        <Error error={error} />
+      </Modal.Content>
+      <Modal.Actions>
+        <Button
+          primary
+          icon
+          labelPosition="left"
+          size="big"
+          disabled={
+            loading ||
+            !choiceType ||
+            (choiceType === 'list' && !activeItem) ||
+            (choiceType === 'upload' && !secureUrlState)
+          }
+          onClick={() => onSubmit(updateAvatar)}
         >
-          <Modal.Header>Thay đổi avatar</Modal.Header>
-          <Modal.Content>
-            <Modal.Description>
-              <Header as="h2" attached="top" onClick={setChoiceTypeList}>
-                <Radio
-                  name="choiceType"
-                  value="list"
-                  checked={choiceType === 'list'}
-                  onChange={setChoiceTypeList}
-                />
-                Chọn avatar có sẵn
-              </Header>
-              <Segment attached>{renderAvatarList()}</Segment>
-              <Header as="h2" attached="top" onClick={setChoiceTypeUpload}>
-                <Radio
-                  name="choiceType"
-                  value="upload"
-                  checked={choiceType === 'upload'}
-                  onChange={setChoiceTypeUpload}
-                />
-                Tải ảnh mới lên
-              </Header>
-              <CloudinaryUploadAvatar
-                chooseUpload={setChoiceTypeUpload}
-                setSecureUrl={setSecureUrl}
-              />
-            </Modal.Description>
-            <Error error={error} />
-          </Modal.Content>
-          <Modal.Actions>
-            <Button
-              primary
-              icon
-              labelPosition="left"
-              size="big"
-              disabled={
-                loading ||
-                !choiceType ||
-                (choiceType === 'list' && !activeItem) ||
-                (choiceType === 'upload' && !secureUrlState)
-              }
-              onClick={() => onSubmit(updateAvatar)}
-            >
-              <Icon name="check" />
-              {loading && 'Đang '}Xác nhận
-            </Button>
-            <Button
-              type="button"
-              icon
-              labelPosition="left"
-              size="big"
-              onClick={closeUpdateAvatarModal}
-            >
-              <Icon name="cancel" />
-              Huỷ
-            </Button>
-          </Modal.Actions>
-        </UpdateAvatarModalStyles>
-      )}
-    </Mutation>
+          <Icon name="check" />
+          {loading && 'Đang '}Xác nhận
+        </Button>
+        <Button
+          type="button"
+          icon
+          labelPosition="left"
+          size="big"
+          onClick={closeUpdateAvatarModal}
+        >
+          <Icon name="cancel" />
+          Huỷ
+        </Button>
+      </Modal.Actions>
+    </UpdateAvatarModalStyles>
   );
 };
 
