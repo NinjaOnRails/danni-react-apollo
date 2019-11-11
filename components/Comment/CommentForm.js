@@ -1,45 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
-import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
-import { CREATE_COMMENT_MUTATION } from '../../graphql/mutation';
-import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
-import { user } from '../UI/ContentLanguage';
 import Error from '../UI/ErrorMessage';
 import { clearForm, onCommentFormChange } from './utils';
-/* eslint-disable */
-const createCommentMutation = ({ commentInput, videoId, render }) => (
-  <Mutation
-    mutation={CREATE_COMMENT_MUTATION}
-    variables={{
-      video: videoId,
-      text: commentInput,
-    }}
-    refetchQueries={[
-      {
-        query: VIDEO_COMMENTS_QUERY,
-        variables: { video: videoId },
-      },
-    ]}
-  >
-    {(createComment, createCommentResult) => {
-      return render({ createComment, createCommentResult });
-    }}
-  </Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  user,
-  createCommentMutation,
-});
+import { useCreateCommentMutation } from './CommentHooks';
 
 const CommentForm = ({ videoId, openAuthModal, currentUser }) => {
   const [commentInput, setCommentInput] = useState('');
   const [commentInputValid, setCommentInputValid] = useState(false);
 
-  const onCommentSubmit = async createComment => {
+  const {
+    createComment,
+    data: { error: createCommentError, loading: createCommentLoading },
+  } = useCreateCommentMutation(commentInput, videoId);
+  const onCommentSubmit = async () => {
     if (!currentUser) {
       openAuthModal();
     } else {
@@ -50,13 +24,14 @@ const CommentForm = ({ videoId, openAuthModal, currentUser }) => {
     }
   };
 
-  const renderCommentForm = (createCommentLoading, createComment) => {
-    return (
+  return (
+    <>
+      <Error error={createCommentError} />
       <Form
         loading={createCommentLoading}
         reply
         onSubmit={() => {
-          if (commentInput.length > 0) onCommentSubmit(createComment);
+          if (commentInput.length > 0) onCommentSubmit();
         }}
       >
         <Form.TextArea
@@ -68,26 +43,7 @@ const CommentForm = ({ videoId, openAuthModal, currentUser }) => {
         />
         <Button content="Đăng" primary disabled={!commentInputValid} />
       </Form>
-    );
-  };
-
-  return (
-    <Composed videoId={videoId} commentInput={commentInput}>
-      {({
-        createCommentMutation: {
-          createComment,
-          createCommentResult: {
-            error: createCommentError,
-            loading: createCommentLoading,
-          },
-        },
-      }) => (
-        <>
-          <Error error={createCommentError} />
-          {renderCommentForm(createCommentLoading, createComment)}
-        </>
-      )}
-    </Composed>
+    </>
   );
 };
 

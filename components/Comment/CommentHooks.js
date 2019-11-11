@@ -122,4 +122,129 @@ const useCreateCommentVoteMutation = (id, videoId, currentUser) => {
   return { createCommentVote, data };
 };
 
-export { useDeleteCommentMutation, useCreateCommentVoteMutation };
+const useCreateCommentMutation = (text, video) => {
+  const [createComment, data] = useMutation(CREATE_COMMENT_MUTATION, {
+    variables: { text, video },
+    refetchQueries: [
+      {
+        query: VIDEO_COMMENTS_QUERY,
+        variables: { video },
+      },
+    ],
+  });
+  return { createComment, data };
+};
+
+const useDeleteCommentReplyMutation = (id, videoId, parentId) => {
+  const [deleteCommentReply, data] = useMutation(DELETE_COMMENTREPLY_MUTATION, {
+    variables: { commentReply: id },
+    refetchQueries: [
+      {
+        query: VIDEO_COMMENTS_QUERY,
+        variables: { video: videoId },
+      },
+    ],
+    update: (proxy, { data: { deleteCommentReply: deletedCommentReply } }) => {
+      const localData = proxy.readQuery({
+        query: VIDEO_COMMENTS_QUERY,
+        variables: { video: videoId },
+      });
+      const commentReplyId = deletedCommentReply.id;
+      localData.comments = localData.comments.map(comment => {
+        if (comment.id === parentId) {
+          comment.reply = comment.reply.filter(
+            reply => reply.id !== commentReplyId
+          );
+        }
+        return comment;
+      });
+      proxy.writeQuery({
+        query: VIDEO_COMMENTS_QUERY,
+        variables: { video: videoId },
+        data: localData,
+      });
+    },
+    optimisticResponse: {
+      __typename: 'Mutation',
+      deleteCommentReply: {
+        id,
+        __typename: 'CommentReply',
+      },
+    },
+  });
+  return { deleteCommentReply, data };
+};
+
+const useCreateCommentReplyVoteMutation = (
+  id,
+  parentId,
+  videoId,
+  currentUser
+) => {
+  const [createCommentReplyVote, data] = useMutation(
+    CREATE_COMMENTREPLY_VOTE_MUTATION,
+    {
+      update: (proxy, { data: { createCommentReplyVote: createVote } }) => {
+        // Read the data from our cache for this query.
+        const localData = proxy.readQuery({
+          query: VIDEO_COMMENTS_QUERY,
+          variables: { video: videoId },
+        });
+        const votingComment = localData.comments.find(
+          comment => comment.id === parentId
+        );
+        const votingReply = votingComment.reply.find(reply => reply.id === id);
+        const existingVote =
+          votingReply.vote.length > 0
+            ? votingReply.vote.find(vote => vote.user.id === currentUser.id)
+            : null;
+        localData.comments = localData.comments.map(comment => {
+          if (comment.id === votingComment.id) {
+            comment.reply.map(reply => {
+              if (reply.id === votingReply.id) {
+                if (!existingVote) {
+                  reply.vote = reply.vote.concat([createVote]);
+                } else if (
+                  existingVote &&
+                  existingVote.type !== createVote.type
+                ) {
+                  reply.vote = reply.vote.map(commentReplyVote => {
+                    if (commentReplyVote.user.id === currentUser.id) {
+                      commentReplyVote.type = createVote.type;
+                    }
+                    return commentReplyVote;
+                  });
+                } else if (
+                  existingVote &&
+                  existingVote.type === createVote.type
+                ) {
+                  reply.vote = reply.vote.filter(
+                    commentReplyVote =>
+                      commentReplyVote.user.id !== currentUser.id
+                  );
+                }
+              }
+              return reply;
+            });
+          }
+          return comment;
+        });
+        proxy.writeQuery({
+          query: VIDEO_COMMENTS_QUERY,
+          variables: { video: videoId },
+          data: localData,
+        });
+      },
+    }
+  );
+
+  return { createCommentReplyVote, data };
+};
+
+export {
+  useDeleteCommentMutation,
+  useCreateCommentVoteMutation,
+  useCreateCommentMutation,
+  useDeleteCommentReplyMutation,
+  useCreateCommentReplyVoteMutation,
+};
