@@ -7,7 +7,7 @@ import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import { isBrowser } from '../../lib/withApolloClient';
 import { useCurrentUser } from './AuthHooks';
-
+// refactor
 /* eslint-disable */
 const openAuthModal = ({ render }) => (
   <Mutation mutation={OPEN_AUTH_MODAL_MUTATION}>{render}</Mutation>

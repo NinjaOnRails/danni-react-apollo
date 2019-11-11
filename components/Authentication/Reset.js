@@ -6,7 +6,6 @@ import { Loader } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
-import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
 import { inputChangeHandler, clearForm } from './utils';
 import { useResetPasswordMutation } from './AuthHooks';

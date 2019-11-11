@@ -27,7 +27,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
   const {
     loading,
     error,
-    data: cloudinaryAuthdata,
+    data: cloudinaryAuthData,
   } = useCloudinaryAuthAvatar();
   const { currentUser, loading: loadingUser } = useCurrentUser();
 
@@ -49,7 +49,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
 
     // Reset uploadError display and assign appropriate value to file
     setUploadError(false);
-    const { cloudinaryAuthAvatar } = cloudinaryAuthdata;
+    const { cloudinaryAuthAvatar } = cloudinaryAuthData;
 
     const file = e ? e.target.files[0] : uploadImageUrl;
 

@@ -24,6 +24,7 @@ import {
   useUserQuery,
   useLocalStateQuery,
 } from './AuthHooks';
+// refactor
 /* eslint-disable */
 const userQuery = ({ render, id }) => (
   <Query query={USER_QUERY} variables={{ id }}>

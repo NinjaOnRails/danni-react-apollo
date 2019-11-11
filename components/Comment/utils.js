@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const clearForm = (setFormEmpty, setFormInvalid) => {
   setFormEmpty('');
   setFormInvalid(false);
@@ -8,5 +10,7 @@ const onCommentFormChange = (e, setForm, setFormValid) => {
   setFormValid(value.length > 0);
   setForm(value);
 };
-
-export { clearForm, onCommentFormChange };
+const formatTime = time => {
+  return `${moment(time).fromNow('yy')} ago`;
+};
+export { clearForm, onCommentFormChange, formatTime };
