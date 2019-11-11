@@ -24,7 +24,11 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
   const [deleteToken, setDeleteToken] = useState('');
   const [uploadImageUrl, setUploadImageUrl] = useState('');
 
-  const { loading, error, data } = useCloudinaryAuthAvatar();
+  const {
+    loading,
+    error,
+    data: cloudinaryAuthdata,
+  } = useCloudinaryAuthAvatar();
   const { currentUser, loading: loadingUser } = useCurrentUser();
 
   const fileInputRef = createRef();
@@ -40,9 +44,12 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
     }
   };
 
-  const onUploadFileSubmit = async (cloudinaryAuthAvatar, id, e) => {
+  const onUploadFileSubmit = async e => {
+    const { id } = currentUser;
+
     // Reset uploadError display and assign appropriate value to file
     setUploadError(false);
+    const { cloudinaryAuthAvatar } = cloudinaryAuthdata;
 
     const file = e ? e.target.files[0] : uploadImageUrl;
 
@@ -80,7 +87,6 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
 
   if (loading || loadingUser) return <Loader inline="centered" active />;
   if (error) return <Error error={error} />;
-  const { id } = currentUser;
 
   return (
     <Segment
@@ -131,7 +137,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
               accept=".jpg,.png"
               onChange={async e => {
                 setStartingUpload(true);
-                await onUploadFileSubmit(data.cloudinaryAuthAvatar, id, e);
+                await onUploadFileSubmit(e);
                 setStartingUpload(false);
               }}
             />
@@ -151,7 +157,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
                 positive
                 onClick={async () => {
                   setStartingUpload(true);
-                  await onUploadFileSubmit(data.cloudinaryAuthAvatar, id);
+                  await onUploadFileSubmit();
                   setStartingUpload(false);
                 }}
               >

@@ -8,7 +8,7 @@ import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
 import { useCurrentUser, useCloseAuthModalMutation } from './AuthHooks';
-
+// refactor
 /* eslint-disable */
 const localData = ({ render }) => (
   <Query query={LOCAL_STATE_QUERY}>{render}</Query>
