@@ -50,21 +50,14 @@ const Me = () => {
   const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
   const { currentUser } = useCurrentUser();
-  const { contentLanguage } = useContentLanguageQuery;
+  const { contentLanguage } = useContentLanguageQuery();
   if (!currentUser) return <Loader active inline="centered" />;
   const { audio, video, avatar, displayName, id } = currentUser;
 
   const {
     deleteAudVid,
     data: { loading, error },
-  } = useDeleteAudVidMutation({
-    refetchQueries: [
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
-      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
-    ],
-  });
+  } = useDeleteAudVidMutation(id, contentLanguage);
   return (
     <Container>
       <UserProfileStyles>

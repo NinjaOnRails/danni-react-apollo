@@ -10,6 +10,13 @@ import {
 import {
   DELETE_AUDVID_MUTATION,
   OPEN_AUTH_MODAL_MUTATION,
+  REQUEST_RESET_MUTATION,
+  RESET_PASSWORD_MUTATION,
+  SIGNIN_MUTATION,
+  CLOSE_AUTH_MODAL_MUTATION,
+  FACEBOOK_LOGIN_MUTATION,
+  SIGN_OUT_MUTATION,
+  SIGNUP_MUTATION,
 } from '../../graphql/mutation';
 
 const useCurrentUser = () => {
@@ -28,8 +35,15 @@ const useCloudinaryAuthAvatar = () => {
   };
 };
 
-const useDeleteAudVidMutation = () => {
-  const [deleteAudVid, data] = useMutation(DELETE_AUDVID_MUTATION);
+const useDeleteAudVidMutation = (id, contentLanguage) => {
+  const [deleteAudVid, data] = useMutation(DELETE_AUDVID_MUTATION, {
+    refetchQueries: [
+      { query: CURRENT_USER_QUERY },
+      { query: USER_QUERY, variables: { id } },
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
+    ],
+  });
   return {
     deleteAudVid,
     data,
@@ -44,17 +58,77 @@ const useContentLanguageQuery = () => {
   };
 };
 
-// const openAuthModal = ({ render }) => (
-//   <Mutation mutation={OPEN_AUTH_MODAL_MUTATION}>{render}</Mutation>
-// );
-
 const useOpenAuthModal = () => {
   const [openAuthModal] = useMutation(OPEN_AUTH_MODAL_MUTATION);
   return { openAuthModal };
 };
+
+const useCloseAuthModalMutation = () => {
+  const [closeAuthModal] = useMutation(CLOSE_AUTH_MODAL_MUTATION);
+  return { closeAuthModal };
+};
+
+const useRequestReset = email => {
+  const [requestReset, data] = useMutation(REQUEST_RESET_MUTATION, {
+    variables: { email },
+  });
+  return {
+    requestReset,
+    data,
+  };
+};
+
+const useResetPasswordMutation = (resetToken, variables) => {
+  const [resetPassword, data] = useMutation(RESET_PASSWORD_MUTATION, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    variables: { resetToken, ...variables },
+  });
+  return { resetPassword, data };
+};
+
+const useSigninMutation = () => {
+  const [signin, data] = useMutation(SIGNIN_MUTATION, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
+  return { signin, data };
+};
+
+const useFacebookLoginMutation = () => {
+  const [facebookLogin, data] = useMutation(FACEBOOK_LOGIN_MUTATION);
+  return { facebookLogin, data };
+};
+
+const useLocalStateQuery = () => {
+  const { data } = useQuery(CONTENT_LANGUAGE_QUERY);
+  const contentLanguage = data ? data.contentLanguage : [];
+  const { previousPage } = data;
+  return { contentLanguage, previousPage };
+};
+
+const useSignoutMutation = () => {
+  const [signout, data] = useMutation(SIGN_OUT_MUTATION);
+  return { signout, data };
+};
+
+const useSignupMutation = () => {
+  const [signup, data] = useMutation(SIGNUP_MUTATION, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
+  return { signup, data };
+};
+
 export {
   useCurrentUser,
   useCloudinaryAuthAvatar,
   useDeleteAudVidMutation,
   useContentLanguageQuery,
+  useRequestReset,
+  useOpenAuthModal,
+  useResetPasswordMutation,
+  useSigninMutation,
+  useCloseAuthModalMutation,
+  useFacebookLoginMutation,
+  useLocalStateQuery,
+  useSignoutMutation,
+  useSignupMutation,
 };

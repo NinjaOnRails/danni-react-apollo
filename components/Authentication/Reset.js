@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
@@ -9,8 +8,8 @@ import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
-import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
 import { inputChangeHandler, clearForm } from './utils';
+import { useResetPasswordMutation } from './AuthHooks';
 
 const Reset = ({ router }) => {
   const [resetForm, setResetForm] = useState({
@@ -22,24 +21,10 @@ const Reset = ({ router }) => {
 
   const { password, confirmPassword } = resetForm;
 
-  const onSubmit = async ({ e, resetPassword, router }) => {
-    e.preventDefault();
-
-    if (password.value !== confirmPassword.value) {
-      clearForm(resetFields, setResetForm, setFormValid);
-      setPasswordsMatch({
-        message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
-      });
-    } else {
-      setPasswordsMatch(null);
-      const { data } = await resetPassword();
-      if (data) {
-        clearForm(resetFields, setResetForm, setFormValid);
-        setRedirecting(true);
-        router.push('/');
-      }
-    }
-  };
+  const {
+    resetPassword,
+    data: { error, loading },
+  } = useResetPasswordMutation();
 
   const variables = {};
   const formElArr = [];
@@ -51,6 +36,32 @@ const Reset = ({ router }) => {
     });
   });
 
+  const onSubmit = async ({
+    e,
+    resetPassword: resetPasswordMutation,
+    router,
+  }) => {
+    e.preventDefault();
+
+    if (password.value !== confirmPassword.value) {
+      clearForm(resetFields, setResetForm, setFormValid);
+      setPasswordsMatch({
+        message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+      });
+    } else {
+      setPasswordsMatch(null);
+      const { data } = await resetPasswordMutation(
+        router.query.resetToken,
+        variables
+      );
+      if (data) {
+        clearForm(resetFields, setResetForm, setFormValid);
+        setRedirecting(true);
+        router.push('/');
+      }
+    }
+  };
+
   if (redirecting)
     return (
       <Loader indeterminate active>
@@ -59,58 +70,42 @@ const Reset = ({ router }) => {
     );
 
   return (
-    <Mutation
-      mutation={RESET_PASSWORD_MUTATION}
-      variables={{ resetToken: router.query.resetToken, ...variables }}
-      refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-    >
-      {(resetPassword, { error, loading }) => {
-        return (
-          <Form
-            method="post"
-            onSubmit={async e => {
-              onSubmit({ e, resetPassword, router });
-            }}
-          >
-            <p className="auth-title">Tạo mật khẩu mới</p>
-            <fieldset disabled={loading} aria-busy={loading}>
-              <Error error={error} />
-              <Error error={passwordsMatch} />
-              {formElArr.map(({ id, input }) => (
-                <AuthForm
-                  key={id}
-                  value={input.value}
-                  config={input.inputConfig}
-                  shouldValidate={input.validation}
-                  invalid={!input.valid}
-                  saveToState={e =>
-                    inputChangeHandler(
-                      e,
-                      id,
-                      resetForm,
-                      setResetForm,
-                      setFormValid
-                    )
-                  }
-                  touched={input.modified}
-                  autoComplete="new-password"
-                />
-              ))}
-              <div className="center">
-                <button type="submit" disabled={loading || !formValid}>
-                  Đặt mật khẩu mới
-                </button>
-              </div>
-            </fieldset>
-            <div className="auth-links">
-              <Link href="/requestReset">
-                <a>Gửi lại yêu cầu đổi mật khẩu</a>
-              </Link>
-            </div>
-          </Form>
-        );
+    <Form
+      method="post"
+      onSubmit={async e => {
+        onSubmit({ e, resetPassword, router });
       }}
-    </Mutation>
+    >
+      <p className="auth-title">Tạo mật khẩu mới</p>
+      <fieldset disabled={loading} aria-busy={loading}>
+        <Error error={error} />
+        <Error error={passwordsMatch} />
+        {formElArr.map(({ id, input }) => (
+          <AuthForm
+            key={id}
+            value={input.value}
+            config={input.inputConfig}
+            shouldValidate={input.validation}
+            invalid={!input.valid}
+            saveToState={e =>
+              inputChangeHandler(e, id, resetForm, setResetForm, setFormValid)
+            }
+            touched={input.modified}
+            autoComplete="new-password"
+          />
+        ))}
+        <div className="center">
+          <button type="submit" disabled={loading || !formValid}>
+            Đặt mật khẩu mới
+          </button>
+        </div>
+      </fieldset>
+      <div className="auth-links">
+        <Link href="/requestReset">
+          <a>Gửi lại yêu cầu đổi mật khẩu</a>
+        </Link>
+      </div>
+    </Form>
   );
 };
 

@@ -1,56 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Query, Mutation } from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import generateName from 'sillyname';
 import { Button, Icon, Loader } from 'semantic-ui-react';
-import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
-import {
-  CURRENT_USER_QUERY,
-  CONTENT_LANGUAGE_QUERY,
-} from '../../graphql/query';
+import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
-import { SIGNUP_MUTATION } from '../../graphql/mutation';
-import { client } from '../UI/ContentLanguage';
-import {
-  onFacebookLoginClick,
-  facebookLoginMutation,
-  closeAuthModal,
-} from './Signin';
-
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import { inputChangeHandler, clearForm } from './utils';
-
-/* eslint-disable */
-const signupMutation = ({ localState: { data }, variables, render }) => (
-  <Mutation
-    mutation={SIGNUP_MUTATION}
-    variables={{
-      ...variables,
-      contentLanguage: data ? data.contentLanguage : [],
-    }}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
-    {(signup, signupResult) => {
-      return render({ signup, signupResult });
-    }}
-  </Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  client,
-  localState: ({ render }) => (
-    <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
-  ),
-  signupMutation,
-  closeAuthModal,
-  facebookLoginMutation,
-});
+import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
+import {
+  useCloseAuthModalMutation,
+  useFacebookLoginMutation,
+  useLocalStateQuery,
+  useSignupMutation,
+} from './AuthHooks';
 
 const Signup = ({ modal }) => {
   const [signupForm, setSignupForm] = useState({
@@ -60,6 +27,18 @@ const Signup = ({ modal }) => {
   const [redirecting, setRedirecting] = useState(false);
   const [displayPassword, setdisplayPassword] = useState(false);
 
+  const {
+    facebookLogin,
+    data: { error: fbLoginError, loading: fbLoginLoading },
+  } = useFacebookLoginMutation();
+  const { closeAuthModal } = useCloseAuthModalMutation();
+  const { contentLanguage, previousPage } = useLocalStateQuery();
+  console.log({ contentLanguage, previousPage });
+  const {
+    signup,
+    data: { error, loading },
+  } = useSignupMutation();
+
   useEffect(() => {
     const { displayName } = signupForm;
     setSignupForm({
@@ -68,15 +47,21 @@ const Signup = ({ modal }) => {
     });
   }, []);
 
-  const onSubmit = async ({
-    e,
-    signup,
-    previousPage,
-    client,
-    closeAuthModal,
-  }) => {
+  const variables = {};
+  const formElArr = [];
+  Object.keys(signupForm).forEach(key => {
+    variables[key] = signupForm[key].value;
+    formElArr.push({
+      id: key,
+      input: signupForm[key],
+    });
+  });
+
+  const onSubmit = async ({ e, signup, previousPage, client }) => {
     e.preventDefault();
-    const { data } = await signup();
+    const { data } = await signup({
+      variables: { ...variables, contentLanguage: contentLanguage || [] },
+    });
     if (data) {
       clearForm(
         {
@@ -105,15 +90,6 @@ const Signup = ({ modal }) => {
     }
   };
 
-  const variables = {};
-  const formElArr = [];
-  Object.keys(signupForm).forEach(key => {
-    variables[key] = signupForm[key].value;
-    formElArr.push({
-      id: key,
-      input: signupForm[key],
-    });
-  });
   if (redirecting)
     return (
       <Loader indeterminate active>
@@ -121,20 +97,8 @@ const Signup = ({ modal }) => {
       </Loader>
     );
   return (
-    <Composed variables={variables}>
-      {({
-        client,
-        localState: { data },
-        signupMutation: {
-          signup,
-          signupResult: { error, loading },
-        },
-        closeAuthModal,
-        facebookLoginMutation: {
-          facebookLogin,
-          facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
-        },
-      }) => {
+    <ApolloConsumer>
+      {client => {
         return (
           <StyledForm
             method="post"
@@ -142,7 +106,7 @@ const Signup = ({ modal }) => {
               onSubmit({
                 e,
                 signup,
-                previousPage: data.previousPage,
+                previousPage,
                 client,
                 closeAuthModal,
               })
@@ -192,9 +156,9 @@ const Signup = ({ modal }) => {
                   onClick={() =>
                     onFacebookLoginClick({
                       facebookLogin,
-                      contentLanguage: data.contentLanguage,
+                      contentLanguage,
                       client,
-                      data,
+                      previousPage,
                       closeAuthModal: modal && closeAuthModal,
                     })
                   }
@@ -222,7 +186,7 @@ const Signup = ({ modal }) => {
           </StyledForm>
         );
       }}
-    </Composed>
+    </ApolloConsumer>
   );
 };
 

@@ -1,114 +1,21 @@
 import React, { useState } from 'react';
-import { Query, Mutation } from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Button, Icon, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
 import { signinFields } from './fieldTypes';
-import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
-import { client, contentLanguageQuery } from '../UI/ContentLanguage';
-import {
-  CONTENT_LANGUAGE_QUERY,
-  CURRENT_USER_QUERY,
-} from '../../graphql/query';
-import {
-  CLOSE_AUTH_MODAL_MUTATION,
-  FACEBOOK_LOGIN_MUTATION,
-  SIGNIN_MUTATION,
-} from '../../graphql/mutation';
+import { trackSignIn } from '../../lib/mixpanel';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import { inputChangeHandler, clearForm } from './utils';
-
-/* eslint-disable */
-const signinMutation = ({ render, variables }) => (
-  <Mutation
-    mutation={SIGNIN_MUTATION}
-    variables={variables}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
-    {(signin, signinResult) => render({ signin, signinResult })}
-  </Mutation>
-);
-
-const facebookLoginMutation = ({ render }) => (
-  <Mutation
-    mutation={FACEBOOK_LOGIN_MUTATION}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
-    {(facebookLogin, facebookLoginResult) =>
-      render({ facebookLogin, facebookLoginResult })
-    }
-  </Mutation>
-);
-
-const closeAuthModal = ({ render }) => (
-  <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  client,
-  localState: ({ render }) => (
-    <Query query={CONTENT_LANGUAGE_QUERY}>{render}</Query>
-  ),
-  facebookLoginMutation,
-  contentLanguageQuery,
-  signinMutation,
-  closeAuthModal,
-});
-
-const onFacebookLoginClick = ({
-  facebookLogin,
-  contentLanguage,
-  client,
-  data: { previousPage },
-  closeSideDrawer = null,
-  closeAuthModal = null,
-}) => {
-  FB.login(
-    async res => {
-      if (res.status === 'connected') {
-        const {
-          authResponse: { accessToken, userID },
-        } = res;
-        const { data } = await facebookLogin({
-          variables: {
-            contentLanguage,
-            accessToken,
-            facebookUserId: userID,
-          },
-        });
-        if (data) {
-          const {
-            facebookLogin: { user, firstLogin },
-          } = data;
-          if (firstLogin) {
-            trackSignUp(user);
-          } else {
-            trackSignIn(user.id);
-          }
-          if (closeSideDrawer) {
-            closeSideDrawer();
-          } else if (closeAuthModal) {
-            closeAuthModal();
-          } else {
-            Router.push(
-              localStorage.getItem('previousPage') || previousPage || '/'
-            );
-            localStorage.removeItem('previousPage');
-            client.writeData({ data: { previousPage: null } });
-          }
-        }
-      }
-    },
-    {
-      scope: 'public_profile',
-    }
-  );
-};
+import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
+import {
+  useCloseAuthModalMutation,
+  useSigninMutation,
+  useFacebookLoginMutation,
+  useLocalStateQuery,
+} from './AuthHooks';
 
 const Signin = ({ modal }) => {
   const [signinForm, setSigninForm] = useState({
@@ -117,20 +24,45 @@ const Signin = ({ modal }) => {
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
 
+  const { contentLanguage, previousPage } = useLocalStateQuery();
+  const {
+    signin,
+    data: { error, loading },
+  } = useSigninMutation();
+
+  const { closeAuthModal } = useCloseAuthModalMutation();
+
+  const {
+    facebookLogin,
+    data: { error: fbLoginError, loading: fbLoginLoading },
+  } = useFacebookLoginMutation();
+
+  const variables = {};
+  const formElArr = [];
+  Object.keys(signinForm).forEach(key => {
+    variables[key] = signinForm[key].value;
+    formElArr.push({
+      id: key,
+      input: signinForm[key],
+    });
+  });
+
   const onSubmit = async ({
     e,
-    signin,
-    data: { previousPage },
+    signin: signinMutation,
+    previousPage,
     client,
-    closeAuthModal,
+    closeAuthModal: closeAuthModalMutation,
   }) => {
     e.preventDefault();
-    const { data } = await signin();
+    const { data } = await signinMutation({
+      variables: { ...variables },
+    });
     if (data) {
       clearForm(signinFields, setSigninForm, setFormValid);
       trackSignIn(data.signin.id);
       if (modal) {
-        closeAuthModal();
+        closeAuthModalMutation();
       } else {
         setRedirecting(true);
         Router.push(
@@ -142,15 +74,6 @@ const Signin = ({ modal }) => {
     }
   };
 
-  const variables = {};
-  const formElArr = [];
-  Object.keys(signinForm).forEach(key => {
-    variables[key] = signinForm[key].value;
-    formElArr.push({
-      id: key,
-      input: signinForm[key],
-    });
-  });
   if (redirecting)
     return (
       <Loader indeterminate active>
@@ -158,28 +81,15 @@ const Signin = ({ modal }) => {
       </Loader>
     );
   return (
-    <Composed variables={variables}>
-      {({
-        client,
-        localState: { data },
-        facebookLoginMutation: {
-          facebookLogin,
-          facebookLoginResult: { error: fbLoginError, loading: fbLoginLoading },
-        },
-        contentLanguageQuery: { contentLanguage },
-        signinMutation: {
-          signin,
-          signinResult: { error, loading },
-        },
-        closeAuthModal,
-      }) => (
+    <ApolloConsumer>
+      {client => (
         <StyledForm
           method="post"
           onSubmit={e =>
             onSubmit({
               e,
               signin,
-              data,
+              previousPage,
               client,
               closeAuthModal,
             })
@@ -225,7 +135,7 @@ const Signin = ({ modal }) => {
                     facebookLogin,
                     contentLanguage,
                     client,
-                    data,
+                    previousPage,
                     closeAuthModal: modal && closeAuthModal,
                   })
                 }
@@ -251,7 +161,7 @@ const Signin = ({ modal }) => {
           </fieldset>
         </StyledForm>
       )}
-    </Composed>
+    </ApolloConsumer>
   );
 };
 
@@ -264,9 +174,3 @@ Signin.defaultProps = {
 };
 
 export default Signin;
-export {
-  onFacebookLoginClick,
-  facebookLoginMutation,
-  signinMutation,
-  closeAuthModal,
-};

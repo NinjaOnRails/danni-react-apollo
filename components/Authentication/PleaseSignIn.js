@@ -1,13 +1,12 @@
 import { Loader, Message } from 'semantic-ui-react';
+import { ApolloConsumer, Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { adopt } from 'react-adopt';
-import { Mutation } from 'react-apollo';
 import Signin from './Signin';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
-import { client, user } from '../UI/ContentLanguage';
 import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import { isBrowser } from '../../lib/withApolloClient';
+import { useCurrentUser } from './AuthHooks';
 
 /* eslint-disable */
 const openAuthModal = ({ render }) => (
@@ -15,16 +14,13 @@ const openAuthModal = ({ render }) => (
 );
 /* eslint-enable */
 
-const Composed = adopt({
-  client,
-  user,
-});
-
 const PleaseSignIn = ({ action, modal, children }) => {
   const router = useRouter();
+  const { currentUser, loading } = useCurrentUser();
+
   return (
-    <Composed>
-      {({ user: { currentUser, loading }, client }) => {
+    <ApolloConsumer>
+      {client => {
         if (loading) return <Loader active inline="centered" />;
         if (!currentUser) {
           if (isBrowser && router && !modal) {
@@ -47,7 +43,7 @@ const PleaseSignIn = ({ action, modal, children }) => {
         }
         return children;
       }}
-    </Composed>
+    </ApolloConsumer>
   );
 };
 
