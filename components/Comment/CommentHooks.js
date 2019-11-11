@@ -135,15 +135,15 @@ const useCreateCommentMutation = (text, video) => {
   return { createComment, data };
 };
 
-const useDeleteCommentReplyMutation = (id, videoId, parentId) => {
+const useDeleteCommentReplyMutation = (id, parentId, videoId) => {
   const [deleteCommentReply, data] = useMutation(DELETE_COMMENTREPLY_MUTATION, {
     variables: { commentReply: id },
-    refetchQueries: [
-      {
-        query: VIDEO_COMMENTS_QUERY,
-        variables: { video: videoId },
-      },
-    ],
+    // refetchQueries: [
+    //   {
+    //     query: VIDEO_COMMENTS_QUERY,
+    //     variables: { video: videoId },
+    //   },
+    // ],
     update: (proxy, { data: { deleteCommentReply: deletedCommentReply } }) => {
       const localData = proxy.readQuery({
         query: VIDEO_COMMENTS_QUERY,
@@ -199,6 +199,8 @@ const useCreateCommentReplyVoteMutation = (
             ? votingReply.vote.find(vote => vote.user.id === currentUser.id)
             : null;
         localData.comments = localData.comments.map(comment => {
+          /* eslint-disable */
+
           if (comment.id === votingComment.id) {
             comment.reply.map(reply => {
               if (reply.id === votingReply.id) {
@@ -229,6 +231,7 @@ const useCreateCommentReplyVoteMutation = (
           }
           return comment;
         });
+        /* eslint-enable */
         proxy.writeQuery({
           query: VIDEO_COMMENTS_QUERY,
           variables: { video: videoId },
@@ -241,10 +244,31 @@ const useCreateCommentReplyVoteMutation = (
   return { createCommentReplyVote, data };
 };
 
+const useCreateCommentReplyMutation = (id, text, videoId) => {
+  const [createCommentReply, data] = useMutation(CREATE_COMMENTREPLY_MUTATION, {
+    variables: { comment: id, text },
+    refetchQueries: [
+      { query: VIDEO_COMMENTS_QUERY, variables: { video: videoId } },
+    ],
+  });
+  return {
+    createCommentReply,
+    data,
+  };
+};
+
+const useCommentsQuery = videoId => {
+  const { data, loading, error } = useQuery(VIDEO_COMMENTS_QUERY, {
+    variables: { video: videoId },
+  });
+  return { data, loading, error };
+};
 export {
   useDeleteCommentMutation,
   useCreateCommentVoteMutation,
   useCreateCommentMutation,
   useDeleteCommentReplyMutation,
   useCreateCommentReplyVoteMutation,
+  useCreateCommentReplyMutation,
+  useCommentsQuery,
 };

@@ -11,7 +11,6 @@ import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import Error from '../UI/ErrorMessage';
 
 /* eslint-disable */
-
 const updateCommentMutation = ({ id, videoId, text, render }) => (
   <Mutation
     mutation={UPDATE_COMMENT_MUTATION}

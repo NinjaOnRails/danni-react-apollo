@@ -1,82 +1,48 @@
 import React from 'react';
 import { Comment, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
-import { adopt } from 'react-adopt';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
-import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
-import CommentList from './CommentList';
-import { user } from '../UI/ContentLanguage';
 import CommentForm from './CommentForm';
-import { openAuthModal } from '../Authentication/PleaseSignIn';
+import { useCurrentUser, useOpenAuthModal } from '../Authentication/AuthHooks';
+import { useCommentsQuery } from './CommentHooks';
+import VideoComment from './Comment';
 
-/* eslint-disable */
-const videoComments = ({ videoId, render }) => (
-  <Query query={VIDEO_COMMENTS_QUERY} variables={{ video: videoId }}>
-    {render}
-  </Query>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  user,
-  videoComments,
-  openAuthModal,
-});
-
-const CommentSection = ({ videoId, client }) => {
-  const renderComments = (data, currentUser, openAuthModal) => {
-    return (
-      <CommentSectionStyles>
-        <Comment.Group size="large">
-          <CommentForm
-            videoId={videoId}
-            client={client}
-            hideSigninToComment={data.hideSigninToComment}
-            openAuthModal={openAuthModal}
-            currentUser={currentUser}
-          />
-          {data.comments.length > 0 && (
-            <CommentList
-              comments={data.comments}
-              videoId={videoId}
-              client={client}
-              currentUser={currentUser}
-              openAuthModal={openAuthModal}
-            />
-          )}
-        </Comment.Group>
-      </CommentSectionStyles>
-    );
-  };
+const CommentSection = ({ videoId }) => {
+  const { currentUser } = useCurrentUser();
+  const { data, loading, error } = useCommentsQuery(videoId);
+  const { openAuthModal } = useOpenAuthModal();
 
   return (
-    <Composed videoId={videoId}>
-      {({
-        user: { currentUser },
-        videoComments: {
-          error: commentsLoadingError,
-          loading: commentsLoading,
-          data,
-        },
-        openAuthModal,
-      }) => (
-        <>
-          <Error error={commentsLoadingError} />
-          {commentsLoading ? (
-            <Loader active inline="centered" />
-          ) : (
-            renderComments(data, currentUser, openAuthModal)
-          )}
-        </>
+    <>
+      <Error error={error} />
+      {loading ? (
+        <Loader active inline="centered" />
+      ) : (
+        <CommentSectionStyles>
+          <Comment.Group size="large">
+            <CommentForm
+              videoId={videoId}
+              openAuthModal={openAuthModal}
+              currentUser={currentUser}
+            />
+            {data.comments.length > 0 &&
+              data.comments.map(comment => (
+                <VideoComment
+                  key={comment.id}
+                  comment={comment}
+                  videoId={videoId}
+                  currentUser={currentUser}
+                />
+              ))}
+          </Comment.Group>
+        </CommentSectionStyles>
       )}
-    </Composed>
+    </>
   );
 };
 
 CommentSection.propTypes = {
   videoId: PropTypes.string.isRequired,
-  client: PropTypes.object.isRequired,
 };
 export default CommentSection;

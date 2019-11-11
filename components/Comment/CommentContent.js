@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Loader } from 'semantic-ui-react';
+import { Comment, Icon, Loader , Button} from 'semantic-ui-react';
 import Link from 'next/link';
 import Error from '../UI/ErrorMessage';
 import StyledPopup from '../styles/PopUpStyles';
@@ -175,7 +175,6 @@ CommentContent.propTypes = {
   videoId: PropTypes.string.isRequired,
   commentType: PropTypes.string.isRequired,
   showEditInput: PropTypes.bool.isRequired,
-  openAuthModal: PropTypes.func.isRequired,
   onReplyClick: PropTypes.func.isRequired,
   closeEditInput: PropTypes.func.isRequired,
   openEditInput: PropTypes.func.isRequired,
