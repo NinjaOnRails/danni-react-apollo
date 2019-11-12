@@ -1,36 +1,21 @@
 import React, { useState } from 'react';
 import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { adopt } from 'react-adopt';
-import { Query, Mutation } from 'react-apollo';
 import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
-import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
-import {
-  USER_QUERY,
-  CURRENT_USER_QUERY,
-  ALL_AUDIOS_QUERY,
-  ALL_VIDEOS_QUERY,
-} from '../../graphql/query';
-import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import UpdateAvatarModal from './UpdateAvatarModal';
 import Error from '../UI/ErrorMessage';
 import {
-  useCurrentUser,
-  useDeleteAudVidMutation,
+  useCurrentUserQuery,
   useUserQuery,
   useLocalStateQuery,
-} from './AuthHooks';
+} from './authHooks';
+import { useDeleteAudVidMutation } from '../Video/videoHooks';
+
 // refactor
-/* eslint-disable */
-const userQuery = ({ render, id }) => (
-  <Query query={USER_QUERY} variables={{ id }}>
-    {render}
-  </Query>
-);
 
 const UserProfile = ({
   userId,
@@ -39,14 +24,14 @@ const UserProfile = ({
   const [editMode, setEditMode] = useState(false);
   const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
-  const { currentUser } = useCurrentUser();
+  const { currentUser } = useCurrentUserQuery();
   const { data, loading, error: userQueryError } = useUserQuery(userId);
   const { contentLanguage } = useLocalStateQuery();
 
-  const {
+  const [
     deleteAudVid,
-    data: { loading: deleteAudVidLoading, error: deleteAudVidError },
-  } = useDeleteAudVidMutation(contentLanguage, userId);
+    { loading: deleteAudVidLoading, error: deleteAudVidError },
+  ] = useDeleteAudVidMutation(contentLanguage, userId);
 
   if (initialLoading || !userId) return <Loader active inline="centered" />;
   if (error) return <Error error={error} />;
@@ -132,4 +117,3 @@ UserProfile.defaultProps = {
 };
 
 export default UserProfile;
-export { userQuery };

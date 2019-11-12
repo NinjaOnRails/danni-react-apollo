@@ -7,7 +7,8 @@ import Signin from './Signin';
 import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
-import { useCurrentUser, useCloseAuthModalMutation } from './AuthHooks';
+import { useCurrentUserQuery } from './authHooks';
+import { useCloseAuthModalMutation } from '../UI/uiHooks';
 // refactor
 /* eslint-disable */
 const localData = ({ render }) => (
@@ -20,8 +21,8 @@ const AuthModal = () => {
   const {
     data: { showAuthModal },
   } = useQuery(LOCAL_STATE_QUERY);
-  const { closeAuthModal } = useCloseAuthModalMutation();
-  const { currentUser } = useCurrentUser();
+  const [closeAuthModal] = useCloseAuthModalMutation();
+  const { currentUser } = useCurrentUserQuery();
   const renderForm = authMode => {
     if (authMode === 'signup') {
       return (

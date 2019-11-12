@@ -14,7 +14,10 @@ import axios from 'axios';
 import Error from '../UI/ErrorMessage';
 import { uploadAvatar } from '../../lib/cloudinaryUpload';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
-import { useCloudinaryAuthAvatar, useCurrentUser } from './AuthHooks';
+import {
+  useCloudinaryAuthAvatarMutation,
+  useCurrentUserQuery,
+} from './authHooks';
 
 const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
   const [startingUpload, setStartingUpload] = useState(false);
@@ -28,8 +31,8 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
     loading,
     error,
     data: cloudinaryAuthData,
-  } = useCloudinaryAuthAvatar();
-  const { currentUser, loading: loadingUser } = useCurrentUser();
+  } = useCloudinaryAuthAvatarMutation();
+  const { currentUser, loading: loadingUser } = useCurrentUserQuery();
 
   const fileInputRef = createRef();
 

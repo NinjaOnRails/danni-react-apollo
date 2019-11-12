@@ -1,10 +1,10 @@
 import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import { useSignoutMutation } from './AuthHooks';
+import { useSignoutMutation } from './authHooks';
 import { onSignout } from './utils';
 
 const Signout = () => {
-  const { signout } = useSignoutMutation();
+  const [signout] = useSignoutMutation();
   return (
     <ApolloConsumer>
       {client => (

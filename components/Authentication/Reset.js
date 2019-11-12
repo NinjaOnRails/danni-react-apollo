@@ -8,7 +8,7 @@ import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
 import { resetFields } from './fieldTypes';
 import { inputChangeHandler, clearForm } from './utils';
-import { useResetPasswordMutation } from './AuthHooks';
+import { useResetPasswordMutation } from './authHooks';
 
 const Reset = ({ router }) => {
   const [resetForm, setResetForm] = useState({
@@ -20,10 +20,7 @@ const Reset = ({ router }) => {
 
   const { password, confirmPassword } = resetForm;
 
-  const {
-    resetPassword,
-    data: { error, loading },
-  } = useResetPasswordMutation();
+  const [resetPassword, { error, loading }] = useResetPasswordMutation();
 
   const variables = {};
   const formElArr = [];

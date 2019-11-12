@@ -71,7 +71,6 @@ const onFacebookLoginClick = ({
             accessToken,
             facebookUserId: userID,
           },
-          refetchQueries: [{ query: CURRENT_USER_QUERY }],
         });
         if (data) {
           const {

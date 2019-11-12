@@ -7,25 +7,22 @@ import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
 import UpdateAvatarModal from './UpdateAvatarModal';
 import Error from '../UI/ErrorMessage';
-import {
-  useCurrentUser,
-  useDeleteAudVidMutation,
-  useLocalStateQuery,
-} from './AuthHooks';
+import { useCurrentUserQuery, useLocalStateQuery } from './authHooks';
+import { useDeleteAudVidMutation } from '../Video/videoHooks';
 
 const Me = () => {
   const [editMode, setEditMode] = useState(false);
   const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
-  const { currentUser } = useCurrentUser();
+  const { currentUser } = useCurrentUserQuery();
   const { contentLanguage } = useLocalStateQuery();
   if (!currentUser) return <Loader active inline="centered" />;
   const { audio, video, avatar, displayName, id } = currentUser;
 
-  const {
-    deleteAudVid,
-    data: { loading, error },
-  } = useDeleteAudVidMutation(contentLanguage, id);
+  const [deleteAudVid, { loading, error }] = useDeleteAudVidMutation(
+    contentLanguage,
+    id
+  );
 
   return (
     <Container>

@@ -6,7 +6,7 @@ import Signin from './Signin';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 import { isBrowser } from '../../lib/withApolloClient';
-import { useCurrentUser } from './AuthHooks';
+import { useCurrentUserQuery } from './authHooks';
 // refactor
 /* eslint-disable */
 const openAuthModal = ({ render }) => (
@@ -16,7 +16,7 @@ const openAuthModal = ({ render }) => (
 
 const PleaseSignIn = ({ action, modal, children }) => {
   const router = useRouter();
-  const { currentUser, loading } = useCurrentUser();
+  const { currentUser, loading } = useCurrentUserQuery();
 
   return (
     <ApolloConsumer>

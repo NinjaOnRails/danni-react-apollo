@@ -12,11 +12,11 @@ import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
 import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
 import {
-  useCloseAuthModalMutation,
   useFacebookLoginMutation,
   useLocalStateQuery,
   useSignupMutation,
-} from './AuthHooks';
+} from './authHooks';
+import { useCloseAuthModalMutation } from '../UI/uiHooks';
 
 const Signup = ({ modal }) => {
   const [signupForm, setSignupForm] = useState({
@@ -36,16 +36,16 @@ const Signup = ({ modal }) => {
     });
   });
 
-  const {
+  const [
     facebookLogin,
-    data: { error: fbLoginError, loading: fbLoginLoading },
-  } = useFacebookLoginMutation();
-  const { closeAuthModal } = useCloseAuthModalMutation();
+    { error: fbLoginError, loading: fbLoginLoading },
+  ] = useFacebookLoginMutation();
+  const [closeAuthModal] = useCloseAuthModalMutation();
   const { contentLanguage, previousPage } = useLocalStateQuery();
-  const {
-    signup,
-    data: { error, loading },
-  } = useSignupMutation(contentLanguage, variables);
+  const [signup, { error, loading }] = useSignupMutation(
+    contentLanguage,
+    variables
+  );
 
   useEffect(() => {
     const { displayName } = signupForm;

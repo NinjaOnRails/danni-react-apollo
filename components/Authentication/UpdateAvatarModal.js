@@ -15,7 +15,7 @@ import CloudinaryUploadAvatar from './CloudinaryUploadAvatar';
 import UpdateAvatarModalStyles from '../styles/UpdateAvatarModalStyles';
 import Error from '../UI/ErrorMessage';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
-import { useUpdateAvatarMutation } from './AuthHooks';
+import { useUpdateAvatarMutation } from './authHooks';
 
 const UpdateAvatarModal = ({
   showUpdateAvatarModal,
@@ -27,10 +27,7 @@ const UpdateAvatarModal = ({
   const [secureUrlState, setSecureUrlState] = useState('');
   const [deleteTokenState, setDeleteTokenState] = useState('');
 
-  const {
-    updateAvatar,
-    data: { loading, error },
-  } = useUpdateAvatarMutation(id);
+  const [updateAvatar, { loading, error }] = useUpdateAvatarMutation(id);
 
   const setChoiceTypeList = () => setChoiceType('list');
 

@@ -4,7 +4,7 @@ import Form from '../styles/Form';
 import { requestResetFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
 import { inputChangeHandler, clearForm } from './utils';
-import { useRequestReset } from './AuthHooks';
+import { useRequestResetMutation } from './authHooks';
 
 const RequestReset = () => {
   const [requestResetForm, setRequestResetForm] = useState({
@@ -16,10 +16,7 @@ const RequestReset = () => {
     email: { value, inputConfig, modified, valid, validation },
   } = requestResetForm;
 
-  const {
-    requestReset,
-    data: { error, loading, called },
-  } = useRequestReset();
+  const [requestReset, { error, loading, called }] = useRequestResetMutation();
 
   return (
     <Form

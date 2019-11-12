@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { clearForm, onCommentFormChange } from './utils';
 import { useCreateCommentMutation } from './CommentHooks';
-import { useOpenAuthModal } from '../Authentication/AuthHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
 
 const CommentForm = ({ videoId, currentUser }) => {
   const [commentInput, setCommentInput] = useState('');
@@ -15,7 +15,7 @@ const CommentForm = ({ videoId, currentUser }) => {
     data: { error: createCommentError, loading: createCommentLoading },
   } = useCreateCommentMutation(commentInput, videoId);
 
-  const { openAuthModal } = useOpenAuthModal();
+  const [openAuthModal] = useOpenAuthModalMutation();
 
   const onCommentSubmit = async () => {
     if (!currentUser) {

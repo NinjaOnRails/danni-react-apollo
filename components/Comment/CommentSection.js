@@ -4,14 +4,16 @@ import PropTypes from 'prop-types';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
 import CommentForm from './CommentForm';
-import { useCurrentUser, useOpenAuthModal } from '../Authentication/AuthHooks';
+import { useCurrentUserQuery } from '../Authentication/authHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
+
 import { useCommentsQuery } from './CommentHooks';
 import VideoComment from './Comment';
 
 const CommentSection = ({ videoId }) => {
-  const { currentUser } = useCurrentUser();
+  const { currentUser } = useCurrentUserQuery();
   const { data, loading, error } = useCommentsQuery(videoId);
-  const { openAuthModal } = useOpenAuthModal();
+  const [openAuthModal] = useOpenAuthModalMutation();
 
   return (
     <>

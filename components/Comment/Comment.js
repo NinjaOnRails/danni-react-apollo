@@ -9,7 +9,7 @@ import {
 } from './CommentHooks';
 import CommentContent from './CommentContent';
 import CommentReply from './CommentReply';
-import { useOpenAuthModal } from '../Authentication/AuthHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
 
 const VideoComment = ({ currentUser, comment, videoId }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -17,7 +17,7 @@ const VideoComment = ({ currentUser, comment, videoId }) => {
 
   const { id, reply } = comment;
 
-  const { openAuthModal } = useOpenAuthModal();
+  const [openAuthModal] = useOpenAuthModalMutation();
 
   const {
     deleteComment,

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Loader , Button} from 'semantic-ui-react';
+import { Comment, Icon, Loader, Button } from 'semantic-ui-react';
 import Link from 'next/link';
 import Error from '../UI/ErrorMessage';
 import StyledPopup from '../styles/PopUpStyles';
 import CommentUpdateForm from './CommentEditForm';
 import { formatTime } from './utils';
-import { useOpenAuthModal } from '../Authentication/AuthHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
 
 const CommentContent = ({
   currentUser,
@@ -28,7 +28,7 @@ const CommentContent = ({
     deleteCommentLoading,
   },
 }) => {
-  const { openAuthModal } = useOpenAuthModal();
+  const [openAuthModal] = useOpenAuthModalMutation();
 
   const onVoteClick = ({ target: { id: type } }) => {
     if (currentUser) {
