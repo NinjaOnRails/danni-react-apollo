@@ -207,9 +207,16 @@ const CONTENT_LANGUAGE_QUERY = gql`
   }
 `;
 
+const LOCAL_STATE_QUERY = gql`
+  query {
+    showSide @client
+    showAuthModal @client
+    previousPage @client
+  }
+`;
+
 const VIDEO_COMMENTS_QUERY = gql`
   query VIDEO_COMMENTS_QUERY($video: ID!) {
-    hideSigninToComment @client
     comments(where: { video: { id: $video } }) {
       id
       text
@@ -253,13 +260,6 @@ const VIDEO_COMMENTS_QUERY = gql`
         }
       }
     }
-  }
-`;
-
-const LOCAL_STATE_QUERY = gql`
-  query {
-    showSide @client
-    showAuthModal @client
   }
 `;
 
