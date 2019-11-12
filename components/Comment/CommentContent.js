@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Comment, Icon, Loader, Button } from 'semantic-ui-react';
 import Link from 'next/link';
+import { Comment, Icon, Loader, Button } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledPopup from '../styles/PopUpStyles';
 import CommentUpdateForm from './CommentEditForm';

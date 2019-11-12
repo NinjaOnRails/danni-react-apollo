@@ -1,5 +1,5 @@
-import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { List } from 'semantic-ui-react';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
 import SmallVideoItem from './SmallVideoItem';
 
@@ -13,7 +13,7 @@ const RenderSmallVideoList = ({
   return (
     <SmallVideoListStyles>
       <List divided relaxed>
-        {audios.map(({id, title, author, video }) => {
+        {audios.map(({ id: vidAudioId, title, author, video }) => {
           const {
             id: videoId,
             originThumbnailUrl,
@@ -21,14 +21,14 @@ const RenderSmallVideoList = ({
             originAuthor,
             duration,
           } = video;
-          if (audioId !== id) {
+          if (audioId !== vidAudioId) {
             const query = {
               id: videoId,
-              audioId: id,
+              audioId: vidAudioId,
             };
             return (
               <SmallVideoItem
-                key={id}
+                key={vidAudioId}
                 onVideoItemClick={onVideoItemClick}
                 id={videoId}
                 originThumbnailUrl={originThumbnailUrl}
@@ -37,7 +37,7 @@ const RenderSmallVideoList = ({
                 originAuthor={originAuthor}
                 title={title}
                 author={author}
-                audioId={id}
+                audioId={vidAudioId}
                 query={query}
               />
             );

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import Link from 'next/link';
+import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import VideoDeleteButton from './VideoDeleteButton';
 import { formatDuration } from './utils';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Loader, Progress, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Loader, Progress, Button, Icon } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import { useCloudinaryAuthAudioQuery } from './videoHooks';
 import { useCurrentUserQuery } from '../Authentication/authHooks';

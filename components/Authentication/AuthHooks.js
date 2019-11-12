@@ -33,6 +33,7 @@ const useLocalStateQuery = () => {
 };
 
 const useLocalDataQuery = () => {
+  // UI state
   return useQuery(LOCAL_STATE_QUERY);
 };
 
@@ -48,7 +49,7 @@ const useFacebookLoginMutation = () => {
   });
 };
 
-const useSignupMutation = (contentLanguage, variables) => {
+const useSignupMutation = ({ contentLanguage, variables }) => {
   return useMutation(SIGNUP_MUTATION, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
     variables: { ...variables, contentLanguage: contentLanguage || [] },
@@ -61,7 +62,7 @@ const useRequestResetMutation = email => {
   });
 };
 
-const useResetPasswordMutation = (resetToken, variables) => {
+const useResetPasswordMutation = ({ resetToken, variables }) => {
   return useMutation(RESET_PASSWORD_MUTATION, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
     variables: { resetToken, ...variables },

@@ -1,27 +1,54 @@
 import React, { Component } from 'react';
-import { Mutation, Query } from 'react-apollo';
+import axios from 'axios';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { Mutation, Query } from 'react-apollo';
 import { Loader, Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
-import axios from 'axios';
 import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
-import { VIDEO_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
+import EditVideoForm from './EditVideoForm';
+import {
+  VIDEO_QUERY,
+  ALL_VIDEOS_QUERY,
+  ALL_AUDIOS_QUERY,
+  CURRENT_USER_QUERY,
+  USER_QUERY,
+} from '../../graphql/query';
 import {
   UPDATE_AUDIO_MUTATION,
   VIDEO_DELETE,
   UPDATE_VIDEO_MUTATION,
+  CREATE_AUDIO_MUTATION,
 } from '../../graphql/mutation';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import youtube from '../../lib/youtube';
-import { createAudioMutation } from './AddVideo';
-import EditVideoForm from './EditVideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { uploadAudio } from '../../lib/cloudinaryUpload';
-import { contentLanguageQuery, user } from '../UI/ContentLanguage';
-
+// import { contentLanguageQuery, user } from '../UI/ContentLanguage';
+// refactor
 /* eslint-disable */
+const createAudioMutation = ({
+  user: {
+    currentUser: { id },
+  },
+  contentLanguageQuery: { contentLanguage },
+  render,
+}) => (
+  <Mutation
+    mutation={CREATE_AUDIO_MUTATION}
+    refetchQueries={[
+      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: CURRENT_USER_QUERY },
+      { query: USER_QUERY, variables: { id } },
+    ]}
+  >
+    {(createAudio, createAudioResult) =>
+      render({ createAudio, createAudioResult })
+    }
+  </Mutation>
+);
+
 const videoQuery = ({ render, id, audioId }) => (
   <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
     {render}

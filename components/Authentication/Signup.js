@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { ApolloConsumer } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { ApolloConsumer } from 'react-apollo';
 import generateName from 'sillyname';
 import { Button, Icon, Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
-import { signupFields } from './fieldTypes';
-import { trackSignUp } from '../../lib/mixpanel';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
+import { signupFields } from './fieldTypes';
+import { trackSignUp } from '../../lib/mixpanel';
 import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
 import {
   useFacebookLoginMutation,
@@ -42,10 +42,10 @@ const Signup = ({ modal }) => {
   ] = useFacebookLoginMutation();
   const [closeAuthModal] = useCloseAuthModalMutation();
   const { contentLanguage, previousPage } = useLocalStateQuery();
-  const [signup, { error, loading }] = useSignupMutation(
+  const [signup, { error, loading }] = useSignupMutation({
     contentLanguage,
-    variables
-  );
+    variables,
+  });
 
   useEffect(() => {
     const { displayName } = signupForm;

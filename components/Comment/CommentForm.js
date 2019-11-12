@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Button, Form } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import { clearForm, onCommentFormChange } from './utils';
-import { useCreateCommentMutation } from './CommentHooks';
+import { useCreateCommentMutation } from './commentHooks';
 import { useOpenAuthModalMutation } from '../UI/uiHooks';
 
 const CommentForm = ({ videoId, currentUser }) => {
@@ -13,7 +13,7 @@ const CommentForm = ({ videoId, currentUser }) => {
   const {
     createComment,
     data: { error: createCommentError, loading: createCommentLoading },
-  } = useCreateCommentMutation(commentInput, videoId);
+  } = useCreateCommentMutation({ text: commentInput, video: videoId });
 
   const [openAuthModal] = useOpenAuthModalMutation();
 

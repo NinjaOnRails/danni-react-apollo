@@ -1,14 +1,13 @@
 import React from 'react';
-import { Comment, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Comment, Loader } from 'semantic-ui-react';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
 import CommentForm from './CommentForm';
+import VideoComment from './Comment';
 import { useCurrentUserQuery } from '../Authentication/authHooks';
 import { useOpenAuthModalMutation } from '../UI/uiHooks';
-
-import { useCommentsQuery } from './CommentHooks';
-import VideoComment from './Comment';
+import { useCommentsQuery } from './commentHooks';
 
 const CommentSection = ({ videoId }) => {
   const { currentUser } = useCurrentUserQuery();

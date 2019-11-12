@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { Button, Icon, Confirm, Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
@@ -15,11 +14,9 @@ const VideoDeleteButton = ({ id, audioId, title, userId }) => {
   );
   const onConfirmDelete = async () => {
     setOpenConfirm(false);
-    const { data } = deleteAudVid({
+    deleteAudVid({
       variables: { id, audioId },
-      // onCompleted: () => Router.push('/'),
     });
-    // if (data) Router.push('/');
   };
   if (error) return <Error error={error} />;
   if (loading)

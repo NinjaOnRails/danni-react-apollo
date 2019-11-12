@@ -1,6 +1,6 @@
-import { Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import ContentLanguage from '../UI/ContentLanguage';
 import RenderSmallVideoList from './RenderSmallVideoList';

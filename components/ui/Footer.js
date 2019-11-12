@@ -1,6 +1,6 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
 import Link from 'next/link';
+import { Icon } from 'semantic-ui-react';
 import Logo from './Logo';
 import FooterStyle from '../styles/FooterStyles';
 

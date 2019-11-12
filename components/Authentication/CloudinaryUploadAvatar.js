@@ -1,4 +1,6 @@
 import React, { useState, createRef } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 import {
   Loader,
   Progress,
@@ -9,8 +11,6 @@ import {
   Header,
   Segment,
 } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
 import Error from '../UI/ErrorMessage';
 import { uploadAvatar } from '../../lib/cloudinaryUpload';
 import deleteFile from '../../lib/cloudinaryDeleteFile';

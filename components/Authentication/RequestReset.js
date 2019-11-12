@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Message } from 'semantic-ui-react';
 import Form from '../styles/Form';
-import { requestResetFields } from './fieldTypes';
 import AuthForm from './AuthenticationForm';
+import { requestResetFields } from './fieldTypes';
 import { inputChangeHandler, clearForm } from './utils';
 import { useRequestResetMutation } from './authHooks';
 

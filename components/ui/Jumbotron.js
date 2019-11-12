@@ -1,5 +1,5 @@
-import { Icon, Header, Button } from 'semantic-ui-react';
 import Link from 'next/link';
+import { Icon, Header, Button } from 'semantic-ui-react';
 import JumbotronStyles from '../styles/JumbotronStyles';
 
 const Jumbotron = () => (

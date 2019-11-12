@@ -1,5 +1,5 @@
-import { Form, Button, Icon, Segment, Header } from 'semantic-ui-react';
 import PropTypes, { string } from 'prop-types';
+import { Form, Button, Icon, Segment, Header } from 'semantic-ui-react';
 
 const DetailsForm = ({
   setAddVideoState,

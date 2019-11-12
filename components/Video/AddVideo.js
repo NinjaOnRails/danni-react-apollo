@@ -1,86 +1,20 @@
 import React, { useState } from 'react';
-import { Segment, Form, Loader, Header } from 'semantic-ui-react';
-import { adopt } from 'react-adopt';
-import { Mutation } from 'react-apollo';
 import Router from 'next/router';
-import { defaultLanguage } from '../../lib/supportedLanguages';
+import { Segment, Form, Loader, Header } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
-import {
-  ALL_VIDEOS_QUERY,
-  ALL_AUDIOS_QUERY,
-  CURRENT_USER_QUERY,
-  USER_QUERY,
-} from '../../graphql/query';
 import VideoForm from './VideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
-import { trackNewVideo } from '../../lib/mixpanel';
-import {
-  CREATE_AUDIO_MUTATION,
-  CREATE_VIDEO_MUTATION,
-} from '../../graphql/mutation';
 import AddVideoSteps from './AddVideoSteps';
 import AudioForm from './AudioForm';
 import AddVideoStyles from '../styles/AddVideoStyles';
 import DetailsForm from './DetailsForm';
+import { trackNewVideo } from '../../lib/mixpanel';
+import { defaultLanguage } from '../../lib/supportedLanguages';
 import { useCreateAudioMutation, useCreateVideoMutation } from './videoHooks';
 import {
   useCurrentUserQuery,
   useLocalStateQuery,
 } from '../Authentication/authHooks';
-/* eslint-disable */
-const createAudioMutation = ({
-  user: {
-    currentUser: { id },
-  },
-  contentLanguageQuery: { contentLanguage },
-  render,
-}) => (
-  <Mutation
-    mutation={CREATE_AUDIO_MUTATION}
-    refetchQueries={[
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-    ]}
-  >
-    {(createAudio, createAudioResult) =>
-      render({ createAudio, createAudioResult })
-    }
-  </Mutation>
-);
-
-const createVideoMutation = ({
-  youtubeId,
-  language,
-  isAudioSource,
-  contentLanguageQuery: { contentLanguage },
-  user: {
-    currentUser: { id },
-  },
-  render,
-}) => (
-  <Mutation
-    mutation={CREATE_VIDEO_MUTATION}
-    variables={{
-      source: youtubeId,
-      language: isAudioSource ? null : language,
-    }}
-    refetchQueries={[
-      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-    ]}
-  >
-    {(createVideo, createVideoResult) =>
-      render({ createVideo, createVideoResult })
-    }
-  </Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  createVideoMutation,
-});
 
 const AddVideo = () => {
   const [addVideoForm, setAddVideoForm] = useState({
@@ -272,4 +206,3 @@ const AddVideo = () => {
 };
 
 export default AddVideo;
-export { createAudioMutation, createVideoMutation };

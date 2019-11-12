@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { adopt } from 'react-adopt';
+import Link from 'next/link';
+import { Mutation, Query } from 'react-apollo';
+import Router from 'next/router';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import {
   Segment,
@@ -8,13 +13,9 @@ import {
   Icon,
   Loader,
 } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-import { adopt } from 'react-adopt';
-import Link from 'next/link';
-import { Mutation, Query } from 'react-apollo';
-import Router from 'next/router';
 import YoutubeViews from './YoutubeViews';
 import VideoDeleteButton from './VideoDeleteButton';
+import Error from '../UI/ErrorMessage';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import {
@@ -23,8 +24,7 @@ import {
   ALL_AUDIOS_QUERY,
   CONTENT_LANGUAGE_QUERY,
 } from '../../graphql/query';
-import Error from '../UI/ErrorMessage';
-
+// refactor
 /* eslint-disable */
 const user = ({ render }) => (
   <Query query={CURRENT_USER_QUERY}>

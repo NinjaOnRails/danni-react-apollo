@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { ApolloConsumer } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Button, Icon, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { ApolloConsumer } from 'react-apollo';
+import { Button, Icon, Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
-import { signinFields } from './fieldTypes';
-import { trackSignIn } from '../../lib/mixpanel';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
+import { signinFields } from './fieldTypes';
+import { trackSignIn } from '../../lib/mixpanel';
 import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
 import {
   useSigninMutation,

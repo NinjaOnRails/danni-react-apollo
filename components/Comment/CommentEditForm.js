@@ -9,7 +9,7 @@ import {
 } from '../../graphql/mutation';
 import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
 import Error from '../UI/ErrorMessage';
-
+// refactor
 /* eslint-disable */
 const updateCommentMutation = ({ id, videoId, text, render }) => (
   <Mutation

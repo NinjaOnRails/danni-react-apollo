@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { ApolloConsumer } from 'react-apollo';
+import { Icon, Menu, MenuItem } from 'semantic-ui-react';
 import { onSignout } from '../../Authentication/utils';
-import BackDrop from './Backdrop';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
+import BackDrop from './Backdrop';
 import ContentLanguage from '../ContentLanguage';
 import LanguageMenuStyles from '../../styles/LanguageMenuStyles';
 import {

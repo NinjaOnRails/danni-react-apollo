@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 import {
   Button,
   Form,
@@ -9,8 +11,6 @@ import {
   Loader,
   Progress,
 } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
 import Error from '../UI/ErrorMessage';
 import { uploadAudio } from '../../lib/cloudinaryUpload';
 import { useCloudinaryAuthAudioQuery } from './videoHooks';

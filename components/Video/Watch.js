@@ -14,7 +14,7 @@ import {
   trackPlayFinish,
   trackPlayedDuration,
 } from '../../lib/mixpanel';
-
+// refactor
 class Watch extends Component {
   state = {
     playingFilePlayer: false,

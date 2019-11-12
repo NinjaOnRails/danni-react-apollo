@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Button } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import { clearForm, onCommentFormChange } from './utils';
-import { useCreateCommentReplyMutation } from './CommentHooks';
+import { useCreateCommentReplyMutation } from './commentHooks';
 
 const CommentReplyForm = ({ id, videoId, closeReplyInput }) => {
   const [replyFormValid, setReplyFormValid] = useState(false);
@@ -12,7 +12,7 @@ const CommentReplyForm = ({ id, videoId, closeReplyInput }) => {
   const {
     createCommentReply,
     data: { error, loading },
-  } = useCreateCommentReplyMutation(id, replyInput, videoId);
+  } = useCreateCommentReplyMutation({ id, text: replyInput, videoId });
 
   const onReplySubmit = async () => {
     const { data } = await createCommentReply();

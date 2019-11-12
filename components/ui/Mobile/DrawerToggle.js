@@ -1,6 +1,6 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Icon } from 'semantic-ui-react';
 import { DrawerToggleStyles } from '../../styles/MobileUiStyles';
 
 const DrawerToggle = ({ clicked }) => (

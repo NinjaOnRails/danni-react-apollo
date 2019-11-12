@@ -1,6 +1,6 @@
-import { List, Image } from 'semantic-ui-react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { List, Image } from 'semantic-ui-react';
 import {
   VideoItemStyles,
   ListDescriptionStyled,

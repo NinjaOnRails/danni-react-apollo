@@ -1,7 +1,7 @@
-import { Message } from 'semantic-ui-react';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Message } from 'semantic-ui-react';
 
 const StyledMessage = styled(Message.Header)`
   &&& {

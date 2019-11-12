@@ -7,7 +7,7 @@ import { USER_QUERY, CURRENT_USER_QUERY } from '../../graphql/query';
 import Error from '../UI/ErrorMessage';
 import { userInfoFields, userPasswordFields } from './fieldTypes';
 import { validateInput } from './utils';
-
+// refactor
 class UserInfoForm extends Component {
   state = {
     userPasswordForm: {

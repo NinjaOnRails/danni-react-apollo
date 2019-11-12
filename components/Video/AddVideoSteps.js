@@ -1,6 +1,6 @@
 import React from 'react';
-import { Step, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Step, Icon } from 'semantic-ui-react';
 
 const AddVideoSteps = ({ activeStep }) => {
   return (

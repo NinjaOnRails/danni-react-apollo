@@ -1,5 +1,3 @@
-const adasd = 13123123;
-
 const formatDuration = duration => {
   // Convert and format duration
   const seconds = duration % 60;
@@ -8,4 +6,4 @@ const formatDuration = duration => {
   }`;
 };
 
-export { adasd, formatDuration };
+export { formatDuration };

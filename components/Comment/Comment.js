@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { Comment, Loader } from 'semantic-ui-react';
 import CommentReplyForm from './CommentReplyForm';
 import Error from '../UI/ErrorMessage';
+import CommentContent from './CommentContent';
+import CommentReply from './CommentReply';
 import {
   useDeleteCommentMutation,
   useCreateCommentVoteMutation,
-} from './CommentHooks';
-import CommentContent from './CommentContent';
-import CommentReply from './CommentReply';
+} from './commentHooks';
 import { useOpenAuthModalMutation } from '../UI/uiHooks';
 
 const VideoComment = ({ currentUser, comment, videoId }) => {
@@ -22,12 +22,12 @@ const VideoComment = ({ currentUser, comment, videoId }) => {
   const {
     deleteComment,
     data: { error: deleteCommentError, loading: deleteCommentLoading },
-  } = useDeleteCommentMutation(id, videoId);
+  } = useDeleteCommentMutation({ id, videoId });
 
   const {
     createCommentVote,
     data: { loading: createCommentVoteLoading, error: createCommentVoteError },
-  } = useCreateCommentVoteMutation(id, videoId, currentUser);
+  } = useCreateCommentVoteMutation({ id, videoId, userId: currentUser.id });
 
   useEffect(() => {
     setShowEditInput(false);

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Modal,
   Button,
@@ -9,25 +10,24 @@ import {
   Header,
   Radio,
 } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-import avatars from '../../lib/avatars';
 import CloudinaryUploadAvatar from './CloudinaryUploadAvatar';
 import UpdateAvatarModalStyles from '../styles/UpdateAvatarModalStyles';
 import Error from '../UI/ErrorMessage';
+import avatars from '../../lib/avatars';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { useUpdateAvatarMutation } from './authHooks';
 
 const UpdateAvatarModal = ({
   showUpdateAvatarModal,
   closeUpdateAvatarModal,
-  currentUser: { id },
+  userId,
 }) => {
   const [choiceType, setChoiceType] = useState(null);
   const [activeItem, setActiveItem] = useState('');
   const [secureUrlState, setSecureUrlState] = useState('');
   const [deleteTokenState, setDeleteTokenState] = useState('');
 
-  const [updateAvatar, { loading, error }] = useUpdateAvatarMutation(id);
+  const [updateAvatar, { loading, error }] = useUpdateAvatarMutation(userId);
 
   const setChoiceTypeList = () => setChoiceType('list');
 
@@ -143,7 +143,7 @@ const UpdateAvatarModal = ({
 UpdateAvatarModal.propTypes = {
   showUpdateAvatarModal: PropTypes.bool,
   closeUpdateAvatarModal: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 UpdateAvatarModal.defaultProps = {

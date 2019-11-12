@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'next/router';
 import Link from 'next/link';
+import { withRouter } from 'next/router';
 import { Loader } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
@@ -20,8 +20,6 @@ const Reset = ({ router }) => {
 
   const { password, confirmPassword } = resetForm;
 
-  const [resetPassword, { error, loading }] = useResetPasswordMutation();
-
   const variables = {};
   const formElArr = [];
   Object.keys(resetForm).forEach(key => {
@@ -30,6 +28,11 @@ const Reset = ({ router }) => {
       id: key,
       input: resetForm[key],
     });
+  });
+
+  const [resetPassword, { error, loading }] = useResetPasswordMutation({
+    resetToken: router.query.resetToken,
+    variables,
   });
 
   const onSubmit = async e => {
@@ -42,7 +45,7 @@ const Reset = ({ router }) => {
       });
     } else {
       setPasswordsMatch(null);
-      const { data } = await resetPassword(router.query.resetToken, variables);
+      const { data } = await resetPassword();
       if (data) {
         clearForm(resetFields, setResetForm, setFormValid);
         setRedirecting(true);

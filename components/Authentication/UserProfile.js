@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Item, Loader, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Item, Loader, Icon } from 'semantic-ui-react';
 import RenderVideoList from '../Video/RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import UserInfo from './UserInfo';
@@ -9,8 +9,6 @@ import UserInfoForm from './UserInfoForm';
 import UpdateAvatarModal from './UpdateAvatarModal';
 import Error from '../UI/ErrorMessage';
 import { useCurrentUserQuery, useUserQuery } from './authHooks';
-
-// refactor
 
 const UserProfile = ({
   userId,
@@ -37,7 +35,7 @@ const UserProfile = ({
           <UpdateAvatarModal
             showUpdateAvatarModal={showUpdateAvatarModal}
             closeUpdateAvatarModal={() => setShowUpdateAvatarModal(false)}
-            currentUser={currentUser}
+            userId={currentUser.id}
           />
         )}
         <Item.Group>

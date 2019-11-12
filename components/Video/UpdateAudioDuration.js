@@ -2,7 +2,7 @@ import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { ALL_AUDIOS_QUERY } from '../../graphql/query';
 import { UPDATE_AUDIO_DURATION_MUTATION } from '../../graphql/mutation';
-
+// refactor
 const UpdateAudioDuration = () => {
   const onAudioLoadedMetadata = async (e, source, updateAudioDuration) => {
     await updateAudioDuration({

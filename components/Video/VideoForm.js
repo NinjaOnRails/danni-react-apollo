@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Form, Button, Icon, Loader } from 'semantic-ui-react';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import PropTypes from 'prop-types';
+import { Form, Button, Icon, Loader } from 'semantic-ui-react';
 import { flagOptions } from '../../lib/supportedLanguages';
 import youtube from '../../lib/youtube';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';

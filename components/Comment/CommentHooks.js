@@ -9,7 +9,7 @@ import {
   CREATE_COMMENTREPLY_VOTE_MUTATION,
 } from '../../graphql/mutation';
 
-const useDeleteCommentMutation = (id, videoId) => {
+const useDeleteCommentMutation = ({ id, videoId }) => {
   const [deleteComment, data] = useMutation(DELETE_COMMENT_MUTATION, {
     variables: { comment: id },
     // refetchQueries: [
@@ -40,7 +40,7 @@ const useDeleteCommentMutation = (id, videoId) => {
   return { deleteComment, data };
 };
 
-const useCreateCommentVoteMutation = (id, videoId, currentUser) => {
+const useCreateCommentVoteMutation = ({ id, videoId, userId }) => {
   const [createCommentVote, data] = useMutation(CREATE_COMMENT_VOTE_MUTATION, {
     update: (proxy, { data: { createCommentVote: createVote } }) => {
       // Read the data from our cache for this query.
@@ -53,7 +53,7 @@ const useCreateCommentVoteMutation = (id, videoId, currentUser) => {
       );
       const existingVote =
         votingComment.vote.length > 0
-          ? votingComment.vote.find(vote => vote.user.id === currentUser.id)
+          ? votingComment.vote.find(vote => vote.user.id === userId)
           : null;
       localData.comments = localData.comments.map(comment => {
         if (comment.id === votingComment.id) {
@@ -63,14 +63,14 @@ const useCreateCommentVoteMutation = (id, videoId, currentUser) => {
             comment.vote = comment.vote.concat([createVote]);
           } else if (existingVote && existingVote.type !== createVote.type) {
             comment.vote = comment.vote.map(commentVote => {
-              if (commentVote.user.id === currentUser.id) {
+              if (commentVote.user.id === userId) {
                 commentVote.type = createVote.type;
               }
               return commentVote;
             });
           } else if (existingVote && existingVote.type === createVote.type) {
             comment.vote = comment.vote.filter(
-              commentVote => commentVote.user.id !== currentUser.id
+              commentVote => commentVote.user.id !== userId
             );
           }
           /* eslint-enable */
@@ -87,7 +87,7 @@ const useCreateCommentVoteMutation = (id, videoId, currentUser) => {
   return { createCommentVote, data };
 };
 
-const useCreateCommentMutation = (text, video) => {
+const useCreateCommentMutation = ({ text, video }) => {
   const [createComment, data] = useMutation(CREATE_COMMENT_MUTATION, {
     variables: { text, video },
     refetchQueries: [
@@ -100,7 +100,7 @@ const useCreateCommentMutation = (text, video) => {
   return { createComment, data };
 };
 
-const useDeleteCommentReplyMutation = (id, parentId, videoId) => {
+const useDeleteCommentReplyMutation = ({ id, parentId, videoId }) => {
   const [deleteCommentReply, data] = useMutation(DELETE_COMMENTREPLY_MUTATION, {
     variables: { commentReply: id },
     // refetchQueries: [
@@ -142,12 +142,12 @@ const useDeleteCommentReplyMutation = (id, parentId, videoId) => {
   return { deleteCommentReply, data };
 };
 
-const useCreateCommentReplyVoteMutation = (
+const useCreateCommentReplyVoteMutation = ({
   id,
   parentId,
   videoId,
-  currentUser
-) => {
+  userId,
+}) => {
   const [createCommentReplyVote, data] = useMutation(
     CREATE_COMMENTREPLY_VOTE_MUTATION,
     {
@@ -163,7 +163,7 @@ const useCreateCommentReplyVoteMutation = (
         const votingReply = votingComment.reply.find(reply => reply.id === id);
         const existingVote =
           votingReply.vote.length > 0
-            ? votingReply.vote.find(vote => vote.user.id === currentUser.id)
+            ? votingReply.vote.find(vote => vote.user.id === userId)
             : null;
         localData.comments = localData.comments.map(comment => {
           /* eslint-disable */
@@ -178,7 +178,7 @@ const useCreateCommentReplyVoteMutation = (
                   existingVote.type !== createVote.type
                 ) {
                   reply.vote = reply.vote.map(commentReplyVote => {
-                    if (commentReplyVote.user.id === currentUser.id) {
+                    if (commentReplyVote.user.id === userId) {
                       commentReplyVote.type = createVote.type;
                     }
                     return commentReplyVote;
@@ -188,8 +188,7 @@ const useCreateCommentReplyVoteMutation = (
                   existingVote.type === createVote.type
                 ) {
                   reply.vote = reply.vote.filter(
-                    commentReplyVote =>
-                      commentReplyVote.user.id !== currentUser.id
+                    commentReplyVote => commentReplyVote.user.id !== userId
                   );
                 }
               }
@@ -211,7 +210,7 @@ const useCreateCommentReplyVoteMutation = (
   return { createCommentReplyVote, data };
 };
 
-const useCreateCommentReplyMutation = (id, text, videoId) => {
+const useCreateCommentReplyMutation = ({ id, text, videoId }) => {
   const [createCommentReply, data] = useMutation(CREATE_COMMENTREPLY_MUTATION, {
     variables: { comment: id, text },
     refetchQueries: [

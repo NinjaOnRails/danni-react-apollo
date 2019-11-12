@@ -1,5 +1,5 @@
-import { Icon, Item, Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Icon, Item, Popup } from 'semantic-ui-react';
 
 const UserInfo = ({
   user: { displayName, name, bio, email, location },

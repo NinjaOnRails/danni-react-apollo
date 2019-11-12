@@ -15,7 +15,7 @@ const Me = () => {
 
   const { currentUser } = useCurrentUserQuery();
   if (!currentUser) return <Loader active inline="centered" />;
-  const { audio, video, avatar, displayName } = currentUser;
+  const { audio, video, avatar, displayName, id } = currentUser;
 
   return (
     <Container>
@@ -23,7 +23,7 @@ const Me = () => {
         <UpdateAvatarModal
           showUpdateAvatarModal={showUpdateAvatarModal}
           closeUpdateAvatarModal={() => setShowUpdateAvatarModal(false)}
-          currentUser={currentUser}
+          userId={id}
         />
         <Item.Group>
           <Item>

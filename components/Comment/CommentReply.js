@@ -5,7 +5,7 @@ import Error from '../UI/ErrorMessage';
 import {
   useDeleteCommentReplyMutation,
   useCreateCommentReplyVoteMutation,
-} from './CommentHooks';
+} from './commentHooks';
 import CommentContent from './CommentContent';
 
 const CommentReply = ({
@@ -25,7 +25,7 @@ const CommentReply = ({
       error: deleteCommentReplyError,
       loading: deleteCommentReplyLoading,
     },
-  } = useDeleteCommentReplyMutation(id, parentId, videoId);
+  } = useDeleteCommentReplyMutation({ id, parentId, videoId });
 
   const {
     createCommentReplyVote,
@@ -33,7 +33,12 @@ const CommentReply = ({
       error: createCommentReplyVoteError,
       loading: createCommentReplyVoteLoading,
     },
-  } = useCreateCommentReplyVoteMutation(id, parentId, videoId, currentUser);
+  } = useCreateCommentReplyVoteMutation({
+    id,
+    parentId,
+    videoId,
+    userId: currentUser.id,
+  });
 
   useEffect(() => {
     setShowEditInput(false);
