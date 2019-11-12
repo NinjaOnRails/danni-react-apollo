@@ -11,22 +11,39 @@ import {
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Link from 'next/link';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import Router from 'next/router';
 import YoutubeViews from './YoutubeViews';
 // import YoutubeViews from './YoutubeViewsRefactored';
 import VideoDeleteButton from './VideoDeleteButton';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
-import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
 import {
   CURRENT_USER_QUERY,
   ALL_VIDEOS_QUERY,
   ALL_AUDIOS_QUERY,
+  CONTENT_LANGUAGE_QUERY,
 } from '../../graphql/query';
 import Error from '../UI/ErrorMessage';
 
 /* eslint-disable */
+const user = ({ render }) => (
+  <Query query={CURRENT_USER_QUERY}>
+    {({ data, loading }) => {
+      const currentUser = data ? data.currentUser : null;
+      return render({ currentUser, loading });
+    }}
+  </Query>
+);
+
+const contentLanguageQuery = ({ render }) => (
+  <Query query={CONTENT_LANGUAGE_QUERY}>
+    {({ data }) => {
+      const contentLanguage = data ? data.contentLanguage : [];
+      return render({ contentLanguage });
+    }}
+  </Query>
+);
 const deleteAudVidMutation = ({
   contentLanguageQuery: { contentLanguage },
   render,

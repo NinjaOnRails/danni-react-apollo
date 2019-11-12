@@ -19,6 +19,10 @@ import {
   FACEBOOK_LOGIN_MUTATION,
   UPDATE_AVATAR_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
+  TOGGLE_CONTENT_LANGUAGE_MUTATION,
+  ADD_CONTENT_LANGUAGE_MUTATION,
+  UPDATE_CONTENT_LANGUAGE_MUTATION,
+  TOGGLE_SIDEDRAWER_MUTATION,
 } from '../../graphql/mutation';
 
 const useOpenAuthModalMutation = () => {
@@ -33,8 +37,28 @@ const useCloseSideDrawerMutation = () => {
   return useMutation(CLOSE_SIDEDRAWER_MUTATION);
 };
 
+const useToggleSideDrawerMutation = () => {
+  return useMutation(TOGGLE_SIDEDRAWER_MUTATION);
+};
+
+const useToggleContentLanguageMutation = () => {
+  return useMutation(TOGGLE_CONTENT_LANGUAGE_MUTATION);
+};
+
+const useAddContentLanguageMutation = () => {
+  return useMutation(ADD_CONTENT_LANGUAGE_MUTATION);
+};
+
+const useUpdateContentLanguageMutation = () => {
+  return useMutation(UPDATE_CONTENT_LANGUAGE_MUTATION);
+};
+
 export {
   useOpenAuthModalMutation,
   useCloseAuthModalMutation,
   useCloseSideDrawerMutation,
+  useToggleContentLanguageMutation,
+  useAddContentLanguageMutation,
+  useUpdateContentLanguageMutation,
+  useToggleSideDrawerMutation,
 };

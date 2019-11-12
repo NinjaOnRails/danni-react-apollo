@@ -18,12 +18,15 @@ import {
   CREATE_AUDIO_MUTATION,
   CREATE_VIDEO_MUTATION,
 } from '../../graphql/mutation';
-import { contentLanguageQuery, user } from '../UI/ContentLanguage';
 import AddVideoSteps from './AddVideoSteps';
 import AudioForm from './AudioForm';
 import AddVideoStyles from '../styles/AddVideoStyles';
 import DetailsForm from './DetailsForm';
-
+import { useCreateAudioMutation, useCreateVideoMutation } from './videoHooks';
+import {
+  useCurrentUserQuery,
+  useLocalStateQuery,
+} from '../Authentication/authHooks';
 /* eslint-disable */
 const createAudioMutation = ({
   user: {
@@ -76,29 +79,10 @@ const createVideoMutation = ({
 /* eslint-enable */
 
 const Composed = adopt({
-  user,
-  contentLanguageQuery,
-  createAudioMutation,
   createVideoMutation,
 });
 
 const AddVideo = () => {
-  // const [source, setSource] = useState('');
-  // const [youtubeId, setYoutubeId] = useState('');
-  // const [title, setTitle] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [audioUrl, setAudioUrl] = useState('');
-  // const [tags, setTags] = useState('');
-  // const [secureUrl, setSecureUrl] = useState('');
-  // const [deleteToken, setDeleteToken] = useState('');
-  // const [error, setError] = useState('');
-  // const [activeStep, setActiveStep] = useState('video');
-  // const [language, setLanguage] = useState(defaultLanguage);
-  // const [videoValid, setVideoValid] = useState(false);
-  // const [isAudioSource, setIsAudioSource] = useState(true);
-  // const [redirecting, setRedirecting] = useState(false);
-  // const [audioDuration, setAudioDuration] = useState(0);
-
   const [addVideoForm, setAddVideoForm] = useState({
     activeStep: 'video',
     language: defaultLanguage,
@@ -137,6 +121,25 @@ const AddVideo = () => {
     audioUrl,
   } = addVideoForm;
 
+  const { currentUser } = useCurrentUserQuery();
+  const { contentLanguage } = useLocalStateQuery();
+
+  const [
+    createAudio,
+    { loading: loadingCreateAudio, error: errorCreateAudio },
+  ] = useCreateAudioMutation(currentUser.id, contentLanguage);
+
+  const [
+    createVideo,
+    { loading: loadingCreateVideo, error: errorCreateVideo },
+  ] = useCreateVideoMutation(
+    youtubeId,
+    isAudioSource,
+    language,
+    currentUser.id,
+    contentLanguage
+  );
+
   const setAddVideoState = newState =>
     setAddVideoForm(prevState => ({ ...prevState, ...newState }));
 
@@ -152,7 +155,7 @@ const AddVideo = () => {
     setAddVideoState({ audioDuration: Math.round(e.target.duration) });
   };
 
-  const onFormSubmit = async (e, createAudio, createVideo) => {
+  const onFormSubmit = async e => {
     // Stop form from submitting
     e.preventDefault();
     setAddVideoState({ error: '' });
@@ -221,88 +224,50 @@ const AddVideo = () => {
       </Loader>
     );
   return (
-    <Composed
-      youtubeId={youtubeId}
-      language={language}
-      isAudioSource={isAudioSource}
-    >
-      {({
-        createAudioMutation: {
-          createAudio,
-          createAudioResult: {
-            loading: loadingCreateAudio,
-            error: errorCreateAudio,
-          },
-        },
-        createVideoMutation: {
-          createVideo,
-          createVideoResult: {
-            loading: loadingCreateVideo,
-            error: errorCreateVideo,
-          },
-        },
-      }) => (
-        <AddVideoStyles>
-          <Header>Thêm Video/Thuyết Minh</Header>
-          <AddVideoSteps activeStep={activeStep} />
-          <Segment>
-            <Error error={errorCreateAudio} />
-            <Error error={errorCreateVideo} />
-            <Error error={{ message: error }} />
-            <Form
-              loading={loadingCreateAudio || loadingCreateVideo}
-              size="big"
-              onSubmit={async e => onFormSubmit(e, createAudio, createVideo)}
-            >
-              {activeStep === 'video' ? (
-                <VideoForm
-                  setAddVideoState={setAddVideoState}
-                  language={language}
-                  source={source}
-                  youtubeId={youtubeId}
-                  videoValid={videoValid}
-                  // language
-                  // originTags
-                  // youtubeId
-                  // videoValid
-                  // activeStep
-                />
-              ) : activeStep === 'audio' ? (
-                <AudioForm
-                  setAddVideoState={setAddVideoState}
-                  isAudioSource={isAudioSource}
-                  audioUrl={audioUrl}
-                  secureUrl={secureUrl}
-                  deleteToken={deleteToken}
-                  language={language}
-                  source={source}
-                  onDeleteFileSubmit={onDeleteFileSubmit}
-                  youtubeId={youtubeId}
-                  // deleteToken
-                  // secureUrl
-                  // deleteToken
-                  // isAudioSource
-                  // activeStep
-                  // audioUrl
-                />
-              ) : (
-                <DetailsForm
-                  setAddVideoState={setAddVideoState}
-                  title={title}
-                  description={description}
-                  tags={tags}
-                  originTags={originTags}
-                  // activeStep
-                  // tags
-                  // description
-                  // title
-                />
-              )}
-            </Form>
-          </Segment>
-        </AddVideoStyles>
-      )}
-    </Composed>
+    <AddVideoStyles>
+      <Header>Thêm Video/Thuyết Minh</Header>
+      <AddVideoSteps activeStep={activeStep} />
+      <Segment>
+        <Error error={errorCreateAudio} />
+        <Error error={errorCreateVideo} />
+        <Error error={{ message: error }} />
+        <Form
+          loading={loadingCreateAudio || loadingCreateVideo}
+          size="big"
+          onSubmit={async e => onFormSubmit(e, createAudio, createVideo)}
+        >
+          {activeStep === 'video' ? (
+            <VideoForm
+              setAddVideoState={setAddVideoState}
+              language={language}
+              source={source}
+              youtubeId={youtubeId}
+              videoValid={videoValid}
+            />
+          ) : activeStep === 'audio' ? (
+            <AudioForm
+              setAddVideoState={setAddVideoState}
+              isAudioSource={isAudioSource}
+              audioUrl={audioUrl}
+              secureUrl={secureUrl}
+              deleteToken={deleteToken}
+              language={language}
+              source={source}
+              onDeleteFileSubmit={onDeleteFileSubmit}
+              youtubeId={youtubeId}
+            />
+          ) : (
+            <DetailsForm
+              setAddVideoState={setAddVideoState}
+              title={title}
+              description={description}
+              tags={tags}
+              originTags={originTags}
+            />
+          )}
+        </Form>
+      </Segment>
+    </AddVideoStyles>
   );
 };
 
