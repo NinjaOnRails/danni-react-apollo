@@ -1,11 +1,11 @@
 import { Loader } from 'semantic-ui-react';
-import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Error from '../UI/ErrorMessage';
-import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
+import ContentLanguage from '../UI/ContentLanguage';
 import RenderSmallVideoList from './RenderSmallVideoList';
-import { videos, audios } from './Videos';
+import { useLocalStateQuery } from '../Authentication/authHooks';
+import { useQueryAllAudios, useQueryAllVideos } from './videoHooks';
 
 const LanguageMenuStyles = styled.div`
   text-align: center;
@@ -17,56 +17,49 @@ const LanguageMenuStyles = styled.div`
   }
 `;
 
-const Composed = adopt({
-  contentLanguageQuery,
-  audios,
-  videos,
-});
-
 const SmallVideoList = props => {
   const {
     audios: { data: initialAudioData },
     videos: { data: initialVideoData },
+    currentWatchingLanguage,
   } = props;
+
+  const {
+    loading: loadingAudios,
+    error: errorAudios,
+    data: dataAudios,
+  } = useQueryAllAudios();
+  const {
+    loading: loadingVideos,
+    errorVideos,
+    data: dataVideos,
+  } = useQueryAllVideos();
+
+  const { contentLanguage } = useLocalStateQuery();
   return (
-    <Composed>
-      {({
-        contentLanguageQuery: { contentLanguage },
-        audios: {
-          loading: loadingAudios,
-          error: errorAudios,
-          data: dataAudios,
-        },
-        videos: { loading: loadingVideos, errorVideos, data: dataVideos },
-      }) => (
-        <>
-          <LanguageMenuStyles>
-            <ContentLanguage
-              currentWatchingLanguage={props.currentWatchingLanguage}
-              loadingData={loadingVideos || loadingAudios}
-            />
-          </LanguageMenuStyles>
-          {(!contentLanguage.length &&
-            (!initialAudioData || !initialVideoData)) ||
-          (contentLanguage.length &&
-            (loadingAudios ||
-              loadingVideos ||
-              (!dataVideos && !dataAudios))) ? (
-            <Loader active inline="centered" />
-          ) : errorAudios ? (
-            <Error>Error: {errorAudios.message}</Error>
-          ) : errorVideos ? (
-            <Error>Error: {errorVideos.message}</Error>
-          ) : (
-            <RenderSmallVideoList
-              dataAudios={dataAudios || initialAudioData}
-              dataVideos={dataVideos || initialVideoData}
-              {...props}
-            />
-          )}
-        </>
+    <>
+      <LanguageMenuStyles>
+        <ContentLanguage
+          currentWatchingLanguage={currentWatchingLanguage}
+          loadingData={loadingVideos || loadingAudios}
+        />
+      </LanguageMenuStyles>
+      {(!contentLanguage.length && (!initialAudioData || !initialVideoData)) ||
+      (contentLanguage.length &&
+        (loadingAudios || loadingVideos || (!dataVideos && !dataAudios))) ? (
+        <Loader active inline="centered" />
+      ) : errorAudios ? (
+        <Error>Error: {errorAudios.message}</Error>
+      ) : errorVideos ? (
+        <Error>Error: {errorVideos.message}</Error>
+      ) : (
+        <RenderSmallVideoList
+          dataAudios={dataAudios || initialAudioData}
+          dataVideos={dataVideos || initialVideoData}
+          {...props}
+        />
       )}
-    </Composed>
+    </>
   );
 };
 

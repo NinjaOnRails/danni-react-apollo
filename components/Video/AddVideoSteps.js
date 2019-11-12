@@ -2,7 +2,7 @@ import React from 'react';
 import { Step, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-export default function AddVideoSteps({ activeStep }) {
+const AddVideoSteps = ({ activeStep }) => {
   return (
     <Step.Group fluid unstackable>
       <Step active={activeStep === 'video'} completed={activeStep !== 'video'}>
@@ -34,7 +34,7 @@ export default function AddVideoSteps({ activeStep }) {
       </Step>
     </Step.Group>
   );
-}
+};
 
 AddVideoSteps.propTypes = {
   activeStep: PropTypes.string,
@@ -43,3 +43,5 @@ AddVideoSteps.propTypes = {
 AddVideoSteps.defaultProps = {
   activeStep: 'video',
 };
+
+export default AddVideoSteps;

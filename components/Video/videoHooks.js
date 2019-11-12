@@ -44,6 +44,18 @@ import {
   UPDATE_AVATAR_MUTATION,
 } from '../../graphql/mutation';
 
+const useQueryAllAudios = contentLanguage => {
+  return useQuery(ALL_AUDIOS_QUERY, {
+    variables: { contentLanguage },
+  });
+};
+
+const useQueryAllVideos = contentLanguage => {
+  return useQuery(ALL_VIDEOS_QUERY, {
+    variables: { contentLanguage },
+  });
+};
+
 const useDeleteAudVidMutation = (contentLanguage, userId = null) => {
   const refetchQueries = [
     { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
@@ -86,8 +98,15 @@ const useCreateVideoMutation = (
   });
 };
 
+const useCloudinaryAuthAudioQuery = (source, language) => {
+  return useQuery(CLOUDINARY_AUTH_AUDIO, { variables: { source, language } });
+};
+
 export {
+  useQueryAllAudios,
+  useQueryAllVideos,
   useDeleteAudVidMutation,
   useCreateAudioMutation,
   useCreateVideoMutation,
+  useCloudinaryAuthAudioQuery,
 };

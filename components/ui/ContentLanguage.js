@@ -1,4 +1,4 @@
-import ApolloConsumer from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import ContentLanguageMenu from './ContentLanguageMenu';
 import {
   useCurrentUserQuery,

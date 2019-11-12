@@ -14,7 +14,6 @@ import Link from 'next/link';
 import { Mutation, Query } from 'react-apollo';
 import Router from 'next/router';
 import YoutubeViews from './YoutubeViews';
-// import YoutubeViews from './YoutubeViewsRefactored';
 import VideoDeleteButton from './VideoDeleteButton';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
 import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';

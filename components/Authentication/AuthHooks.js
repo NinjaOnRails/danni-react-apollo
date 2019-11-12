@@ -34,7 +34,8 @@ const useLocalStateQuery = () => {
 };
 
 const useLocalDataQuery = () => {
-  return useQuery(LOCAL_STATE_QUERY);
+  const data = useQuery(LOCAL_STATE_QUERY);
+  return data;
 };
 
 const useSigninMutation = () => {

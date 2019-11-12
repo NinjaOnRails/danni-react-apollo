@@ -17,10 +17,11 @@ import { useLocalDataQuery } from '../Authentication/authHooks';
 
 const Page = ({ children }) => {
   const {
+    data,
     data: { showSide, showAuthModal },
-  } = useLocalDataQuery;
+  } = useLocalDataQuery();
 
-  if (!showSide || !showAuthModal) return <div>Loading...</div>;
+  if (!data) return <div>Loading...</div>;
   return (
     <ThemeProvider theme={defaultTheme}>
       <StyledPage>
