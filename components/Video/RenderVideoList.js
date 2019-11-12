@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import Link from 'next/link';
@@ -16,7 +17,22 @@ const RenderVideoList = ({
   hideAuthor,
   currentUser,
   deleteAudVid,
+  fetchMore,
 }) => {
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !==
+      document.documentElement.offsetHeight
+    )
+      return;
+    console.log('fetching more');
+  };
+
+  // useEffect(() => {
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
+
   const renderVideoItem = (
     id,
     originThumbnailUrl,

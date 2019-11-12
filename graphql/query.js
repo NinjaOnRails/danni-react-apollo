@@ -150,6 +150,7 @@ const VIDEO_QUERY = gql`
 const ALL_VIDEOS_QUERY = gql`
   query ALL_VIDEOS_QUERY($contentLanguage: [Language!]) {
     videos(
+      # first: 10
       where: {
         OR: [
           { language_in: $contentLanguage }
