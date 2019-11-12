@@ -65,11 +65,6 @@ const StyledModal = styled.div`
   .auth-mode:hover {
     background-color: #bfbfbf;
   }
-  a:active,
-  a:focus {
-    outline: 0;
-    border: none;
-  }
 
   .auth-modes .active {
     background-color: ${props => props.theme.red};

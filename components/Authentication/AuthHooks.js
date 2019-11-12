@@ -29,13 +29,11 @@ const useUserQuery = id => {
 const useLocalStateQuery = () => {
   const { data } = useQuery(CONTENT_LANGUAGE_QUERY);
   const contentLanguage = data ? data.contentLanguage : [];
-  const { previousPage } = data;
-  return { contentLanguage, previousPage };
+  return { contentLanguage, ...data };
 };
 
 const useLocalDataQuery = () => {
-  const data = useQuery(LOCAL_STATE_QUERY);
-  return data;
+  return useQuery(LOCAL_STATE_QUERY);
 };
 
 const useSigninMutation = () => {

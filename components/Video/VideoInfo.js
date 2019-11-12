@@ -119,45 +119,53 @@ export default class VideoInfo extends Component {
       <Composed>
         {({
           user: { currentUser },
-          deleteAudVidMutation: {
-            deleteAudVid,
-            deleteAudVidResult: { loading, error },
-          },
+          // deleteAudVidMutation: {
+          //   deleteAudVid,
+          //   deleteAudVidResult: { loading, error },
+          // },
         }) => {
+          const isVideoOwner =
+            currentUser && currentUser.id === addedBy.id && !audioId;
+          let isAudioOwner = false;
+          if (audioId) {
+            const videoAudio = audio.filter(vidAud => vidAud.id === audioId)[0];
+            isAudioOwner =
+              currentUser && currentUser.id === videoAudio.author.id;
+          }
           return (
             <VideoInfoStyles>
               <div className="basic-info">
                 <Header>
                   <h1>{title}</h1>
                 </Header>
-                <Error error={error} />
-                {currentUser && currentUser.id === addedBy.id && (
+                {/* <Error error={error} /> */}
+                {(isAudioOwner || isVideoOwner) && (
                   <div className="buttons">
-                    {loading ? (
+                    {/* {loading ? (
                       <Loader active inline="centered">
                         Đang xoá video...
                       </Loader>
-                    ) : (
-                      <>
-                        <Link
-                          href={{
-                            pathname: '/edit',
-                            query,
-                          }}
-                        >
-                          <Button icon labelPosition="left">
-                            <Icon name="write" />
-                            Sửa
-                          </Button>
-                        </Link>
-                        <VideoDeleteButton
-                          id={id}
-                          audioId={audioId}
-                          title={title}
-                          deleteAudVid={deleteAudVid}
-                        />
-                      </>
-                    )}
+                    ) : ( */}
+                    <>
+                      <Link
+                        href={{
+                          pathname: '/edit',
+                          query,
+                        }}
+                      >
+                        <Button icon labelPosition="left">
+                          <Icon name="write" />
+                          Sửa
+                        </Button>
+                      </Link>
+                      <VideoDeleteButton
+                        id={id}
+                        audioId={audioId}
+                        title={title}
+                        userId={currentUser.id}
+                      />
+                    </>
+                    {/* )} */}
                   </div>
                 )}
                 <div className="views-social">

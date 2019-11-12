@@ -8,12 +8,7 @@ import UserProfileStyles from '../styles/UserProfileStyles';
 import UserInfoForm from './UserInfoForm';
 import UpdateAvatarModal from './UpdateAvatarModal';
 import Error from '../UI/ErrorMessage';
-import {
-  useCurrentUserQuery,
-  useUserQuery,
-  useLocalStateQuery,
-} from './authHooks';
-import { useDeleteAudVidMutation } from '../Video/videoHooks';
+import { useCurrentUserQuery, useUserQuery } from './authHooks';
 
 // refactor
 
@@ -26,12 +21,6 @@ const UserProfile = ({
 
   const { currentUser } = useCurrentUserQuery();
   const { data, loading, error: userQueryError } = useUserQuery(userId);
-  const { contentLanguage } = useLocalStateQuery();
-
-  const [
-    deleteAudVid,
-    { loading: deleteAudVidLoading, error: deleteAudVidError },
-  ] = useDeleteAudVidMutation(contentLanguage, userId);
 
   if (initialLoading || !userId) return <Loader active inline="centered" />;
   if (error) return <Error error={error} />;
@@ -87,20 +76,19 @@ const UserProfile = ({
         style={{ width: '80%', margin: '3.75rem auto 0 auto' }}
       >
         <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
-        <Error error={deleteAudVidError} />
-        {deleteAudVidLoading ? (
+        {/* <Error error={deleteAudVidError} /> */}
+        {/* {deleteAudVidLoading ? (
           <Loader active inline="centered" />
-        ) : (
-          <VideoListStyles>
-            <RenderVideoList
-              dataAudios={{ audios: audio }}
-              dataVideos={{ videos: video }}
-              hideAuthor
-              currentUser={currentUser}
-              deleteAudVid={deleteAudVid}
-            />
-          </VideoListStyles>
-        )}
+        ) : ( */}
+        <VideoListStyles>
+          <RenderVideoList
+            dataAudios={{ audios: audio }}
+            dataVideos={{ videos: video }}
+            hideAuthor
+            currentUser={currentUser}
+          />
+        </VideoListStyles>
+        {/* )} */}
       </div>
     </>
   );

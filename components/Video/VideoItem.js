@@ -15,7 +15,6 @@ const VideoItem = ({
   audioId,
   hideAuthor,
   currentUser,
-  deleteAudVid,
   query,
 }) => (
   <div>
@@ -69,10 +68,10 @@ const VideoItem = ({
             </Button>
           </Link>
           <VideoDeleteButton
-            deleteAudVid={deleteAudVid}
             id={id}
             audioId={audioId}
             title={title}
+            userId={currentUser.id}
           />
         </div>
       )
@@ -90,14 +89,12 @@ VideoItem.propTypes = {
   originAuthor: PropTypes.string.isRequired,
   author: PropTypes.object.isRequired,
   query: PropTypes.object.isRequired,
-  deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
 };
 
 VideoItem.defaultProps = {
   audioId: '',
-  deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
   originThumbnailUrlSd: '',

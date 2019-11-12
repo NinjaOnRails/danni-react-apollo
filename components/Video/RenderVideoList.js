@@ -6,7 +6,6 @@ const RenderVideoList = ({
   dataVideos,
   hideAuthor,
   currentUser,
-  deleteAudVid,
 }) => {
   return (
     <>
@@ -40,7 +39,6 @@ const RenderVideoList = ({
               author={author}
               hideAuthor={hideAuthor}
               currentUser={currentUser}
-              deleteAudVid={deleteAudVid}
               query={query}
             />
           );
@@ -74,7 +72,6 @@ const RenderVideoList = ({
                 author={addedBy}
                 hideAuthor={hideAuthor}
                 currentUser={currentUser}
-                deleteAudVid={deleteAudVid}
                 query={query}
               />
             );
@@ -89,13 +86,11 @@ const RenderVideoList = ({
 RenderVideoList.propTypes = {
   dataAudios: PropTypes.object.isRequired,
   dataVideos: PropTypes.object.isRequired,
-  deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
 };
 
 RenderVideoList.defaultProps = {
-  deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
 };

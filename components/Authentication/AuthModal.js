@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
-import { Query } from 'react-apollo';
-import { useQuery } from '@apollo/react-hooks';
-import { LOCAL_STATE_QUERY } from '../../graphql/query';
 import Signin from './Signin';
 import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
-import { useCurrentUserQuery } from './authHooks';
+import { useCurrentUserQuery, useLocalDataQuery } from './authHooks';
 import { useCloseAuthModalMutation } from '../UI/uiHooks';
-// refactor
-/* eslint-disable */
-const localData = ({ render }) => (
-  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
-);
-/* eslint-enable */
 
 const AuthModal = () => {
   const [mode, setMode] = useState('signup');
   const {
     data: { showAuthModal },
-  } = useQuery(LOCAL_STATE_QUERY);
+  } = useLocalDataQuery();
   const [closeAuthModal] = useCloseAuthModalMutation();
   const { currentUser } = useCurrentUserQuery();
   const renderForm = authMode => {
@@ -44,18 +35,20 @@ const AuthModal = () => {
         <div className="modal-container">
           <h1 className="Logo">danni.tv</h1>
           <div className="auth-modes">
-            <a
+            <button
+              type="button"
               className={`auth-mode ${mode === 'signin' ? 'active' : null} `}
               onClick={() => setMode('signin')}
             >
               Đăng nhập
-            </a>
-            <a
+            </button>
+            <button
+              type="button"
               className={`auth-mode ${mode === 'signup' ? 'active' : null}`}
               onClick={() => setMode('signup')}
             >
               Đăng ký
-            </a>
+            </button>
           </div>
           <Icon
             inverted
@@ -72,5 +65,3 @@ const AuthModal = () => {
 };
 
 export default AuthModal;
-
-export { localData };

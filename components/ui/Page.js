@@ -16,12 +16,10 @@ import GDPR from './GDPR';
 import { useLocalDataQuery } from '../Authentication/authHooks';
 
 const Page = ({ children }) => {
-  const {
-    data,
-    data: { showSide, showAuthModal },
-  } = useLocalDataQuery();
+  const { data } = useLocalDataQuery();
 
   if (!data) return <div>Loading...</div>;
+  const { showSide, showAuthModal } = data;
   return (
     <ThemeProvider theme={defaultTheme}>
       <StyledPage>
