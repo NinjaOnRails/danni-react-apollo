@@ -36,9 +36,14 @@ const Meta = () => (
     <meta property="fb:app_id" content="398428117464454" />
     <meta property="og:title" content="Danni TV" key="og:title" />
     <meta
+      property="og:description"
+      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
+      key="og:description"
+    />
+    {/* <meta
       property="og:image"
       content="https://res.cloudinary.com/danni/image/upload/v1573162609/btluys8ednhxpolg868s.jpg"
-    />
+    /> */}
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
     {/* <meta
@@ -46,11 +51,6 @@ const Meta = () => (
       content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
       key="og:description"
     /> */}
-    <meta
-      property="og:description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
-      key="og:description"
-    />
 
     <link rel="canonical" href="https://www.danni.tv/" />
     <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
