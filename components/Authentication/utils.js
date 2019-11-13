@@ -23,8 +23,17 @@ const validateInput = (value, rule) => {
   return isValid;
 };
 
-const inputChangeHandler = (e, input, authForm, setAuthForm, setFormValid) => {
+const inputChangeHandler = (
+  e,
+  // { type, checked, value },
+  input,
+  authForm,
+  setAuthForm,
+  setFormValid
+) => {
   const eventValue = e.target.value;
+  // const val = type === 'checkbox' ? checked : value;
+  // console.log(e);
   const updatedForm = {
     ...authForm,
   };

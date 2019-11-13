@@ -66,6 +66,9 @@ const resetFields = {
 const userPasswordFields = {
   password: {
     ...resetFields.password,
+    validation: {
+      required: true,
+    },
     inputConfig: {
       ...resetFields.password.inputConfig,
       label: 'Mật khẩu cũ',
@@ -77,13 +80,23 @@ const userPasswordFields = {
       ...resetFields.password.inputConfig,
       name: 'newPassword',
     },
+    mustMatch: true,
   },
-  confirmPassword: { ...resetFields.confirmPassword },
+  confirmPassword: { ...resetFields.confirmPassword, mustMatch: true },
 };
 
 const userInfoFields = {
   displayName: {
-    inputConfig: { ...signupFields.displayName.inputConfig },
+    inputConfig: {
+      label: 'Tên hiển thị',
+      type: 'text',
+      name: 'displayName',
+    },
+    validation: {
+      required: true,
+    },
+    modified: false,
+    valid: true,
   },
   name: {
     inputConfig: {
@@ -92,6 +105,8 @@ const userInfoFields = {
       type: 'text',
     },
     boxName: 'showName',
+    modified: false,
+    valid: true,
   },
   bio: {
     inputConfig: {
@@ -100,6 +115,8 @@ const userInfoFields = {
       type: 'text',
     },
     boxName: 'showBio',
+    modified: false,
+    valid: true,
   },
   location: {
     inputConfig: {
@@ -108,9 +125,22 @@ const userInfoFields = {
       type: 'text',
     },
     boxName: 'showLocation',
+    modified: false,
+    valid: true,
   },
   email: {
-    inputConfig: { ...signinFields.email.inputConfig, boxName: 'showEmail' },
+    inputConfig: {
+      label: 'E-mail',
+      type: 'email',
+      name: 'email',
+    },
+    boxName: 'showEmail',
+    validation: {
+      required: true,
+      isEmail: true,
+    },
+    modified: false,
+    valid: true,
   },
 };
 

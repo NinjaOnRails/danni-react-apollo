@@ -24,7 +24,7 @@ import {
   ALL_AUDIOS_QUERY,
   CONTENT_LANGUAGE_QUERY,
 } from '../../graphql/query';
-// refactor
+
 /* eslint-disable */
 const user = ({ render }) => (
   <Query query={CURRENT_USER_QUERY}>

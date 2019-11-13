@@ -13,6 +13,7 @@ import {
   RESET_PASSWORD_MUTATION,
   FACEBOOK_LOGIN_MUTATION,
   UPDATE_AVATAR_MUTATION,
+  UPDATE_USER_MUTATION,
 } from '../../graphql/mutation';
 
 const useCurrentUserQuery = () => {
@@ -76,6 +77,23 @@ const useUpdateAvatarMutation = id => {
   });
 };
 
+const useUpdateUserMutation = ({ variables, id }) => {
+  return useMutation(UPDATE_USER_MUTATION, {
+    variables: { ...variables },
+    refetchQueries: [
+      {
+        query: USER_QUERY,
+        variables: {
+          id,
+        },
+      },
+      {
+        query: CURRENT_USER_QUERY,
+      },
+    ],
+  });
+};
+
 const useCloudinaryAuthAvatarMutation = () => {
   return useQuery(CLOUDINARY_AUTH_AVATAR);
 };
@@ -92,4 +110,5 @@ export {
   useLocalStateQuery,
   useUpdateAvatarMutation,
   useCloudinaryAuthAvatarMutation,
+  useUpdateUserMutation,
 };

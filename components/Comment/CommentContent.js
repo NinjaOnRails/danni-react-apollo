@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { Comment, Icon, Loader, Button } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledPopup from '../styles/PopUpStyles';
-// import CommentUpdateForm from './CommentEditForm';
-import CommentUpdateForm from './CommentEditFormRefactored';
+import CommentUpdateForm from './CommentEditForm';
 import { formatTime } from './utils';
 import { useOpenAuthModalMutation } from '../UI/uiHooks';
 

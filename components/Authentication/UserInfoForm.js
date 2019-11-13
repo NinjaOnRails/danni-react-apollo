@@ -72,7 +72,7 @@ class UserInfoForm extends Component {
       });
     });
     Object.keys(userInfoFields).forEach(key => {
-      const boxName = userInfoFields[key].boxName;
+      const { boxName } = userInfoFields[key];
       if (boxName) {
         variables[boxName] = this.state[boxName];
       }
@@ -154,7 +154,7 @@ class UserInfoForm extends Component {
                         onChange={e => this.inputChangeHandler(e, id)}
                         autoComplete="new-password"
                       />
-                      {name === 'password' && (
+                      {/* {name === 'password' && (
                         <Popup
                           content={
                             displayPassword
@@ -173,7 +173,7 @@ class UserInfoForm extends Component {
                             />
                           }
                         />
-                      )}
+                      )} */}
                     </Form.Group>
                   )
                 )) || (
