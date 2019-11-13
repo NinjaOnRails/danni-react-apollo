@@ -4,14 +4,12 @@ import Signin from './Signin';
 import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
-import { useCurrentUserQuery, useLocalDataQuery } from './authHooks';
+import { useCurrentUserQuery, useLocalStateQuery } from './authHooks';
 import { useCloseAuthModalMutation } from '../UI/uiHooks';
 
 const AuthModal = () => {
   const [mode, setMode] = useState('signup');
-  const {
-    data: { showAuthModal },
-  } = useLocalDataQuery();
+  const { showAuthModal } = useLocalStateQuery();
   const [closeAuthModal] = useCloseAuthModalMutation();
   const { currentUser } = useCurrentUserQuery();
   const renderForm = authMode => {

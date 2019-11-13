@@ -134,6 +134,7 @@ class LanguageMenu extends Component {
 
   updateLocalState = async language => {
     // Update local state
+    this.setState({ disabled: true });
     const {
       data: {
         toggleContentLanguage: {
@@ -145,7 +146,7 @@ class LanguageMenu extends Component {
         language,
       },
     });
-
+    this.setState({ disabled: false });
     return contentLanguage;
   };
 

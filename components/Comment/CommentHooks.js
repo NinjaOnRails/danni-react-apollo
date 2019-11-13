@@ -40,7 +40,7 @@ const useDeleteCommentMutation = ({ id, videoId }) => {
   return { deleteComment, data };
 };
 
-const useCreateCommentVoteMutation = ({ id, videoId, userId }) => {
+const useCreateCommentVoteMutation = ({ id, videoId, currentUser }) => {
   const [createCommentVote, data] = useMutation(CREATE_COMMENT_VOTE_MUTATION, {
     update: (proxy, { data: { createCommentVote: createVote } }) => {
       // Read the data from our cache for this query.
@@ -51,6 +51,7 @@ const useCreateCommentVoteMutation = ({ id, videoId, userId }) => {
       const votingComment = localData.comments.find(
         comment => comment.id === id
       );
+      const userId = currentUser.id;
       const existingVote =
         votingComment.vote.length > 0
           ? votingComment.vote.find(vote => vote.user.id === userId)
@@ -146,7 +147,7 @@ const useCreateCommentReplyVoteMutation = ({
   id,
   parentId,
   videoId,
-  userId,
+  currentUser,
 }) => {
   const [createCommentReplyVote, data] = useMutation(
     CREATE_COMMENTREPLY_VOTE_MUTATION,
@@ -161,6 +162,7 @@ const useCreateCommentReplyVoteMutation = ({
           comment => comment.id === parentId
         );
         const votingReply = votingComment.reply.find(reply => reply.id === id);
+        const userId = currentUser.id;
         const existingVote =
           votingReply.vote.length > 0
             ? votingReply.vote.find(vote => vote.user.id === userId)

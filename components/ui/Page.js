@@ -13,10 +13,10 @@ import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal from '../Authentication/AuthModal';
 import GDPR from './GDPR';
-import { useLocalDataQuery } from '../Authentication/authHooks';
+import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const Page = ({ children }) => {
-  const { data } = useLocalDataQuery();
+  const data = useLocalStateQuery();
 
   if (!data) return <div>Loading...</div>;
   const { showSide, showAuthModal } = data;

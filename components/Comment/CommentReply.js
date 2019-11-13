@@ -37,7 +37,7 @@ const CommentReply = ({
     id,
     parentId,
     videoId,
-    userId: currentUser.id,
+    currentUser,
   });
 
   useEffect(() => {

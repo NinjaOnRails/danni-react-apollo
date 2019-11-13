@@ -6,7 +6,7 @@ import Nav from './Nav';
 import Logo from './Logo';
 import DrawerToggle from './Mobile/DrawerToggle';
 import StyledHeader from '../styles/HeaderStyles';
-import { useToggleContentLanguageMutation } from './uiHooks';
+import { useToggleSideDrawerMutation } from './uiHooks';
 
 Router.onRouteChangeStart = () => {
   NProgress.start();
@@ -20,7 +20,7 @@ Router.onRouteChangeError = () => {
 };
 
 const Header = () => {
-  const [toggleSideDrawer] = useToggleContentLanguageMutation();
+  const [toggleSideDrawer] = useToggleSideDrawerMutation();
   return (
     <StyledHeader>
       <div className="bar">

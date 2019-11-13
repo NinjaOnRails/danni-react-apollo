@@ -27,7 +27,7 @@ const VideoComment = ({ currentUser, comment, videoId }) => {
   const {
     createCommentVote,
     data: { loading: createCommentVoteLoading, error: createCommentVoteError },
-  } = useCreateCommentVoteMutation({ id, videoId, userId: currentUser.id });
+  } = useCreateCommentVoteMutation({ id, videoId, currentUser });
 
   useEffect(() => {
     setShowEditInput(false);

@@ -9,7 +9,7 @@ import ContentLanguage from '../ContentLanguage';
 import LanguageMenuStyles from '../../styles/LanguageMenuStyles';
 import {
   useCurrentUserQuery,
-  useLocalDataQuery,
+  useLocalStateQuery,
   useSignoutMutation,
 } from '../../Authentication/authHooks';
 import { useCloseSideDrawerMutation } from '../uiHooks';
@@ -25,9 +25,7 @@ const SideDrawer = () => {
   const [closeSideDrawer] = useCloseSideDrawerMutation();
   const { currentUser } = useCurrentUserQuery();
   const [signout] = useSignoutMutation();
-  const {
-    data: { showSide },
-  } = useLocalDataQuery();
+  const { showSide } = useLocalStateQuery();
   return (
     <ApolloConsumer>
       {client => (

@@ -23,18 +23,17 @@ const Videos = ({
   audios: { data: initialAudioData },
   videos: { data: initialVideoData },
 }) => {
+  const { contentLanguage } = useLocalStateQuery();
   const {
     loading: loadingAudios,
     error: errorAudios,
     data: dataAudios,
-  } = useQueryAllAudios();
+  } = useQueryAllAudios(contentLanguage);
   const {
     loading: loadingVideos,
     errorVideos,
     data: dataVideos,
-  } = useQueryAllVideos();
-  const { contentLanguage } = useLocalStateQuery();
-
+  } = useQueryAllVideos(contentLanguage);
   return (
     <>
       <LanguageMenuStyles>

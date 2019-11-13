@@ -27,7 +27,7 @@ const useUserQuery = id => {
 };
 
 const useLocalStateQuery = () => {
-  const { data } = useQuery(CONTENT_LANGUAGE_QUERY);
+  const { data } = useQuery(LOCAL_STATE_QUERY);
   const contentLanguage = data ? data.contentLanguage : [];
   return { contentLanguage, ...data };
 };
@@ -35,7 +35,6 @@ const useLocalStateQuery = () => {
 const useLocalDataQuery = () => {
   // UI state
   const data = useQuery(LOCAL_STATE_QUERY);
-  console.log(data);
   return data;
 };
 
