@@ -44,7 +44,7 @@ WatchPage.getInitialProps = async ({
     contentLanguage,
   });
 
-  return { id, audioId, asPath, payload, videos };
+  return { id, audioId, asPath, payload, videos, watchPage: true };
 };
 
 export default WatchPage;
