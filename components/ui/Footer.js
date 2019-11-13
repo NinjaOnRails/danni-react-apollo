@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Logo from './Logo';
 import FooterStyle from '../styles/FooterStyles';
 
+const pagesWithFooter = ['/new', '/about', '/me', '/user'];
+
 const Footer = () => (
   <FooterStyle>
     <div className="footer-container">
@@ -83,3 +85,4 @@ const Footer = () => (
 );
 
 export default Footer;
+export { pagesWithFooter };

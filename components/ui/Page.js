@@ -3,7 +3,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Header from './Header';
-import Footer from './Footer';
+import Footer, { pagesWithFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
@@ -74,7 +74,7 @@ const Composed = adopt({
 
 class Page extends Component {
   render() {
-    const { children } = this.props;
+    const { children, route } = this.props;
     return (
       <Composed>
         {({ localData: { data } }) => {
@@ -92,7 +92,7 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
-                <Footer />
+                {pagesWithFooter.includes(route) && <Footer />}
                 {/* </SideDrawer> */}
               </StyledPage>
             </ThemeProvider>
@@ -108,6 +108,7 @@ Page.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  route: PropTypes.string.isRequired,
 };
 
 Page.defaultProps = {

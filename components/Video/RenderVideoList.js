@@ -160,8 +160,8 @@ const RenderVideoList = ({
                 addedBy
               );
             }
-            return audio.map(({ title, id: audioId, author }) =>
-              renderVideoItem(
+            return audio.map(({ title, id: audioId, author }) => {
+              return renderVideoItem(
                 id,
                 originThumbnailUrl,
                 originThumbnailUrlSd,
@@ -170,8 +170,8 @@ const RenderVideoList = ({
                 originAuthor,
                 author,
                 audioId
-              )
-            );
+              );
+            });
           }
         )}
       </VideoListStyles>

@@ -8,7 +8,6 @@ const DetailsForm = ({
   tags,
   originTags,
 }) => {
-  console.log(originTags);
   const handleChange = ({ target: { name, value } }) =>
     setAddVideoState({ [name]: value });
   return (
