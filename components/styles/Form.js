@@ -5,6 +5,10 @@ const StyledForm = styled.form`
   margin: 0;
   width: 100%;
 
+  .display-hide-password {
+    cursor: pointer;
+  }
+
   fieldset {
     border: none;
     width: ${props => (props.modal ? '100%' : '50%')};
