@@ -9,10 +9,10 @@ const CommentReplyForm = ({ id, videoId, closeReplyInput }) => {
   const [replyFormValid, setReplyFormValid] = useState(false);
   const [replyInput, setReplyInput] = useState('');
 
-  const {
+  const [
     createCommentReply,
-    data: { error, loading },
-  } = useCreateCommentReplyMutation({ id, text: replyInput, videoId });
+    { error, loading },
+  ] = useCreateCommentReplyMutation({ id, text: replyInput, videoId });
 
   const onReplySubmit = async () => {
     const { data } = await createCommentReply();

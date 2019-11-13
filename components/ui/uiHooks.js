@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/react-hooks';
 import {
-  CLOSE_AUTH_MODAL_MUTATION,
   OPEN_AUTH_MODAL_MUTATION,
+  CLOSE_AUTH_MODAL_MUTATION,
   CLOSE_SIDEDRAWER_MUTATION,
   TOGGLE_CONTENT_LANGUAGE_MUTATION,
   ADD_CONTENT_LANGUAGE_MUTATION,
   UPDATE_CONTENT_LANGUAGE_MUTATION,
-  TOGGLE_SIDEDRAWER_MUTATION,
+  OPEN_SIDEDRAWER_MUTATION,
 } from '../../graphql/mutation';
 
 const useOpenAuthModalMutation = () => {
@@ -22,7 +22,7 @@ const useCloseSideDrawerMutation = () => {
 };
 
 const useToggleSideDrawerMutation = () => {
-  return useMutation(TOGGLE_SIDEDRAWER_MUTATION);
+  return useMutation(OPEN_SIDEDRAWER_MUTATION);
 };
 
 const useToggleContentLanguageMutation = () => {
@@ -40,9 +40,9 @@ const useUpdateContentLanguageMutation = () => {
 export {
   useOpenAuthModalMutation,
   useCloseAuthModalMutation,
+  useToggleSideDrawerMutation,
   useCloseSideDrawerMutation,
   useToggleContentLanguageMutation,
   useAddContentLanguageMutation,
   useUpdateContentLanguageMutation,
-  useToggleSideDrawerMutation,
 };

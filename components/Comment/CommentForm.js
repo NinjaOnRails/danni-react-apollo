@@ -10,10 +10,10 @@ const CommentForm = ({ videoId, currentUser }) => {
   const [commentInput, setCommentInput] = useState('');
   const [commentInputValid, setCommentInputValid] = useState(false);
 
-  const {
+  const [
     createComment,
-    data: { error: createCommentError, loading: createCommentLoading },
-  } = useCreateCommentMutation({ text: commentInput, video: videoId });
+    { error: createCommentError, loading: createCommentLoading },
+  ] = useCreateCommentMutation({ text: commentInput, video: videoId });
 
   const [openAuthModal] = useOpenAuthModalMutation();
 

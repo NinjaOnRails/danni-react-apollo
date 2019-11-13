@@ -19,15 +19,15 @@ const VideoComment = ({ currentUser, comment, videoId }) => {
 
   const [openAuthModal] = useOpenAuthModalMutation();
 
-  const {
+  const [
     deleteComment,
-    data: { error: deleteCommentError, loading: deleteCommentLoading },
-  } = useDeleteCommentMutation({ id, videoId });
+    { error: deleteCommentError, loading: deleteCommentLoading },
+  ] = useDeleteCommentMutation({ id, videoId });
 
-  const {
+  const [
     createCommentVote,
-    data: { loading: createCommentVoteLoading, error: createCommentVoteError },
-  } = useCreateCommentVoteMutation({ id, videoId, currentUser });
+    { loading: createCommentVoteLoading, error: createCommentVoteError },
+  ] = useCreateCommentVoteMutation({ id, videoId, currentUser });
 
   useEffect(() => {
     setShowEditInput(false);

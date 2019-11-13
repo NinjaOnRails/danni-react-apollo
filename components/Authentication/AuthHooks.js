@@ -3,7 +3,6 @@ import {
   CURRENT_USER_QUERY,
   USER_QUERY,
   CLOUDINARY_AUTH_AVATAR,
-  CONTENT_LANGUAGE_QUERY,
   LOCAL_STATE_QUERY,
 } from '../../graphql/query';
 import {
@@ -30,12 +29,6 @@ const useLocalStateQuery = () => {
   const { data } = useQuery(LOCAL_STATE_QUERY);
   const contentLanguage = data ? data.contentLanguage : [];
   return { contentLanguage, ...data };
-};
-
-const useLocalDataQuery = () => {
-  // UI state
-  const data = useQuery(LOCAL_STATE_QUERY);
-  return data;
 };
 
 const useSigninMutation = () => {
@@ -88,16 +81,15 @@ const useCloudinaryAuthAvatarMutation = () => {
 };
 
 export {
+  useUserQuery,
   useCurrentUserQuery,
-  useCloudinaryAuthAvatarMutation,
+  useFacebookLoginMutation,
+  useSignupMutation,
+  useSigninMutation,
+  useSignoutMutation,
   useRequestResetMutation,
   useResetPasswordMutation,
-  useSigninMutation,
-  useFacebookLoginMutation,
   useLocalStateQuery,
-  useSignoutMutation,
-  useSignupMutation,
   useUpdateAvatarMutation,
-  useUserQuery,
-  useLocalDataQuery,
+  useCloudinaryAuthAvatarMutation,
 };

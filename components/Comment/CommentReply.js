@@ -19,21 +19,18 @@ const CommentReply = ({
 
   const { id } = commentReply;
 
-  const {
+  const [
     deleteCommentReply,
-    data: {
-      error: deleteCommentReplyError,
-      loading: deleteCommentReplyLoading,
-    },
-  } = useDeleteCommentReplyMutation({ id, parentId, videoId });
+    { error: deleteCommentReplyError, loading: deleteCommentReplyLoading },
+  ] = useDeleteCommentReplyMutation({ id, parentId, videoId });
 
-  const {
+  const [
     createCommentReplyVote,
-    data: {
+    {
       error: createCommentReplyVoteError,
       loading: createCommentReplyVoteLoading,
     },
-  } = useCreateCommentReplyVoteMutation({
+  ] = useCreateCommentReplyVoteMutation({
     id,
     parentId,
     videoId,

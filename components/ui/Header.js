@@ -20,13 +20,13 @@ Router.onRouteChangeError = () => {
 };
 
 const Header = () => {
-  const [toggleSideDrawer] = useToggleSideDrawerMutation();
+  const [openSideDrawer] = useToggleSideDrawerMutation();
   return (
     <StyledHeader>
       <div className="bar">
         <Logo />
         <Nav />
-        <DrawerToggle clicked={toggleSideDrawer} />
+        <DrawerToggle onClick={openSideDrawer} />
         {/* <MobileSearch /> */}
       </div>
       {/* <Search /> */}
