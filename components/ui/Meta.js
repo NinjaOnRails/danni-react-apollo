@@ -1,7 +1,6 @@
 import Head from 'next/head';
-import PropTypes from 'prop-types';
 
-const Meta = ({ watchPage }) => (
+const Meta = () => (
   <Head>
     <title key="title">Danni TV - Trang chủ</title>
     <meta key="metaTitle" name="title" content="Danni TV - Trang chủ" />
@@ -41,12 +40,11 @@ const Meta = ({ watchPage }) => (
       content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
       key="og:description"
     />
-    {!watchPage && (
-      <meta
-        property="og:image"
-        content="https://res.cloudinary.com/danni/image/upload/v1573162609/btluys8ednhxpolg868s.jpg"
-      />
-    )}
+    <meta
+      key="og:image"
+      property="og:image"
+      content="https://res.cloudinary.com/danni/image/upload/v1573162609/btluys8ednhxpolg868s.jpg"
+    />
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
     {/* <meta
@@ -95,13 +93,5 @@ const Meta = ({ watchPage }) => (
     />
   </Head>
 );
-
-Meta.propTypes = {
-  watchPage: PropTypes.bool,
-};
-
-Meta.defaultProps = {
-  watchPage: null,
-};
 
 export default Meta;

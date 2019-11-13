@@ -35,6 +35,7 @@ const VideoHeader = props => {
         }
       />
       <meta
+        key="og:image"
         property="og:image"
         content={originThumbnailUrlSd || originThumbnailUrl}
       />

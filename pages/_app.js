@@ -10,7 +10,7 @@ class MyApp extends App {
     const { Component, pageProps, apollo, router } = this.props;
     return (
       <ApolloProvider client={apollo}>
-        <Meta watchPage={pageProps.watchPage} />
+        <Meta />
         <Page route={router.route}>
           <Component {...pageProps} />
         </Page>
