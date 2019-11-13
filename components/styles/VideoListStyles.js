@@ -53,23 +53,30 @@ const VideoListStyles = styled.div`
     line-height: 1.6rem; /* Implement for browsers with no support for webkit */
     max-height: 3.2rem; /* This is line height X no. of lines to show */
   }
+
   .ui.card > .content > .meta + .description {
     margin-top: 0;
   }
-  .ui.placeholder .rectangular.image:not(.header) {
-    width: 210px;
-    height: 118.13px;
-    padding-top: 0;
+
+  @media (min-width: 480px) {
+    .ui.placeholder .image:not(.header) {
+      width: 210px;
+      height: 118.13px;
+      padding-top: 0;
+    }
   }
+
   @media (max-width: 479px) {
     grid-template-columns: auto;
     .ui.card {
       box-shadow: none;
     }
-    .ui.placeholder .rectangular.image:not(.header) {
+
+    .ui.placeholder .image:not(.header) {
       width: 320px;
       height: 180px;
     }
+
     .buttons {
       bottom: 10px;
     }
@@ -80,9 +87,11 @@ const VideoListStyles = styled.div`
     div.header {
       height: 3.2rem;
     }
+
     div.ui.fluid.card {
       height: 214.11px;
     }
+
     .author {
       top: -30px;
     }
