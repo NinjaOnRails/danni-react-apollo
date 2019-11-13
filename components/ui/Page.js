@@ -37,9 +37,10 @@ const Inner = styled.div`
     font-family: ${props => props.theme.font};
   }
 
-  @media (max-width: 991px) {
+  @media (max-width: 720px) {
     width: 100%;
-    padding-top: 0;
+    padding-top: ${({ route }) =>
+      route === '/' || route === '/watch' ? 0 : '3.5rem'};
   }
 `;
 
@@ -95,7 +96,7 @@ class Page extends Component {
                 <Header />
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
-                <Inner>{children}</Inner>
+                <Inner route={route}>{children}</Inner>
                 {!pagesWithoutFooter.includes(route) && <Footer />}
               </StyledPage>
             </ThemeProvider>
