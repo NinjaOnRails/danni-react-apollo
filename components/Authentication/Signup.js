@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import generateName from 'sillyname';
-import { Button, Icon, Loader } from 'semantic-ui-react';
+import { Button, Icon, Loader, Header } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import Head from 'next/head';
 import Error from '../UI/ErrorMessage';
@@ -229,7 +229,9 @@ class Signup extends Component {
                 }
                 modal={modal}
               >
-                <p className="auth-title">Tạo tài khoản miễn phí</p>
+                <Header as="h1" textAlign="center">
+                  Tạo tài khoản miễn phí
+                </Header>
 
                 <fieldset
                   disabled={loading || fbLoginLoading}

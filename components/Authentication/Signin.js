@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Button, Icon, Loader } from 'semantic-ui-react';
+import { Button, Icon, Loader, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Head from 'next/head';
@@ -262,7 +262,9 @@ class Signin extends Component {
               }
               modal={modal}
             >
-              <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
+              <Header as="h1" textAlign="center">
+                Đăng nhập {modal && 'để tiếp tục'}
+              </Header>
               <fieldset
                 disabled={loading || fbLoginLoading}
                 aria-busy={loading || fbLoginLoading}

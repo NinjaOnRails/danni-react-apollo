@@ -4,12 +4,14 @@ const StyledForm = styled.form`
   font-family: ${props => props.theme.font};
   margin: 0;
   width: 100%;
+
   fieldset {
     border: none;
     width: ${props => (props.modal ? '100%' : '50%')};
     margin: ${props => (props.modal ? 0 : 'auto')};
     padding: 0;
   }
+
   .auth-input {
     margin: 0 16px 8px;
     position: relative;
@@ -18,6 +20,7 @@ const StyledForm = styled.form`
   h2 {
     font-family: ${props => props.theme.font};
   }
+
   input {
     border: none;
     border-bottom: 1px solid ${props => props.theme.pureBlack};
@@ -31,9 +34,11 @@ const StyledForm = styled.form`
   .invalid {
     border-bottom: 1px solid ${props => props.theme.red};
   }
+
   .or {
     margin: 5px 0;
   }
+
   label {
     color: #818384;
     display: inline-block;
@@ -59,42 +64,51 @@ const StyledForm = styled.form`
     border-radius: 0.28571429rem;
     cursor: pointer;
   }
+
   button:hover {
     background: #cc0000;
   }
+
   button:disabled {
     background: ${props => props.theme.lightGrey};
     color: ${props => props.theme.grey};
   }
+
   .center {
     text-align: center;
     margin-top: 20px;
   }
+
   input:focus + label,
   input[data-empty='false'] + label {
     transform: translate3d(0, -15px, 0) scale(0.83);
   }
+
   .ui.facebook.button {
     display: block;
     margin: 0 auto 0.75rem auto;
   }
+
   .auth-links {
     color: ${props => props.theme.white};
     font-size: 15px;
     padding: 8px;
     text-align: center;
   }
+
   .auth-links a {
     color: #0079d3;
     display: inline-block;
     width: fit-content;
     margin: 0 10px 10px;
   }
+
   .auth-links a:hover {
     color: #3394dc;
   }
 
-  .auth-title {
+  h1.ui.header {
+    font-family: ${props => props.theme.font};
     color: ${props => props.theme.pureBlack};
     font-size: 2.8rem;
     font-weight: 700;

@@ -104,7 +104,6 @@ class RequestReset extends Component {
                       Hãy kiểm tra e-mail của bạn để tiếp tục.
                     </Message>
                   )}
-                  <h2>Yêu cầu đổi mật khẩu</h2>
                   <AuthForm
                     value={value}
                     config={inputConfig}
