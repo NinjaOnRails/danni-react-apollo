@@ -82,7 +82,6 @@ class Page extends Component {
           return (
             <ThemeProvider theme={defaultTheme}>
               <StyledPage>
-                {/* <SideDrawer> */}
                 <GlobalStyle
                   showSide={data.showSide}
                   showAuthModal={data.showAuthModal}
@@ -93,7 +92,6 @@ class Page extends Component {
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
                 {!pagesWithoutFooter.includes(route) && <Footer />}
-                {/* </SideDrawer> */}
               </StyledPage>
             </ThemeProvider>
           );

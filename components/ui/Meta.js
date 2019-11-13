@@ -17,7 +17,7 @@ const Meta = ({ watchPage }) => (
     <meta
       key="description"
       name="description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
+      content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
     />
     <meta
       name="keywords"
@@ -38,7 +38,7 @@ const Meta = ({ watchPage }) => (
     <meta property="og:title" content="Danni TV" key="og:title" />
     <meta
       property="og:description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
+      content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
       key="og:description"
     />
     {!watchPage && (
