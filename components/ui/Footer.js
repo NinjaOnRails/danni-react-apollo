@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Logo from './Logo';
 import FooterStyle from '../styles/FooterStyles';
 
-const pagesWithFooter = ['/new', '/about', '/me', '/user'];
+const pagesWithoutFooter = ['/', '/watch'];
 
 const Footer = () => (
   <FooterStyle>
@@ -85,4 +85,4 @@ const Footer = () => (
 );
 
 export default Footer;
-export { pagesWithFooter };
+export { pagesWithoutFooter };

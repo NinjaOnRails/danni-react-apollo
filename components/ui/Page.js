@@ -3,7 +3,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import Header from './Header';
-import Footer, { pagesWithFooter } from './Footer';
+import Footer, { pagesWithoutFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
@@ -92,7 +92,7 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner>{children}</Inner>
-                {pagesWithFooter.includes(route) && <Footer />}
+                {!pagesWithoutFooter.includes(route) && <Footer />}
                 {/* </SideDrawer> */}
               </StyledPage>
             </ThemeProvider>
