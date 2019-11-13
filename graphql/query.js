@@ -148,9 +148,10 @@ const VIDEO_QUERY = gql`
 `;
 
 const ALL_VIDEOS_QUERY = gql`
-  query ALL_VIDEOS_QUERY($contentLanguage: [Language!]) {
-    videos(
-      # first: 10
+  query ALL_VIDEOS_QUERY($contentLanguage: [Language!], $cursor: String) {
+    videosConnection(
+      first: 10
+      after: $cursor
       where: {
         OR: [
           { language_in: $contentLanguage }
@@ -159,26 +160,36 @@ const ALL_VIDEOS_QUERY = gql`
       }
       orderBy: createdAt_DESC
     ) {
-      id
-      originThumbnailUrl
-      originThumbnailUrlSd
-      originTitle
-      duration
-      originAuthor
-      originViewCount
-      addedBy {
-        id
-        displayName
-        avatar
-      }
-      audio(where: { language_in: $contentLanguage }) {
-        id
-        title
-        author {
+      edges {
+        node {
           id
-          displayName
-          avatar
+          originThumbnailUrl
+          originThumbnailUrlSd
+          originTitle
+          duration
+          originAuthor
+          originViewCount
+          addedBy {
+            id
+            displayName
+            avatar
+          }
+          audio(where: { language_in: $contentLanguage }) {
+            id
+            title
+            author {
+              id
+              displayName
+              avatar
+            }
+          }
         }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        startCursor
+        endCursor
       }
     }
   }

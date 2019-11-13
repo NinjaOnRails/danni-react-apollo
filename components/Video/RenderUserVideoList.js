@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
-import { Card, Icon, Image, Button, Loader } from 'semantic-ui-react';
+import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import Link from 'next/link';
-import InfiniteScroll from 'react-infinite-scroller';
 import VideoDeleteButton from './VideoDeleteButton';
-import VideoListStyles from '../styles/VideoListStyles';
 
 const formatDuration = duration => {
   // Convert and format duration
@@ -13,12 +11,11 @@ const formatDuration = duration => {
   }`;
 };
 
-const RenderVideoList = ({
+const RenderUserVideoList = ({
   dataVideos,
   hideAuthor,
   currentUser,
   deleteAudVid,
-  fetchMore,
 }) => {
   const renderVideoItem = (
     id,
@@ -100,98 +97,61 @@ const RenderVideoList = ({
     );
   };
 
-  const loadMore = () =>
-    fetchMore({
-      variables: {
-        cursor: dataVideos.videosConnection.pageInfo.endCursor,
-      },
-      updateQuery: (
-        previousResult,
-        {
-          fetchMoreResult: {
-            videosConnection: { edges, pageInfo, __typename },
-          },
-        }
-      ) =>
-        edges.length
-          ? {
-              // Put the new videos at the end of the list and update `pageInfo`
-              // so we have the new `endCursor` and `hasNextPage` values
-              videosConnection: {
-                __typename,
-                edges: [...previousResult.videosConnection.edges, ...edges],
-                pageInfo,
-              },
-            }
-          : previousResult,
-    });
-
   return (
-    <InfiniteScroll
-      pageStart={0}
-      loadMore={loadMore}
-      hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      loader={<Loader active inline="centered" key={0} />}
-    >
-      <VideoListStyles>
-        {dataVideos.videosConnection.edges.map(
-          ({
-            node: {
+    <>
+      {dataVideos.videos.map(
+        ({
+          originThumbnailUrl,
+          originThumbnailUrlSd,
+          originTitle,
+          originAuthor,
+          originViewCount,
+          id,
+          audio,
+          duration,
+          addedBy,
+        }) => {
+          const displayDuration = formatDuration(duration);
+          if (audio.length === 0) {
+            return renderVideoItem(
+              id,
               originThumbnailUrl,
               originThumbnailUrlSd,
               originTitle,
+              displayDuration,
               originAuthor,
-              originViewCount,
-              id,
-              audio,
-              duration,
-              addedBy,
-            },
-          }) => {
-            const displayDuration = formatDuration(duration);
-            if (audio.length === 0) {
-              return renderVideoItem(
-                id,
-                originThumbnailUrl,
-                originThumbnailUrlSd,
-                originTitle,
-                displayDuration,
-                originAuthor,
-                addedBy
-              );
-            }
-            return audio.map(({ title, id: audioId, author }) =>
-              renderVideoItem(
-                id,
-                originThumbnailUrl,
-                originThumbnailUrlSd,
-                title,
-                displayDuration,
-                originAuthor,
-                author,
-                audioId
-              )
+              addedBy
             );
           }
-        )}
-      </VideoListStyles>
-    </InfiniteScroll>
+          return audio.map(({ title, id: audioId, author }) => {
+            return renderVideoItem(
+              id,
+              originThumbnailUrl,
+              originThumbnailUrlSd,
+              title,
+              displayDuration,
+              originAuthor,
+              author,
+              audioId
+            );
+          });
+        }
+      )}
+    </>
   );
 };
 
-RenderVideoList.propTypes = {
+RenderUserVideoList.propTypes = {
   dataVideos: PropTypes.object.isRequired,
-  fetchMore: PropTypes.func,
   deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
 };
 
-RenderVideoList.defaultProps = {
+RenderUserVideoList.defaultProps = {
   deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
-  fetchMore: undefined,
 };
 
-export default RenderVideoList;
+export default RenderUserVideoList;

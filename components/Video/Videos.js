@@ -48,19 +48,19 @@ const Videos = ({ videos: { data: initialVideoData } }) => (
         <LanguageMenuStyles>
           <ContentLanguage loadingData={loadingVideos} />
         </LanguageMenuStyles>
-        <VideoListStyles>
-          {(!contentLanguage.length && !initialVideoData) ||
-          (contentLanguage.length && (loadingVideos || !dataVideos)) ? (
+        {(!contentLanguage.length && !initialVideoData) ||
+        (contentLanguage.length && (loadingVideos || !dataVideos)) ? (
+          <VideoListStyles>
             <VideosLoading />
-          ) : errorVideos ? (
-            <Error>Error: {errorVideos.message}</Error>
-          ) : (
-            <RenderVideoList
-              dataVideos={dataVideos || initialVideoData}
-              fetchMore={fetchMore}
-            />
-          )}
-        </VideoListStyles>
+          </VideoListStyles>
+        ) : errorVideos ? (
+          <Error>Error: {errorVideos.message}</Error>
+        ) : (
+          <RenderVideoList
+            dataVideos={dataVideos || initialVideoData}
+            fetchMore={fetchMore}
+          />
+        )}
       </>
     )}
   </Composed>

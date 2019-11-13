@@ -1,6 +1,7 @@
-import { List, Image } from 'semantic-ui-react';
+import { List, Image, Loader } from 'semantic-ui-react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
+import InfiniteScroll from 'react-infinite-scroller';
 import {
   VideoItemStyles,
   ListDescriptionStyled,
@@ -70,58 +71,94 @@ const formatDuration = duration => {
 };
 
 const RenderSmallVideoList = ({
-  dataVideos: { videos },
+  dataVideos,
   id,
   audioId,
   onVideoItemClick,
+  fetchMore,
 }) => {
+  const loadMore = () =>
+    fetchMore({
+      variables: {
+        cursor: dataVideos.videosConnection.pageInfo.endCursor,
+      },
+      updateQuery: (
+        previousResult,
+        {
+          fetchMoreResult: {
+            videosConnection: { edges, pageInfo, __typename },
+          },
+        }
+      ) =>
+        edges.length
+          ? {
+              // Put the new videos at the end of the list and update `pageInfo`
+              // so we have the new `endCursor` and `hasNextPage` values
+              videosConnection: {
+                __typename,
+                edges: [...previousResult.videosConnection.edges, ...edges],
+                pageInfo,
+              },
+            }
+          : previousResult,
+    });
+
   return (
-    <SmallVideoListStyles>
-      <List divided relaxed>
-        {videos.map(
-          ({
-            audio,
-            originTitle,
-            addedBy,
-            id: videoId,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            originAuthor,
-            duration,
-          }) => {
-            const displayDuration = formatDuration(duration);
-            if (audio.length === 0 && videoId !== id) {
-              return renderVideoItem(
-                onVideoItemClick,
-                videoId,
+    <InfiniteScroll
+      pageStart={0}
+      loadMore={loadMore}
+      hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
+      loader={<Loader active inline="centered" key={0} />}
+    >
+      <SmallVideoListStyles>
+        <List divided relaxed>
+          {dataVideos.videosConnection.edges.map(
+            ({
+              node: {
+                audio,
+                originTitle,
+                addedBy,
+                id: videoId,
                 originThumbnailUrl,
                 originThumbnailUrlSd,
-                originTitle,
-                displayDuration,
                 originAuthor,
-                addedBy
-              );
-            }
-            return audio.map(el => {
-              if (audioId !== el.id) {
+                duration,
+              },
+            }) => {
+              const displayDuration = formatDuration(duration);
+              if (audio.length === 0 && videoId !== id) {
                 return renderVideoItem(
                   onVideoItemClick,
                   videoId,
                   originThumbnailUrl,
                   originThumbnailUrlSd,
-                  el.title,
+                  originTitle,
                   displayDuration,
                   originAuthor,
-                  el.author,
-                  el.id
+                  addedBy
                 );
               }
-              return null;
-            });
-          }
-        )}
-      </List>
-    </SmallVideoListStyles>
+              return audio.map(el => {
+                if (audioId !== el.id) {
+                  return renderVideoItem(
+                    onVideoItemClick,
+                    videoId,
+                    originThumbnailUrl,
+                    originThumbnailUrlSd,
+                    el.title,
+                    displayDuration,
+                    originAuthor,
+                    el.author,
+                    el.id
+                  );
+                }
+                return null;
+              });
+            }
+          )}
+        </List>
+      </SmallVideoListStyles>
+    </InfiniteScroll>
   );
 };
 

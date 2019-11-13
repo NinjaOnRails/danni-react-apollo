@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 import { Query, Mutation } from 'react-apollo';
 import Head from 'next/head';
-import RenderVideoList from '../Video/RenderVideoList';
+import RenderUserVideoList from '../Video/RenderUserVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import { user, contentLanguageQuery } from '../UI/ContentLanguage';
 import UserInfo from './UserInfo';
@@ -104,7 +104,7 @@ class UserProfile extends Component {
           // Only display videos added by user intentionally, ie language is specified
           const videosWithLang = video.filter(el => el.language);
 
-          // To be displayed by RenderVideoList component they need to satisty this condition
+          // To be displayed by RenderUserVideoList component they need to satisty this condition
           videosWithLang.forEach((el, i) => {
             videosWithLang[i].audio = [];
           });
@@ -182,7 +182,7 @@ class UserProfile extends Component {
                   <Loader active inline="centered" />
                 ) : (
                   <VideoListStyles>
-                    <RenderVideoList
+                    <RenderUserVideoList
                       dataVideos={{ videos }}
                       hideAuthor
                       currentUser={currentUser}

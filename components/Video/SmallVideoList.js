@@ -30,7 +30,12 @@ const SmallVideoList = props => {
     <Composed>
       {({
         contentLanguageQuery: { contentLanguage },
-        videos: { loading: loadingVideos, errorVideos, data: dataVideos },
+        videos: {
+          loading: loadingVideos,
+          errorVideos,
+          data: dataVideos,
+          fetchMore,
+        },
       }) => (
         <>
           <LanguageMenuStyles>
@@ -47,6 +52,7 @@ const SmallVideoList = props => {
           ) : (
             <RenderSmallVideoList
               dataVideos={dataVideos || initialVideoData}
+              fetchMore={fetchMore}
               {...props}
             />
           )}
