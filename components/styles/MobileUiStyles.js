@@ -38,7 +38,7 @@ export const SideDrawerStyles = styled.div`
       margin-left: 2rem;
       text-transform: uppercase;
       font-size: 1rem;
-      padding: 1%;
+      padding: 1% 0;
     }
 
     .ui.menu .item {
