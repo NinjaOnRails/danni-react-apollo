@@ -12,8 +12,6 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
   });
   const [userInfoForm, setUserInfoForm] = useState({ ...userInfoFields });
   const [infoVisibility, setInfoVisibility] = useState({});
-  const [infoFormValid, setInfoFormValid] = useState(false);
-  const [passwordFormValid, setpasswordFormValid] = useState(false);
 
   const [displayPassword, setDisplayPassword] = useState(false);
   const [showPasswordChange, setShowPasswordChange] = useState(false);
@@ -47,22 +45,22 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
     });
   });
 
+  console.log(variables);
+
   const [updateUser, { loading, error }] = useUpdateUserMutation({
     id,
     variables,
   });
 
   const handleChange = (e, { name, checked }) => {
-    setInfoFormValid(true);
     setInfoVisibility({ ...infoVisibility, [name]: checked });
   };
 
   const onSubmit = async e => {
     e.preventDefault();
     const { newPassword, confirmPassword } = userPasswordForm;
-
     if (newPassword.value !== confirmPassword.value) {
-      clearForm(userPasswordFields, setUserPasswordForm, setpasswordFormValid);
+      clearForm(userPasswordFields, setUserPasswordForm);
       setPasswordsMatch({
         message: 'Mật khẩu mới không khớp. Xin vui lòng điền lại',
       });
@@ -104,13 +102,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
                 defaultValue={currentUser[name]}
                 error={validation && !valid && modified}
                 onChange={e =>
-                  inputChangeHandler(
-                    e,
-                    inputId,
-                    userInfoForm,
-                    setUserInfoForm,
-                    setInfoFormValid
-                  )
+                  inputChangeHandler(e, inputId, userInfoForm, setUserInfoForm)
                 }
               />
               {boxName && (
@@ -154,29 +146,24 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
                       e,
                       inputId,
                       userPasswordForm,
-                      setUserPasswordForm,
-                      setpasswordFormValid
+                      setUserPasswordForm
                     )
                   }
                 />
-                {/* {name === 'password' && (
-                      <Popup
-                        content={
-                          displayPassword
-                            ? 'Giấu mật khẩu'
-                            : 'Hiển thị mật khẩu'
-                        }
-                        trigger={
-                          <Icon
-                            className="display-hide-password"
-                            name={displayPassword ? 'eye' : 'eye slash'}
-                            onClick={() =>
-                              setDisplayPassword(!displayPassword)
-                            }
-                          />
-                        }
+                {name === 'password' && (
+                  <Popup
+                    content={
+                      displayPassword ? 'Giấu mật khẩu' : 'Hiển thị mật khẩu'
+                    }
+                    trigger={
+                      <Icon
+                        className="display-hide-password"
+                        name={displayPassword ? 'eye' : 'eye slash'}
+                        onClick={() => setDisplayPassword(!displayPassword)}
                       />
-                    )} */}
+                    }
+                  />
+                )}
               </Form.Group>
             )
           )) || (
@@ -191,17 +178,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
           </p>
         )}
 
-        <Button
-          type="submit"
-          primary
-          icon
-          labelPosition="left"
-          size="big"
-          disabled={
-            (!displayPassword && !infoFormValid) ||
-            (displayPassword && !passwordFormValid)
-          }
-        >
+        <Button type="submit" primary icon labelPosition="left" size="big">
           <Icon name="check" />
           {loading && 'Đang '}Xác nhận
         </Button>

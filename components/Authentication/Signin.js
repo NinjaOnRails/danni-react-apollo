@@ -9,7 +9,7 @@ import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
 import { signinFields } from './fieldTypes';
 import { trackSignIn } from '../../lib/mixpanel';
-import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
+import { inputChangeHandler, onFacebookLoginClick } from './utils';
 import {
   useSigninMutation,
   useFacebookLoginMutation,
@@ -21,7 +21,6 @@ const Signin = ({ modal }) => {
   const [signinForm, setSigninForm] = useState({
     ...signinFields,
   });
-  const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
 
   const { contentLanguage, previousPage } = useLocalStateQuery();
@@ -50,7 +49,6 @@ const Signin = ({ modal }) => {
       variables: { ...variables },
     });
     if (data) {
-      clearForm(signinFields, setSigninForm, setFormValid);
       trackSignIn(data.signin.id);
       if (modal) {
         closeAuthModal();
@@ -99,13 +97,7 @@ const Signin = ({ modal }) => {
                 shouldValidate={input.validation}
                 invalid={!input.valid}
                 saveToState={e =>
-                  inputChangeHandler(
-                    e,
-                    id,
-                    signinForm,
-                    setSigninForm,
-                    setFormValid
-                  )
+                  inputChangeHandler(e, id, signinForm, setSigninForm)
                 }
                 touched={input.modified}
               />

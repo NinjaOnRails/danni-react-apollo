@@ -10,7 +10,7 @@ import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
 import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
-import { inputChangeHandler, clearForm, onFacebookLoginClick } from './utils';
+import { inputChangeHandler, onFacebookLoginClick } from './utils';
 import {
   useFacebookLoginMutation,
   useLocalStateQuery,
@@ -22,7 +22,6 @@ const Signup = ({ modal }) => {
   const [signupForm, setSignupForm] = useState({
     ...signupFields,
   });
-  const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [displayPassword, setdisplayPassword] = useState(false);
 
@@ -59,19 +58,6 @@ const Signup = ({ modal }) => {
     e.preventDefault();
     const { data } = await signup();
     if (data) {
-      clearForm(
-        {
-          ...signupFields,
-          displayName: {
-            ...signupFields.displayName,
-            value: generateName(),
-            valid: true,
-          },
-        },
-        setSignupForm,
-        setFormValid
-      );
-
       trackSignUp(data.signup);
       if (modal) {
         closeAuthModal();
@@ -122,13 +108,7 @@ const Signup = ({ modal }) => {
                   shouldValidate={input.validation}
                   invalid={!input.valid}
                   saveToState={e =>
-                    inputChangeHandler(
-                      e,
-                      id,
-                      signupForm,
-                      setSignupForm,
-                      setFormValid
-                    )
+                    inputChangeHandler(e, id, signupForm, setSignupForm)
                   }
                   touched={input.modified}
                   autoComplete="new-password"

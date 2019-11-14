@@ -47,7 +47,6 @@ const Reset = ({ router }) => {
       setPasswordsMatch(null);
       const { data } = await resetPassword();
       if (data) {
-        clearForm(resetFields, setResetForm, setFormValid);
         setRedirecting(true);
         router.push('/');
       }

@@ -23,17 +23,8 @@ const validateInput = (value, rule) => {
   return isValid;
 };
 
-const inputChangeHandler = (
-  e,
-  // { type, checked, value },
-  input,
-  authForm,
-  setAuthForm,
-  setFormValid
-) => {
+const inputChangeHandler = (e, input, authForm, setAuthForm, setFormValid) => {
   const eventValue = e.target.value;
-  // const val = type === 'checkbox' ? checked : value;
-  // console.log(e);
   const updatedForm = {
     ...authForm,
   };
@@ -52,12 +43,12 @@ const inputChangeHandler = (
     isFormValid = updatedForm[key].valid && isFormValid;
   });
   setAuthForm(updatedForm);
-  setFormValid(isFormValid);
+  if (setFormValid) setFormValid(isFormValid);
 };
 
 const clearForm = (initialForm, setInitialForm, setFormInvalid) => {
   setInitialForm({ ...initialForm });
-  setFormInvalid(false);
+  if (setFormInvalid) setFormInvalid(false);
 };
 
 const onFacebookLoginClick = ({
