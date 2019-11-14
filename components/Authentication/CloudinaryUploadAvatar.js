@@ -1,4 +1,4 @@
-import React, { useState, createRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import {
@@ -34,7 +34,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
   } = useCloudinaryAuthAvatarMutation();
   const { currentUser, loading: loadingUser } = useCurrentUserQuery();
 
-  const fileInputRef = createRef();
+  const fileInputRef = useRef(null);
 
   const onDeleteFileSubmit = async () => {
     setUploadProgress(0);
