@@ -1,4 +1,3 @@
-import { Loader } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -29,7 +28,6 @@ const SmallVideoList = props => {
   return (
     <Composed>
       {({
-        contentLanguageQuery: { contentLanguage },
         videos: {
           loading: loadingVideos,
           errorVideos,
