@@ -1,69 +1,27 @@
-import React, { Component } from 'react';
-import { Checkbox, Item, Form, Button, Icon, Popup } from 'semantic-ui-react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Mutation } from 'react-apollo';
-import { UPDATE_USER_MUTATION } from '../../graphql/mutation';
-import { USER_QUERY, CURRENT_USER_QUERY } from '../../graphql/query';
+import { Checkbox, Item, Form, Button, Icon, Popup } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import { userInfoFields, userPasswordFields } from './fieldTypes';
-import { validateInput } from './utils';
-// refactor
-class UserInfoForm extends Component {
-  state = {
-    userPasswordForm: {
-      ...userPasswordFields,
-    },
-    formValid: false,
-    showPasswordChange: false,
-    displayPassword: false,
-  };
+import { inputChangeHandler, clearForm } from './utils';
+import { useUpdateUserMutation } from './authHooks';
 
-  handleChange = (e, { type, name, value, checked }) => {
-    const val = type === 'checkbox' ? checked : value;
-    this.setState({ [name]: val });
-  };
+const UserInfoForm = ({ currentUser, onCancelClick }) => {
+  const [userPasswordForm, setUserPasswordForm] = useState({
+    ...userPasswordFields,
+  });
+  const [userInfoForm, setUserInfoForm] = useState({ ...userInfoFields });
+  const [infoVisibility, setInfoVisibility] = useState({});
 
-  onSubmit = async (e, updateUser) => {
-    e.preventDefault();
-    const { data } = await updateUser();
-    if (data) this.props.onCancelClick();
-  };
+  const [displayPassword, setDisplayPassword] = useState(false);
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(null);
 
-  inputChangeHandler = (e, input) => {
-    const eventValue = e.target.value;
-    this.setState(prevState => {
-      const updatedForm = {
-        ...prevState.userPasswordForm,
-      };
-      const updatedInput = {
-        ...updatedForm[input],
-      };
-      updatedInput.value = eventValue;
-      updatedInput.valid = validateInput(
-        updatedInput.value,
-        updatedInput.validation
-      );
-      updatedInput.modified = true;
-      updatedForm[input] = updatedInput;
-      let formValid = true;
-      Object.keys(updatedForm).forEach(key => {
-        formValid = updatedForm[key].valid && formValid;
-      });
-      return { userPasswordForm: updatedForm, formValid };
-    });
-  };
-
-  render() {
-    const { currentUser, onCancelClick } = this.props;
-    const {
-      userPasswordForm,
-      showPasswordChange,
-      displayPassword,
-    } = this.state;
-    const { id } = currentUser;
-    const variables = {};
-    const formElArr = [];
-    const formPassArr = [];
+  const { id } = currentUser;
+  const variables = {};
+  const formElArr = [];
+  const formPassArr = [];
+  if (showPasswordChange) {
     Object.keys(userPasswordForm).forEach(key => {
       variables[key] = userPasswordForm[key].value;
       formPassArr.push({
@@ -71,148 +29,173 @@ class UserInfoForm extends Component {
         input: userPasswordForm[key],
       });
     });
-    Object.keys(userInfoFields).forEach(key => {
-      const { boxName } = userInfoFields[key];
-      if (boxName) {
-        variables[boxName] = this.state[boxName];
-      }
-      variables[key] = this.state[key];
-      formElArr.push({
-        id: key,
-        input: userInfoFields[key],
-      });
-    });
-    return (
-      <Mutation
-        mutation={UPDATE_USER_MUTATION}
-        variables={{ ...variables }}
-        refetchQueries={[
-          {
-            query: USER_QUERY,
-            variables: {
-              id,
-            },
-          },
-          {
-            query: CURRENT_USER_QUERY,
-          },
-        ]}
-      >
-        {(updateUser, { loading, error }) => (
-          <Item.Content verticalAlign="middle">
-            <Form
-              size="large"
-              unstackable
-              loading={loading}
-              onSubmit={e => this.onSubmit(e, updateUser)}
-            >
-              {formElArr.map(
-                ({
-                  id,
-                  input: {
-                    boxName,
-                    inputConfig: { label, type, name },
-                  },
-                }) => (
-                  <Form.Group inline key={id}>
-                    <Form.Input
-                      required={name === 'displayName' || name === 'email'}
-                      label={label}
-                      type={type}
-                      id={name}
-                      name={name}
-                      defaultValue={currentUser[name]}
-                      onChange={this.handleChange}
-                    />
-                    {boxName && (
-                      <Checkbox
-                        label="Công khai"
-                        name={boxName}
-                        defaultChecked={currentUser[boxName]}
-                        onChange={this.handleChange}
-                      />
-                    )}
-                  </Form.Group>
-                )
-              )}
-              {(showPasswordChange &&
-                formPassArr.map(
-                  ({
-                    id,
-                    input: {
-                      value,
-                      inputConfig: { label, type, name },
-                    },
-                  }) => (
-                    <Form.Group inline key={id}>
-                      <Form.Input
-                        label={label}
-                        type={displayPassword ? 'text' : type}
-                        id={name}
-                        name={name}
-                        value={value}
-                        onChange={e => this.inputChangeHandler(e, id)}
-                        autoComplete="new-password"
-                      />
-                      {/* {name === 'password' && (
-                        <Popup
-                          content={
-                            displayPassword
-                              ? 'Giấu mật khẩu'
-                              : 'Hiển thị mật khẩu'
-                          }
-                          trigger={
-                            <Icon
-                              className="display-hide-password"
-                              name={displayPassword ? 'eye' : 'eye slash'}
-                              onClick={() =>
-                                this.setState({
-                                  displayPassword: !displayPassword,
-                                })
-                              }
-                            />
-                          }
-                        />
-                      )} */}
-                    </Form.Group>
-                  )
-                )) || (
-                <p>
-                  <Button
-                    onClick={() => this.setState({ showPasswordChange: true })}
-                  >
-                    Đổi mật khẩu
-                  </Button>
-                </p>
-              )}
-              <Error error={error} />
-              <Button
-                type="submit"
-                primary
-                icon
-                labelPosition="left"
-                size="big"
-              >
-                <Icon name="check" />
-                {loading && 'Đang '}Xác nhận
-              </Button>
-              <Button
-                type="button"
-                icon
-                labelPosition="left"
-                size="big"
-                onClick={onCancelClick}
-              >
-                <Icon name="cancel" />
-                Huỷ
-              </Button>
-            </Form>
-          </Item.Content>
-        )}
-      </Mutation>
-    );
   }
-}
+  Object.keys(userInfoForm).forEach(key => {
+    const { boxName } = userInfoForm[key];
+
+    if (boxName) {
+      variables[boxName] = infoVisibility[boxName];
+    }
+    if (userInfoForm[key].value) {
+      variables[key] = userInfoForm[key].value;
+    }
+    formElArr.push({
+      id: key,
+      input: userInfoForm[key],
+    });
+  });
+
+  console.log(variables);
+
+  const [updateUser, { loading, error }] = useUpdateUserMutation({
+    id,
+    variables,
+  });
+
+  const handleChange = (e, { name, checked }) => {
+    setInfoVisibility({ ...infoVisibility, [name]: checked });
+  };
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    const { newPassword, confirmPassword } = userPasswordForm;
+    if (newPassword.value !== confirmPassword.value) {
+      clearForm(userPasswordFields, setUserPasswordForm);
+      setPasswordsMatch({
+        message: 'Mật khẩu mới không khớp. Xin vui lòng điền lại',
+      });
+    } else {
+      setPasswordsMatch(null);
+      const { data } = await updateUser();
+      if (data) onCancelClick();
+    }
+  };
+
+  return (
+    <Item.Content verticalAlign="middle">
+      <Form
+        size="large"
+        unstackable
+        loading={loading}
+        onSubmit={e => onSubmit(e)}
+      >
+        <Error error={error} />
+        <Error error={passwordsMatch} />
+        {formElArr.map(
+          ({
+            id: inputId,
+            input: {
+              boxName,
+              modified,
+              validation,
+              valid,
+              inputConfig: { label, type, name },
+            },
+          }) => (
+            <Form.Group inline key={inputId}>
+              <Form.Input
+                required={name === 'displayName' || name === 'email'}
+                label={label}
+                type={type}
+                id={name}
+                name={name}
+                defaultValue={currentUser[name]}
+                error={validation && !valid && modified}
+                onChange={e =>
+                  inputChangeHandler(e, inputId, userInfoForm, setUserInfoForm)
+                }
+              />
+              {boxName && (
+                <Checkbox
+                  label="Công khai"
+                  name={boxName}
+                  defaultChecked={currentUser[boxName]}
+                  onChange={handleChange}
+                />
+              )}
+            </Form.Group>
+          )
+        )}
+        {(showPasswordChange &&
+          formPassArr.map(
+            ({
+              id: inputId,
+              input: {
+                value,
+                modified,
+                validation,
+                valid,
+                mustMatch,
+                inputConfig: { label, type, name },
+              },
+            }) => (
+              <Form.Group inline key={inputId}>
+                <Form.Input
+                  autoComplete="new-password"
+                  label={label}
+                  type={displayPassword ? 'text' : type}
+                  id={name}
+                  name={name}
+                  value={value}
+                  error={
+                    (validation && !valid && modified) ||
+                    (mustMatch && passwordsMatch && !modified)
+                  }
+                  onChange={e =>
+                    inputChangeHandler(
+                      e,
+                      inputId,
+                      userPasswordForm,
+                      setUserPasswordForm
+                    )
+                  }
+                />
+                {name === 'password' && (
+                  <Popup
+                    content={
+                      displayPassword ? 'Giấu mật khẩu' : 'Hiển thị mật khẩu'
+                    }
+                    trigger={
+                      <Icon
+                        className="display-hide-password"
+                        name={displayPassword ? 'eye' : 'eye slash'}
+                        onClick={() => setDisplayPassword(!displayPassword)}
+                      />
+                    }
+                  />
+                )}
+              </Form.Group>
+            )
+          )) || (
+          <p>
+            <Button
+              onClick={() => {
+                setShowPasswordChange(true);
+              }}
+            >
+              Đổi mật khẩu
+            </Button>
+          </p>
+        )}
+
+        <Button type="submit" primary icon labelPosition="left" size="big">
+          <Icon name="check" />
+          {loading && 'Đang '}Xác nhận
+        </Button>
+        <Button
+          type="button"
+          icon
+          labelPosition="left"
+          size="big"
+          onClick={onCancelClick}
+        >
+          <Icon name="cancel" />
+          Huỷ
+        </Button>
+      </Form>
+    </Item.Content>
+  );
+};
 
 UserInfoForm.propTypes = {
   currentUser: PropTypes.object,
