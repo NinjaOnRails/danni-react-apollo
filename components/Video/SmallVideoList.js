@@ -17,13 +17,14 @@ const LanguageMenuStyles = styled.div`
   }
 `;
 
-const SmallVideoList = props => {
-  const {
-    audios: { data: initialAudioData },
-    videos: { data: initialVideoData },
-    currentWatchingLanguage,
-  } = props;
-
+const SmallVideoList = ({
+  id,
+  audioId,
+  audios: { data: initialAudioData },
+  videos: { data: initialVideoData },
+  currentWatchingLanguage,
+  onVideoItemClick,
+}) => {
   const {
     loading: loadingAudios,
     error: errorAudios,
@@ -56,7 +57,9 @@ const SmallVideoList = props => {
         <RenderSmallVideoList
           dataAudios={dataAudios || initialAudioData}
           dataVideos={dataVideos || initialVideoData}
-          {...props}
+          id={id}
+          audioId={audioId}
+          onVideoItemClick={onVideoItemClick}
         />
       )}
     </>
