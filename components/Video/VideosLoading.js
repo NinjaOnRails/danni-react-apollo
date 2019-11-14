@@ -2,9 +2,9 @@ import { Placeholder } from 'semantic-ui-react';
 
 const VideosLoading = () => (
   <>
-    {[...Array(10)].map((x, i) => (
+    {[...Array(12)].map((x, i) => (
       <span key={i}>
-        <Placeholder fluid>
+        <Placeholder>
           <Placeholder.Image />
           <Placeholder.Paragraph>
             <Placeholder.Line length="very long" />

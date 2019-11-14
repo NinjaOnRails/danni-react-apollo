@@ -4,9 +4,7 @@ import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { ALL_VIDEOS_QUERY } from '../../graphql/query';
-import VideosLoading from './VideoLoading';
 import RenderVideoList from './RenderVideoList';
-import VideoListStyles from '../styles/VideoListStyles';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 
 const LanguageMenuStyles = styled.div`
@@ -36,7 +34,6 @@ const Composed = adopt({
 const Videos = ({ videos: { data: initialVideoData } }) => (
   <Composed>
     {({
-      contentLanguageQuery: { contentLanguage },
       videos: {
         loading: loadingVideos,
         errorVideos,
@@ -48,12 +45,7 @@ const Videos = ({ videos: { data: initialVideoData } }) => (
         <LanguageMenuStyles>
           <ContentLanguage loadingData={loadingVideos} />
         </LanguageMenuStyles>
-        {(!contentLanguage.length && !initialVideoData) ||
-        (contentLanguage.length && (loadingVideos || !dataVideos)) ? (
-          <VideoListStyles>
-            <VideosLoading />
-          </VideoListStyles>
-        ) : errorVideos ? (
+        {errorVideos ? (
           <Error>Error: {errorVideos.message}</Error>
         ) : (
           <RenderVideoList
