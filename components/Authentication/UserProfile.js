@@ -74,10 +74,6 @@ const UserProfile = ({
         style={{ width: '80%', margin: '3.75rem auto 0 auto' }}
       >
         <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
-        {/* <Error error={deleteAudVidError} /> */}
-        {/* {deleteAudVidLoading ? (
-          <Loader active inline="centered" />
-        ) : ( */}
         <VideoListStyles>
           <RenderVideoList
             dataAudios={{ audios: audio }}
@@ -86,7 +82,6 @@ const UserProfile = ({
             currentUser={currentUser}
           />
         </VideoListStyles>
-        {/* )} */}
       </div>
     </>
   );

@@ -44,9 +44,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
       input: userInfoForm[key],
     });
   });
-
-  console.log(variables);
-
+  
   const [updateUser, { loading, error }] = useUpdateUserMutation({
     id,
     variables,
