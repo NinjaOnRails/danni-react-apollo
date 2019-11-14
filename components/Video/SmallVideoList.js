@@ -44,10 +44,7 @@ const SmallVideoList = props => {
               loadingData={loadingVideos}
             />
           </LanguageMenuStyles>
-          {(!contentLanguage.length && !initialVideoData) ||
-          (contentLanguage.length && (loadingVideos || !dataVideos)) ? (
-            <Loader active inline="centered" />
-          ) : errorVideos ? (
+          {errorVideos ? (
             <Error>Error: {errorVideos.message}</Error>
           ) : (
             <RenderSmallVideoList
