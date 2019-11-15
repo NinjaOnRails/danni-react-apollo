@@ -38,18 +38,28 @@ const Watch = ({
   const youtubePlayer = useRef(null);
   const filePlayer = useRef(null);
 
+  const url = `https://www.danni.tv${asPath}
+  `;
+  if (error) return <Error error={error} />;
+  if (loading) return <Loader active inline="centered" />;
+  const { video } = data;
+  if (!video) return <p>No Video Found for ID: {id}</p>;
+  const currentWatchingLanguage = video.audio[0]
+    ? video.audio[0].language
+    : video.language;
+
   useEffect(() => {
     if (youtubePlayer.current) {
       setPlayedFilePlayer(0);
       setPlayedYoutube(0);
       setReadyYoutube(false);
-      console.log(youtubePlayer.current);
       // Unmute after auto mute below in case new video opened has no separate audio
-      // youtubePlayer.current.getInternalPlayer().unMute();
+      youtubePlayer.current.getInternalPlayer();
+      // .unMute();
     }
   }, [id, audioId]);
 
-  const onProgressYoutube = (e, video) => {
+  const onProgressYoutube = e => {
     const { playedSeconds } = e;
 
     // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
@@ -97,7 +107,7 @@ const Watch = ({
     setShowFullDescription(!showFullDescription);
   };
 
-  const renderVideoPlayer = video => {
+  const renderVideoPlayer = () => {
     return (
       <YoutubeStyle onClick={() => setPlayingFilePlayer(!playingFilePlayer)}>
         <YouTubePlayer
@@ -110,7 +120,7 @@ const Watch = ({
           controls
           onPause={() => setPlayingFilePlayer(false)}
           onPlay={() => setPlayingFilePlayer(true)}
-          onProgress={e => onProgressYoutube(e, video)}
+          onProgress={e => onProgressYoutube(e)}
           onStart={() => trackPlayStart(video)}
           onEnded={() => trackPlayFinish(video)}
           ref={youtubePlayer}
@@ -143,15 +153,6 @@ const Watch = ({
     );
   };
 
-  const url = `https://www.danni.tv${asPath}
-    `;
-  if (error) return <Error error={error} />;
-  if (loading) return <Loader active inline="centered" />;
-  const { video } = data;
-  if (!video) return <p>No Video Found for ID: {id}</p>;
-  const currentWatchingLanguage = video.audio[0]
-    ? video.audio[0].language
-    : video.language;
   return (
     <>
       <VideoHeader video={video} url={url} />

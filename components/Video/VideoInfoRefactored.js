@@ -82,7 +82,6 @@ const VideoInfo = ({
                 userId={currentUser.id}
               />
             </>
-            )}
           </div>
         )}
         <div className="views-social">
