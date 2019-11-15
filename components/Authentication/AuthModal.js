@@ -31,7 +31,7 @@ const AuthModal = () => {
       <Backdrop show={showAuthModal && !currentUser} clicked={closeAuthModal} />
       <div className="Modal">
         <div className="modal-container">
-          <h1 className="Logo">danni.tv</h1>
+          <h2 className="Logo">danni.tv</h2>
           <div className="auth-modes">
             <button
               type="button"
