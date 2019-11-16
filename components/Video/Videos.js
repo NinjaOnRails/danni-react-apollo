@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
-import VideosLoading from './VideoLoading';
 import RenderVideoList from './RenderVideoList';
-import VideoListStyles from '../styles/VideoListStyles';
 import ContentLanguage from '../UI/ContentLanguage';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 import { useQueryAllVideos } from './videoHooks';
@@ -26,19 +24,22 @@ const Videos = ({ videos: { data: initialVideoData } }) => {
     loading: loadingVideos,
     errorVideos,
     data: dataVideos,
+    fetchMore,
   } = useQueryAllVideos(contentLanguage);
   return (
     <>
       <LanguageMenuStyles>
         <ContentLanguage loadingData={loadingVideos} />
       </LanguageMenuStyles>
-      <VideoListStyles>
-        {errorVideos ? (
-          <Error>Error: {errorVideos.message}</Error>
-        ) : (
-          <RenderVideoList dataVideos={dataVideos || initialVideoData} />
-        )}
-      </VideoListStyles>
+
+      {errorVideos ? (
+        <Error>Error: {errorVideos.message}</Error>
+      ) : (
+        <RenderVideoList
+          dataVideos={dataVideos || initialVideoData}
+          fetchMore={fetchMore}
+        />
+      )}
     </>
   );
 };

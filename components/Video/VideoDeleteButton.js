@@ -5,13 +5,14 @@ import Error from '../UI/ErrorMessage';
 import { useDeleteAudVidMutation } from './videoHooks';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
-const VideoDeleteButton = ({ id, audioId, title, userId }) => {
+const VideoDeleteButton = ({ id, audioId, title, userId, redirect }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { contentLanguage } = useLocalStateQuery();
-  const [deleteAudVid, { loading, error }] = useDeleteAudVidMutation(
+  const [deleteAudVid, { loading, error }] = useDeleteAudVidMutation({
     contentLanguage,
-    userId
-  );
+    userId,
+    redirect,
+  });
   const onConfirmDelete = async () => {
     setOpenConfirm(false);
     deleteAudVid({
@@ -55,10 +56,12 @@ VideoDeleteButton.propTypes = {
   title: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   audioId: PropTypes.string,
+  redirect: PropTypes.bool,
 };
 
 VideoDeleteButton.defaultProps = {
   audioId: null,
+  redirect: false,
 };
 
 export default VideoDeleteButton;

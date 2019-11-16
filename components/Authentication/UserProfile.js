@@ -103,7 +103,6 @@ const UserProfile = ({
         <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
         <VideoListStyles>
           <RenderUserVideoList
-            dataAudios={{ audios: audio }}
             dataVideos={{ videos }}
             hideAuthor
             currentUser={currentUser}

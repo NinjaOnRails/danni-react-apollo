@@ -104,7 +104,6 @@ const RenderSmallVideoList = ({
               });
             }
           )}
-          )}
         </List>
       </SmallVideoListStyles>
     </InfiniteScroll>
@@ -117,11 +116,11 @@ RenderSmallVideoList.propTypes = {
   onVideoItemClick: PropTypes.func.isRequired,
   dataVideos: PropTypes.object.isRequired,
   fetchMore: PropTypes.func,
-  fetchMore: undefined,
 };
 
 RenderSmallVideoList.defaultProps = {
   audioId: '',
+  fetchMore: undefined,
 };
 
 export default RenderSmallVideoList;

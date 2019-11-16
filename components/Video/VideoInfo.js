@@ -80,9 +80,9 @@ const VideoInfo = ({
                 audioId={audioId}
                 title={title}
                 userId={currentUser.id}
+                redirect
               />
             </>
-            )}
           </div>
         )}
         <div className="views-social">

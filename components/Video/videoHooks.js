@@ -18,14 +18,16 @@ const useQueryAllVideos = contentLanguage => {
   });
 };
 
-const useDeleteAudVidMutation = (contentLanguage, userId) => {
+const useDeleteAudVidMutation = ({ contentLanguage, userId, redirect }) => {
   return useMutation(DELETE_AUDVID_MUTATION, {
     refetchQueries: [
       { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id: userId } },
     ],
-    onCompleted: () => Router.push('/'),
+    onCompleted: () => {
+      if (redirect) Router.push('/');
+    },
   });
 };
 

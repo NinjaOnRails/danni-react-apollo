@@ -6,7 +6,7 @@ const StyledForm = styled.form`
   width: 100%;
   fieldset {
     border: none;
-    width: ${props => (props.modal ? '100%' : '50%')};
+    width: ${props => (props.modal ? '100%' : '30%')};
     margin: ${props => (props.modal ? 0 : 'auto')};
     padding: 0;
   }

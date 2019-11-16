@@ -23,7 +23,6 @@ const Watch = ({
   asPath,
   payload: { error, loading, data },
   client,
-  audios,
   videos,
 }) => {
   const [playingFilePlayer, setPlayingFilePlayer] = useState(false);
@@ -178,7 +177,6 @@ const Watch = ({
         </div>
         <div className="list tablet-padding">
           <SmallVideoList
-            audios={audios}
             videos={videos}
             currentWatchingLanguage={currentWatchingLanguage}
             onVideoItemClick={() => onVideoItemClick(client)}
@@ -197,7 +195,6 @@ Watch.propTypes = {
   payload: PropTypes.object.isRequired,
   audioId: PropTypes.string,
   client: PropTypes.object.isRequired,
-  audios: PropTypes.object.isRequired,
   videos: PropTypes.object.isRequired,
 };
 

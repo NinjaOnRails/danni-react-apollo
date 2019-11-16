@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Flag } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {
@@ -6,56 +6,48 @@ import {
   flagOptions,
 } from '../../lib/supportedLanguages';
 import { CONTENT_LANGUAGE_QUERY } from '../../graphql/query';
-import fetchAudiosVideos from '../../lib/fetchAudiosVideos';
-// refactor
-class LanguageMenu extends Component {
-  state = {
-    disabled: false,
+import fetchVideos from '../../lib/fetchVideos';
+
+const LanguageMenu = ({
+  currentUser,
+  currentWatchingLanguage,
+  addContentLanguage,
+  updateContentLanguage,
+  client,
+  toggleContentLanguage,
+  contentLanguage: currentContentLanguage,
+  loadingUpdate,
+  sideDrawer,
+  loadingUser,
+  loadingData,
+
+  // currentUser: { contentLanguage },
+}) => {
+  const [disabled, setDisabled] = useState(false);
+
+  const buttonWidth = sideDrawer ? 2 : 1;
+
+  const updateLocalState = async language => {
+    // Update local state
+    setDisabled(true);
+    const {
+      data: {
+        toggleContentLanguage: {
+          data: { contentLanguage: toggledContentLanguage },
+        },
+      },
+    } = await toggleContentLanguage({
+      variables: {
+        language,
+      },
+    });
+    setDisabled(false);
+
+    return toggledContentLanguage;
   };
-
-  // Determine and set content language from one source
-  componentDidMount = () => {
-    const { currentUser } = this.props;
-    const languages = localStorage.getItem('contentLanguage');
-
-    if (currentUser) {
-      // Get user's content languages if signed in
-      this.initFromCurrentUser();
-      this.onCurrentWatchingLanguage();
-    } else if (languages) {
-      // Get content languages from local storage if present
-      this.initFromLocalStorage(languages);
-      this.onCurrentWatchingLanguage();
-    } else {
-      // Make browser's language default content language
-      this.initFromBrowser().then(() => this.onCurrentWatchingLanguage());
-    }
-  };
-
-  componentDidUpdate(prevProps) {
-    const { currentUser } = this.props;
-    // Update on sign in
-    if (
-      (currentUser && !prevProps.currentUser) ||
-      (currentUser &&
-        prevProps.currentUser &&
-        currentUser.id !== prevProps.currentUser.id)
-    )
-      this.initFromCurrentUser();
-
-    // Update on sign out
-    if (!currentUser && prevProps.currentUser) this.initFromBrowser();
-  }
 
   // If currently watching video of new language, add it
-  onCurrentWatchingLanguage = async () => {
-    const {
-      currentWatchingLanguage,
-      addContentLanguage,
-      currentUser,
-      updateContentLanguage,
-      client,
-    } = this.props;
+  const onCurrentWatchingLanguage = async () => {
     if (currentWatchingLanguage) {
       // Update Local State
       const { data } = await addContentLanguage({
@@ -66,50 +58,48 @@ class LanguageMenu extends Component {
 
       let {
         addContentLanguage: {
-          data: { contentLanguage },
+          data: { contentLanguage: addedContentLanguage },
         },
       } = data;
 
-      await fetchAudiosVideos({ client, contentLanguage });
+      await fetchVideos({
+        client,
+        contentLanguage: addedContentLanguage,
+      });
 
       const { data: newData } = await client.query({
         query: CONTENT_LANGUAGE_QUERY,
       });
 
       // Check Local State update again due to current Apollo Client bug
-      if (newData.contentLanguage.length !== contentLanguage.length) {
-        contentLanguage = await this.updateLocalState(currentWatchingLanguage);
+      if (newData.contentLanguage.length !== addedContentLanguage.length) {
+        addedContentLanguage = await updateLocalState(currentWatchingLanguage);
       }
 
       // If signed in update db too
       if (currentUser && addContentLanguage) {
         await updateContentLanguage({
           variables: {
-            contentLanguage,
+            contentLanguage: addedContentLanguage,
           },
         });
       }
     }
   };
 
-  initFromCurrentUser = () => {
-    const {
-      client,
-      currentUser: { contentLanguage },
-    } = this.props;
-
-    if (contentLanguage.length) {
-      localStorage.setItem('contentLanguage', contentLanguage.join());
+  const initFromCurrentUser = () => {
+    const { contentLanguage: userContentLanguage } = currentUser;
+    if (userContentLanguage.length) {
+      localStorage.setItem('contentLanguage', userContentLanguage.join());
       client.writeData({
         data: {
-          contentLanguage,
+          contentLanguage: userContentLanguage,
         },
       });
     }
   };
 
-  initFromLocalStorage = languages => {
-    const { client } = this.props;
+  const initFromLocalStorage = languages => {
     return client.writeData({
       data: {
         contentLanguage:
@@ -118,46 +108,20 @@ class LanguageMenu extends Component {
     });
   };
 
-  initFromBrowser = async () => {
-    const { addContentLanguage, client } = this.props;
+  const initFromBrowser = async () => {
     // const language = getSupportedLanguage(navigator.language); // User browser's language
     const { data } = await addContentLanguage({
       variables: { language: 'VIETNAMESE' },
     });
     if (data.addContentLanguage)
-      return fetchAudiosVideos({
+      return fetchVideos({
         client,
         contentLanguage: data.addContentLanguage.data.contentLanguage,
       });
     return null;
   };
 
-  updateLocalState = async language => {
-    // Update local state
-    this.setState({ disabled: true });
-    const {
-      data: {
-        toggleContentLanguage: {
-          data: { contentLanguage },
-        },
-      },
-    } = await this.props.toggleContentLanguage({
-      variables: {
-        language,
-      },
-    });
-    this.setState({ disabled: false });
-    return contentLanguage;
-  };
-
-  onChange = async (e, { name: language }) => {
-    const {
-      currentUser,
-      updateContentLanguage,
-      contentLanguage: currentContentLanguage,
-      client,
-    } = this.props;
-
+  const onChange = async (e, { name: language }) => {
     // Require min 1 language active
     if (
       currentContentLanguage.length === 1 &&
@@ -166,23 +130,26 @@ class LanguageMenu extends Component {
       return;
 
     // Disable buttons
-    this.setState({ disabled: true });
+    setDisabled(true);
 
     // Update Local State
-    let contentLanguage = await this.updateLocalState(language);
+    let contentLanguage = await updateLocalState(language);
 
     // Refetch data
-    await fetchAudiosVideos({ client, contentLanguage });
+    await fetchVideos({
+      client,
+      contentLanguage,
+    });
 
     const { data } = await client.query({ query: CONTENT_LANGUAGE_QUERY });
 
     // Check Local State update again due to current Apollo Client bug
     if (data.contentLanguage.length !== contentLanguage.length) {
-      contentLanguage = await this.updateLocalState(language);
+      contentLanguage = await updateLocalState(language);
     }
 
     // Re-enable buttons
-    this.setState({ disabled: false });
+    setDisabled(false);
 
     // Update user in db
     if (currentUser) {
@@ -194,48 +161,63 @@ class LanguageMenu extends Component {
     }
   };
 
-  render() {
-    const {
-      contentLanguage,
-      loadingUpdate,
-      sideDrawer,
-      loadingUser,
-      loadingData,
-    } = this.props;
-    const buttonWidth = sideDrawer ? 2 : 1;
-    return (
-      <>
-        <Button.Group
-          basic
-          icon
-          toggle
-          size="big"
-          vertical={sideDrawer}
-          widths={buttonWidth}
-        >
-          {flagOptions.map(({ key, value, flag, text }) => (
-            <Button
-              key={key}
-              name={value}
-              onClick={this.onChange}
-              active={contentLanguage.includes(value)}
-              disabled={
-                loadingUser ||
-                loadingUpdate ||
-                !contentLanguage.length ||
-                loadingData ||
-                this.state.disabled
-              }
-            >
-              <Flag name={flag} />
-              {sideDrawer && text}
-            </Button>
-          ))}
-        </Button.Group>
-      </>
-    );
-  }
-}
+  useEffect(() => {
+    const languages = localStorage.getItem('contentLanguage');
+
+    if (currentUser) {
+      // Get user's content languages if signed in
+      initFromCurrentUser();
+      onCurrentWatchingLanguage();
+    } else if (languages) {
+      // Get content languages from local storage if present
+      initFromLocalStorage(languages);
+      onCurrentWatchingLanguage();
+    } else {
+      // Make browser's language default content language
+      initFromBrowser().then(() => onCurrentWatchingLanguage());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      initFromCurrentUser();
+    } else {
+      initFromBrowser();
+    }
+  }, [currentUser]);
+
+  return (
+    <>
+      <Button.Group
+        basic
+        icon
+        toggle
+        size="big"
+        vertical={sideDrawer}
+        widths={buttonWidth}
+      >
+        {flagOptions.map(({ key, value, flag, text }) => (
+          <Button
+            key={key}
+            name={value}
+            onClick={onChange}
+            active={currentContentLanguage.includes(value)}
+            disabled={
+              loadingUser ||
+              loadingUpdate ||
+              !currentContentLanguage.length ||
+              loadingData ||
+              disabled
+            }
+          >
+            <Flag name={flag} />
+            {sideDrawer && text}
+          </Button>
+        ))}
+      </Button.Group>
+    </>
+  );
+};
 
 LanguageMenu.propTypes = {
   toggleContentLanguage: PropTypes.func.isRequired,

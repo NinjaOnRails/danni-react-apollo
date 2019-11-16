@@ -98,7 +98,6 @@ const Signup = ({ modal }) => {
               }
               modal={modal}
             >
-              <p className="auth-title">Tạo tài khoản miễn phí</p>
               <Header as="h1" textAlign="center">
                 Tạo tài khoản miễn phí
               </Header>

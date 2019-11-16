@@ -1,9 +1,5 @@
 import PropTypes from 'prop-types';
-import { Card, Icon, Image, Button } from 'semantic-ui-react';
-import Link from 'next/link';
-import VideoDeleteButton from './VideoDeleteButton';
 import VideoItem from './VideoItem';
-import { formatDuration } from './utils';
 
 const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
   return (

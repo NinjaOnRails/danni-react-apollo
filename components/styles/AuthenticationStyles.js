@@ -5,7 +5,7 @@ export const StyledMessage = styled.div`
   max-width: ${props => props.theme.maxWidth};
   margin: 24px auto;
   text-align: center;
-  width: 80%;
+  width: 50%;
 `;
 
 export const StyledHeader = styled(Message.Header)`

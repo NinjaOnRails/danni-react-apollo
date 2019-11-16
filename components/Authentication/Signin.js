@@ -88,7 +88,6 @@ const Signin = ({ modal }) => {
             }
             modal={modal}
           >
-            <p className="auth-title">Đăng nhập {modal && 'để tiếp tục'}</p>
             <Header as="h1" textAlign="center">
               Đăng nhập {modal && 'để tiếp tục'}
             </Header>
