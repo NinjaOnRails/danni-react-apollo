@@ -91,7 +91,7 @@ VideoItem.propTypes = {
   originAuthor: PropTypes.string.isRequired,
   author: PropTypes.object.isRequired,
   query: PropTypes.object.isRequired,
-  contentLanguage: PropTypes.array.isRequired,
+  contentLanguage: PropTypes.array,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
 };
@@ -101,6 +101,7 @@ VideoItem.defaultProps = {
   hideAuthor: false,
   currentUser: null,
   originThumbnailUrlSd: '',
+  contentLanguage: [],
 };
 
 export default VideoItem;
