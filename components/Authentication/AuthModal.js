@@ -12,20 +12,7 @@ const AuthModal = () => {
   const { showAuthModal } = useLocalStateQuery();
   const [closeAuthModal] = useCloseAuthModalMutation();
   const { currentUser } = useCurrentUserQuery();
-  const renderForm = authMode => {
-    if (authMode === 'signup') {
-      return (
-        <div className="auth-section">
-          <Signup modal />
-        </div>
-      );
-    }
-    return (
-      <div className="auth-section">
-        <Signin modal />
-      </div>
-    );
-  };
+
   return (
     <StyledModal show={showAuthModal && !currentUser}>
       <Backdrop show={showAuthModal && !currentUser} clicked={closeAuthModal} />
@@ -55,7 +42,9 @@ const AuthModal = () => {
             size="large"
             onClick={closeAuthModal}
           />
-          {renderForm(mode)}
+          <div className="auth-section">
+            {mode === 'signup' ? <Signup modal /> : <Signin modal />}
+          </div>
         </div>
       </div>
     </StyledModal>

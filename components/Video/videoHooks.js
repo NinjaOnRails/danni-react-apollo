@@ -29,7 +29,6 @@ const useDeleteAudVidMutation = (contentLanguage, userId) => {
   return useMutation(DELETE_AUDVID_MUTATION, {
     refetchQueries: [
       { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id: userId } },
     ],

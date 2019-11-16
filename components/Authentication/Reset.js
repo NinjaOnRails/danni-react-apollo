@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Head from 'next/head';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { withRouter } from 'next/router';
@@ -61,37 +62,47 @@ const Reset = ({ router }) => {
     );
 
   return (
-    <Form method="post" onSubmit={onSubmit}>
-      <p className="auth-title">Tạo mật khẩu mới</p>
-      <fieldset disabled={loading} aria-busy={loading}>
-        <Error error={error} />
-        <Error error={passwordsMatch} />
-        {formElArr.map(({ id, input }) => (
-          <AuthForm
-            key={id}
-            value={input.value}
-            config={input.inputConfig}
-            shouldValidate={input.validation}
-            invalid={!input.valid}
-            saveToState={e =>
-              inputChangeHandler(e, id, resetForm, setResetForm, setFormValid)
-            }
-            touched={input.modified}
-            autoComplete="new-password"
-          />
-        ))}
-        <div className="center">
-          <button type="submit" disabled={loading || !formValid}>
-            Đặt mật khẩu mới
-          </button>
+    <>
+      <Head>
+        <title key="title">Danni TV - Lập mật khẩu mới</title>
+        <meta
+          key="metaTitle"
+          name="title"
+          content="Danni TV - Lập mật khẩu mới"
+        />
+      </Head>
+      <Form method="post" onSubmit={onSubmit}>
+        <p className="auth-title">Tạo mật khẩu mới</p>
+        <fieldset disabled={loading} aria-busy={loading}>
+          <Error error={error} />
+          <Error error={passwordsMatch} />
+          {formElArr.map(({ id, input }) => (
+            <AuthForm
+              key={id}
+              value={input.value}
+              config={input.inputConfig}
+              shouldValidate={input.validation}
+              invalid={!input.valid}
+              saveToState={e =>
+                inputChangeHandler(e, id, resetForm, setResetForm, setFormValid)
+              }
+              touched={input.modified}
+              autoComplete="new-password"
+            />
+          ))}
+          <div className="center">
+            <button type="submit" disabled={loading || !formValid}>
+              Xác nhận
+            </button>
+          </div>
+        </fieldset>
+        <div className="auth-links">
+          <Link href="/requestReset">
+            <a>Gửi lại yêu cầu đổi mật khẩu</a>
+          </Link>
         </div>
-      </fieldset>
-      <div className="auth-links">
-        <Link href="/requestReset">
-          <a>Gửi lại yêu cầu đổi mật khẩu</a>
-        </Link>
-      </div>
-    </Form>
+      </Form>
+    </>
   );
 };
 

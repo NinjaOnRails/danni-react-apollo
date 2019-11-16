@@ -12,7 +12,7 @@ const UserInfo = ({
   const isOwner = currentUser && currentUser.id === userId;
   return (
     <Item.Content verticalAlign="middle">
-      <Item.Header>
+      <Item.Header as="h1">
         {displayName}{' '}
         {isOwner && (
           <Popup

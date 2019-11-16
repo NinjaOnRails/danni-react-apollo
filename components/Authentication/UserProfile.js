@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Item, Loader, Icon } from 'semantic-ui-react';
-import RenderVideoList from '../Video/RenderVideoList';
+import Head from 'next/head';
+import RenderUserVideoList from '../Video/RenderUserVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import UserInfo from './UserInfo';
 import UserProfileStyles from '../styles/UserProfileStyles';
@@ -28,8 +29,34 @@ const UserProfile = ({
   const fetchedUser = data ? data.user : initialData.user;
   const { audio, video, avatar, displayName } = fetchedUser;
 
+  // Only display videos added by user intentionally, ie language is specified
+  const videosWithLang = video.filter(el => el.language);
+
+  // To be displayed by RenderUserVideoList component they need to satisty this condition
+  videosWithLang.forEach((el, i) => {
+    videosWithLang[i].audio = [];
+  });
+
+  // Create video objects from user's audio uploads
+  const videosWithAudio = [];
+  audio.forEach(({ id: audioId, title }, i) => {
+    audio[i].video.audio = [
+      { id: audioId, title, author: { id: userId, displayName } },
+    ];
+    videosWithAudio.push({ ...audio[i].video });
+  });
+  const videos = [...videosWithAudio, ...videosWithLang];
+
   return (
     <>
+      <Head>
+        <title key="title">{user.displayName} | Danni TV</title>
+        <meta
+          key="metaTitle"
+          name="title"
+          content={`${user.displayName} | Danni TV`}
+        />
+      </Head>
       <UserProfileStyles>
         {currentUser && currentUser.id === userId && (
           <UpdateAvatarModal
@@ -63,7 +90,7 @@ const UserProfile = ({
                 userId={userId}
                 currentUser={currentUser}
                 onUserInfoEditClick={() => setEditMode(true)}
-                uploadsTotal={audio.length}
+                uploadsTotal={videos.length}
               />
             )}
           </Item>
@@ -75,9 +102,9 @@ const UserProfile = ({
       >
         <h1 style={{ marginBottom: '3rem' }}>Uploads:</h1>
         <VideoListStyles>
-          <RenderVideoList
+          <RenderUserVideoList
             dataAudios={{ audios: audio }}
-            dataVideos={{ videos: video }}
+            dataVideos={{ videos }}
             hideAuthor
             currentUser={currentUser}
           />

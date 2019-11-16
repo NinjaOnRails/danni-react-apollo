@@ -46,7 +46,11 @@ const UpdateAvatarModal = ({
             setChoiceTypeList();
           }}
         >
-          <Image src={`../../static/avatar/large/${avatar}`} size="tiny" />
+          <Image
+            src={`../../static/avatar/large/${avatar}`}
+            size="tiny"
+            alt={avatar}
+          />
         </List.Item>
       ))}
     </List>
