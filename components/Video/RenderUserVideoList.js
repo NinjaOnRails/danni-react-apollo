@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import VideoItem from './VideoItem';
+import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
+  const { contentLanguage } = useLocalStateQuery();
+
   return (
     <>
       {dataVideos.videos.map(
@@ -33,6 +36,7 @@ const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
                 hideAuthor={hideAuthor}
                 currentUser={currentUser}
                 query={query}
+                contentLanguage={contentLanguage}
               />
             );
           }
@@ -55,6 +59,7 @@ const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
                 hideAuthor={hideAuthor}
                 currentUser={currentUser}
                 query={query}
+                contentLanguage={contentLanguage}
               />
             );
           });

@@ -16,6 +16,7 @@ const VideoItem = ({
   hideAuthor,
   currentUser,
   query,
+  contentLanguage,
 }) => (
   <div>
     <Link
@@ -72,6 +73,7 @@ const VideoItem = ({
             audioId={audioId}
             title={title}
             userId={currentUser.id}
+            contentLanguage={contentLanguage}
           />
         </div>
       )
@@ -89,6 +91,7 @@ VideoItem.propTypes = {
   originAuthor: PropTypes.string.isRequired,
   author: PropTypes.object.isRequired,
   query: PropTypes.object.isRequired,
+  contentLanguage: PropTypes.array.isRequired,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
 };

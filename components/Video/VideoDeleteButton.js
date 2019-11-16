@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import { Button, Icon, Confirm, Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import { useDeleteAudVidMutation } from './videoHooks';
-import { useLocalStateQuery } from '../Authentication/authHooks';
 
-const VideoDeleteButton = ({ id, audioId, title, userId, redirect }) => {
+const VideoDeleteButton = ({
+  id,
+  audioId,
+  title,
+  userId,
+  redirect,
+  contentLanguage,
+}) => {
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { contentLanguage } = useLocalStateQuery();
   const [deleteAudVid, { loading, error }] = useDeleteAudVidMutation({
     contentLanguage,
     userId,
@@ -55,6 +60,7 @@ VideoDeleteButton.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
+  contentLanguage: PropTypes.array.isRequired,
   audioId: PropTypes.string,
   redirect: PropTypes.bool,
 };
