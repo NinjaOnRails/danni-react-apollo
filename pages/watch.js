@@ -1,6 +1,5 @@
 import { ApolloConsumer } from 'react-apollo';
-// import Watch from '../components/Video/Watch';
-import Watch from '../components/Video/WatchRefactored';
+import Watch from '../components/Video/Watch';
 import { VIDEO_QUERY } from '../graphql/query';
 import fetchVideos from '../lib/fetchVideos';
 
