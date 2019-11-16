@@ -1,84 +1,113 @@
 import PropTypes from 'prop-types';
-import { List } from 'semantic-ui-react';
+import InfiniteScroll from 'react-infinite-scroller';
+import { List, Loader } from 'semantic-ui-react';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
 import SmallVideoItem from './SmallVideoItem';
 
 const RenderSmallVideoList = ({
-  dataAudios: { audios },
-  dataVideos: { videos },
+  dataVideos,
   id,
   audioId,
   onVideoItemClick,
+  fetchMore,
 }) => {
-  return (
-    <SmallVideoListStyles>
-      <List divided relaxed>
-        {audios.map(({ id: vidAudioId, title, author, video }) => {
-          const {
-            id: videoId,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            originAuthor,
-            duration,
-          } = video;
-          if (audioId !== vidAudioId) {
-            const query = {
-              id: videoId,
-              audioId: vidAudioId,
-            };
-            return (
-              <SmallVideoItem
-                key={vidAudioId}
-                onVideoItemClick={onVideoItemClick}
-                id={videoId}
-                originThumbnailUrl={originThumbnailUrl}
-                originThumbnailUrlSd={originThumbnailUrlSd}
-                duration={duration}
-                originAuthor={originAuthor}
-                title={title}
-                author={author}
-                audioId={vidAudioId}
-                query={query}
-              />
-            );
-          }
-          return null;
-        })}
-        {videos.map(
-          ({
-            audio,
-            originTitle,
-            addedBy,
-            id: videoId,
-            originThumbnailUrl,
-            originThumbnailUrlSd,
-            originAuthor,
-            duration,
-          }) => {
-            if (audio.length === 0 && videoId !== id) {
-              const query = {
-                id: videoId,
-              };
-              return (
-                <SmallVideoItem
-                  key={videoId}
-                  onVideoItemClick={onVideoItemClick}
-                  id={videoId}
-                  originThumbnailUrl={originThumbnailUrl}
-                  originThumbnailUrlSd={originThumbnailUrlSd}
-                  duration={duration}
-                  originAuthor={originAuthor}
-                  title={originTitle}
-                  author={addedBy}
-                  query={query}
-                />
-              );
+  const loadMore = () => {
+    fetchMore({
+      variables: {
+        cursor: dataVideos.videosConnection.pageInfo.endCursor,
+      },
+      updateQuery: (
+        previousResult,
+        {
+          fetchMoreResult: {
+            videosConnection: { edges, pageInfo, __typename },
+          },
+        }
+      ) =>
+        edges.length
+          ? {
+              // Put the new videos at the end of the list and update `pageInfo`
+              // so we have the new `endCursor` and `hasNextPage` values
+              videosConnection: {
+                __typename,
+                edges: [...previousResult.videosConnection.edges, ...edges],
+                pageInfo,
+              },
             }
-            return null;
-          }
-        )}
-      </List>
-    </SmallVideoListStyles>
+          : previousResult,
+    });
+  };
+  return (
+    <InfiniteScroll
+      pageStart={0}
+      loadMore={loadMore}
+      hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
+      loader={<Loader active inline="centered" key={0} />}
+    >
+      <SmallVideoListStyles>
+        <List divided relaxed>
+          {dataVideos.videosConnection.edges.map(
+            ({
+              node: {
+                audio,
+                originTitle,
+                addedBy,
+                id: videoId,
+                originThumbnailUrl,
+                originThumbnailUrlSd,
+                originAuthor,
+                duration,
+              },
+            }) => {
+              if (audio.length === 0 && videoId !== id) {
+                const query = {
+                  id: videoId,
+                };
+                return (
+                  <SmallVideoItem
+                    key={videoId}
+                    onVideoItemClick={onVideoItemClick}
+                    id={videoId}
+                    originThumbnailUrl={originThumbnailUrl}
+                    originThumbnailUrlSd={originThumbnailUrlSd}
+                    duration={duration}
+                    originAuthor={originAuthor}
+                    title={originTitle}
+                    author={addedBy}
+                    query={query}
+                  />
+                );
+              }
+              return audio.map(({ id: vidAudioId, title, author, video }) => {
+                if (audioId !== vidAudioId) {
+                  const query = {
+                    id: videoId,
+                    audioId: vidAudioId,
+                  };
+                  return (
+                    <SmallVideoItem
+                      key={vidAudioId}
+                      onVideoItemClick={onVideoItemClick}
+                      id={videoId}
+                      originThumbnailUrl={originThumbnailUrl}
+                      originThumbnailUrlSd={originThumbnailUrlSd}
+                      duration={duration}
+                      originAuthor={originAuthor}
+                      title={title}
+                      author={author}
+                      audioId={vidAudioId}
+                      query={query}
+                    />
+                  );
+                }
+                return null;
+              });
+            }
+          )}
+          )}
+        </List>
+      </SmallVideoListStyles>
+    </InfiniteScroll>
   );
 };
 
@@ -86,8 +115,9 @@ RenderSmallVideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
-  dataAudios: PropTypes.object.isRequired,
   dataVideos: PropTypes.object.isRequired,
+  fetchMore: PropTypes.func,
+  fetchMore: undefined,
 };
 
 RenderSmallVideoList.defaultProps = {

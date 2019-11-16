@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import Head from 'next/head';
 import { Mutation, Query } from 'react-apollo';
 import { Loader, Container } from 'semantic-ui-react';
 import { adopt } from 'react-adopt';
@@ -503,45 +504,60 @@ class EditVideo extends Component {
           if (!data.video) return <p>No Video Found for {id}</p>;
           const oldValuesObject = this.getDefaultValues(data);
           return (
-            <Container>
-              <Form
-                data-test="form"
-                onSubmit={e =>
-                  this.onSubmit(
-                    e,
-                    updateVideo,
-                    createAudio,
-                    updateAudio,
-                    oldValuesObject
-                  )
-                }
-              >
-                <Error error={errorCreateAudio} />
-                <Error error={errorUpdateVideo} />
-                <Error error={errorUpdateAudio} />
-                <EditVideoForm
-                  {...this.state}
-                  {...oldValuesObject}
-                  audioId={audioId}
-                  loadingUpdateVideo={loadingUpdateVideo}
-                  loadingCreateAudio={loadingCreateAudio}
-                  loadingUpdateAudio={loadingUpdateAudio}
-                  handleChange={this.handleChange}
-                  handleDropdown={this.handleDropdown}
-                  onUploadFileSubmit={(cloudinaryAuth, id, e) =>
-                    this.onUploadFileSubmit(
-                      cloudinaryAuth,
-                      id,
+            <>
+              <Head>
+                <title key="title">
+                  {audioId ? data.video.audio[0].title : data.video.originTitle}{' '}
+                  | Danni TV - Sửa video
+                </title>
+                <meta
+                  key="metaTitle"
+                  name="title"
+                  content={`${
+                    audioId ? data.video.audio[0].title : data.video.originTitle
+                  } | Danni TV - Sửa video`}
+                />
+              </Head>
+              <Container>
+                <Form
+                  data-test="form"
+                  onSubmit={e =>
+                    this.onSubmit(
                       e,
+                      updateVideo,
+                      createAudio,
+                      updateAudio,
                       oldValuesObject
                     )
                   }
-                  onDeleteFileSubmit={this.onDeleteFileSubmit}
-                  onAudioLoadedMetadata={this.onAudioLoadedMetadata}
-                  onShowUpload={this.onShowUpload}
-                />
-              </Form>
-            </Container>
+                >
+                  <Error error={errorCreateAudio} />
+                  <Error error={errorUpdateVideo} />
+                  <Error error={errorUpdateAudio} />
+                  <EditVideoForm
+                    {...this.state}
+                    {...oldValuesObject}
+                    audioId={audioId}
+                    loadingUpdateVideo={loadingUpdateVideo}
+                    loadingCreateAudio={loadingCreateAudio}
+                    loadingUpdateAudio={loadingUpdateAudio}
+                    handleChange={this.handleChange}
+                    handleDropdown={this.handleDropdown}
+                    onUploadFileSubmit={(cloudinaryAuth, id, e) =>
+                      this.onUploadFileSubmit(
+                        cloudinaryAuth,
+                        id,
+                        e,
+                        oldValuesObject
+                      )
+                    }
+                    onDeleteFileSubmit={this.onDeleteFileSubmit}
+                    onAudioLoadedMetadata={this.onAudioLoadedMetadata}
+                    onShowUpload={this.onShowUpload}
+                  />
+                </Form>
+              </Container>
+            </>
           );
         }}
       </Composed>

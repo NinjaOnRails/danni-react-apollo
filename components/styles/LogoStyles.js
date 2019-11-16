@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const LogoStyles = styled.h1`
+const LogoStyles = styled.h2`
   font-size: 3rem;
   margin-left: ${props => (props.footer ? '0' : '2rem')};
   position: relative;

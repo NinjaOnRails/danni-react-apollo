@@ -2,8 +2,8 @@ import Head from 'next/head';
 
 const Meta = () => (
   <Head>
-    <title key="title">Danni TV</title>
-    <meta key="metaTitle" name="title" content="Danni TV" />
+    <title key="title">Danni TV - Trang chủ</title>
+    <meta key="metaTitle" name="title" content="Danni TV - Trang chủ" />
     {/* <meta
       key="description"
       name="description"
@@ -16,7 +16,7 @@ const Meta = () => (
     <meta
       key="description"
       name="description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
+      content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
     />
     <meta
       name="keywords"
@@ -35,6 +35,16 @@ const Meta = () => (
 
     <meta property="fb:app_id" content="398428117464454" />
     <meta property="og:title" content="Danni TV" key="og:title" />
+    <meta
+      property="og:description"
+      content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
+      key="og:description"
+    />
+    <meta
+      key="og:image"
+      property="og:image"
+      content="https://res.cloudinary.com/danni/image/upload/v1573162609/btluys8ednhxpolg868s.jpg"
+    />
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
     {/* <meta
@@ -42,11 +52,6 @@ const Meta = () => (
       content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
       key="og:description"
     /> */}
-    <meta
-      property="og:description"
-      content="Phim ngắn về giáo dục, khoa học, sức khoẻ, kinh tế và công nghệ. Thuyết minh Tiếng Việt"
-      key="og:description"
-    />
 
     <link rel="canonical" href="https://www.danni.tv/" />
     <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />

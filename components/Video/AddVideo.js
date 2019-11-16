@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
-import { Segment, Form, Loader, Header } from 'semantic-ui-react';
+import Head from 'next/head';
+import { Segment, Form, Loader } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import VideoForm from './VideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
@@ -158,50 +159,55 @@ const AddVideo = () => {
       </Loader>
     );
   return (
-    <AddVideoStyles>
-      <Header>Thêm Video/Thuyết Minh</Header>
-      <AddVideoSteps activeStep={activeStep} />
-      <Segment>
-        <Error error={errorCreateAudio} />
-        <Error error={errorCreateVideo} />
-        <Error error={{ message: error }} />
-        <Form
-          loading={loadingCreateAudio || loadingCreateVideo}
-          size="big"
-          onSubmit={async e => onFormSubmit(e, createAudio, createVideo)}
-        >
-          {activeStep === 'video' ? (
-            <VideoForm
-              setAddVideoState={setAddVideoState}
-              language={language}
-              source={source}
-              youtubeId={youtubeId}
-              videoValid={videoValid}
-            />
-          ) : activeStep === 'audio' ? (
-            <AudioForm
-              setAddVideoState={setAddVideoState}
-              isAudioSource={isAudioSource}
-              audioUrl={audioUrl}
-              secureUrl={secureUrl}
-              deleteToken={deleteToken}
-              language={language}
-              source={source}
-              onDeleteFileSubmit={onDeleteFileSubmit}
-              youtubeId={youtubeId}
-            />
-          ) : (
-            <DetailsForm
-              setAddVideoState={setAddVideoState}
-              title={title}
-              description={description}
-              tags={tags}
-              originTags={originTags}
-            />
-          )}
-        </Form>
-      </Segment>
-    </AddVideoStyles>
+    <>
+      <Head>
+        <title key="title">Danni TV - Thêm Video</title>
+        <meta key="metaTitle" name="title" content="Danni TV - Thêm Video" />
+      </Head>
+      <AddVideoStyles>
+        <AddVideoSteps activeStep={activeStep} />
+        <Segment>
+          <Error error={errorCreateAudio} />
+          <Error error={errorCreateVideo} />
+          <Error error={{ message: error }} />
+          <Form
+            loading={loadingCreateAudio || loadingCreateVideo}
+            size="big"
+            onSubmit={async e => onFormSubmit(e)}
+          >
+            {activeStep === 'video' ? (
+              <VideoForm
+                setAddVideoState={setAddVideoState}
+                language={language}
+                source={source}
+                youtubeId={youtubeId}
+                videoValid={videoValid}
+              />
+            ) : activeStep === 'audio' ? (
+              <AudioForm
+                setAddVideoState={setAddVideoState}
+                isAudioSource={isAudioSource}
+                audioUrl={audioUrl}
+                secureUrl={secureUrl}
+                deleteToken={deleteToken}
+                language={language}
+                source={source}
+                onDeleteFileSubmit={onDeleteFileSubmit}
+                youtubeId={youtubeId}
+              />
+            ) : (
+              <DetailsForm
+                setAddVideoState={setAddVideoState}
+                title={title}
+                description={description}
+                tags={tags}
+                originTags={originTags}
+              />
+            )}
+          </Form>
+        </Segment>
+      </AddVideoStyles>
+    </>
   );
 };
 

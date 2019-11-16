@@ -65,7 +65,10 @@ DetailsForm.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
-  originTags: PropTypes.arrayOf(string).isRequired,
+  originTags: PropTypes.arrayOf(string),
+};
+DetailsForm.defaultProps = {
+  originTags: [],
 };
 
 export default DetailsForm;

@@ -7,11 +7,11 @@ import Meta from '../components/UI/Meta';
 
 class MyApp extends App {
   render() {
-    const { Component, pageProps, apollo } = this.props;
+    const { Component, pageProps, apollo, router } = this.props;
     return (
       <ApolloProvider client={apollo}>
         <Meta />
-        <Page>
+        <Page route={router.route}>
           <Component {...pageProps} />
         </Page>
       </ApolloProvider>

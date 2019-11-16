@@ -6,7 +6,7 @@ import RenderVideoList from './RenderVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import ContentLanguage from '../UI/ContentLanguage';
 import { useLocalStateQuery } from '../Authentication/authHooks';
-import { useQueryAllAudios, useQueryAllVideos } from './videoHooks';
+import { useQueryAllVideos } from './videoHooks';
 
 const LanguageMenuStyles = styled.div`
   padding-bottom: 2rem;
@@ -19,16 +19,9 @@ const LanguageMenuStyles = styled.div`
   }
 `;
 
-const Videos = ({
-  audios: { data: initialAudioData },
-  videos: { data: initialVideoData },
-}) => {
+const Videos = ({ videos: { data: initialVideoData } }) => {
   const { contentLanguage } = useLocalStateQuery();
-  const {
-    loading: loadingAudios,
-    error: errorAudios,
-    data: dataAudios,
-  } = useQueryAllAudios(contentLanguage);
+
   const {
     loading: loadingVideos,
     errorVideos,
@@ -37,23 +30,13 @@ const Videos = ({
   return (
     <>
       <LanguageMenuStyles>
-        <ContentLanguage loadingData={loadingAudios || loadingVideos} />
+        <ContentLanguage loadingData={loadingVideos} />
       </LanguageMenuStyles>
       <VideoListStyles>
-        {(!contentLanguage.length &&
-          (!initialVideoData && !initialAudioData)) ||
-        (contentLanguage.length &&
-          (loadingAudios || loadingVideos || (!dataVideos && !dataAudios))) ? (
-          <VideosLoading />
-        ) : errorAudios ? (
-          <Error>Error: {errorAudios.message}</Error>
-        ) : errorVideos ? (
+        {errorVideos ? (
           <Error>Error: {errorVideos.message}</Error>
         ) : (
-          <RenderVideoList
-            dataAudios={dataAudios || initialAudioData}
-            dataVideos={dataVideos || initialVideoData}
-          />
+          <RenderVideoList dataVideos={dataVideos || initialVideoData} />
         )}
       </VideoListStyles>
     </>
@@ -61,7 +44,6 @@ const Videos = ({
 };
 
 Videos.propTypes = {
-  audios: PropTypes.object.isRequired,
   videos: PropTypes.object.isRequired,
 };
 

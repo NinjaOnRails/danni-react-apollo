@@ -14,6 +14,9 @@ const Nav = () => {
       <Link href="/new">
         <a>Thêm video</a>
       </Link>
+      <Link href="/about">
+        <a>Giới thiệu</a>
+      </Link>
       <Link href="/me">
         <a>Tài khoản</a>
       </Link>

@@ -54,7 +54,7 @@ const Watch = ({
       setPlayedYoutube(0);
       setReadyYoutube(false);
       // Unmute after auto mute below in case new video opened has no separate audio
-      youtubePlayer.current.getInternalPlayer();
+      if (readyYoutube) youtubePlayer.current.getInternalPlayer();
       // .unMute();
     }
   }, [id, audioId]);

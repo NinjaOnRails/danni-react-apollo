@@ -28,6 +28,7 @@ const CURRENT_USER_QUERY = gql`
         audio {
           id
         }
+        language
       }
       audio {
         id
@@ -38,9 +39,6 @@ const CURRENT_USER_QUERY = gql`
           originAuthor
           originThumbnailUrl
           duration
-        }
-        author {
-          id
         }
       }
     }
@@ -67,6 +65,7 @@ const USER_QUERY = gql`
         addedBy {
           id
         }
+        language
         audio {
           id
         }
@@ -80,9 +79,6 @@ const USER_QUERY = gql`
           originAuthor
           originThumbnailUrl
           duration
-        }
-        author {
-          id
         }
       }
     }
@@ -152,49 +148,48 @@ const VIDEO_QUERY = gql`
 `;
 
 const ALL_VIDEOS_QUERY = gql`
-  query ALL_VIDEOS_QUERY($contentLanguage: [Language!]) {
-    videos(where: { language_in: $contentLanguage }, orderBy: createdAt_DESC) {
-      id
-      originThumbnailUrl
-      originThumbnailUrlSd
-      originTitle
-      duration
-      originAuthor
-      originViewCount
-      addedBy {
-        id
-        displayName
-        avatar
+  query ALL_VIDEOS_QUERY($contentLanguage: [Language!], $cursor: String) {
+    videosConnection(
+      first: 12
+      after: $cursor
+      where: {
+        OR: [
+          { language_in: $contentLanguage }
+          { audio_some: { language_in: $contentLanguage } }
+        ]
       }
-      audio {
-        id
-        title
-        author {
+      orderBy: createdAt_DESC
+    ) {
+      edges {
+        node {
           id
-          displayName
-          avatar
+          originThumbnailUrl
+          originThumbnailUrlSd
+          originTitle
+          duration
+          originAuthor
+          originViewCount
+          addedBy {
+            id
+            displayName
+            avatar
+          }
+          audio(where: { language_in: $contentLanguage }) {
+            id
+            title
+            author {
+              id
+              displayName
+              avatar
+            }
+          }
         }
+        cursor
       }
-    }
-  }
-`;
-
-const ALL_AUDIOS_QUERY = gql`
-  query ALL_AUDIOS_QUERY($contentLanguage: [Language!]) {
-    audios(where: { language_in: $contentLanguage }, orderBy: createdAt_DESC) {
-      id
-      title
-      author {
-        id
-        displayName
-        avatar
-      }
-      video {
-        id
-        originAuthor
-        originThumbnailUrl
-        originThumbnailUrlSd
-        duration
+      pageInfo {
+        hasNextPage
+        startCursor
+        endCursor
       }
     }
   }
@@ -269,7 +264,6 @@ export {
   USER_QUERY,
   CLOUDINARY_AUTH_AUDIO,
   CLOUDINARY_AUTH_AVATAR,
-  ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
   CONTENT_LANGUAGE_QUERY,
   VIDEO_QUERY,

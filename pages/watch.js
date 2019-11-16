@@ -2,7 +2,7 @@ import { ApolloConsumer } from 'react-apollo';
 // import Watch from '../components/Video/Watch';
 import Watch from '../components/Video/WatchRefactored';
 import { VIDEO_QUERY } from '../graphql/query';
-import fetchAudiosVideos from '../lib/fetchAudiosVideos';
+import fetchVideos from '../lib/fetchVideos';
 
 const WatchPage = props => (
   <ApolloConsumer>
@@ -40,12 +40,12 @@ WatchPage.getInitialProps = async ({
 
   if (!contentLanguage) return { id, audioId, asPath, payload };
 
-  const { audios, videos } = await fetchAudiosVideos({
+  const { videos } = await fetchVideos({
     client: apolloClient,
     contentLanguage,
   });
 
-  return { id, audioId, asPath, payload, videos, audios };
+  return { id, audioId, asPath, payload, videos };
 };
 
 export default WatchPage;

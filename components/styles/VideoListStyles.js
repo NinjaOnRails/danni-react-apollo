@@ -8,20 +8,17 @@ const VideoListStyles = styled.div`
   margin: 0 auto;
   justify-content: center;
   padding: 0;
-
   .buttons {
     position: relative;
     bottom: 32px;
     text-align: right;
     margin: 5px 5px 0 0;
   }
-
   .ui.large.label {
     position: absolute;
     bottom: 0.2rem;
     right: 0.2rem;
   }
-
   div.meta,
   .author {
     font-family: ${props => props.theme.font};
@@ -33,7 +30,6 @@ const VideoListStyles = styled.div`
     line-height: 17px;
     max-height: 17px;
   }
-
   .author {
     position: relative;
     top: -10px;
@@ -42,7 +38,6 @@ const VideoListStyles = styled.div`
     line-height: 22px;
     max-height: 44px;
   }
-
   .ui.card > .content > .header {
     font-family: ${props => props.theme.font};
     overflow: hidden;
@@ -56,17 +51,19 @@ const VideoListStyles = styled.div`
   .ui.card > .content > .meta + .description {
     margin-top: 0;
   }
-  .ui.placeholder .rectangular.image:not(.header) {
-    width: 210px;
-    height: 118.13px;
-    padding-top: 0;
+  @media (min-width: 480px) {
+    .ui.placeholder .image:not(.header) {
+      width: 210px;
+      height: 118.13px;
+      padding-top: 0;
+    }
   }
   @media (max-width: 479px) {
     grid-template-columns: auto;
     .ui.card {
       box-shadow: none;
     }
-    .ui.placeholder .rectangular.image:not(.header) {
+    .ui.placeholder .image:not(.header) {
       width: 320px;
       height: 180px;
     }
@@ -74,7 +71,6 @@ const VideoListStyles = styled.div`
       bottom: 10px;
     }
   }
-
   @media (min-width: 480px) {
     grid-gap: 42px 14px;
     div.header {

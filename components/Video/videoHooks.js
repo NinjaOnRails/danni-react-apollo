@@ -4,7 +4,6 @@ import {
   CURRENT_USER_QUERY,
   USER_QUERY,
   CLOUDINARY_AUTH_AUDIO,
-  ALL_AUDIOS_QUERY,
   ALL_VIDEOS_QUERY,
 } from '../../graphql/query';
 import {
@@ -12,12 +11,6 @@ import {
   DELETE_AUDVID_MUTATION,
   CREATE_VIDEO_MUTATION,
 } from '../../graphql/mutation';
-
-const useQueryAllAudios = contentLanguage => {
-  return useQuery(ALL_AUDIOS_QUERY, {
-    variables: { contentLanguage },
-  });
-};
 
 const useQueryAllVideos = contentLanguage => {
   return useQuery(ALL_VIDEOS_QUERY, {
@@ -39,7 +32,7 @@ const useDeleteAudVidMutation = (contentLanguage, userId) => {
 const useCreateAudioMutation = (id, contentLanguage) => {
   return useMutation(CREATE_AUDIO_MUTATION, {
     refetchQueries: [
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
+      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
       { query: CURRENT_USER_QUERY },
       { query: USER_QUERY, variables: { id } },
     ],
@@ -71,7 +64,6 @@ const useCloudinaryAuthAudioQuery = (source, language) => {
 };
 
 export {
-  useQueryAllAudios,
   useQueryAllVideos,
   useDeleteAudVidMutation,
   useCreateAudioMutation,

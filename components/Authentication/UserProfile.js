@@ -50,11 +50,11 @@ const UserProfile = ({
   return (
     <>
       <Head>
-        <title key="title">{user.displayName} | Danni TV</title>
+        <title key="title">{displayName} | Danni TV</title>
         <meta
           key="metaTitle"
           name="title"
-          content={`${user.displayName} | Danni TV`}
+          content={`${displayName} | Danni TV`}
         />
       </Head>
       <UserProfileStyles>

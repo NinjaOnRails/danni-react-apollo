@@ -8,14 +8,14 @@ import {
   StyledPage,
 } from '../styles/PageStyles';
 import Header from './Header';
-import Footer from './Footer';
+import Footer, { pagesWithoutFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
-const Page = ({ children }) => {
+const Page = ({ children, route }) => {
   const data = useLocalStateQuery();
 
   if (!data) return <div>Loading...</div>;
@@ -29,7 +29,8 @@ const Page = ({ children }) => {
         <Header />
         <SideDrawer />
         {showAuthModal && <AuthModal />}
-        <Inner>{children}</Inner>
+        <Inner route={route}>{children}</Inner>
+        {!pagesWithoutFooter.includes(route) && <Footer />}
         <Footer />
         {/* </SideDrawer> */}
       </StyledPage>
@@ -42,6 +43,7 @@ Page.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  route: PropTypes.string.isRequired,
 };
 
 Page.defaultProps = {

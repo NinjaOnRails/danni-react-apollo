@@ -23,9 +23,15 @@ const StyledPage = styled.div`
 const Inner = styled.div`
   margin: auto;
   padding: 3.5rem 0;
+  h1.ui.header {
+    font-family: ${props => props.theme.font};
+  }
   @media (max-width: 991px) {
-    width: 100%;
-    padding-top: 0;
+    padding-top: ${({ route }) => (route === '/watch' ? 0 : '3.5rem')};
+  }
+  @media (max-width: 720px) {
+    padding-top: ${({ route }) =>
+      route === '/' || route === '/watch' ? 0 : '3.5rem'};
   }
 `;
 

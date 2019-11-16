@@ -4,6 +4,8 @@ import { Icon } from 'semantic-ui-react';
 import Logo from './Logo';
 import FooterStyle from '../styles/FooterStyles';
 
+const pagesWithoutFooter = ['/', '/watch'];
+
 const Footer = () => (
   <FooterStyle>
     <div className="footer-container">
@@ -83,3 +85,4 @@ const Footer = () => (
 );
 
 export default Footer;
+export { pagesWithoutFooter };

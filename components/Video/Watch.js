@@ -29,6 +29,7 @@ class Watch extends Component {
 
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
+    const { readyYoutube } = this.state;
 
     if (
       this.youtubePlayer &&
@@ -39,7 +40,7 @@ class Watch extends Component {
         playedYoutube: 0,
         readyYoutube: false,
       });
-      this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
+      if (readyYoutube) this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
     }
   }
 

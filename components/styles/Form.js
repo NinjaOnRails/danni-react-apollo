@@ -28,6 +28,11 @@ const StyledForm = styled.form`
     padding: 22px 36px 10px 12px;
     width: 100%;
   }
+
+  .display-hide-password {
+    cursor: pointer;
+  }
+
   .invalid {
     border-bottom: 1px solid ${props => props.theme.red};
   }
@@ -94,7 +99,9 @@ const StyledForm = styled.form`
     color: #3394dc;
   }
 
-  .auth-title {
+  h1.ui.header {
+    font-family: ${props => props.theme.font};
+
     color: ${props => props.theme.pureBlack};
     font-size: 2.8rem;
     font-weight: 700;
