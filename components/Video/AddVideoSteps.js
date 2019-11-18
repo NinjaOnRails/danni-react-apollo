@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Step, Icon } from 'semantic-ui-react';
 

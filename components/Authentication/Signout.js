@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { useSignoutMutation } from './authHooks';
 import { onSignout } from './utils';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import Signin from './Signin';
 import Signup from './Signup';

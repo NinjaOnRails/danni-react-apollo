@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import PropTypes from 'prop-types';
 import { Form, Button, Icon, Loader } from 'semantic-ui-react';

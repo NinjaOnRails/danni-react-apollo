@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import Downshift, { resetIdCounter } from 'downshift';
 import debounce from 'lodash.debounce';

@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import { ApolloConsumer } from 'react-apollo';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';

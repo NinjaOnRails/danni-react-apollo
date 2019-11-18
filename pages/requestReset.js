@@ -1,5 +1,4 @@
 import { Header } from 'semantic-ui-react';
-
 import RequestReset from '../components/Authentication/RequestReset';
 
 const RequestResetPage = () => (

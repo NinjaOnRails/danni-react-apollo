@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Item, Form, Button, Icon, Popup } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';

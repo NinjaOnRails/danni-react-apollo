@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 import { Segment, Form, Loader } from 'semantic-ui-react';

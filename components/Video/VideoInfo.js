@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import { Segment, Header, Image, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -7,7 +7,10 @@ import YoutubeViews from './YoutubeViews';
 import VideoDeleteButton from './VideoDeleteButton';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
 
-import { useCurrentUserQuery } from '../Authentication/authHooks';
+import {
+  useCurrentUserQuery,
+  useLocalStateQuery,
+} from '../Authentication/authHooks';
 
 const VideoInfo = ({
   video: {
@@ -27,6 +30,7 @@ const VideoInfo = ({
   const [descriptionOverflow, setDescriptionOverflow] = useState(false);
 
   const { currentUser } = useCurrentUserQuery();
+  const { contentLanguage } = useLocalStateQuery();
   const descriptionDiv = useRef(null);
 
   const isDescriptionOverflow = () => {
@@ -80,6 +84,7 @@ const VideoInfo = ({
                 audioId={audioId}
                 title={title}
                 userId={currentUser.id}
+                contentLanguage={contentLanguage}
                 redirect
               />
             </>

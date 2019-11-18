@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Loader, Segment, Message, Button } from 'semantic-ui-react';
 import { flagOptions } from '../../lib/supportedLanguages';

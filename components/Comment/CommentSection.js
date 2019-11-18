@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Comment, Loader } from 'semantic-ui-react';
 import CommentSectionStyles from '../styles/Commentstyles';
