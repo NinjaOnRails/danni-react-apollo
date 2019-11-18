@@ -169,6 +169,7 @@ const ALL_VIDEOS_QUERY = gql`
           duration
           originAuthor
           originViewCount
+          language
           addedBy {
             id
             displayName

@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Icon, Image, Button, Loader } from 'semantic-ui-react';
 import Link from 'next/link';
@@ -146,32 +147,37 @@ const RenderVideoList = ({
               audio,
               duration,
               addedBy,
+              language,
             },
           }) => {
             const displayDuration = formatDuration(duration);
-            if (audio.length === 0) {
-              return renderVideoItem(
-                id,
-                originThumbnailUrl,
-                originThumbnailUrlSd,
-                originTitle,
-                displayDuration,
-                originAuthor,
-                addedBy
-              );
-            }
-            return audio.map(({ title, id: audioId, author }) => {
-              return renderVideoItem(
-                id,
-                originThumbnailUrl,
-                originThumbnailUrlSd,
-                title,
-                displayDuration,
-                originAuthor,
-                author,
-                audioId
-              );
-            });
+            return (
+              <React.Fragment key={id}>
+                {language &&
+                  renderVideoItem(
+                    id,
+                    originThumbnailUrl,
+                    originThumbnailUrlSd,
+                    originTitle,
+                    displayDuration,
+                    originAuthor,
+                    addedBy
+                  )}
+                {audio.length !== 0 &&
+                  audio.map(({ title, id: audioId, author }) => {
+                    return renderVideoItem(
+                      id,
+                      originThumbnailUrl,
+                      originThumbnailUrlSd,
+                      title,
+                      displayDuration,
+                      originAuthor,
+                      author,
+                      audioId
+                    );
+                  })}
+              </React.Fragment>
+            );
           }
         )}
       </VideoListStyles>
