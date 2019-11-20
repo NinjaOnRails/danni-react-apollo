@@ -7,7 +7,6 @@ const LogoStyles = styled.h2`
   font-size: 3rem;
   margin-left: ${props => (props.footer ? '0' : '2rem')};
   position: relative;
-  z-index: 2;
   transform: skew(-7deg);
   width: auto;
   justify-content: start;
