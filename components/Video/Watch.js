@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { Container, Loader } from 'semantic-ui-react';
-import { isMobile } from 'react-device-detect';
 import SmallVideoList from './SmallVideoList';
 import CommentSection from '../Comment/CommentSection';
 import VideoInfo from './VideoInfo';
@@ -50,12 +49,7 @@ class Watch extends Component {
   }
 
   onProgressYoutube = (e, video) => {
-    const {
-      playedYoutube,
-      playedFilePlayer,
-      mixpanelEventsSent,
-      playingFilePlayer,
-    } = this.state;
+    const { playedYoutube, playedFilePlayer, mixpanelEventsSent } = this.state;
     const { playedSeconds } = e;
 
     // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
@@ -90,7 +84,6 @@ class Watch extends Component {
 
   onReadyYoutube = () => {
     this.setState({
-      playingFilePlayer: !isMobile,
       readyYoutube: true,
       playbackRates: this.youtubePlayer
         .getInternalPlayer()
@@ -151,7 +144,6 @@ class Watch extends Component {
             forceAudio: true,
           },
         }}
-        onReady={() => !isMobile && this.setState({ playingFilePlayer: true })}
         onProgress={e => {
           this.setState({
             playedFilePlayer: e.playedSeconds,
