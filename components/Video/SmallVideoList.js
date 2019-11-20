@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Error from '../UI/ErrorMessage';
 import ContentLanguage from '../UI/ContentLanguage';
 import RenderSmallVideoList from './RenderSmallVideoList';
-import { useQueryAllVideos } from './videoHooks';
+import { useAllVideosQuery } from './videoHooks';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const LanguageMenuStyles = styled.div`
@@ -29,7 +29,7 @@ const SmallVideoList = ({
     errorVideos,
     data: dataVideos,
     fetchMore,
-  } = useQueryAllVideos(contentLanguage);
+  } = useAllVideosQuery(contentLanguage);
 
   return (
     <>

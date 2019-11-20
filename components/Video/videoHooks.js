@@ -12,10 +12,14 @@ import {
   CREATE_VIDEO_MUTATION,
 } from '../../graphql/mutation';
 
-const useQueryAllVideos = contentLanguage => {
+const useAllVideosQuery = contentLanguage => {
   return useQuery(ALL_VIDEOS_QUERY, {
     variables: { contentLanguage },
   });
+};
+
+const useCloudinaryAuthAudioQuery = (source, language) => {
+  return useQuery(CLOUDINARY_AUTH_AUDIO, { variables: { source, language } });
 };
 
 const useDeleteAudVidMutation = ({ contentLanguage, userId, redirect }) => {
@@ -61,12 +65,8 @@ const useCreateVideoMutation = (
   });
 };
 
-const useCloudinaryAuthAudioQuery = (source, language) => {
-  return useQuery(CLOUDINARY_AUTH_AUDIO, { variables: { source, language } });
-};
-
 export {
-  useQueryAllVideos,
+  useAllVideosQuery,
   useDeleteAudVidMutation,
   useCreateAudioMutation,
   useCreateVideoMutation,

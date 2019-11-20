@@ -4,7 +4,7 @@ import Error from '../UI/ErrorMessage';
 import RenderVideoList from './RenderVideoList';
 import ContentLanguage from '../UI/ContentLanguage';
 import { useLocalStateQuery } from '../Authentication/authHooks';
-import { useQueryAllVideos } from './videoHooks';
+import { useAllVideosQuery } from './videoHooks';
 
 const LanguageMenuStyles = styled.div`
   padding-bottom: 2rem;
@@ -25,7 +25,7 @@ const Videos = ({ videos: { data: initialVideoData } }) => {
     errorVideos,
     data: dataVideos,
     fetchMore,
-  } = useQueryAllVideos(contentLanguage);
+  } = useAllVideosQuery(contentLanguage);
   return (
     <>
       <LanguageMenuStyles>
