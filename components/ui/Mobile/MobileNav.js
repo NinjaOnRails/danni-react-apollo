@@ -26,16 +26,6 @@ const StyledNav = styled.div`
     margin: 0 auto 0.5rem;
     font-size: 1.71428571em;
   }
-  /* .ui.menu {
-    margin: 0;
-    border: 0;
-  }
-  .ui.menu .item {
-    padding: 0;
-  }
-  .ui.labeled.icon.menu .item > .icon:not(.dropdown) {
-    margin: 0;
-  } */
 
   @media (min-width: 639px) {
     display: none;
@@ -74,27 +64,6 @@ const MobileNav = () => {
           Menu
         </Menu.Item>
       </Menu>
-      {/* <Menu icon="labeled">
-        <Menu.Item
-          name="home"
-          active={activeItem === 'home'}
-          onClick={handleItemClick}
-        >
-          <Icon name="home" />
-          Trang chủ
-        </Menu.Item>
-        <Menu.Item
-          name="video camera"
-          active={activeItem === 'video camera'}
-          onClick={handleItemClick}
-        >
-          <Icon.Group size="large">
-            <Icon name="video" />
-            <Icon color="grey" name="plus" size="tiny" />
-          </Icon.Group>
-          Thêm video
-        </Menu.Item>
-      </Menu> */}
     </StyledNav>
   );
 };
