@@ -12,13 +12,11 @@ const StyledHeader = styled.header`
 
   @media (max-width: 639px) {
     z-index: 99;
-    position: sticky;
-    top: 0;
     .bar {
-      grid-template-columns: auto auto;
+      grid-template-columns: auto;
+      justify-content: center;
       grid-auto-flow: column;
-      border-bottom: 
-      /* 0; */ 2px solid ${props => props.theme.black};
+      border-bottom: 2px solid ${props => props.theme.grey};
       height: 35px;
     }
   }

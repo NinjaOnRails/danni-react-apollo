@@ -8,6 +8,7 @@ import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
+import MobileNav from './Mobile/MobileNav';
 
 const defaultTheme = {
   white: ' #fff',
@@ -100,6 +101,7 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner route={route}>{children}</Inner>
+                <MobileNav />
                 {!pagesWithoutFooter.includes(route) && <Footer />}
               </StyledPage>
             </ThemeProvider>
