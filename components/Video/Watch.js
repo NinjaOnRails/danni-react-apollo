@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import YouTubePlayer from 'react-player/lib/players/YouTube';
+import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
 import { Container, Loader } from 'semantic-ui-react';
 import SmallVideoList from './SmallVideoList';
@@ -85,9 +85,9 @@ class Watch extends Component {
   onReadyYoutube = () => {
     this.setState({
       readyYoutube: true,
-      playbackRates: this.youtubePlayer
-        .getInternalPlayer()
-        .getAvailablePlaybackRates(),
+      //   playbackRates: this.youtubePlayer
+      //     .getInternalPlayer()
+      //     .getAvailablePlaybackRates(),
     });
   };
 
@@ -112,8 +112,9 @@ class Watch extends Component {
           })
         }
       >
-        <YouTubePlayer
+        <ReactPlayer
           className="youtube-player"
+          // url="https://www.facebook.com/NasDailyVietnamese/videos/457978568180650"
           url={`https://www.youtube.com/embed/${video.originId}`}
           width="100%"
           height="100%"
@@ -129,6 +130,7 @@ class Watch extends Component {
             this.youtubePlayer = youtubePlayer;
           }}
           playbackRate={playbackRate}
+          // config={{ facebook: { appId: '398428117464454' } }}
         />
       </YoutubeStyle>
     );
