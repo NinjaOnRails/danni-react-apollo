@@ -21,6 +21,9 @@ const StyledNav = styled.div`
     display: flex;
     justify-content: space-around;
   }
+  .ui.labeled.icon.menu .item {
+    margin: auto;
+  }
   i.large.icon,
   i.large.icons {
     margin: 0 auto 0.5rem;

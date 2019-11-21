@@ -46,6 +46,10 @@ const Inner = styled.div`
     padding-top: ${({ route }) =>
       route === '/' || route === '/watch' ? 0 : '3.5rem'};
   }
+
+  @media (max-width: 639px) {
+    padding-bottom: 3.5rem;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
