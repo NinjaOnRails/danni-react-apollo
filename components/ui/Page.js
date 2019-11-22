@@ -48,7 +48,7 @@ const Inner = styled.div`
   }
 
   @media (max-width: 639px) {
-    padding-bottom: 3.5rem;
+    padding-bottom: 4.5rem;
   }
 `;
 
