@@ -89,7 +89,6 @@ const EditVideo = ({ id, audioId }) => {
     updateVideo,
     { loading: loadingUpdateVideo, error: errorUpdateVideo },
   ] = useUpdateVideoMutation(id);
-
   const {
     oldTitleVi,
     oldDescriptionVi,
