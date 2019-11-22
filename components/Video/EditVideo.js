@@ -116,24 +116,6 @@ const EditVideo = ({ id, audioId }) => {
 
   const { originTags, originTitle, image, channelTitle } = originInfo;
 
-  const handleChange = ({ target: { name, type, value, checked } }) => {
-    // Controlled logic
-    const val =
-      type === 'checkbox'
-        ? checked
-        : name === 'defaultVolume' && value > 100
-        ? 100
-        : type === 'number'
-        ? parseInt(value, 10)
-        : value;
-
-    // Check video source input to refetch preview if necessary
-    if (name === 'source' && val.length >= 11) onSourceFill(val.trim());
-
-    // Controlled set state
-    setInputState({ ...inputState, [name]: val });
-  };
-
   const resetUpload = () => {
     setUploadProgress(0);
     setDeleteToken('');
@@ -147,24 +129,6 @@ const EditVideo = ({ id, audioId }) => {
       channelTitle: '',
       originTags: '',
     });
-  };
-
-  const onSourceFill = () => {
-    // Check if source is YouTube, extract ID from it and fetch data
-    const isYouTube = isYouTubeSource(source);
-    let originId;
-    if (isYouTube) {
-      const { length } = isYouTube;
-      originId = source.slice(length, length + youtubeIdLength);
-    } else if (source.length === youtubeIdLength) {
-      originId = source;
-    } else {
-      setYoutubeIdStatus('Invalid source');
-      clearOriginVideoInfo();
-
-      throw new Error('No valid YouTube source was provided');
-    }
-    fetchYoutube(originId);
   };
 
   const fetchYoutube = async originId => {
@@ -213,6 +177,51 @@ const EditVideo = ({ id, audioId }) => {
     }
   };
 
+  const onSourceFill = () => {
+    // Check if source is YouTube, extract ID from it and fetch data
+    const isYouTube = isYouTubeSource(source);
+    let originId;
+    if (isYouTube) {
+      const { length } = isYouTube;
+      originId = source.slice(length, length + youtubeIdLength);
+    } else if (source.length === youtubeIdLength) {
+      originId = source;
+    } else {
+      setYoutubeIdStatus('Invalid source');
+      clearOriginVideoInfo();
+
+      throw new Error('No valid YouTube source was provided');
+    }
+    fetchYoutube(originId);
+  };
+
+  const handleChange = ({ target: { name, type, value, checked } }) => {
+    // Controlled logic
+    const val =
+      type === 'checkbox'
+        ? checked
+        : name === 'defaultVolume' && value > 100
+        ? 100
+        : type === 'number'
+        ? parseInt(value, 10)
+        : value;
+
+    // Check video source input to refetch preview if necessary
+    if (name === 'source' && val.length >= 11) onSourceFill(val.trim());
+
+    // Controlled set state
+    setInputState({ ...inputState, [name]: val });
+  };
+
+  const onDeleteFileSubmit = async () => {
+    resetUpload();
+
+    const res = await deleteFile(deleteToken);
+    if (res.status === 200) {
+      setDeleteToken('');
+    }
+  };
+
   const onUploadFileSubmit = async (cloudinaryAuth, e, defaultValues) => {
     // Reset uploadError display and assign appropriate value to file
     setUploadError(false);
@@ -254,15 +263,6 @@ const EditVideo = ({ id, audioId }) => {
       // setAudioSource
     } catch (err) {
       setUploadError(true);
-    }
-  };
-
-  const onDeleteFileSubmit = async () => {
-    resetUpload();
-
-    const res = await deleteFile(deleteToken);
-    if (res.status === 200) {
-      setDeleteToken('');
     }
   };
 

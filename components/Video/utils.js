@@ -1,3 +1,5 @@
+import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
+
 const formatDuration = duration => {
   // Convert and format duration
   const seconds = duration % 60;
