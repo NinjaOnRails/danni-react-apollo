@@ -29,7 +29,7 @@ import {
 import {
   useCurrentUserQuery,
   useLocalStateQuery,
-} from '../Authentication/AuthHooks';
+} from '../Authentication/authHooks';
 import { getDefaultValues } from './utils';
 
 const EditVideo = ({ id, audioId }) => {
@@ -89,6 +89,16 @@ const EditVideo = ({ id, audioId }) => {
     updateVideo,
     { loading: loadingUpdateVideo, error: errorUpdateVideo },
   ] = useUpdateVideoMutation(id);
+
+  if (redirecting)
+    return (
+      <Loader indeterminate active>
+        Đang chuyển trang...
+      </Loader>
+    );
+  if (errorQueryVideo || error) return <p>Error</p>;
+  if (loadingQueryVideo) return <Loader active />;
+  if (!data.video) return <p>No Video Found for {id}</p>;
   const {
     oldTitleVi,
     oldDescriptionVi,
@@ -176,15 +186,15 @@ const EditVideo = ({ id, audioId }) => {
     }
   };
 
-  const onSourceFill = () => {
+  const onSourceFill = inputSource => {
     // Check if source is YouTube, extract ID from it and fetch data
-    const isYouTube = isYouTubeSource(source);
+    const isYouTube = isYouTubeSource(inputSource);
     let originId;
     if (isYouTube) {
       const { length } = isYouTube;
-      originId = source.slice(length, length + youtubeIdLength);
-    } else if (source.length === youtubeIdLength) {
-      originId = source;
+      originId = inputSource.slice(length, length + youtubeIdLength);
+    } else if (inputSource.length === youtubeIdLength) {
+      originId = inputSource;
     } else {
       setYoutubeIdStatus('Invalid source');
       clearOriginVideoInfo();
@@ -206,8 +216,9 @@ const EditVideo = ({ id, audioId }) => {
         : value;
 
     // Check video source input to refetch preview if necessary
-    if (name === 'source' && val.length >= 11) onSourceFill(val.trim());
 
+    if (name === 'source' && val.length >= 11) onSourceFill(val.trim());
+    console.log(name, val);
     // Controlled set state
     setInputState({ ...inputState, [name]: val });
   };
@@ -342,16 +353,6 @@ const EditVideo = ({ id, audioId }) => {
       query: { id, audioId: redirectAudioParam },
     });
   };
-
-  if (redirecting)
-    return (
-      <Loader indeterminate active>
-        Đang chuyển trang...
-      </Loader>
-    );
-  if (errorQueryVideo || error) return <p>Error</p>;
-  if (loadingQueryVideo) return <Loader active />;
-  if (!data.video) return <p>No Video Found for {id}</p>;
 
   return (
     <>

@@ -17,11 +17,9 @@ import {
 } from '../../graphql/mutation';
 
 const useVideoQuery = ({ id, audioId }) => {
-  const { data, loading, error } = useQuery(VIDEO_QUERY, {
+  return useQuery(VIDEO_QUERY, {
     variables: { id, audioId },
   });
-  console.log(data);
-  return { data, loading, error };
 };
 const useAllVideosQuery = contentLanguage => {
   return useQuery(ALL_VIDEOS_QUERY, {
