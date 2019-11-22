@@ -5,13 +5,22 @@ import {
   USER_QUERY,
   CLOUDINARY_AUTH_AUDIO,
   ALL_VIDEOS_QUERY,
+  VIDEO_QUERY,
 } from '../../graphql/query';
 import {
   CREATE_AUDIO_MUTATION,
   DELETE_AUDVID_MUTATION,
   CREATE_VIDEO_MUTATION,
+  UPDATE_VIDEO_MUTATION,
+  UPDATE_AUDIO_MUTATION,
+  VIDEO_DELETE,
 } from '../../graphql/mutation';
 
+const useVideoQuery = ({ id, audioId }) => {
+  return useQuery(VIDEO_QUERY, {
+    variables: { id, audioId },
+  });
+};
 const useAllVideosQuery = contentLanguage => {
   return useQuery(ALL_VIDEOS_QUERY, {
     variables: { contentLanguage },
@@ -65,10 +74,30 @@ const useCreateVideoMutation = (
   });
 };
 
+const useUpdateAudioMutation = id => {
+  return useMutation(UPDATE_AUDIO_MUTATION, {
+    refetchQueries: [{ query: VIDEO_QUERY, variables: { id } }],
+  });
+};
+
+const useUpdateVideoMutation = id => {
+  return useMutation(UPDATE_VIDEO_MUTATION, {
+    refetchQueries: [{ query: VIDEO_QUERY, variables: { id } }],
+  });
+};
+
+const useDeleteVideoMutation = () => {
+  return useMutation(VIDEO_DELETE);
+};
+
 export {
   useAllVideosQuery,
+  useVideoQuery,
   useDeleteAudVidMutation,
   useCreateAudioMutation,
+  useUpdateAudioMutation,
   useCreateVideoMutation,
+  useUpdateVideoMutation,
+  useDeleteVideoMutation,
   useCloudinaryAuthAudioQuery,
 };

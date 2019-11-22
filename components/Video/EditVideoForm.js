@@ -7,34 +7,39 @@ import CloudinaryUploadAudio from './CloudinaryUploadAudio';
 const EditVideoForm = ({
   audioId,
   // default values
-  oldTitleVi,
-  oldDescriptionVi,
-  oldDefaultVolume,
-  oldOriginId,
-  oldTags,
-  oldAudioSource,
-  oldLanguage,
-  oldImage,
-  oldOriginTitle,
-  oldOriginChannel,
-  oldOriginTags,
+  oldValuesObject: {
+    oldTitleVi,
+    oldDescriptionVi,
+    oldDefaultVolume,
+    oldOriginId,
+    oldTags,
+    oldAudioSource,
+    oldLanguage,
+    oldImage,
+    oldOriginTitle,
+    oldOriginChannel,
+    oldOriginTags,
+  },
   // input state
   language,
   audioSource,
-  secureUrl,
-  uploadProgress,
-  uploadError,
-  deleteToken,
-  youtubeId,
   // ui state
-  loadingUpdateVideo,
-  loadingCreateAudio,
-  loadingUpdateAudio,
-  isDescription,
-  isAudioSource,
-  isTags,
-  isDefaultVolume,
-  showUpload,
+  uiState: {
+    isDescription,
+    isAudioSource,
+    isTags,
+    isDefaultVolume,
+    showUpload,
+    secureUrl,
+    uploadProgress,
+    uploadError,
+    deleteToken,
+    youtubeId,
+    youtubeIdStatus,
+    fetchingYoutube,
+  },
+  disabled,
+  ariaBusy,
   // methods
   handleChange,
   handleDropdown,
@@ -46,14 +51,10 @@ const EditVideoForm = ({
   image,
   originTitle,
   channelTitle,
-  youtubeIdStatus,
-  fetchingYoutube,
+
   originTags,
 }) => (
-  <fieldset
-    disabled={loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio}
-    aria-busy={loadingUpdateVideo}
-  >
+  <fieldset disabled={disabled} aria-busy={ariaBusy}>
     Language:
     <DropDownForm>
       <Dropdown
@@ -61,7 +62,7 @@ const EditVideoForm = ({
         selection
         options={flagOptions}
         onChange={handleDropdown}
-        defaultValue={oldLanguage || ''}
+        defaultValue={oldLanguage}
         name="language"
         className="semantic-dropdown"
       />
@@ -234,7 +235,7 @@ const EditVideoForm = ({
 );
 
 EditVideoForm.defaultProps = {
-  oldLanguage: null,
+  oldLanguage: '',
   image: '',
   channelTitle: '',
   originTitle: '',
@@ -249,16 +250,10 @@ EditVideoForm.defaultProps = {
 EditVideoForm.propTypes = {
   audioId: PropTypes.string,
   // props from state
-  isDescription: PropTypes.bool.isRequired,
-  isTags: PropTypes.bool.isRequired,
-  isDefaultVolume: PropTypes.bool.isRequired,
-  isAudioSource: PropTypes.bool.isRequired,
-  fetchingYoutube: PropTypes.bool.isRequired,
-  youtubeIdStatus: PropTypes.string.isRequired,
+  uiState: PropTypes.object.isRequired,
   image: PropTypes.string,
   channelTitle: PropTypes.string,
   originTitle: PropTypes.string,
-  showUpload: PropTypes.bool.isRequired,
   // tags: PropTypes.string,
   originTags: PropTypes.array,
   language: PropTypes.string,
@@ -269,21 +264,10 @@ EditVideoForm.propTypes = {
   deleteToken: PropTypes.string.isRequired,
   youtubeId: PropTypes.string.isRequired,
   // default values
-  oldTitleVi: PropTypes.string.isRequired,
-  oldDescriptionVi: PropTypes.string.isRequired,
-  oldDefaultVolume: PropTypes.number.isRequired,
-  oldOriginId: PropTypes.string.isRequired,
-  oldTags: PropTypes.string.isRequired,
-  oldAudioSource: PropTypes.string.isRequired,
-  oldLanguage: PropTypes.string,
-  oldImage: PropTypes.string.isRequired,
-  oldOriginTitle: PropTypes.string.isRequired,
-  oldOriginChannel: PropTypes.string.isRequired,
-  oldOriginTags: PropTypes.array.isRequired,
+  oldValuesObject: PropTypes.object.isRequired,
   // loading status
-  loadingUpdateAudio: PropTypes.bool.isRequired,
-  loadingCreateAudio: PropTypes.bool.isRequired,
-  loadingUpdateVideo: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  ariaBusy: PropTypes.bool.isRequired,
   // passsed down methods
   handleChange: PropTypes.func.isRequired,
   handleDropdown: PropTypes.func.isRequired,
@@ -294,3 +278,49 @@ EditVideoForm.propTypes = {
 };
 
 export default EditVideoForm;
+
+// 117       setUiState({ ...uiState, youtubeIdStatus: 'Invalid source' });
+// 124     setUiState({ ...uiState, fetchYoutube: originId });
+// 130       setUiState({ ...uiState, fetchingYoutube: true });
+// 141 setUiState({
+//   ...uiState,
+//   youtubeIdStatus: 'Not found on Youtube',
+//   fetchingYoutube: false,
+// });
+// 162  setUiState({
+//   ...uiState,
+//   youtubeIdStatus: '',
+//   fetchingYoutube: false,
+//   youtubeId: id,
+// });
+// 174 setUiState({
+//   ...uiState,
+//   fetchingYoutube: false,
+//   youtubeIdStatus: false,
+// });
+// 187 setUiState({
+//   ...uiState,
+//   uploadError: false,
+//   error: '',
+// });
+// 226 setUiState({
+//   ...uiState,
+//   uploadProgress: Math.floor((p.loaded / p.total) * 100),
+// });
+// 232 setUiState({
+//   ...uiState,
+//   deleteToken: newDeleteToken,
+//   secureUrl,
+// });
+// 240  setUiState({
+//   ...uiState,
+//   uploadError: true,
+// });
+// 257  setUiState({
+//   ...uiState,
+//   deleteToken: '',
+// });
+// 265 setUiState({
+//   ...uiState,
+//   audioDuration: Math.round(e.target.duration),
+// });

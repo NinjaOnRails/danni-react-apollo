@@ -1,125 +1,122 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import { Mutation, Query } from 'react-apollo';
-import { Loader, Container } from 'semantic-ui-react';
-import { adopt } from 'react-adopt';
+import {
+  Loader,
+  Container,
+  Dropdown,
+  Segment,
+  Message,
+  Button,
+} from 'semantic-ui-react';
+import { flagOptions } from '../../lib/supportedLanguages';
+import DropDownForm from '../styles/VideoFormStyles';
+import CloudinaryUploadAudio from './CloudinaryUploadAudio';
 import Form from '../styles/OldFormStyles';
 import Error from '../UI/ErrorMessage';
-import EditVideoForm from './EditVideoForm';
-import {
-  VIDEO_QUERY,
-  ALL_VIDEOS_QUERY,
-  ALL_AUDIOS_QUERY,
-  CURRENT_USER_QUERY,
-  USER_QUERY,
-} from '../../graphql/query';
-import {
-  UPDATE_AUDIO_MUTATION,
-  VIDEO_DELETE,
-  UPDATE_VIDEO_MUTATION,
-  CREATE_AUDIO_MUTATION,
-} from '../../graphql/mutation';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import youtube from '../../lib/youtube';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { uploadAudio } from '../../lib/cloudinaryUpload';
-// import { contentLanguageQuery, user } from '../UI/ContentLanguage';
-// refactor
-/* eslint-disable */
-const createAudioMutation = ({
-  user: {
-    currentUser: { id },
-  },
-  contentLanguageQuery: { contentLanguage },
-  render,
-}) => (
-  <Mutation
-    mutation={CREATE_AUDIO_MUTATION}
-    refetchQueries={[
-      { query: ALL_AUDIOS_QUERY, variables: { contentLanguage } },
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-    ]}
-  >
-    {(createAudio, createAudioResult) =>
-      render({ createAudio, createAudioResult })
-    }
-  </Mutation>
-);
+import {
+  useVideoQuery,
+  useCreateAudioMutation,
+  useUpdateAudioMutation,
+  useUpdateVideoMutation,
+} from './videoHooks';
+import {
+  useCurrentUserQuery,
+  useLocalStateQuery,
+} from '../Authentication/AuthHooks';
+import { getDefaultValues } from './utils';
 
-const videoQuery = ({ render, id, audioId }) => (
-  <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
-    {render}
-  </Query>
-);
+const EditVideo = ({ id, audioId }) => {
+  const [redirecting, setRedirecting] = useState(false);
+  const [isDescription, setIsDescription] = useState(true);
+  const [isAudioSource, setIsAudioSource] = useState(false);
+  const [isTags, setIsTags] = useState(true);
+  const [isDefaultVolume, setIsDefaultVolume] = useState(true);
+  const [fetchingYoutube, setFetchingYoutube] = useState(false);
+  const [youtubeIdStatus, setYoutubeIdStatus] = useState('');
+  const [youtubeId, setYoutubeId] = useState('');
+  const [secureUrl, setSecureUrl] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState(false);
+  const [deleteToken, setDeleteToken] = useState('');
+  const [error, setError] = useState('');
+  const [audioDuration, setAudioDuration] = useState(0);
+  const [showUpload, setShowUpload] = useState(false);
 
-const updateAudioMutation = ({ render, id }) => (
-  <Mutation
-    mutation={UPDATE_AUDIO_MUTATION}
-    refetchQueries={[{ query: VIDEO_QUERY, variables: { id } }]}
-  >
-    {(updateAudio, updateAudioResult) =>
-      render({ updateAudio, updateAudioResult })
-    }
-  </Mutation>
-);
+  const [inputState, setInputState] = useState({
+    language: null,
+    audioSource: null,
+    source: null,
+    title: null,
+    description: null,
+    tags: null,
+    defaultVolume: 30,
+  });
 
-const updateVideoMutation = ({ render, id }) => (
-  <Mutation
-    mutation={UPDATE_VIDEO_MUTATION}
-    refetchQueries={[{ query: VIDEO_QUERY, variables: { id } }]}
-  >
-    {(updateVideo, updateVideoResult) =>
-      render({ updateVideo, updateVideoResult })
-    }
-  </Mutation>
-);
+  const [originInfo, setOriginInfo] = useState({
+    originTags: null,
+    originTitle: null,
+    channelTitle: null,
+    image: null,
+  });
 
-const deleteVideoMutation = ({ render }) => (
-  <Mutation
-    mutation={VIDEO_DELETE}
-    refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
-  >
-    {(deleteVideo, deleteVideoResult) =>
-      render({ deleteVideo, deleteVideoResult })
-    }
-  </Mutation>
-);
-/* eslint-enable */
+  const { currentUser } = useCurrentUserQuery();
+  const { contentLanguage } = useLocalStateQuery();
 
-const Composed = adopt({
-  user,
-  contentLanguageQuery,
-  videoQuery,
-  createAudioMutation,
-  updateAudioMutation,
-  updateVideoMutation,
-  deleteVideoMutation,
-});
+  const {
+    data,
+    loading: loadingQueryVideo,
+    error: errorQueryVideo,
+  } = useVideoQuery({ id, audioId });
 
-class EditVideo extends Component {
-  state = {
-    redirecting: false,
-    isDescription: true,
-    isAudioSource: false,
-    isTags: true,
-    isDefaultVolume: true,
-    fetchingYoutube: false,
-    youtubeIdStatus: '',
-    youtubeId: '',
-    secureUrl: '',
-    uploadProgress: 0,
-    uploadError: false,
-    deleteToken: '',
-    error: '',
-    audioDuration: 0,
-    showUpload: false,
-  };
+  const [
+    createAudio,
+    { loading: loadingCreateAudio, error: errorCreateAudio },
+  ] = useCreateAudioMutation(currentUser.id, contentLanguage);
 
-  handleChange = ({ target: { name, type, value, checked } }) => {
+  const [
+    updateAudio,
+    { loading: loadingUpdateAudio, error: errorUpdateAudio },
+  ] = useUpdateAudioMutation(id);
+
+  const [
+    updateVideo,
+    { loading: loadingUpdateVideo, error: errorUpdateVideo },
+  ] = useUpdateVideoMutation(id);
+
+  const {
+    oldTitleVi,
+    oldDescriptionVi,
+    oldDefaultVolume,
+    oldOriginId,
+    oldTags,
+    oldAudioSource,
+    oldLanguage,
+    oldImage,
+    oldOriginTitle,
+    oldOriginChannel,
+    oldOriginTags,
+  } = getDefaultValues(data, audioId);
+
+  const {
+    language,
+    audioSource,
+    source,
+    title,
+    description,
+    tags,
+    defaultVolume,
+  } = inputState;
+
+  const { originTags, originTitle, image, channelTitle } = originInfo;
+
+  const handleChange = ({ target: { name, type, value, checked } }) => {
     // Controlled logic
     const val =
       type === 'checkbox'
@@ -131,21 +128,28 @@ class EditVideo extends Component {
         : value;
 
     // Check video source input to refetch preview if necessary
-    if (name === 'source' && val.length >= 11) this.onSourceFill(val.trim());
+    if (name === 'source' && val.length >= 11) onSourceFill(val.trim());
 
     // Controlled set state
-    this.setState({ [name]: val });
+    setInputState({ ...inputState, [name]: val });
   };
 
-  handleDropdown = (e, { value }) => {
-    const { language, deleteToken } = this.state;
-    if (language !== value && deleteToken) {
-      this.onDeleteFileSubmit();
-    }
-    this.setState({ language: value });
+  const resetUpload = () => {
+    setUploadProgress(0);
+    setDeleteToken('');
+    setSecureUrl();
   };
 
-  onSourceFill = source => {
+  const clearOriginVideoInfo = () => {
+    setOriginInfo({
+      image: '',
+      originTitle: '',
+      channelTitle: '',
+      originTags: '',
+    });
+  };
+
+  const onSourceFill = () => {
     // Check if source is YouTube, extract ID from it and fetch data
     const isYouTube = isYouTubeSource(source);
     let originId;
@@ -155,22 +159,19 @@ class EditVideo extends Component {
     } else if (source.length === youtubeIdLength) {
       originId = source;
     } else {
-      this.setState({
-        youtubeIdStatus: 'Invalid source',
-        image: '',
-        originTitle: '',
-        channelTitle: '',
-      });
+      setYoutubeIdStatus('Invalid source');
+      clearOriginVideoInfo();
+
       throw new Error('No valid YouTube source was provided');
     }
-
-    this.fetchYoutube(originId);
+    fetchYoutube(originId);
   };
 
-  fetchYoutube = async id => {
+  const fetchYoutube = async originId => {
     // Fetch data from Youtube for info preview
     try {
-      this.setState({ fetchingYoutube: true });
+      setFetchingYoutube(true);
+
       const res = await youtube.get('/videos', {
         params: {
           id,
@@ -180,13 +181,10 @@ class EditVideo extends Component {
       });
 
       if (!res.data.items.length) {
-        this.setState({
-          youtubeIdStatus: 'Not found on Youtube',
-          image: '',
-          originTitle: '',
-          channelTitle: '',
-          fetchingYoutube: false,
-        });
+        setYoutubeIdStatus('Not found on Youtube');
+        setFetchingYoutube(false);
+        clearOriginVideoInfo();
+
         throw new Error('Video not found on Youtube');
       }
 
@@ -195,49 +193,41 @@ class EditVideo extends Component {
         thumbnails: {
           medium: { url },
         },
-        channelTitle,
-        localized: { title },
-        tags: originTags,
+        fetchedChannelTitle,
+        localized: { fetchedTitle },
+        tags: fetchedOriginTags,
       } = res.data.items[0].snippet;
-
-      this.setState({
-        youtubeIdStatus: '',
-        youtubeId: id,
+      setYoutubeIdStatus('');
+      setYoutubeId(originId);
+      setFetchingYoutube(false);
+      setOriginInfo({
         image: url,
-        originTitle: title,
-        channelTitle,
-        originTags,
-        fetchingYoutube: false,
+        originTitle: fetchedTitle,
+        channelTitle: fetchedChannelTitle,
+        originTags: fetchedOriginTags,
       });
     } catch (err) {
-      this.setState({
-        youtubeIdStatus: 'Network error',
-        image: '',
-        originTitle: '',
-        channelTitle: '',
-        fetchingYoutube: false,
-      });
+      setFetchingYoutube(false);
+      setYoutubeIdStatus(false);
+      clearOriginVideoInfo();
     }
   };
 
-  onUploadFileSubmit = async (cloudinaryAuth, id, e, defaultValues) => {
+  const onUploadFileSubmit = async (cloudinaryAuth, e, defaultValues) => {
     // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false, error: '' });
-    const { audioSource, youtubeId, language, deleteToken } = this.state;
+    setUploadError(false);
+    setError('');
+
     const file = e ? e.target.files[0] : audioSource;
-    const { oldOriginId, oldLanguage } = defaultValues;
     if (!file) return; // Do nothing if no file selected
 
-    if (deleteToken) await this.onDeleteFileSubmit();
+    if (deleteToken) await onDeleteFileSubmit();
 
     // More initial state reset
-    this.setState({
-      uploadProgress: 0,
-      deleteToken: '',
-      secureUrl: '',
-    });
+    resetUpload();
+
     // Prepare cloudinary upload params
-    const { url, data } = uploadAudio(
+    const { url, data: uploadAudioData } = uploadAudio(
       file,
       youtubeId || oldOriginId,
       language || oldLanguage,
@@ -248,141 +238,43 @@ class EditVideo extends Component {
 
     try {
       const {
-        data: { secure_url: secureUrl, delete_token: newDeleteToken },
+        data: { secure_url: fetchedSecureUrl, delete_token: newDeleteToken },
       } = await axios({
         method: 'post',
         url,
-        data,
+        data: uploadAudioData,
         onUploadProgress: p => {
           // Show upload progress
-          this.setState({
-            uploadProgress: Math.floor((p.loaded / p.total) * 100),
-          });
+          setUploadProgress(Math.floor((p.loaded / p.total) * 100));
         },
       });
-      this.setState({
-        secureUrl,
-        deleteToken: newDeleteToken,
-        audioSource: '',
-      });
+      setDeleteToken(newDeleteToken);
+      setSecureUrl(fetchedSecureUrl);
+
+      // setAudioSource
     } catch (err) {
-      console.log(err);
-      this.setState({
-        uploadError: true,
-      });
+      setUploadError(true);
     }
   };
 
-  onDeleteFileSubmit = async () => {
-    const { deleteToken } = this.state;
-    this.setState({
-      uploadProgress: 0,
-      secureUrl: '',
-      error: '',
-    });
+  const onDeleteFileSubmit = async () => {
+    resetUpload();
+
     const res = await deleteFile(deleteToken);
     if (res.status === 200) {
-      this.setState({
-        deleteToken: '',
-      });
+      setDeleteToken('');
     }
   };
 
-  onAudioLoadedMetadata = e => {
-    this.setState({ audioDuration: Math.round(e.target.duration) });
+  const onAudioLoadedMetadata = e => {
+    setAudioDuration(Math.round(e.target.duration));
   };
 
-  getDefaultValues = data => {
-    const { audioId } = this.props;
-    const {
-      video: {
-        originId: oldOriginId,
-        originThumbnailUrl: oldImage,
-        originTitle: oldOriginTitle,
-        originAuthor: oldOriginChannel,
-        originTags: oldOriginTags,
-      },
-    } = data;
-    let oldTitleVi = '';
-    let oldDescriptionVi = '';
-    let oldDefaultVolume = 30;
-    let oldTagsObj = '';
-    let oldAudioSource = '';
-    let oldLanguage;
-    if (!audioId) {
-      ({
-        video: { language: oldLanguage },
-      } = data);
-    } else {
-      const {
-        video: { audio },
-      } = data;
-      // Destructor audio array
-      [
-        {
-          source: oldAudioSource,
-          title: oldTitleVi,
-          description: oldDescriptionVi,
-          tags: oldTagsObj,
-          defaultVolume: oldDefaultVolume,
-          language: oldLanguage,
-        },
-      ] = audio.filter(audioFile => audioFile.id === audioId);
-    }
-    let oldTags = '';
-    Object.values(oldTagsObj).forEach(val => {
-      oldTags = oldTags + val.text + ' ';
-    });
-    return {
-      oldOriginId,
-      oldTitleVi,
-      oldDescriptionVi,
-      oldDefaultVolume,
-      oldTags,
-      oldAudioSource,
-      oldLanguage,
-      oldImage,
-      oldOriginTitle,
-      oldOriginChannel,
-      oldOriginTags,
-    };
-  };
-
-  onShowUpload = () => this.setState({ showUpload: true });
-
-  onSubmit = async (
-    e,
-    updateVideo,
-    createAudio,
-    updateAudio,
-    oldValuesObject
-  ) => {
+  const onSubmit = async e => {
     // Stop form from submitting
     e.preventDefault();
-    const { id, audioId } = this.props;
-    const {
-      source,
-      title,
-      description,
-      tags,
-      defaultVolume,
-      language,
-      audioDuration,
-      isTags,
-      isDescription,
-      isDefaultVolume,
-      audioSource,
-      secureUrl,
-    } = this.state;
+
     // if fields unchanged, use default values
-    const {
-      oldTitleVi,
-      oldDescriptionVi,
-      oldDefaultVolume,
-      oldTags,
-      oldAudioSource,
-      oldLanguage,
-    } = oldValuesObject;
     let redirectAudioParam;
     // Call updateVideo mutation
     if (
@@ -443,8 +335,7 @@ class EditVideo extends Component {
         },
       }));
     }
-
-    this.setState({ redirecting: true });
+    setRedirecting(true);
 
     // Redirect to newly updated Video watch page
     Router.push({
@@ -453,117 +344,231 @@ class EditVideo extends Component {
     });
   };
 
-  render() {
-    const { id, audioId } = this.props;
-    const { redirecting } = this.state;
-    if (redirecting)
-      return (
-        <Loader indeterminate active>
-          Đang chuyển trang...
-        </Loader>
-      );
+  if (redirecting)
     return (
-      <Composed id={id} audioId={audioId}>
-        {({
-          videoQuery: {
-            data,
-            loading: loadingQueryVideo,
-            error: errorQueryVideo,
-          },
-          createAudioMutation: {
-            createAudio,
-            createAudioResult: {
-              loading: loadingCreateAudio,
-              error: errorCreateAudio,
-            },
-          },
-          updateAudioMutation: {
-            updateAudio,
-            updateAudioResult: {
-              loading: loadingUpdateAudio,
-              error: errorUpdateAudio,
-            },
-          },
-          updateVideoMutation: {
-            updateVideo,
-            updateVideoResult: {
-              loading: loadingUpdateVideo,
-              error: errorUpdateVideo,
-            },
-          },
-          // deleteVideoMutation: {
-          //   deleteVideo,
-          //   deleteVideoResult: {
-          //     loading: loadingDeleteVideo,
-          //     error: errorDeleteVideo,
-          //   },
-          // },
-        }) => {
-          if (errorQueryVideo) return <p>Error</p>;
-          if (loadingQueryVideo) return <Loader active />;
-          if (!data.video) return <p>No Video Found for {id}</p>;
-          const oldValuesObject = this.getDefaultValues(data);
-          return (
-            <>
-              <Head>
-                <title key="title">
-                  {audioId ? data.video.audio[0].title : data.video.originTitle}{' '}
-                  | Danni TV - Sửa video
-                </title>
-                <meta
-                  key="metaTitle"
-                  name="title"
-                  content={`${
-                    audioId ? data.video.audio[0].title : data.video.originTitle
-                  } | Danni TV - Sửa video`}
-                />
-              </Head>
-              <Container>
-                <Form
-                  data-test="form"
-                  onSubmit={e =>
-                    this.onSubmit(
-                      e,
-                      updateVideo,
-                      createAudio,
-                      updateAudio,
-                      oldValuesObject
-                    )
-                  }
-                >
-                  <Error error={errorCreateAudio} />
-                  <Error error={errorUpdateVideo} />
-                  <Error error={errorUpdateAudio} />
-                  <EditVideoForm
-                    {...this.state}
-                    {...oldValuesObject}
-                    audioId={audioId}
-                    loadingUpdateVideo={loadingUpdateVideo}
-                    loadingCreateAudio={loadingCreateAudio}
-                    loadingUpdateAudio={loadingUpdateAudio}
-                    handleChange={this.handleChange}
-                    handleDropdown={this.handleDropdown}
-                    onUploadFileSubmit={(cloudinaryAuth, id, e) =>
-                      this.onUploadFileSubmit(
-                        cloudinaryAuth,
-                        id,
-                        e,
-                        oldValuesObject
-                      )
-                    }
-                    onDeleteFileSubmit={this.onDeleteFileSubmit}
-                    onAudioLoadedMetadata={this.onAudioLoadedMetadata}
-                    onShowUpload={this.onShowUpload}
-                  />
-                </Form>
-              </Container>
-            </>
-          );
-        }}
-      </Composed>
+      <Loader indeterminate active>
+        Đang chuyển trang...
+      </Loader>
     );
-  }
-}
+  if (errorQueryVideo || error) return <p>Error</p>;
+  if (loadingQueryVideo) return <Loader active />;
+  if (!data.video) return <p>No Video Found for {id}</p>;
+
+  return (
+    <>
+      <Head>
+        <title key="title">
+          {audioId ? data.video.audio[0].title : data.video.originTitle} | Danni
+          TV - Sửa video
+        </title>
+        <meta
+          key="metaTitle"
+          name="title"
+          content={`${
+            audioId ? data.video.audio[0].title : data.video.originTitle
+          } | Danni TV - Sửa video`}
+        />
+      </Head>
+      <Container>
+        <Form data-test="form" onSubmit={onSubmit}>
+          <Error error={errorCreateAudio} />
+          <Error error={errorUpdateVideo} />
+          <Error error={errorUpdateAudio} />
+          <fieldset
+            disabled={
+              loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio
+            }
+            aria-busy={loadingUpdateVideo}
+          >
+            Language:
+            <DropDownForm>
+              <Dropdown
+                fluid
+                selection
+                options={flagOptions}
+                onChange={(e, { value }) => {
+                  if (language !== value && deleteToken) {
+                    onDeleteFileSubmit();
+                  }
+                  setInputState({ ...inputState, language: value });
+                }}
+                defaultValue={oldLanguage}
+                name="language"
+                className="semantic-dropdown"
+              />
+            </DropDownForm>
+            <label htmlFor="source">
+              Nguồn (Link hoặc YouTube ID):
+              <input
+                type="text"
+                id="source"
+                name="source"
+                required
+                defaultValue={oldOriginId}
+                onChange={handleChange}
+              />
+            </label>
+            {fetchingYoutube && <Loader inline="centered" active />}
+            {youtubeIdStatus && <div>{youtubeIdStatus}</div>}
+            {(originTitle || oldOriginTitle) && (
+              <Segment>
+                <p>{originTitle || oldOriginTitle}</p>
+                <p>{channelTitle || oldOriginChannel}</p>
+                {(image || oldImage) && (
+                  <img width="200" src={image || oldImage} alt="thumbnail" />
+                )}
+              </Segment>
+            )}
+            {!audioId && (
+              <label htmlFor="isAudioSource">
+                <input
+                  id="isAudioSource"
+                  name="isAudioSource"
+                  type="checkbox"
+                  checked={audioId || isAudioSource}
+                  onChange={handleChange}
+                />
+                Upload Separate Audio File
+              </label>
+            )}
+            {(audioId || isAudioSource) && (
+              <>
+                {!secureUrl && oldAudioSource && (
+                  <>
+                    <p>Current Audio:</p>
+                    <audio
+                      controls
+                      src={oldAudioSource}
+                      onLoadedMetadata={e => onAudioLoadedMetadata(e)}
+                    >
+                      <track kind="captions" />
+                    </audio>
+                  </>
+                )}
+                <p>Upload New Audio:</p>
+
+                {(showUpload && (
+                  <CloudinaryUploadAudio
+                    onUploadFileSubmit={onUploadFileSubmit}
+                    source={youtubeId || oldOriginId}
+                    language={language || oldLanguage}
+                    uploadProgress={uploadProgress}
+                    uploadError={uploadError}
+                    deleteToken={deleteToken}
+                    onDeleteFileSubmit={onDeleteFileSubmit}
+                    secureUrl={secureUrl}
+                    handleChange={handleChange}
+                    audioSource={audioSource}
+                    onAudioLoadedMetadata={onAudioLoadedMetadata}
+                  />
+                )) || (
+                  <Message warning>
+                    <p>
+                      Uploading a new audio file will immediately permanently
+                      replace the old one.{' '}
+                      <Button onClick={() => setShowUpload(true)}>
+                        Continue
+                      </Button>
+                    </p>
+                  </Message>
+                )}
+                {(secureUrl || audioSource || audioId) && (
+                  <>
+                    <label htmlFor="title">
+                      Tiêu đề:
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        maxLength="100"
+                        defaultValue={oldTitleVi}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label htmlFor="description">
+                      <input
+                        id="description"
+                        name="isDescription"
+                        type="checkbox"
+                        checked={isDescription}
+                        onChange={handleChange}
+                      />
+                      Nội dung:
+                    </label>
+                    {isDescription && (
+                      <label htmlFor="description">
+                        <textarea
+                          name="description"
+                          maxLength="5000"
+                          rows="10"
+                          defaultValue={oldDescriptionVi}
+                          onChange={handleChange}
+                        />
+                      </label>
+                    )}
+                    <label htmlFor="tags">
+                      <input
+                        id="tags"
+                        name="isTags"
+                        type="checkbox"
+                        checked={isTags}
+                        onChange={handleChange}
+                      />
+                      Tags:
+                    </label>
+                    {isTags && (
+                      <>
+                        <input
+                          type="text"
+                          name="tags"
+                          maxLength="500"
+                          defaultValue={oldTags.trim()}
+                          onChange={handleChange}
+                        />
+                        {originTags && (
+                          <Segment>
+                            <p>Current YouTube tags:</p>
+                            {originTags.join(' ') ||
+                              oldOriginTags.reduce(
+                                (tagString, tag) => tagString + ' ' + tag.text,
+                                ' '
+                              )}
+                          </Segment>
+                        )}
+                      </>
+                    )}
+                    <label htmlFor="defaultVolume">
+                      <input
+                        id="defaultVolume"
+                        name="isDefaultVolume"
+                        type="checkbox"
+                        checked={isDefaultVolume}
+                        onChange={handleChange}
+                      />
+                      Âm lượng (%):
+                    </label>
+                    {isDefaultVolume && (
+                      <input
+                        type="number"
+                        name="defaultVolume"
+                        min="0"
+                        max="100"
+                        defaultValue={oldDefaultVolume}
+                        onChange={handleChange}
+                      />
+                    )}
+                  </>
+                )}
+              </>
+            )}
+            <button type="submit">Save Changes</button>
+          </fieldset>
+        </Form>
+      </Container>
+    </>
+  );
+};
 
 EditVideo.propTypes = {
   id: PropTypes.string.isRequired,
