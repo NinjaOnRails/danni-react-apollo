@@ -66,7 +66,15 @@ export default styled.div`
     display: block;
   }
 
+  .ui.negative.button {
+    margin-left: 7px;
+  }
+
   .submit-edit-button {
     margin: auto;
+  }
+  .add-audio-button {
+    display: block;
+    margin-bottom: 15px;
   }
 `;

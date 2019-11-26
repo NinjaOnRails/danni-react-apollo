@@ -90,13 +90,13 @@ const VideoForm = ({
         selection
         options={flagOptions}
         onChange={handleChange}
-        value={language}
+        defaultValue={language}
         name="language"
       />
       <Form.Input
         label="YouTube ID hoặc đường link (URL)  "
         placeholder="36A5bOSP334 hoặc www.youtube.com/watch?v=36A5bOSP334"
-        value={source}
+        defaultValue={source}
         onChange={handleChange}
         name="source"
       />

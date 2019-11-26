@@ -16,7 +16,7 @@ const DetailsForm = ({
       <Form.Input
         required
         label="Tiêu đề"
-        value={title}
+        defaultValue={title}
         onChange={handleChange}
         name="title"
         placeholder="bắt buộc"
@@ -24,14 +24,14 @@ const DetailsForm = ({
       />
       <Form.TextArea
         label="Giới thiệu"
-        value={description}
+        defaultValue={description}
         onChange={handleChange}
         name="description"
         maxLength="5000"
       />
       <Form.Input
         label="Tags"
-        value={tags}
+        defaultValue={tags}
         onChange={handleChange}
         name="tags"
         maxLength="500"

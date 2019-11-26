@@ -31,47 +31,41 @@ import { getDefaultValues } from './utils';
 
 const EditVideo = ({ id, audioId }) => {
   const [editVideoForm, setEditVideoForm] = useState({
-    videoValid: true,
-    redirecting: false,
-    isDescription: true,
-    isAudioSource: false,
-    isTags: true,
-    youtubeIdStatus: false,
-    youtubeId: '',
-    secureUrl: '',
-    deleteToken: '',
-    audioDuration: 0,
-    showUpload: false,
-    originTags: [],
-    originTitle: null,
-    channelTitle: null,
-    image: null,
     language: null,
-    audioUrl: null,
     source: null,
+    videoValid: true,
+    originTags: [],
+    youtubeId: '',
     title: null,
     description: null,
+    audioUrl: null,
     tags: null,
+    isAudioSource: false,
+    secureUrl: '',
+    deleteToken: '',
+    error: '',
+    audioDuration: 0,
+    redirecting: false,
+    showUpload: false,
   });
 
   const {
-    redirecting,
-    isDescription,
-    isAudioSource,
-    isTags,
-    youtubeId,
-    secureUrl,
-    deleteToken,
-    audioDuration,
-    showUpload,
+    language,
+    source,
     videoValid,
     originTags,
-    language,
-    audioUrl,
-    source,
+    youtubeId,
     title,
     description,
+    audioUrl,
     tags,
+    isAudioSource,
+    secureUrl,
+    deleteToken,
+    error,
+    audioDuration,
+    redirecting,
+    showUpload,
   } = editVideoForm;
 
   const {
@@ -97,9 +91,8 @@ const EditVideo = ({ id, audioId }) => {
     { loading: loadingUpdateVideo, error: errorUpdateVideo },
   ] = useUpdateVideoMutation(id);
 
-  if (errorQueryVideo) return <p>Error</p>;
   if (loadingQueryVideo) return <Loader active />;
-  if (!data.video) return <p>No Video Found for {id}</p>;
+  if (!data.video || errorQueryVideo) return <p>Không tìm thấy video {id}</p>;
 
   if (redirecting)
     return (
@@ -119,11 +112,13 @@ const EditVideo = ({ id, audioId }) => {
     oldOriginTags,
   } = getDefaultValues(data, audioId);
 
+  console.log(title || oldOriginTitle);
+
   const setEditVideoState = newState =>
     setEditVideoForm(prevState => ({ ...prevState, ...newState }));
 
   const onDeleteFileSubmit = async () => {
-    setEditVideoState({ deleteToken: '', secureUrl: '' });
+    setEditVideoState({ error: '', secureUrl: '' });
 
     const res = await deleteFile(deleteToken);
     if (res.status === 200) {
@@ -140,11 +135,12 @@ const EditVideo = ({ id, audioId }) => {
     // Stop form from submitting
     e.preventDefault();
     let action = 'no action';
+    setEditVideoState({ error: '' });
     // if fields unchanged, use default values
     let redirectAudioParam;
     // Call updateVideo mutation
     if (
-      (!audioId && !audioUrl && (language || source)) ||
+      (!audioId && !audioUrl && !secureUrl && (language || source)) ||
       (audioId && source)
     ) {
       action = 'updateVideo';
@@ -160,7 +156,7 @@ const EditVideo = ({ id, audioId }) => {
     if (
       !audioId &&
       (audioUrl || secureUrl) &&
-      (!oldAudioSource || oldAudioSource !== audioUrl)
+      (!oldAudioSource || oldAudioSource !== (audioUrl || secureUrl))
     ) {
       action = 'createAudio';
       ({
@@ -172,10 +168,8 @@ const EditVideo = ({ id, audioId }) => {
           source: secureUrl || audioUrl || oldAudioSource,
           language: language || oldLanguage,
           title: title || oldTitleVi,
-          description: isDescription
-            ? description || oldDescriptionVi
-            : undefined,
-          tags: isTags ? tags || oldTags : undefined,
+          description: description || oldDescriptionVi,
+          tags: tags || oldTags,
           duration: audioDuration,
 
           video: id,
@@ -200,7 +194,6 @@ const EditVideo = ({ id, audioId }) => {
       }));
     }
     setEditVideoState({ redirecting: true });
-    // setRedirecting(true);
     console.log(action);
     // Redirect to newly updated Video watch page
     Router.push({
@@ -229,8 +222,8 @@ const EditVideo = ({ id, audioId }) => {
           <Error error={errorCreateAudio} />
           <Error error={errorUpdateVideo} />
           <Error error={errorUpdateAudio} />
+          <Error error={{ message: error }} />
           <Form
-            data-test="form"
             onSubmit={onSubmit}
             size="big"
             loading={
@@ -245,6 +238,15 @@ const EditVideo = ({ id, audioId }) => {
               videoValid={videoValid}
               editVideo
             />
+            {!audioId && (
+              <Button
+                className="add-audio-button"
+                color="green"
+                onClick={() => setEditVideoState({ isAudioSource: true })}
+              >
+                Thêm thuyết minh cho video
+              </Button>
+            )}
 
             {(audioId || isAudioSource) && (
               <>
@@ -261,7 +263,7 @@ const EditVideo = ({ id, audioId }) => {
                   </>
                 )}
                 <Header as="h3">Tải file thuyết minh mới:</Header>
-                {showUpload ? (
+                {showUpload || isAudioSource ? (
                   <AudioForm
                     setAddVideoState={setEditVideoState}
                     isAudioSource={isAudioSource}
@@ -276,12 +278,12 @@ const EditVideo = ({ id, audioId }) => {
                 ) : (
                   <Message warning>
                     <p>
-                      Uploading a new audio file will immediately permanently
-                      replace the old one.{' '}
+                      Tải tệp file mới lên sẽ lập tức xoá vĩnh viễn tệp cũ.
                       <Button
+                        negative
                         onClick={() => setEditVideoState({ showUpload: true })}
                       >
-                        Continue
+                        Tiếp tục
                       </Button>
                     </p>
                   </Message>
@@ -296,7 +298,14 @@ const EditVideo = ({ id, audioId }) => {
                 />
               </>
             )}
-            <Button type="submit" size="big" icon labelPosition="right" primary>
+            <Button
+              disabled={!videoValid}
+              type="submit"
+              size="big"
+              icon
+              labelPosition="right"
+              primary
+            >
               Lưu thay đổi
               <Icon name="check" />
             </Button>
