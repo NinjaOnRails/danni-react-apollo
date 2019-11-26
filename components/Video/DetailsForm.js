@@ -7,6 +7,7 @@ const DetailsForm = ({
   description,
   tags,
   originTags,
+  editVideo,
 }) => {
   const handleChange = ({ target: { name, value } }) =>
     setAddVideoState({ [name]: value });
@@ -41,21 +42,23 @@ const DetailsForm = ({
           {originTags.join(' ')}
         </Segment>
       )}
-      <div className="buttons">
-        <Button
-          size="big"
-          icon
-          labelPosition="left"
-          onClick={() => setAddVideoState({ activeStep: 'audio' })}
-        >
-          Quay lại
-          <Icon name="left arrow" />
-        </Button>
-        <Button type="submit" size="big" icon labelPosition="right" primary>
-          Xác nhận
-          <Icon name="check" />
-        </Button>
-      </div>
+      {!editVideo && (
+        <div className="buttons">
+          <Button
+            size="big"
+            icon
+            labelPosition="left"
+            onClick={() => setAddVideoState({ activeStep: 'audio' })}
+          >
+            Quay lại
+            <Icon name="left arrow" />
+          </Button>
+          <Button type="submit" size="big" icon labelPosition="right" primary>
+            Xác nhận
+            <Icon name="check" />
+          </Button>
+        </div>
+      )}
     </>
   );
 };
@@ -66,9 +69,11 @@ DetailsForm.propTypes = {
   description: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
   originTags: PropTypes.arrayOf(string),
+  editVideo: PropTypes.bool,
 };
 DetailsForm.defaultProps = {
   originTags: [],
+  editVideo: false,
 };
 
 export default DetailsForm;

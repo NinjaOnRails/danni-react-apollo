@@ -9,9 +9,9 @@ export default styled.div`
   }
 
   form.ui.form {
-    height: 525.69px;
+    height: ${props => (props.editVideo ? 'auto' : '525.69px')};
     @media (max-width: 375px) {
-      height: 400px;
+      height: ${props => (props.editVideo ? 'auto' : '400px')};
     }
   }
 
@@ -60,5 +60,13 @@ export default styled.div`
       top: 0;
       left: 0;
     }
+  }
+
+  .ui.form .warning.message {
+    display: block;
+  }
+
+  .submit-edit-button {
+    margin: auto;
   }
 `;

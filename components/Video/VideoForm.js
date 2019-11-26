@@ -13,6 +13,7 @@ const VideoForm = ({
   source,
   youtubeId,
   videoValid,
+  editVideo,
 }) => {
   const [fetchingYoutube, setFetchingYoutube] = useState(false);
   const [error, setError] = useState(null);
@@ -100,7 +101,7 @@ const VideoForm = ({
         name="source"
       />
       <Loader active={fetchingYoutube || (Boolean(youtubeId) && !videoValid)} />
-      {youtubeId && (
+      {(youtubeId || (editVideo && source)) && (
         <div className="youtube-player">
           <YouTubePlayer
             url={`https://www.youtube.com/embed/${source}`}
@@ -113,22 +114,28 @@ const VideoForm = ({
         </div>
       )}
       <Error error={error} />
-      <div className="buttons">
-        <Button
-          size="big"
-          disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
-          type="button"
-          icon
-          labelPosition="right"
-          primary
-          onClick={onButtonClick}
-        >
-          Tiếp tục
-          <Icon name="right arrow" />
-        </Button>
-      </div>
+      {!editVideo && (
+        <div className="buttons">
+          <Button
+            size="big"
+            disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
+            type="button"
+            icon
+            labelPosition="right"
+            primary
+            onClick={onButtonClick}
+          >
+            Tiếp tục
+            <Icon name="right arrow" />
+          </Button>
+        </div>
+      )}
     </>
   );
+};
+
+VideoForm.defaultProps = {
+  editVideo: false,
 };
 
 VideoForm.propTypes = {
@@ -137,6 +144,7 @@ VideoForm.propTypes = {
   youtubeId: PropTypes.string.isRequired,
   videoValid: PropTypes.bool.isRequired,
   setAddVideoState: PropTypes.func.isRequired,
+  editVideo: PropTypes.bool,
 };
 
 export default VideoForm;
