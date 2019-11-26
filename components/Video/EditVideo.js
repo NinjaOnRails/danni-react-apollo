@@ -147,7 +147,7 @@ const EditVideo = ({ id, audioId }) => {
 
       const res = await youtube.get('/videos', {
         params: {
-          id,
+          id: originId,
           part: 'snippet',
           key: process.env.YOUTUBE_API_KEY,
         },
@@ -218,7 +218,6 @@ const EditVideo = ({ id, audioId }) => {
     // Check video source input to refetch preview if necessary
 
     if (name === 'source' && val.length >= 11) onSourceFill(val.trim());
-    console.log(name, val);
     // Controlled set state
     setInputState({ ...inputState, [name]: val });
   };
@@ -232,7 +231,7 @@ const EditVideo = ({ id, audioId }) => {
     }
   };
 
-  const onUploadFileSubmit = async (cloudinaryAuth, e, defaultValues) => {
+  const onUploadFileSubmit = async (cloudinaryAuth, e) => {
     // Reset uploadError display and assign appropriate value to file
     setUploadError(false);
     setError('');
@@ -291,6 +290,7 @@ const EditVideo = ({ id, audioId }) => {
       (!audioId && !audioSource && (language || source)) ||
       (audioId && source)
     ) {
+      console.log('updateVideo');
       await updateVideo({
         variables: {
           id,
@@ -305,28 +305,30 @@ const EditVideo = ({ id, audioId }) => {
       (audioSource || secureUrl) &&
       (!oldAudioSource || oldAudioSource !== audioSource)
     ) {
-      ({
-        data: {
-          createAudio: { id: redirectAudioParam },
-        },
-      } = await createAudio({
-        variables: {
-          source: secureUrl || oldAudioSource,
-          // source: audioSource || oldAudioSource,
-          language: language || oldLanguage,
-          title: title || oldTitleVi,
-          description: isDescription
-            ? description || oldDescriptionVi
-            : undefined,
-          tags: isTags ? tags || oldTags : undefined,
-          duration: audioDuration,
-          defaultVolume: isDefaultVolume
-            ? defaultVolume || oldDefaultVolume
-            : undefined,
-          video: id,
-        },
-      }));
-    } else if (audioId) {
+      console.log('createAudio')(
+        ({
+          data: {
+            createAudio: { id: redirectAudioParam },
+          },
+        } = await createAudio({
+          variables: {
+            source: secureUrl || oldAudioSource,
+            // source: audioSource || oldAudioSource,
+            language: language || oldLanguage,
+            title: title || oldTitleVi,
+            description: isDescription
+              ? description || oldDescriptionVi
+              : undefined,
+            tags: isTags ? tags || oldTags : undefined,
+            duration: audioDuration,
+            defaultVolume: isDefaultVolume
+              ? defaultVolume || oldDefaultVolume
+              : undefined,
+            video: id,
+          },
+        }))
+      );
+    } else if (audioId && (language || secureUrl || audioSource)) {
       ({
         data: {
           updateAudio: { id: redirectAudioParam },
@@ -335,7 +337,6 @@ const EditVideo = ({ id, audioId }) => {
         variables: {
           language,
           id: audioId,
-          // source: audioSource,
           source: secureUrl || oldAudioSource,
           duration: audioDuration,
           title,
