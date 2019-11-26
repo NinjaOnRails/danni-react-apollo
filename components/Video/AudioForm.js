@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createRef } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import {
@@ -25,6 +25,7 @@ const AudioForm = ({
   secureUrl,
   onDeleteFileSubmit,
   deleteToken,
+  editVideo,
 }) => {
   const [startingUpload, setStartingUpload] = useState(false);
   const [uploadError, setUploadError] = useState(false);
@@ -37,7 +38,7 @@ const AudioForm = ({
   );
   const { currentUser, loading: loadingUser } = useCurrentUserQuery();
 
-  const fileInputRef = React.createRef();
+  const fileInputRef = createRef();
 
   if (loading || loadingUser) return <Loader active />;
   if (queryError) return <Error error={queryError} />;
@@ -108,16 +109,18 @@ const AudioForm = ({
 
   return (
     <>
-      <Header
-        as="h2"
-        attached="top"
-        onClick={() => {
-          setAddVideoState({ isAudioSource: true });
-        }}
-      >
-        <Radio value="upload" checked={isAudioSource} />
-        Tải file thuyết minh lên
-      </Header>
+      {!editVideo && (
+        <Header
+          as="h2"
+          attached="top"
+          onClick={() => {
+            setAddVideoState({ isAudioSource: true });
+          }}
+        >
+          <Radio value="upload" checked={isAudioSource} />
+          Tải file thuyết minh lên
+        </Header>
+      )}
       <Segment attached>
         {(uploadProgress > 0 && uploadProgress < 100 && (
           <Progress percent={uploadProgress} progress success />
@@ -192,54 +195,62 @@ const AudioForm = ({
           )}
       </Segment>
 
-      <Segment>
-        <Header
-          as="h2"
-          onClick={() => {
-            setAddVideoState({ isAudioSource: false });
-          }}
-        >
-          <Radio value="upload" checked={!isAudioSource} />
-          Video đã có sẵn thuyết minh
-        </Header>
-      </Segment>
+      {!editVideo && (
+        <Segment>
+          <Header
+            as="h2"
+            onClick={() => {
+              setAddVideoState({ isAudioSource: false });
+            }}
+          >
+            <Radio value="upload" checked={!isAudioSource} />
+            Video đã có sẵn thuyết minh
+          </Header>
+        </Segment>
+      )}
 
       <Error error={error} />
 
-      <div className="buttons">
-        <Button
-          size="big"
-          icon
-          labelPosition="left"
-          onClick={() => setAddVideoState({ activeStep: 'video' })}
-        >
-          Quay lại
-          <Icon name="left arrow" />
-        </Button>
-        {isAudioSource ? (
+      {!editVideo && (
+        <div className="buttons">
           <Button
-            disabled={
-              startingUpload || (uploadProgress > 0 && uploadProgress < 100)
-            }
-            type="button"
             size="big"
             icon
-            labelPosition="right"
-            primary
-            onClick={onNextButtonClick}
+            labelPosition="left"
+            onClick={() => setAddVideoState({ activeStep: 'video' })}
           >
-            Tiếp tục
-            <Icon name="right arrow" />
+            Quay lại
+            <Icon name="left arrow" />
           </Button>
-        ) : (
-          <Button type="submit" size="big" icon labelPosition="right" primary>
-            Xác nhận
-            <Icon name="check" />
-          </Button>
-        )}
-      </div>
+          {isAudioSource ? (
+            <Button
+              disabled={
+                startingUpload || (uploadProgress > 0 && uploadProgress < 100)
+              }
+              type="button"
+              size="big"
+              icon
+              labelPosition="right"
+              primary
+              onClick={onNextButtonClick}
+            >
+              Tiếp tục
+              <Icon name="right arrow" />
+            </Button>
+          ) : (
+            <Button type="submit" size="big" icon labelPosition="right" primary>
+              Xác nhận
+              <Icon name="check" />
+            </Button>
+          )}
+        </div>
+      )}
     </>
   );
+};
+
+AudioForm.defaultProps = {
+  editVideo: false,
 };
 
 AudioForm.propTypes = {
@@ -250,8 +261,9 @@ AudioForm.propTypes = {
   secureUrl: PropTypes.string.isRequired,
   deleteToken: PropTypes.string.isRequired,
   youtubeId: PropTypes.string.isRequired,
-  source: PropTypes.string.isRequired,
+  // source: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
+  editVideo: PropTypes.bool,
 };
 
 export default AudioForm;
