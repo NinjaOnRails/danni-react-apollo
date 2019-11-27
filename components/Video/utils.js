@@ -8,20 +8,14 @@ const formatDuration = duration => {
 
 const getDefaultValues = (data, audioId) => {
   const {
-    video: {
-      originId: oldOriginId,
-      originThumbnailUrl: oldImage,
-      originTitle: oldOriginTitle,
-      originAuthor: oldOriginChannel,
-      originTags: oldOriginTags,
-    },
+    video: { originId: oldOriginId, originTags: oldOriginTagsObj },
   } = data;
-  let oldTitleVi = '';
+  let oldTitleVi = data.video.originTitle;
   let oldDescriptionVi = '';
-  let oldDefaultVolume = 30;
-  let oldTagsObj = '';
+  let oldTagsObj = {};
   let oldAudioSource = '';
   let oldLanguage;
+
   if (!audioId) {
     ({
       video: { language: oldLanguage },
@@ -37,26 +31,26 @@ const getDefaultValues = (data, audioId) => {
         title: oldTitleVi,
         description: oldDescriptionVi,
         tags: oldTagsObj,
-        defaultVolume: oldDefaultVolume,
         language: oldLanguage,
       },
     ] = audio.filter(audioFile => audioFile.id === audioId);
   }
   let oldTags = '';
+
   Object.values(oldTagsObj).forEach(val => {
     oldTags = oldTags + val.text + ' ';
   });
+  const oldOriginTags = oldOriginTagsObj.map(tagObj => {
+    return tagObj.text;
+  });
+
   return {
     oldOriginId,
     oldTitleVi,
     oldDescriptionVi,
-    oldDefaultVolume,
     oldTags,
     oldAudioSource,
     oldLanguage,
-    oldImage,
-    oldOriginTitle,
-    oldOriginChannel,
     oldOriginTags,
   };
 };

@@ -34,7 +34,7 @@ const EditVideo = ({ id, audioId }) => {
     language: null,
     source: null,
     videoValid: true,
-    originTags: [],
+    originTags: null,
     youtubeId: '',
     title: null,
     description: null,
@@ -108,11 +108,8 @@ const EditVideo = ({ id, audioId }) => {
     oldTags,
     oldAudioSource,
     oldLanguage,
-    oldOriginTitle,
     oldOriginTags,
   } = getDefaultValues(data, audioId);
-
-  console.log(title || oldOriginTitle);
 
   const setEditVideoState = newState =>
     setEditVideoForm(prevState => ({ ...prevState, ...newState }));
@@ -134,7 +131,6 @@ const EditVideo = ({ id, audioId }) => {
   const onSubmit = async e => {
     // Stop form from submitting
     e.preventDefault();
-    let action = 'no action';
     setEditVideoState({ error: '' });
     // if fields unchanged, use default values
     let redirectAudioParam;
@@ -143,7 +139,6 @@ const EditVideo = ({ id, audioId }) => {
       (!audioId && !audioUrl && !secureUrl && (language || source)) ||
       (audioId && source)
     ) {
-      action = 'updateVideo';
       await updateVideo({
         variables: {
           id,
@@ -158,7 +153,6 @@ const EditVideo = ({ id, audioId }) => {
       (audioUrl || secureUrl) &&
       (!oldAudioSource || oldAudioSource !== (audioUrl || secureUrl))
     ) {
-      action = 'createAudio';
       ({
         data: {
           createAudio: { id: redirectAudioParam },
@@ -176,7 +170,6 @@ const EditVideo = ({ id, audioId }) => {
         },
       }));
     } else if (audioId) {
-      action = 'updateAudio';
       ({
         data: {
           updateAudio: { id: redirectAudioParam },
@@ -194,7 +187,6 @@ const EditVideo = ({ id, audioId }) => {
       }));
     }
     setEditVideoState({ redirecting: true });
-    console.log(action);
     // Redirect to newly updated Video watch page
     Router.push({
       pathname: '/watch',
@@ -240,19 +232,25 @@ const EditVideo = ({ id, audioId }) => {
             />
             {!audioId && (
               <Button
+                content={
+                  isAudioSource
+                    ? 'Thôi thêm thuyết minh cho video'
+                    : 'Thêm thuyết minh cho video'
+                }
                 className="add-audio-button"
-                color="green"
-                onClick={() => setEditVideoState({ isAudioSource: true })}
-              >
-                Thêm thuyết minh cho video
-              </Button>
+                color={isAudioSource ? 'red' : 'green'}
+                onClick={e => {
+                  e.preventDefault();
+                  setEditVideoState({ isAudioSource: !isAudioSource });
+                }}
+              />
             )}
 
             {(audioId || isAudioSource) && (
               <>
                 {!secureUrl && oldAudioSource && (
                   <>
-                    <Header as="h3">File thuyết minh hiện tại:</Header>
+                    <Header as="h3" content="File thuyết minh hiện tại:" />
                     <audio
                       controls
                       src={oldAudioSource}
@@ -262,7 +260,7 @@ const EditVideo = ({ id, audioId }) => {
                     </audio>
                   </>
                 )}
-                <Header as="h3">Tải file thuyết minh mới:</Header>
+                <Header as="h3" content="Tải file thuyết minh mới:" />
                 {showUpload || isAudioSource ? (
                   <AudioForm
                     setAddVideoState={setEditVideoState}
@@ -280,17 +278,16 @@ const EditVideo = ({ id, audioId }) => {
                     <p>
                       Tải tệp file mới lên sẽ lập tức xoá vĩnh viễn tệp cũ.
                       <Button
+                        content="Tiếp tục"
                         negative
                         onClick={() => setEditVideoState({ showUpload: true })}
-                      >
-                        Tiếp tục
-                      </Button>
+                      />
                     </p>
                   </Message>
                 )}
                 <DetailsForm
                   setAddVideoState={setEditVideoState}
-                  title={title || oldOriginTitle}
+                  title={title || oldTitleVi}
                   description={description || oldDescriptionVi}
                   tags={tags || oldTags}
                   originTags={originTags || oldOriginTags}
