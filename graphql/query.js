@@ -256,6 +256,8 @@ const LOCAL_STATE_QUERY = gql`
   query {
     showSide @client
     showAuthModal @client
+    previousPage @client
+    contentLanguage @client
   }
 `;
 
