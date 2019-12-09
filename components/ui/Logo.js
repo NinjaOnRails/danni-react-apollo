@@ -18,6 +18,7 @@ const LogoStyles = styled.h2`
     color: white;
     text-transform: uppercase;
     text-decoration: none;
+    background-color: ${props => props.theme.red};
   }
   i.icon {
     margin: 0;
@@ -31,7 +32,7 @@ const LogoStyles = styled.h2`
     font-size: 2rem;
   }
   @media (max-width: 639px) {
-    font-size:  ${props => (props.footer ? '2.5rem' : '1.8rem')};
+    font-size:  2.5rem;
     /* transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')}; */
     margin: 0;
     background-color: ${props => props.theme.red}
