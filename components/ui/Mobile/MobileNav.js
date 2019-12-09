@@ -7,16 +7,6 @@ import DrawerToggle from './DrawerToggle';
 import { TOGGLE_SIDEDRAWER_MUTATION } from '../../../graphql/mutation';
 
 const StyledNav = styled.div`
-  /* overflow: hidden;
-  background-color: white;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 48px;
-  width: 100%;
-  z-index: 2;
-  border-top: 1px solid grey; */
   .ui.menu {
     width: 100%;
     display: flex;
@@ -28,7 +18,6 @@ const StyledNav = styled.div`
     left: 0;
     right: 0;
     height: 48px;
-    width: 100%;
     z-index: 2;
     border-top: 1px solid grey;
   }

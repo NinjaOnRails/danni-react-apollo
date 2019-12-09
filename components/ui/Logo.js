@@ -32,7 +32,7 @@ const LogoStyles = styled.h2`
   }
   @media (max-width: 639px) {
     font-size:  ${props => (props.footer ? '2.5rem' : '1.8rem')};
-    transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')};
+    /* transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')}; */
     margin: 0;
     background-color: ${props => props.theme.red}
   }

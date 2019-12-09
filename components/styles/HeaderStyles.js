@@ -16,7 +16,8 @@ const StyledHeader = styled.header`
       grid-template-columns: auto;
       justify-content: center;
       grid-auto-flow: column;
-      border-bottom: 2px solid ${props => props.theme.grey};
+      /* border-bottom: 2px solid ${props => props.theme.grey}; */
+      border-bottom: 0;
       height: 35px;
     }
   }
