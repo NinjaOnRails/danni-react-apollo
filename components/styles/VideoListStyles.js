@@ -9,6 +9,11 @@ const VideoListStyles = styled.div`
   justify-content: center;
   padding: 0;
 
+  div.ui.fluid.card {
+    box-shadow: 0 1px 9px -1px hsla(0, 0%, 0%, 0.2);
+    border: 0;
+  }
+
   .buttons {
     position: relative;
     bottom: 32px;
