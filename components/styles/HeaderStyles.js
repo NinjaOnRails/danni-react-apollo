@@ -11,6 +11,7 @@ const StyledHeader = styled.header`
   }
 
   @media (max-width: 639px) {
+    margin-bottom: 10px;
     z-index: 99;
     .bar {
       grid-template-columns: auto;

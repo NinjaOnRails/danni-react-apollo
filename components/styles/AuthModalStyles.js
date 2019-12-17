@@ -78,14 +78,18 @@ const StyledModal = styled.div`
   .auth-modes .active:hover {
     background-color: #cc0000;
   }
-  i.large.icon,
-  i.large.icons {
+  i.large.icon {
     top: -30px;
     position: absolute;
     right: -7.5%;
     font-size: 2em;
     opacity: 1;
     color: ${props => props.theme.lightGrey};
+    transition: all 250ms ease 0s;
+    transform: rotate(00deg);
+  }
+  i.large.icon:hover {
+    transform: rotate(90deg);
   }
   @media (max-width: 736px) {
     .Modal {
