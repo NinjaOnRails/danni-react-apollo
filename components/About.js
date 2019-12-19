@@ -24,11 +24,11 @@ class About extends Component {
         <AboutStyles>
           <Container text>
             <Header as="h2" textAlign="center">
-              🌍MỤC ĐÍCH CỦA CHÚNG TÔI 🌍
+              🌍 MỤC ĐÍCH CỦA CHÚNG TÔI 🌍
             </Header>
             <p>Phổ biến hóa kiến ​​thức toàn cầu.</p>
             <Header as="h2" textAlign="center">
-              💪CHÚNG TÔI LÀM GÌ 💪
+              💪 CHÚNG TÔI LÀM GÌ 💪
             </Header>
             <p>
               Cộng đồng của chúng tôi tìm hiểu, dịch và lồng tiếng cho các video
@@ -41,7 +41,7 @@ class About extends Component {
               với đông đảo khán giả.
             </p>
             <Header as="h2" textAlign="center">
-              🚀KÊU GỌI HÀNH ĐỘNG 🚀
+              🚀 KÊU GỌI HÀNH ĐỘNG 🚀
             </Header>
             <p>
               Hãy cùng nhau vượt qua các rào cản ngôn ngữ để mọi người có thể
@@ -72,7 +72,7 @@ class About extends Component {
               posts. Join the team!
             </p> */}
             <Header as="h2" textAlign="center">
-              🤙Liên lạc 🤙
+              🤙 Liên lạc 🤙
             </Header>
             <p>info.dannitv@gmail.com, (+420) 774897789</p>
           </Container>
