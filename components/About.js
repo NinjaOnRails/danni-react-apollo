@@ -3,8 +3,14 @@ import { Container, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Head from 'next/head';
 
-const AboutStyle = styled.div`
+const AboutStyles = styled.div`
   padding: 2rem;
+  .ui.header {
+    font-family: ${props => props.theme.font};
+  }
+  p {
+    text-align: center;
+  }
 `;
 
 class About extends Component {
@@ -15,11 +21,15 @@ class About extends Component {
           <title key="title">Danni TV - Giới thiệu</title>
           <meta key="metaTitle" name="title" content="Danni TV - Giới thiệu" />
         </Head>
-        <AboutStyle>
+        <AboutStyles>
           <Container text>
-            <Header as="h2">MỤC ĐÍCH CỦA CHÚNG TÔI</Header>
+            <Header as="h2" textAlign="center">
+              💩MỤC ĐÍCH CỦA CHÚNG TÔI 💩
+            </Header>
             <p>Phổ biến hóa kiến ​​thức toàn cầu.</p>
-            <Header as="h2">CHÚNG TÔI LÀM GÌ</Header>
+            <Header as="h2" textAlign="center">
+              💩CHÚNG TÔI LÀM GÌ 💩
+            </Header>
             <p>
               Cộng đồng của chúng tôi tìm hiểu, dịch và lồng tiếng cho các video
               trực tuyến sang các ngôn ngữ khác. Chúng tôi tập trung vào các nội
@@ -30,7 +40,9 @@ class About extends Component {
               vượt qua được các giới hạn về ngôn ngữ và không gian và tới được
               với đông đảo khán giả.
             </p>
-            <Header as="h2">KÊU GỌI HÀNH ĐỘNG</Header>
+            <Header as="h2" textAlign="center">
+              💩KÊU GỌI HÀNH ĐỘNG 💩
+            </Header>
             <p>
               Hãy cùng nhau vượt qua các rào cản ngôn ngữ để mọi người có thể
               truy cập thư viện video tốt nhất của Internet.
@@ -61,7 +73,7 @@ class About extends Component {
             </p> */}
             <p>Liên lạc: info.dannitv@gmail.com, (+420) 774897789</p>
           </Container>
-        </AboutStyle>
+        </AboutStyles>
       </>
     );
   }
