@@ -17,23 +17,29 @@ class About extends Component {
         </Head>
         <AboutStyle>
           <Container text>
-            <Header as="h2">OUR MISSION</Header>
-            <p>To help democratise global knowledge.</p>
-            <Header as="h2">WHAT WE DO</Header>
+            <Header as="h2">MỤC ĐÍCH CỦA CHÚNG TÔI</Header>
+            <p>Phổ biến hóa kiến ​​thức toàn cầu.</p>
+            <Header as="h2">CHÚNG TÔI LÀM GÌ</Header>
             <p>
-              Our community researches, translates and dubs relevant online
-              videos into other languages. We focus on video content which we
-              believe to contain elements of education, inspiration, personal
-              and professional growth, smart entertainment, and insights about
-              issues that matter.
+              Cộng đồng của chúng tôi tìm hiểu, dịch và lồng tiếng cho các video
+              trực tuyến sang các ngôn ngữ khác. Chúng tôi tập trung vào các nội
+              dung có các yếu tố liên quan tới giáo dục, phát triển bản thân và
+              chuyên môn, giải trí thông minh, với mong muốn chia sẻ những góc
+              nhìn sâu sắc hơn về các vấn đề quan trọng trong xã hội. Thông qua
+              hoạt động này, chúng tôi hy vọng nội dung của các video thú vị sẽ
+              vượt qua được các giới hạn về ngôn ngữ và không gian và tới được
+              với đông đảo khán giả.
             </p>
-            <Header as="h2">CALL FOR ACTION</Header>
+            <Header as="h2">KÊU GỌI HÀNH ĐỘNG</Header>
             <p>
-              Let's break down language barriers so everyone can access
-              internet’s finest video library.
+              Hãy cùng nhau vượt qua các rào cản ngôn ngữ để mọi người có thể
+              truy cập thư viện video tốt nhất của Internet.
             </p>
-            <p>Currently served languages: Czech, English, and Vietnamese.</p>
-            <Header as="h2">Join us!</Header>
+            <p>
+              Các ngôn ngữ hiện đang được sử dụng: tiếng Séc, tiếng Anh và tiếng
+              Việt.
+            </p>
+            {/* <Header as="h2">Join us!</Header>
             <p>
               BECOME A DUBBER Register and start dubbing. Use your phone or
               another device to start recording. Then just upload your audio
@@ -52,8 +58,8 @@ class About extends Component {
               SUPPORT THE PROJECT Subscribe and share the content you like. Give
               us feedback, write about us Mention us in your videos, blogs or
               posts. Join the team!
-            </p>
-            <p>Contact: info.dannitv@gmail.com, (+420) 774897789</p>
+            </p> */}
+            <p>Liên lạc: info.dannitv@gmail.com, (+420) 774897789</p>
           </Container>
         </AboutStyle>
       </>
