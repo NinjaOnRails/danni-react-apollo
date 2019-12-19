@@ -4,6 +4,7 @@ import { Mutation } from 'react-apollo';
 import Nav from './Nav';
 // import Search from './Search';
 // import MobileSearch from './Mobile/MobileSearch';
+import MobileNav from './Mobile/MobileNav';
 import Logo from './Logo';
 import DrawerToggle from './Mobile/DrawerToggle';
 import { TOGGLE_SIDEDRAWER_MUTATION } from '../../graphql/mutation';
@@ -23,11 +24,12 @@ Router.onRouteChangeError = () => {
 const Header = () => (
   <StyledHeader>
     <div className="bar">
+      {/* <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
+        {toggleSideDrawer => <DrawerToggle clicked={toggleSideDrawer} />}
+      </Mutation> */}
       <Logo />
       <Nav />
-      <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
-        {toggleSideDrawer => <DrawerToggle clicked={toggleSideDrawer} />}
-      </Mutation>
+      {/* <MobileNav /> */}
       {/* <MobileSearch /> */}
     </div>
     {/* <Search /> */}

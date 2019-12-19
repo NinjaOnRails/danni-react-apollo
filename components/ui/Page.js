@@ -8,6 +8,7 @@ import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
+import MobileNav from './Mobile/MobileNav';
 
 const defaultTheme = {
   white: ' #fff',
@@ -44,6 +45,10 @@ const Inner = styled.div`
   @media (max-width: 720px) {
     padding-top: ${({ route }) =>
       route === '/' || route === '/watch' ? 0 : '3.5rem'};
+  }
+
+  @media (max-width: 639px) {
+    padding-bottom: 4.5rem;
   }
 `;
 
@@ -100,6 +105,7 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner route={route}>{children}</Inner>
+                <MobileNav />
                 {!pagesWithoutFooter.includes(route) && <Footer />}
               </StyledPage>
             </ThemeProvider>
