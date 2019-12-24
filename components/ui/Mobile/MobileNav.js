@@ -20,6 +20,7 @@ const StyledNav = styled.div`
     height: 48px;
     z-index: 2;
     border-top: 1px solid grey;
+    border-radius: 0;
   }
   .ui.labeled.icon.menu .item {
     margin: auto;
