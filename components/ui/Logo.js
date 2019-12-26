@@ -10,7 +10,9 @@ const LogoStyles = styled.h2`
   transform: skew(-7deg);
   width: auto;
   justify-content: start;
-  display: ${props => (props.footer ? 'inline-block' : 'grid')};
+  display: inline-block;
+  
+  /* ${props => (props.footer ? 'inline-block' : 'grid')}; */
   /* padding: ${props => (props.footer ? 'block' : 'grid')} */
   background-color: ${props => props.theme.red};
   a {
