@@ -76,7 +76,7 @@ const StyledHeader = styled.header`
             -webkit-transform-style: preserve-3d;
             -webkit-backface-visibility: hidden;
             left: 50%;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
           }
 
           &:hover,
