@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import RenderVideoList from './RenderVideoList';
+import TagsMenu from '../UI/TagsMenu';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 
 const LanguageMenuStyles = styled.div`
@@ -47,6 +48,7 @@ const Videos = ({ videos: { data: initialVideoData } }) => (
         <LanguageMenuStyles>
           <ContentLanguage loadingData={loadingVideos} />
         </LanguageMenuStyles>
+        <TagsMenu />
         {errorVideos ? (
           <Error>Error: {errorVideos.message}</Error>
         ) : (
