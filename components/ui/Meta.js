@@ -4,15 +4,6 @@ const Meta = () => (
   <Head>
     <title key="title">Danni TV - Trang chủ</title>
     <meta key="metaTitle" name="title" content="Danni TV - Trang chủ" />
-    {/* <meta
-      key="description"
-      name="description"
-      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
-    />
-    <meta
-      name="keywords"
-      content="Danni TV, danni.tv, Different, Global, Languages, Translate, Dub, Dubbed, Voice-over, Free, Videos, TV, Online, Lecture, Lesson, Learn, Health, Science, Business"
-    /> */}
     <meta
       key="description"
       name="description"
@@ -47,11 +38,6 @@ const Meta = () => (
     />
     <meta property="og:type" content="website" key="og:type" />
     <meta property="og:url" content="https://danni.tv/" key="og:url" />
-    {/* <meta
-      property="og:description"
-      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
-      key="og:description"
-    /> */}
 
     <link rel="canonical" href="https://www.danni.tv/" />
     <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
@@ -107,13 +93,6 @@ const Meta = () => (
         `,
       }}
     />
-    {/* <script
-      dangerouslySetInnerHTML={{
-        __html: `
-        window.purechatApi = { l: [], t: [], on: function () { this.l.push(arguments); } }; (function () { var done = false; var script = document.createElement('script'); script.async = true; script.type = 'text/javascript'; script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) { if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({c: '4ae7c825-1b22-432d-b5f4-fb4fddd582d3', f: true }); done = true; } }; })();
-      `,
-      }}
-    /> */}
   </Head>
 );
 
