@@ -15,7 +15,11 @@ const Home = props => {
 Home.getInitialProps = ({ req, apolloClient, query }) => {
   // const contentLanguage = getSupportedLanguage(req.headers['accept-language']);
   const contentLanguage = ['VIETNAMESE'];
-  return fetchVideos({ client: apolloClient, contentLanguage });
+  return fetchVideos({
+    client: apolloClient,
+    contentLanguage,
+    tags: query.tags,
+  });
 };
 
 export default Home;

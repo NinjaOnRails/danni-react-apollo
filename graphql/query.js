@@ -148,7 +148,11 @@ const VIDEO_QUERY = gql`
 `;
 
 const ALL_VIDEOS_QUERY = gql`
-  query ALL_VIDEOS_QUERY($contentLanguage: [Language!], $cursor: String) {
+  query ALL_VIDEOS_QUERY(
+    $contentLanguage: [Language!]
+    $cursor: String
+    $tags: String
+  ) {
     videosConnection(
       first: 18
       after: $cursor
@@ -156,6 +160,7 @@ const ALL_VIDEOS_QUERY = gql`
         OR: [
           { language_in: $contentLanguage }
           { audio_some: { language_in: $contentLanguage } }
+          { audio_some: { tags_some: { text: $tags } } }
         ]
       }
       orderBy: createdAt_DESC

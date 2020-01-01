@@ -89,7 +89,7 @@ const TagsMenu = () => {
           query = decodeURI(query);
           return (
             <StyledTag key={name} i={i}>
-              <Link href={`/browse?tag=${query}`}>
+              <Link href={`/browse?tags=${query}`}>
                 <a>
                   <Button
                     size="big"
