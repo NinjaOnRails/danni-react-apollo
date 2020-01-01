@@ -1,27 +1,32 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { Button } from 'semantic-ui-react';
+import Link from 'next/link';
 
-const tags = [
-  'education1',
-  'health1',
-  'science1',
-  'wonders1',
-  'self-help1',
-  'education2',
-  'health2',
-  'science2',
-  'wonders2',
-  'self-help2',
-  'education3',
-  'health3',
-  'science3',
-  'wonders3',
-  'self-help3',
-  'education4',
-  'health4',
-  'science4',
-  'wonders4',
-  'self-help4',
+const defaultTags = [
+  { name: 'tech', text: 'Công nghệ' },
+  { name: 'sci', text: 'Khoa học' },
+  { name: 'design', text: 'Thiết kế' },
+  { name: 'business', text: 'Kinh doanh' },
+  { name: 'innovation', text: 'Đổi mới công nghệ' },
+  { name: 'social', text: 'Thay đổi xã hội' },
+  { name: 'health', text: 'Sức khỏe' },
+  { name: 'nature', text: 'Thiên nhiên' },
+  { name: 'environment', text: 'Môi trường' },
+  { name: 'future', text: 'Tương lai' },
+  { name: 'communication', text: 'Giao tiếp' },
+  { name: 'child', text: 'Sự phát triển của trẻ nhỏ' },
+  { name: 'personal', text: 'Phát triển cá nhân' },
+  { name: 'Humanity', text: 'Nhân loại' },
+  { name: 'society', text: 'Xã hội' },
+  { name: 'identity', text: 'Danh tính' },
+  { name: 'community', text: 'Cộng đồng' },
+  { name: 'inspiration', text: 'Cảm hứng hay động lực' },
+  { name: 'professional', text: 'Phát triển sự nghiệp' },
+  { name: 'smart', text: 'Giải trí thông minh' },
+  { name: 'ideas', text: 'Ý tưởng để tự cải thiện' },
+  { name: 'stories', text: 'Những câu chuyện' },
 ];
 
 const StyledList = styled.div`
@@ -32,7 +37,7 @@ const StyledList = styled.div`
 
   ul {
     list-style: none;
-    width: 50%;
+    width: 70%;
     margin-left: auto;
     margin-right: auto;
     padding: 0;
@@ -51,8 +56,8 @@ const StyledTag = styled.li`
   opacity: 0;
   animation: FadeIn 1s forwards;
   animation-fill-mode: both;
-  animation-delay: ${props => (props.i + 1) * 0.15}s;
-
+  animation-delay: ${props => (props.i + 1) * 0.1}s;
+  margin: 2.5px;
   @keyframes FadeIn {
     from {
       opacity: 0;
@@ -62,17 +67,45 @@ const StyledTag = styled.li`
     }
   }
 `;
-const TagsMenu = () => (
-  <StyledList>
-    <h2>Lựa chọn chủ đề:</h2>
-    <ul>
-      {tags.map((tag, i) => (
-        <StyledTag key={tag} i={i}>
-          <Button color={tag === 'wonders1' ? 'blue' : 'black'}>#{tag}</Button>
-        </StyledTag>
-      ))}
-    </ul>
-  </StyledList>
-);
+const TagsMenu = () => {
+  const router = useRouter();
+  return (
+    <StyledList>
+      <h2>Lựa chọn chủ đề:</h2>
+      <ul>
+        {defaultTags.map(({ name, text }, i) => {
+          let query = router.query.tag || '';
+          const tagMatch = query.includes(name);
+          if (query.includes(name)) {
+            query = query.replace((',' + name).toString(), ' ');
+            query = query.replace(name.toString(), ' ');
+          } else {
+            if (!query) {
+              query = name;
+            } else {
+              query = query + ',' + name;
+            }
+          }
+          query = decodeURI(query);
+          return (
+            <StyledTag key={name} i={i}>
+              <Link href={`/browse?tag=${query}`}>
+                <a>
+                  <Button
+                    size="big"
+                    basic={!tagMatch}
+                    color={tagMatch ? 'blue' : 'black'}
+                  >
+                    {text}
+                  </Button>
+                </a>  
+              </Link>
+            </StyledTag>
+          );
+        })}
+      </ul>
+    </StyledList>
+  );
+};
 
 export default TagsMenu;
