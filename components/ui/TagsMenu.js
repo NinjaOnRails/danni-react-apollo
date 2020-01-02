@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const defaultTags = [
   { name: 'tech', text: 'Công nghệ' },
-  { name: 'sci', text: 'Khoa học' },
+  { name: 'science', text: 'Khoa học' },
   { name: 'design', text: 'Thiết kế' },
   { name: 'business', text: 'Kinh doanh' },
   { name: 'innovation', text: 'Đổi mới công nghệ' },
@@ -18,7 +18,7 @@ const defaultTags = [
   { name: 'communication', text: 'Giao tiếp' },
   { name: 'child', text: 'Sự phát triển của trẻ nhỏ' },
   { name: 'personal', text: 'Phát triển cá nhân' },
-  { name: 'Humanity', text: 'Nhân loại' },
+  { name: 'humanity', text: 'Nhân loại' },
   { name: 'society', text: 'Xã hội' },
   { name: 'identity', text: 'Danh tính' },
   { name: 'community', text: 'Cộng đồng' },
@@ -74,7 +74,7 @@ const TagsMenu = () => {
       <h2>Lựa chọn chủ đề:</h2>
       <ul>
         {defaultTags.map(({ name, text }, i) => {
-          let query = router.query.tag || '';
+          let query = router.query.tags || '';
           const tagMatch = query.includes(name);
           if (query.includes(name)) {
             query = query.replace((',' + name).toString(), ' ');
