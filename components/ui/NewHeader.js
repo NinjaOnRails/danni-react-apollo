@@ -56,7 +56,7 @@ const StyledHeader = styled.header`
     margin-bottom: 5px;
 
     .auth-button {
-      background-color: #21ba45 ;
+      background-color: #21ba45;
       /* border: 1px solid rgba(255, 0, 0, 0.5);
       margin: -1px 0; */
       outline: 0px;
@@ -83,8 +83,7 @@ const StyledHeader = styled.header`
     }
 
     .signin {
-      background-color: #e1e1e1;
-      /* border-color: #e1e1e1; */
+      background-color: #808080;
     }
 
     a,
@@ -194,13 +193,13 @@ const Header = () => (
                   <>
                     <li className="auth-button signin">
                       <Link href="/signin">
-                        Đăng Nhập
+                        <a>Đăng Nhập</a>
                         {/* <a>Đăng Nhập</a> */}
                       </Link>
                     </li>
                     <li className="auth-button">
                       <Link href="/signup">
-                        Đăng Ký
+                        <a>Đăng Ký</a>
                         {/* <a>Đăng Ký</a> */}
                       </Link>
                     </li>
