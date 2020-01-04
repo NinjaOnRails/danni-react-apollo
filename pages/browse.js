@@ -1,9 +1,9 @@
 import Videos from '../components/Video/Videos';
 import Jumbotron from '../components/UI/Jumbotron';
 import { getSupportedLanguage } from '../lib/supportedLanguages';
-import fetchVideos from '../lib/fetchVideosByTags';
+import fetchVideosByTags from '../lib/fetchVideosByTags';
 
-const Home = props => {
+const Browse = props => {
   return (
     <>
       <Jumbotron />
@@ -12,15 +12,15 @@ const Home = props => {
   );
 };
 
-Home.getInitialProps = ({ req, apolloClient, query }) => {
+Browse.getInitialProps = ({ req, apolloClient, query }) => {
   // const contentLanguage = getSupportedLanguage(req.headers['accept-language']);
   const tags = query.tags.split(',');
   const contentLanguage = ['VIETNAMESE'];
-  return fetchVideos({
+  return fetchVideosByTags({
     client: apolloClient,
     contentLanguage,
     tags
   });
 };
 
-export default Home;
+export default Browse;
