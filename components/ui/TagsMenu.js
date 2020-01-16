@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { Button } from 'semantic-ui-react';
@@ -67,6 +66,7 @@ const StyledTag = styled.li`
     }
   }
 `;
+
 const TagsMenu = () => {
   const router = useRouter();
   return (
@@ -76,17 +76,16 @@ const TagsMenu = () => {
         {defaultTags.map(({ name, text }, i) => {
           let query = router.query.tags || '';
           const tagMatch = query.includes(name);
-          if (query.includes(name)) {
-            query = query.replace((',' + name).toString(), ' ');
-            query = query.replace(name.toString(), ' ');
-          } else {
-            if (!query) {
-              query = name;
-            } else {
-              query = query + ',' + name;
-            }
-          }
+          query = query.includes(name)
+            ? query
+                .replace(`,${name}`.toString(), '')
+                .replace(name.toString(), '')
+            : !query
+            ? name
+            : `${query},${name}`;
+
           query = decodeURI(query);
+
           return (
             <StyledTag key={name} i={i}>
               <Link href={`/browse?tags=${query}`}>
@@ -98,7 +97,7 @@ const TagsMenu = () => {
                   >
                     {text}
                   </Button>
-                </a>  
+                </a>
               </Link>
             </StyledTag>
           );
