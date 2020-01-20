@@ -125,6 +125,13 @@ const VIDEO_QUERY = gql`
       originTags {
         text
       }
+      vote {
+        id
+        type
+        user {
+          id
+        }
+      }
       audio(where: { id: $audioId }) {
         id
         source
@@ -139,6 +146,13 @@ const VIDEO_QUERY = gql`
         defaultVolume
         startAt
         duration
+        vote {
+          id
+          type
+          user {
+            id
+          }
+        }
         tags {
           text
         }

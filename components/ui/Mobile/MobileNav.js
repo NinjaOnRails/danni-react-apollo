@@ -23,7 +23,7 @@ const StyledNav = styled.div`
     border-radius: 0;
   }
   .ui.labeled.icon.menu .item {
-    margin: auto;
+    width: 20%;
   }
   i.large.icon,
   i.large.icons {

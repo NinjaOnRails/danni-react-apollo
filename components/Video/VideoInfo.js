@@ -18,8 +18,17 @@ import YoutubeViews from './YoutubeViews';
 import VideoDeleteButton from './VideoDeleteButton';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
 import { user, contentLanguageQuery } from '../UI/ContentLanguage';
-import { DELETE_AUDVID_MUTATION } from '../../graphql/mutation';
-import { CURRENT_USER_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
+import {
+  DELETE_AUDVID_MUTATION,
+  CREATE_VIDEO_VOTE,
+  CREATE_AUDIO_VOTE,
+} from '../../graphql/mutation';
+import {
+  CURRENT_USER_QUERY,
+  ALL_VIDEOS_QUERY,
+  VIDEO_QUERY,
+} from '../../graphql/query';
+import { openAuthModal } from '../Authentication/PleaseSignIn';
 import Error from '../UI/ErrorMessage';
 
 /* eslint-disable */
@@ -27,7 +36,6 @@ const deleteAudVidMutation = ({
   contentLanguageQuery: { contentLanguage },
   render,
 }) => (
-  /* eslint-enable */
   <Mutation
     mutation={DELETE_AUDVID_MUTATION}
     refetchQueries={[
@@ -42,10 +50,35 @@ const deleteAudVidMutation = ({
   </Mutation>
 );
 
+const createAudioVoteMutation = ({ render, id, audioId }) => (
+  <Mutation
+    mutation={CREATE_AUDIO_VOTE}
+    refetchQueries={[{ query: VIDEO_QUERY, variables: { id, audioId } }]}
+  >
+    {(createAudioVote, createAudioVoteResult) =>
+      render({ createAudioVote, createAudioVoteResult })
+    }
+  </Mutation>
+);
+const createVideoVoteMutation = ({ render, id, audioId, type }) => (
+  <Mutation
+    mutation={CREATE_VIDEO_VOTE}
+    refetchQueries={[{ query: VIDEO_QUERY, variables: { id, audioId } }]}
+  >
+    {(createVideoVote, createVideoVoteResult) =>
+      render({ createVideoVote, createVideoVoteResult })
+    }
+  </Mutation>
+);
+/* eslint-enable */
+
 const Composed = adopt({
   user,
   contentLanguageQuery,
   deleteAudVidMutation,
+  createAudioVoteMutation,
+  createVideoVoteMutation,
+  openAuthModal,
 });
 
 export default class VideoInfo extends Component {
@@ -64,8 +97,45 @@ export default class VideoInfo extends Component {
     }
   }
 
-  onVideoLike() {
-    console.log('liked');
+  onVideoLike({
+    createAudioVote,
+    createVideoVote,
+    type,
+    openAuthModal,
+    currentUser,
+  }) {
+    const { id, audioId } = this.props;
+    if (currentUser) {
+      if (!audioId) {
+        createVideoVote({
+          variables: { video: id, type },
+          // optimisticResponse: {
+          //   __typename: 'Mutation',
+          //   createVideoVote: {
+          //     id: Math.round(Math.random() * -100000000),
+          //     type,
+          //     user: { id: currentUser.id, __typename: 'User' },
+          //     __typename: 'VideoVote',
+          //   },
+          // },
+        });
+      } else {
+        createAudioVote({
+          variables: { audio: audioId, type },
+          // optimisticResponse: {
+          //   __typename: 'Mutation',
+          //   createAudioVote: {
+          //     id: Math.round(Math.random() * -100000000),
+          //     type,
+          //     user: { id: currentUser.id, __typename: 'User' },
+          //     __typename: 'AudioVote',
+          //   },
+          // },
+        });
+      }
+    } else {
+      openAuthModal();
+    }
   }
 
   isDescriptionOverflow() {
@@ -85,6 +155,7 @@ export default class VideoInfo extends Component {
         originAuthor,
         addedBy,
         originDescription,
+        vote,
       },
       url,
       showFullDescription,
@@ -99,14 +170,33 @@ export default class VideoInfo extends Component {
     if (audioId) query.audioId = audioId;
 
     return (
-      <Composed>
+      <Composed id={id} audioId={audioId}>
         {({
           user: { currentUser },
           deleteAudVidMutation: {
             deleteAudVid,
             deleteAudVidResult: { loading, error },
           },
+          createAudioVoteMutation: { createAudioVote, createAudioVoteResult },
+          createVideoVoteMutation: { createVideoVote, createVideoVoteResult },
+          openAuthModal,
         }) => {
+          const watchVotes = audioId ? audio[0].vote : vote;
+          let userVoteType = null;
+          let voteCount = 0;
+          if (watchVotes.length > 0) {
+            voteCount = watchVotes.reduce((total, watchVote) => {
+              const i = watchVote.type === 'UPVOTE' ? 1 : -1;
+              return total + i;
+            }, 0);
+
+            if (currentUser) {
+              userVoteType = watchVotes.find(
+                watchVote => watchVote.user.id === currentUser.id
+              );
+            }
+          }
+          // console.log(watchVotes, voteCount, userVoteType);
           return (
             <VideoInfoStyles>
               <div className="basic-info">
@@ -147,14 +237,40 @@ export default class VideoInfo extends Component {
                   <YoutubeViews originId={originId} />
                   <div className="video-like">
                     <Icon
-                      name="thumbs up outline"
+                      id="UPVOTE"
+                      name="thumbs up"
                       link
-                      onClick={this.onVideoLike}
+                      color={
+                        userVoteType && userVoteType.type === 'UPVOTE'
+                          ? 'blue'
+                          : 'grey'
+                      }
+                      size="large"
+                      onClick={e =>
+                        this.onVideoLike({
+                          openAuthModal,
+                          createAudioVote,
+                          createVideoVote,
+                          type: e.target.id,
+                          currentUser,
+                        })
+                      }
                     />
+                    {/* <Icon
+                      id="DOWNVOTE"
+                      name="thumbs down"
+                      link
+                      onClick={e =>
+                        this.onVideoLike({
+                          openAuthModal,
+                          createAudioVote,
+                          createVideoVote,
+                          type: e.target.id,
+                        })
+                      }
+                    /> */}
                     <Statistic size="mini" horizontal>
-                      <Statistic.Value>
-                        {100 || <Loader active inline />}
-                      </Statistic.Value>
+                      <Statistic.Value>{voteCount} </Statistic.Value>
                       <Statistic.Label>lượt thích</Statistic.Label>
                     </Statistic>
                   </div>
