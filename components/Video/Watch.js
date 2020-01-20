@@ -2,13 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import { Container, Loader } from 'semantic-ui-react';
-import SmallVideoList from './SmallVideoList';
-import CommentSection from '../Comment/CommentSection';
-import VideoInfo from './VideoInfo';
-import VideoHeader from './VideoHeader';
-import Error from '../UI/ErrorMessage';
-import { WatchPageStyles, YoutubeStyle } from '../styles/WatchStyles';
+import { YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,
   trackPlayFinish,
@@ -26,10 +20,6 @@ class Watch extends Component {
     showFullDescription: false,
     mixpanelEventsSent: [],
   };
-
-  componentDidMount() {
-    this.props.client.writeData({ data: { hideSigninToComment: true } });
-  }
 
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
@@ -91,9 +81,8 @@ class Watch extends Component {
     });
   };
 
-  onVideoItemClick = client => {
+  onVideoItemClick = () => {
     // Reset some states on different video click
-    client.writeData({ data: { hideSigninToComment: true } });
     this.setState({ showFullDescription: false, mixpanelEventsSent: [] });
   };
 
@@ -165,54 +154,12 @@ class Watch extends Component {
   };
 
   render() {
-    const {
-      id,
-      asPath,
-      payload: { error, loading, data },
-      client,
-    } = this.props;
-    const { readyYoutube, showFullDescription } = this.state;
-    const url = `https://www.danni.tv${asPath}
-    `;
-    if (error) return <Error error={error} />;
-    if (loading) return <Loader active inline="centered" />;
-    const { video } = data;
-    if (!video) return <p>No Video Found for ID: {id}</p>;
-    const currentWatchingLanguage = video.audio[0]
-      ? video.audio[0].language
-      : video.language;
+    const { readyYoutube } = this.state;
+    const { video } = this.props;
     return (
       <>
-        <VideoHeader video={video} url={url} />
-        <WatchPageStyles>
-          <div className="main">
-            {this.renderVideoPlayer(video)}
-            <Container fluid className="tablet-padding">
-              <VideoInfo
-                {...this.props}
-                video={video}
-                url={url}
-                showFullDescription={showFullDescription}
-                toggleFullDescription={this.toggleFullDescription}
-              />
-              {video.audio[0] &&
-                readyYoutube &&
-                this.renderFilePlayer(video.audio)}
-              <CommentSection
-                videoId={id}
-                videoLanguage={video.language}
-                client={client}
-              />
-            </Container>
-          </div>
-          <div className="list tablet-padding">
-            <SmallVideoList
-              {...this.props}
-              currentWatchingLanguage={currentWatchingLanguage}
-              onVideoItemClick={() => this.onVideoItemClick(client)}
-            />
-          </div>
-        </WatchPageStyles>
+        {this.renderVideoPlayer(video)}
+        {video.audio[0] && readyYoutube && this.renderFilePlayer(video.audio)}
       </>
     );
   }
@@ -220,10 +167,8 @@ class Watch extends Component {
 
 Watch.propTypes = {
   id: PropTypes.string.isRequired,
-  asPath: PropTypes.string.isRequired,
-  payload: PropTypes.object.isRequired,
+  video: PropTypes.object.isRequired,
   audioId: PropTypes.string,
-  client: PropTypes.object.isRequired,
 };
 
 Watch.defaultProps = {
