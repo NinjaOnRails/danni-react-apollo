@@ -7,6 +7,7 @@ import {
   Button,
   Icon,
   Loader,
+  Statistic,
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
@@ -61,6 +62,10 @@ export default class VideoInfo extends Component {
     if (id !== prevProps.id || audioId !== prevProps.audioId) {
       this.isDescriptionOverflow();
     }
+  }
+
+  onVideoLike() {
+    console.log('liked');
   }
 
   isDescriptionOverflow() {
@@ -140,6 +145,19 @@ export default class VideoInfo extends Component {
                 )}
                 <div className="views-social">
                   <YoutubeViews originId={originId} />
+                  <div className="video-like">
+                    <Icon
+                      name="thumbs up outline"
+                      link
+                      onClick={this.onVideoLike}
+                    />
+                    <Statistic size="mini" horizontal>
+                      <Statistic.Value>
+                        {100 || <Loader active inline />}
+                      </Statistic.Value>
+                      <Statistic.Label>lượt thích</Statistic.Label>
+                    </Statistic>
+                  </div>
                   <div>
                     <FacebookShareButton className="fb-share-button" url={url}>
                       <FacebookIcon size={32} round />

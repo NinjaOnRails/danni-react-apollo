@@ -46,4 +46,8 @@ export default styled.div`
     font-size: 12px;
     text-transform: none;
   }
+
+  .ui.statistic {
+    margin-top: 0;
+  }
 `;
