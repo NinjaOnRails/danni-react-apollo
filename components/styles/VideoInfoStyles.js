@@ -46,4 +46,13 @@ export default styled.div`
     font-size: 12px;
     text-transform: none;
   }
+
+  .ui.statistic {
+    margin: 0;
+  }
+
+  .vid-statistic {
+    display: flex;
+    padding: 5px 0;
+  }
 `;

@@ -136,6 +136,13 @@ const VIDEO_QUERY = gql`
       originTags {
         text
       }
+      vote {
+        id
+        type
+        user {
+          id
+        }
+      }
       audio(where: { id: $audioId }) {
         id
         customThumbnail
@@ -145,14 +152,27 @@ const VIDEO_QUERY = gql`
           displayName
           avatar
         }
+        comment {
+          id
+        }
         language
         title
         description
         defaultVolume
         startAt
         duration
+        vote {
+          id
+          type
+          user {
+            id
+          }
+        }
         tags {
           text
+        }
+        comment {
+          id
         }
       }
     }

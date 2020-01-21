@@ -107,6 +107,30 @@ const DELETE_AUDVID_MUTATION = gql`
   }
 `;
 
+const CREATE_VIDEO_VOTE = gql`
+  mutation CREATE_VIDEO_VOTE($video: ID!, $type: VoteType!) {
+    createVideoVote(video: $video, type: $type) {
+      id
+      type
+      user {
+        id
+      }
+    }
+  }
+`;
+
+const CREATE_AUDIO_VOTE = gql`
+  mutation CREATE_AUDIO_VOTE($audio: ID!, $type: VoteType!) {
+    createAudioVote(audio: $audio, type: $type) {
+      id
+      type
+      user {
+        id
+      }
+    }
+  }
+`;
+
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
     $name: String
@@ -404,4 +428,6 @@ export {
   FACEBOOK_LOGIN_MUTATION,
   UPDATE_USER_MUTATION,
   UPDATE_AVATAR_MUTATION,
+  CREATE_VIDEO_VOTE,
+  CREATE_AUDIO_VOTE,
 };
