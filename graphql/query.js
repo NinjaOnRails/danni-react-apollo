@@ -150,7 +150,7 @@ const VIDEO_QUERY = gql`
 const ALL_VIDEOS_QUERY = gql`
   query ALL_VIDEOS_QUERY($contentLanguage: [Language!], $cursor: String) {
     videosConnection(
-      first: 12
+      first: 18
       after: $cursor
       where: {
         OR: [

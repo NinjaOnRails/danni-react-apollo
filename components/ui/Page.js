@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
-import Header from './Header';
+// import Header from './Header';
+import Header from './NewHeader';
 import Footer, { pagesWithoutFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
 import AuthModal, { localData } from '../Authentication/AuthModal';
 import GDPR from './GDPR';
+import MobileNav from './Mobile/MobileNav';
 
 const defaultTheme = {
   white: ' #fff',
@@ -44,6 +46,10 @@ const Inner = styled.div`
   @media (max-width: 720px) {
     padding-top: ${({ route }) =>
       route === '/' || route === '/watch' ? 0 : '3.5rem'};
+  }
+
+  @media (max-width: 639px) {
+    padding-bottom: 4.5rem;
   }
 `;
 
@@ -100,6 +106,7 @@ class Page extends Component {
                 <SideDrawer />
                 {data.showAuthModal && <AuthModal />}
                 <Inner route={route}>{children}</Inner>
+                <MobileNav />
                 {!pagesWithoutFooter.includes(route) && <Footer />}
               </StyledPage>
             </ThemeProvider>

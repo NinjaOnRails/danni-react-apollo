@@ -91,6 +91,29 @@ const Meta = () => (
       `,
       }}
     />
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+        (function(d, w, c) {
+          w.ChatraID = 'f6vcumwP3zpnYjrhH';
+          var s = d.createElement('script');
+          w[c] = w[c] || function() {
+              (w[c].q = w[c].q || []).push(arguments);
+          };
+          s.async = true;
+          s.src = 'https://call.chatra.io/chatra.js';
+          if (d.head) d.head.appendChild(s);
+      })(document, window, 'Chatra');
+        `,
+      }}
+    />
+    {/* <script
+      dangerouslySetInnerHTML={{
+        __html: `
+        window.purechatApi = { l: [], t: [], on: function () { this.l.push(arguments); } }; (function () { var done = false; var script = document.createElement('script'); script.async = true; script.type = 'text/javascript'; script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) { if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({c: '4ae7c825-1b22-432d-b5f4-fb4fddd582d3', f: true }); done = true; } }; })();
+      `,
+      }}
+    /> */}
   </Head>
 );
 

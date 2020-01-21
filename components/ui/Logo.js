@@ -7,11 +7,12 @@ const LogoStyles = styled.h2`
   font-size: 3rem;
   margin-left: ${props => (props.footer ? '0' : '2rem')};
   position: relative;
-  z-index: 2;
   transform: skew(-7deg);
   width: auto;
   justify-content: start;
-  display: ${props => (props.footer ? 'inline-block' : 'grid')};
+  display: inline-block;
+  
+  /* ${props => (props.footer ? 'inline-block' : 'grid')}; */
   /* padding: ${props => (props.footer ? 'block' : 'grid')} */
   background-color: ${props => props.theme.red};
   a {
@@ -19,6 +20,7 @@ const LogoStyles = styled.h2`
     color: white;
     text-transform: uppercase;
     text-decoration: none;
+    background-color: ${props => props.theme.red};
   }
   i.icon {
     margin: 0;
@@ -32,8 +34,8 @@ const LogoStyles = styled.h2`
     font-size: 2rem;
   }
   @media (max-width: 639px) {
-    font-size:  ${props => (props.footer ? '2.5rem' : '1.8rem')};
-    transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')};
+    font-size:  2.5rem;
+    /* transform: ${props => (props.footer ? 'skew(-7deg)' : 'none')}; */
     margin: 0;
     background-color: ${props => props.theme.red}
   }

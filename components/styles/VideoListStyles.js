@@ -9,6 +9,11 @@ const VideoListStyles = styled.div`
   justify-content: center;
   padding: 0;
 
+  div.ui.fluid.card {
+    box-shadow: 0 1px 9px -1px hsla(0, 0%, 0%, 0.2);
+    border: 0;
+  }
+
   .buttons {
     position: relative;
     bottom: 32px;
@@ -64,25 +69,6 @@ const VideoListStyles = styled.div`
       height: 118.13px;
       padding-top: 0;
     }
-  }
-
-  @media (max-width: 479px) {
-    grid-template-columns: auto;
-    .ui.card {
-      box-shadow: none;
-    }
-
-    .ui.placeholder .image:not(.header) {
-      width: 320px;
-      height: 180px;
-    }
-
-    .buttons {
-      bottom: 10px;
-    }
-  }
-
-  @media (min-width: 480px) {
     grid-gap: 42px 14px;
     div.header {
       height: 3.2rem;
@@ -94,6 +80,26 @@ const VideoListStyles = styled.div`
 
     .author {
       top: -30px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    grid-template-columns: auto;
+    .ui.card {
+      box-shadow: none;
+    }
+
+    div.ui.fluid.card {
+      box-shadow: none;
+    }
+
+    .ui.placeholder .image:not(.header) {
+      width: 320px;
+      height: 180px;
+    }
+
+    .buttons {
+      bottom: 10px;
     }
   }
 `;

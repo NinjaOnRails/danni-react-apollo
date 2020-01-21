@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyledHeader = styled.header`
   .bar {
-    border-bottom: 10px solid ${props => props.theme.black};
+    border-bottom: 4px solid ${props => props.theme.black};
     display: grid;
     grid-template-columns: auto 1fr;
     justify-content: space-between;
@@ -11,14 +11,14 @@ const StyledHeader = styled.header`
   }
 
   @media (max-width: 639px) {
+    margin-bottom: 10px;
     z-index: 99;
-    position: sticky;
-    top: 0;
     .bar {
-      grid-template-columns: auto auto;
+      grid-template-columns: auto;
+      justify-content: center;
       grid-auto-flow: column;
-      border-bottom: 
-      /* 0; */ 2px solid ${props => props.theme.black};
+      /* border-bottom: 2px solid ${props => props.theme.grey}; */
+      border-bottom: 0;
       height: 35px;
     }
   }
