@@ -66,9 +66,9 @@ export default styled.div`
     display: grid;
     grid-template-columns: auto 80px;
     grid-column-gap: 10px;
+  }
 
-    input {
-      width: auto;
-    }
+  input#uploadImageUrl {
+    width: auto;
   }
 `;

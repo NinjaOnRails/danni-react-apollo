@@ -489,7 +489,6 @@ class EditVideo extends Component {
           if (loadingQueryVideo) return <Loader active />;
           if (!data.video) return <p>No Video Found for {id}</p>;
           const oldValuesObject = this.getDefaultValues(data);
-          console.log(this.state.cusThumbnailSecUrl)
           return (
             <>
               <Head>

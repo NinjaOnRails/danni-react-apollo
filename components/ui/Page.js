@@ -81,6 +81,10 @@ const GlobalStyle = createGlobalStyle`
   button {
     font-family: 'Verdana';
   }
+
+  #chatra.chatra--mobile-widget:not(.chatra--expanded) {
+    bottom: 50px !important;
+  }
 `;
 
 const Composed = adopt({
