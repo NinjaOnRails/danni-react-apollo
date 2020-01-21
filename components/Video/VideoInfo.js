@@ -31,7 +31,6 @@ import {
 import { openAuthModal } from '../Authentication/PleaseSignIn';
 import Error from '../UI/ErrorMessage';
 
-/* eslint-disable */
 const deleteAudVidMutation = ({
   contentLanguageQuery: { contentLanguage },
   render,
@@ -50,20 +49,98 @@ const deleteAudVidMutation = ({
   </Mutation>
 );
 
-const createAudioVoteMutation = ({ render, id, audioId }) => (
+const createAudioVoteMutation = ({
+  render,
+  id,
+  audioId,
+  user: { currentUser },
+}) => (
   <Mutation
     mutation={CREATE_AUDIO_VOTE}
-    refetchQueries={[{ query: VIDEO_QUERY, variables: { id, audioId } }]}
+    // refetchQueries={[{ query: VIDEO_QUERY, variables: { id, audioId } }]}
+    update={(proxy, { data: { createAudioVote } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+      });
+
+      const existingVote =
+        data.video.audio[0].vote.length > 0
+          ? data.video.audio[0].vote.find(
+              audioVote => audioVote.user.id === currentUser.id
+            )
+          : null;
+      if (!existingVote) {
+        data.video.audio[0].vote = data.video.audio[0].vote.concat([
+          createAudioVote,
+        ]);
+      } else if (existingVote && existingVote.type !== createAudioVote.type) {
+        data.video.audio[0].vote = data.video.audio[0].vote.map(audioVote => {
+          if (audioVote.user.id === currentUser.id) {
+            audioVote.type = createAudioVote.type;
+          }
+          return audioVote;
+        });
+      } else if (existingVote && existingVote.type === createAudioVote.type) {
+        data.video.audio[0].vote = data.video.audio[0].vote.filter(
+          audioVote => audioVote.user.id !== currentUser.id
+        );
+      }
+      // data.video.audio[0].vote = vote;
+      proxy.writeQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+        data,
+      });
+    }}
   >
     {(createAudioVote, createAudioVoteResult) =>
       render({ createAudioVote, createAudioVoteResult })
     }
   </Mutation>
 );
-const createVideoVoteMutation = ({ render, id, audioId, type }) => (
+const createVideoVoteMutation = ({
+  render,
+  id,
+  audioId,
+  user: { currentUser },
+}) => (
   <Mutation
     mutation={CREATE_VIDEO_VOTE}
-    refetchQueries={[{ query: VIDEO_QUERY, variables: { id, audioId } }]}
+    // refetchQueries={[{ query: VIDEO_QUERY, variables: { id, audioId } }]}
+    update={(proxy, { data: { createVideoVote } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+      });
+      const existingVote =
+        data.video.vote.length > 0
+          ? data.video.vote.find(
+              videoVote => videoVote.user.id === currentUser.id
+            )
+          : null;
+      if (!existingVote) {
+        data.video.vote = data.video.vote.concat([createVideoVote]);
+      } else if (existingVote && existingVote.type !== createVideoVote.type) {
+        data.video.vote = data.video.vote.map(videoVote => {
+          if (videoVote.user.id === currentUser.id) {
+            videoVote.type = createVideoVote.type;
+          }
+          return videoVote;
+        });
+      } else if (existingVote && existingVote.type === createVideoVote.type) {
+        data.video.vote = data.video.vote.filter(
+          videoVote => videoVote.user.id !== currentUser.id
+        );
+      }
+      proxy.writeQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+        data,
+      });
+    }}
   >
     {(createVideoVote, createVideoVoteResult) =>
       render({ createVideoVote, createVideoVoteResult })
@@ -109,28 +186,28 @@ export default class VideoInfo extends Component {
       if (!audioId) {
         createVideoVote({
           variables: { video: id, type },
-          // optimisticResponse: {
-          //   __typename: 'Mutation',
-          //   createVideoVote: {
-          //     id: Math.round(Math.random() * -100000000),
-          //     type,
-          //     user: { id: currentUser.id, __typename: 'User' },
-          //     __typename: 'VideoVote',
-          //   },
-          // },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createVideoVote: {
+              id: Math.round(Math.random() * -100000000),
+              type,
+              user: { id: currentUser.id, __typename: 'User' },
+              __typename: 'VideoVote',
+            },
+          },
         });
       } else {
         createAudioVote({
           variables: { audio: audioId, type },
-          // optimisticResponse: {
-          //   __typename: 'Mutation',
-          //   createAudioVote: {
-          //     id: Math.round(Math.random() * -100000000),
-          //     type,
-          //     user: { id: currentUser.id, __typename: 'User' },
-          //     __typename: 'AudioVote',
-          //   },
-          // },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createAudioVote: {
+              id: Math.round(Math.random() * -100000000),
+              type,
+              user: { id: currentUser.id, __typename: 'User' },
+              __typename: 'AudioVote',
+            },
+          },
         });
       }
     } else {
@@ -196,7 +273,6 @@ export default class VideoInfo extends Component {
               );
             }
           }
-          // console.log(watchVotes, voteCount, userVoteType);
           return (
             <VideoInfoStyles>
               <div className="basic-info">
