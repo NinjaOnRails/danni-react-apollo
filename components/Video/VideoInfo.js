@@ -233,6 +233,7 @@ export default class VideoInfo extends Component {
         addedBy,
         originDescription,
         vote,
+        comment,
       },
       url,
       showFullDescription,
@@ -260,12 +261,16 @@ export default class VideoInfo extends Component {
         }) => {
           const watchVotes = audioId ? audio[0].vote : vote;
           let userVoteType = null;
-          let voteCount = 0;
+          let upVoteCount = 0;
+          let downVoteCount = 0;
           if (watchVotes.length > 0) {
-            voteCount = watchVotes.reduce((total, watchVote) => {
-              const i = watchVote.type === 'UPVOTE' ? 1 : -1;
-              return total + i;
-            }, 0);
+            // voteCount = watchVotes.reduce((total, watchVote) => {
+            //   const i = watchVote.type === 'UPVOTE' ? 1 : -1;
+            //   return total + i;
+            // }, 0);
+            for (let i = 0; i < watchVotes.length; i++) {
+              watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
+            }
 
             if (currentUser) {
               userVoteType = watchVotes.find(
@@ -310,44 +315,65 @@ export default class VideoInfo extends Component {
                   </div>
                 )}
                 <div className="views-social">
-                  <YoutubeViews originId={originId} />
-                  <div className="video-like">
-                    <Icon
-                      id="UPVOTE"
-                      name="thumbs up"
-                      link
-                      color={
-                        userVoteType && userVoteType.type === 'UPVOTE'
-                          ? 'blue'
-                          : 'grey'
-                      }
-                      size="large"
-                      onClick={e =>
-                        this.onVideoLike({
-                          openAuthModal,
-                          createAudioVote,
-                          createVideoVote,
-                          type: e.target.id,
-                          currentUser,
-                        })
-                      }
-                    />
-                    {/* <Icon
-                      id="DOWNVOTE"
-                      name="thumbs down"
-                      link
-                      onClick={e =>
-                        this.onVideoLike({
-                          openAuthModal,
-                          createAudioVote,
-                          createVideoVote,
-                          type: e.target.id,
-                        })
-                      }
-                    /> */}
+                  <div className="vid-statistic">
+                    <YoutubeViews originId={originId} />
                     <Statistic size="mini" horizontal>
-                      <Statistic.Value>{voteCount} </Statistic.Value>
-                      <Statistic.Label>lượt thích</Statistic.Label>
+                      <Statistic.Value>{upVoteCount} </Statistic.Value>
+                      <Statistic.Label>
+                        <Icon
+                          id="UPVOTE"
+                          name="thumbs up"
+                          link
+                          color={
+                            userVoteType && userVoteType.type === 'UPVOTE'
+                              ? 'green'
+                              : 'black'
+                          }
+                          size="large"
+                          onClick={e =>
+                            this.onVideoLike({
+                              openAuthModal,
+                              createAudioVote,
+                              createVideoVote,
+                              type: e.target.id,
+                              currentUser,
+                            })
+                          }
+                        />
+                      </Statistic.Label>
+                    </Statistic>
+                    <Statistic size="mini" horizontal>
+                      <Statistic.Value>{downVoteCount}</Statistic.Value>
+                      <Statistic.Label>
+                        <Icon
+                          id="DOWNVOTE"
+                          name="thumbs down"
+                          link
+                          color={
+                            userVoteType && userVoteType.type === 'DOWNVOTE'
+                              ? 'red'
+                              : 'black'
+                          }
+                          size="large"
+                          onClick={e =>
+                            this.onVideoLike({
+                              openAuthModal,
+                              createAudioVote,
+                              createVideoVote,
+                              type: e.target.id,
+                              currentUser,
+                            })
+                          }
+                        />
+                      </Statistic.Label>
+                    </Statistic>
+                    <Statistic size="mini" horizontal>
+                      <Statistic.Value>
+                        {audioId ? audio[0].comment.length : comment.length}
+                      </Statistic.Value>
+                      <Statistic.Label>
+                        <Icon name="comment" size="large" />
+                      </Statistic.Label>
                     </Statistic>
                   </div>
                   <div>

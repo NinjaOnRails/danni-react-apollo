@@ -48,6 +48,11 @@ export default styled.div`
   }
 
   .ui.statistic {
-    margin-top: 0;
+    margin: 0;
+  }
+
+  .vid-statistic {
+    display: flex;
+    padding: 5px 0;
   }
 `;

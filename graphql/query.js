@@ -140,6 +140,9 @@ const VIDEO_QUERY = gql`
           displayName
           avatar
         }
+        comment {
+          id
+        }
         language
         title
         description
@@ -155,6 +158,9 @@ const VIDEO_QUERY = gql`
         }
         tags {
           text
+        }
+        comment {
+          id
         }
       }
     }
