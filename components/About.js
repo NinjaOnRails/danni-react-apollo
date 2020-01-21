@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import Head from 'next/head';
 import { Container, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
-import Head from 'next/head';
 
 const AboutStyles = styled.div`
   padding: 2rem;
@@ -14,17 +13,15 @@ const AboutStyles = styled.div`
   }
 `;
 
-class About extends Component {
-  render() {
-    return (
-      <>
-        <Head>
-          <title key="title">Danni TV - Giới thiệu</title>
-          <meta key="metaTitle" name="title" content="Danni TV - Giới thiệu" />
-        </Head>
-        <AboutStyles>
-          <Container text>
-            <Header as="h2" textAlign="center">
+const About = () => (
+  <>
+    <Head>
+      <title key="title">Danni TV - Giới thiệu</title>
+      <meta key="metaTitle" name="title" content="Danni TV - Giới thiệu" />
+    </Head>
+    <AboutStyle>
+      <Container text>
+        <Header as="h2" textAlign="center">
               🌍 MỤC ĐÍCH CỦA CHÚNG TÔI 🌍
             </Header>
             <p>Phổ biến hóa kiến ​​thức toàn cầu.</p>
@@ -75,12 +72,11 @@ class About extends Component {
             <Header as="h2" textAlign="center">
               🤙 Liên lạc 🤙
             </Header>
-            <p>info.dannitv@gmail.com, (+420) 774897789</p>
-          </Container>
-        </AboutStyles>
-      </>
-    );
-  }
-}
+            <p>info.dannitv@gmail.com</p>
+            <p>(+420) 774897789</p>
+      </Container>
+    </AboutStyle>
+  </>
+);
 
 export default About;
