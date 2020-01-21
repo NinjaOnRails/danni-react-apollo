@@ -93,9 +93,14 @@ class Me extends Component {
 
           // Create video objects from user's audio uploads
           const videosWithAudio = [];
-          audio.forEach(({ id: audioId, title }, i) => {
+          audio.forEach(({ id: audioId, title, customThumbnail }, i) => {
             audio[i].video.audio = [
-              { id: audioId, title, author: { id, displayName } },
+              {
+                id: audioId,
+                title,
+                customThumbnail,
+                author: { id, displayName },
+              },
             ];
             videosWithAudio.push({ ...audio[i].video });
           });

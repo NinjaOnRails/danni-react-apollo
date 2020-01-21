@@ -37,7 +37,11 @@ const VideoHeader = props => {
       <meta
         key="og:image"
         property="og:image"
-        content={originThumbnailUrlSd || originThumbnailUrl}
+        content={
+          audio[0] && audio[0].customThumbnail
+            ? audio[0].customThumbnail
+            : originThumbnailUrlSd || originThumbnailUrl
+        }
       />
       <meta property="og:type" content="article" key="og:type" />
       <meta property="og:url" content={url} key="og:url" />

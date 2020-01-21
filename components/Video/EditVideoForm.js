@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { flagOptions } from '../../lib/supportedLanguages';
 import DropDownForm from '../styles/VideoFormStyles';
 import CloudinaryUploadAudio from './CloudinaryUploadAudio';
+import CloudinaryUploadCusThumbnail from './CloudinaryUploadCusThumbnail';
 
 const EditVideoForm = ({
   audioId,
@@ -19,6 +20,7 @@ const EditVideoForm = ({
   oldOriginTitle,
   oldOriginChannel,
   oldOriginTags,
+  oldCusThumbnail,
   // input state
   language,
   audioSource,
@@ -50,6 +52,7 @@ const EditVideoForm = ({
   youtubeIdStatus,
   fetchingYoutube,
   originTags,
+  setCusThumbnailUrl,
 }) => (
   <fieldset
     disabled={loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio}
@@ -135,7 +138,7 @@ const EditVideoForm = ({
           <Message warning>
             <p>
               Uploading a new audio file will immediately permanently replace
-              the old one.{' '}
+              the old one.
               <Button onClick={() => onShowUpload()}>Continue</Button>
             </p>
           </Message>
@@ -154,6 +157,11 @@ const EditVideoForm = ({
                 onChange={handleChange}
               />
             </label>
+            <CloudinaryUploadCusThumbnail
+              setCusThumbnailUrl={setCusThumbnailUrl}
+              youtubeId={youtubeId}
+              oldCusThumbnail={oldCusThumbnail}
+            />
             <label htmlFor="description">
               <input
                 id="description"
@@ -199,7 +207,7 @@ const EditVideoForm = ({
                     <p>Current YouTube tags:</p>
                     {originTags.join(' ') ||
                       oldOriginTags.reduce(
-                        (tagString, tag) => tagString + ' ' + tag.text,
+                        (tagString, tag) => `${tagString} ${tag.text}`,
                         ' '
                       )}
                   </Segment>
@@ -292,6 +300,7 @@ EditVideoForm.propTypes = {
   onDeleteFileSubmit: PropTypes.func.isRequired,
   onAudioLoadedMetadata: PropTypes.func.isRequired,
   onShowUpload: PropTypes.func.isRequired,
+  setCusThumbnailUrl: PropTypes.func.isRequired,
 };
 
 export default EditVideoForm;

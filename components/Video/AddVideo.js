@@ -100,6 +100,8 @@ class AddVideo extends Component {
     error: '',
     audioDuration: 0,
     redirecting: false,
+    cusThumbnailSecUrl: '',
+    cusThumbnailDelToken: '',
   };
 
   setAddVideoState = state => this.setState(state);
@@ -133,6 +135,7 @@ class AddVideo extends Component {
       secureUrl,
       audioDuration,
       deleteToken,
+      cusThumbnailSecUrl,
     } = this.state;
 
     // Stop form from submitting
@@ -175,6 +178,7 @@ class AddVideo extends Component {
           title,
           description,
           tags,
+          customThumbnail: cusThumbnailSecUrl,
         },
       });
 
@@ -200,6 +204,12 @@ class AddVideo extends Component {
       query: { id },
     });
   };
+
+  setCusThumbnailUrl = (cusThumbnailSecUrl, cusThumbnailDelToken) =>
+    this.setState({
+      cusThumbnailSecUrl,
+      cusThumbnailDelToken,
+    });
 
   render() {
     const {
@@ -296,6 +306,8 @@ class AddVideo extends Component {
                       description={description}
                       tags={tags}
                       originTags={originTags}
+                      youtubeId={youtubeId}
+                      setCusThumbnailUrl={this.setCusThumbnailUrl}
                     />
                   )}
                 </Form>

@@ -9,9 +9,9 @@ export default styled.div`
   }
 
   form.ui.form {
-    height: 525.69px;
+    min-height: 525.69px;
     @media (max-width: 375px) {
-      height: 400px;
+      min-height: 400px;
     }
   }
 
@@ -59,6 +59,16 @@ export default styled.div`
       position: absolute;
       top: 0;
       left: 0;
+    }
+  }
+
+  .uploadImageUrl {
+    display: grid;
+    grid-template-columns: auto 80px;
+    grid-column-gap: 10px;
+
+    input {
+      width: auto;
     }
   }
 `;

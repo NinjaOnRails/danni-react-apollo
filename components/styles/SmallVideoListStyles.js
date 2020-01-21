@@ -10,12 +10,23 @@ export const VideoItemStyles = styled.div`
   align-items: top;
   height: 68px;
   cursor: pointer;
+
   .content {
     padding-left: 0.5rem;
   }
-  .ui.image img {
-    max-width: 168px;
+
+  .ui.image {
+    min-width: 168px;
+    height: 94.5px;
+    display: flex;
+    justify-content: center;
+
+    img {
+      max-height: 100%;
+      object-fit: contain;
+    }
   }
+
   .ui.label {
     position: absolute;
     top: 73px;

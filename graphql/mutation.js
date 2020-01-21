@@ -34,6 +34,7 @@ const UPDATE_VIDEO_MUTATION = gql`
 const CREATE_AUDIO_MUTATION = gql`
   mutation CREATE_AUDIO_MUTATION(
     $source: String!
+    $customThumbnail: String
     $language: Language!
     $title: String!
     $description: String
@@ -45,6 +46,7 @@ const CREATE_AUDIO_MUTATION = gql`
     createAudio(
       data: {
         source: $source
+        customThumbnail: $customThumbnail
         language: $language
         title: $title
         description: $description
@@ -72,6 +74,7 @@ const UPDATE_AUDIO_MUTATION = gql`
     $tags: String
     $duration: Int
     $defaultVolume: Int
+    $customThumbnail: String
   ) {
     updateAudio(
       id: $id
@@ -83,6 +86,7 @@ const UPDATE_AUDIO_MUTATION = gql`
         tags: $tags
         duration: $duration
         defaultVolume: $defaultVolume
+        customThumbnail: $customThumbnail
       }
     ) {
       id

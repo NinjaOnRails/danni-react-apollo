@@ -1,5 +1,6 @@
 import { Form, Button, Icon, Segment, Header } from 'semantic-ui-react';
 import PropTypes, { string } from 'prop-types';
+import CloudinaryUploadCusThumbnail from './CloudinaryUploadCusThumbnail';
 
 const DetailsForm = ({
   setAddVideoState,
@@ -7,6 +8,8 @@ const DetailsForm = ({
   description,
   tags,
   originTags,
+  youtubeId,
+  setCusThumbnailUrl,
 }) => {
   const handleChange = ({ target: { name, value } }) =>
     setAddVideoState({ [name]: value });
@@ -20,6 +23,10 @@ const DetailsForm = ({
         name="title"
         placeholder="bắt buộc"
         maxLength="100"
+      />
+      <CloudinaryUploadCusThumbnail
+        setCusThumbnailUrl={setCusThumbnailUrl}
+        youtubeId={youtubeId}
       />
       <Form.TextArea
         label="Giới thiệu"
@@ -62,9 +69,11 @@ const DetailsForm = ({
 
 DetailsForm.propTypes = {
   setAddVideoState: PropTypes.func.isRequired,
+  setCusThumbnailUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
+  youtubeId: PropTypes.string.isRequired,
   originTags: PropTypes.arrayOf(string),
 };
 

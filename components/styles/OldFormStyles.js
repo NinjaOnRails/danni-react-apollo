@@ -94,6 +94,16 @@ const Form = styled.form`
     /* ${props => (props.modal ? 'inline-block' : 'block')}; */
     margin: ${props => (props.modal ? '0 auto 0.75rem auto' : '0 0 1rem 0')};
   }
+
+  .uploadImageUrl {
+    display: grid;
+    grid-template-columns: auto 80px;
+    grid-column-gap: 10px;
+
+    input {
+      width: auto;
+    }
+  }
 `;
 
 export default Form;

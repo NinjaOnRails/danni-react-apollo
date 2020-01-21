@@ -140,6 +140,7 @@ const RenderSmallVideoList = ({
               }
               return audio.map(el => {
                 if (audioId !== el.id) {
+                  if (el.customThumbnail) originThumbnailUrl = el.customThumbnail;
                   return renderVideoItem(
                     onVideoItemClick,
                     videoId,

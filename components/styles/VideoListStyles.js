@@ -69,7 +69,9 @@ const VideoListStyles = styled.div`
       height: 118.13px;
       padding-top: 0;
     }
+
     grid-gap: 42px 14px;
+
     div.header {
       height: 3.2rem;
     }
@@ -80,6 +82,11 @@ const VideoListStyles = styled.div`
 
     .author {
       top: -30px;
+    }
+
+    img {
+      max-height: 118.13px;
+      object-fit: contain;
     }
   }
 
@@ -100,6 +107,11 @@ const VideoListStyles = styled.div`
 
     .buttons {
       bottom: 10px;
+    }
+
+    img {
+      max-height: 269.44px;
+      object-fit: contain;
     }
   }
 `;

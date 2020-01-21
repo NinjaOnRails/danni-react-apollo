@@ -164,18 +164,21 @@ const RenderVideoList = ({
                     addedBy
                   )}
                 {audio.length !== 0 &&
-                  audio.map(({ title, id: audioId, author }) => {
-                    return renderVideoItem(
-                      id,
-                      originThumbnailUrl,
-                      originThumbnailUrlSd,
-                      title,
-                      displayDuration,
-                      originAuthor,
-                      author,
-                      audioId
-                    );
-                  })}
+                  audio.map(
+                    ({ title, id: audioId, author, customThumbnail }) => {
+                      if (customThumbnail) originThumbnailUrl = customThumbnail;
+                      return renderVideoItem(
+                        id,
+                        originThumbnailUrl,
+                        originThumbnailUrlSd,
+                        title,
+                        displayDuration,
+                        originAuthor,
+                        author,
+                        audioId
+                      );
+                    }
+                  )}
               </React.Fragment>
             );
           }

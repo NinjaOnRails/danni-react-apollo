@@ -111,9 +111,14 @@ class UserProfile extends Component {
 
           // Create video objects from user's audio uploads
           const videosWithAudio = [];
-          audio.forEach(({ id: audioId, title }, i) => {
+          audio.forEach(({ id: audioId, title, customThumbnail }, i) => {
             audio[i].video.audio = [
-              { id: audioId, title, author: { id: userId, displayName } },
+              {
+                id: audioId,
+                title,
+                customThumbnail,
+                author: { id: userId, displayName },
+              },
             ];
             videosWithAudio.push({ ...audio[i].video });
           });

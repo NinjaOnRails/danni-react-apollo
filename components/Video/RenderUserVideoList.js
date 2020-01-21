@@ -123,18 +123,22 @@ const RenderUserVideoList = ({
               addedBy
             );
           }
-          return audio.map(({ title, id: audioId, author }) => {
-            return renderVideoItem(
-              id,
-              originThumbnailUrl,
-              originThumbnailUrlSd,
-              title,
-              displayDuration,
-              originAuthor,
-              author,
-              audioId
-            );
-          });
+          return audio.map(
+            ({ title, id: audioId, author, customThumbnail }) => {
+              const thumbnail = customThumbnail || originThumbnailUrl;
+
+              return renderVideoItem(
+                id,
+                thumbnail,
+                originThumbnailUrlSd,
+                title,
+                displayDuration,
+                originAuthor,
+                author,
+                audioId
+              );
+            }
+          );
         }
       )}
     </>

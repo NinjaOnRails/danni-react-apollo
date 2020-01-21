@@ -90,6 +90,8 @@ class EditVideo extends Component {
     error: '',
     audioDuration: 0,
     showUpload: false,
+    cusThumbnailSecUrl: '',
+    cusThumbnailDelToken: '',
   };
 
   handleChange = ({ target: { name, type, value, checked } }) => {
@@ -282,6 +284,7 @@ class EditVideo extends Component {
     let oldTagsObj = '';
     let oldAudioSource = '';
     let oldLanguage;
+    let oldCusThumbnail = '';
     if (!audioId) {
       ({
         video: { language: oldLanguage },
@@ -290,7 +293,7 @@ class EditVideo extends Component {
       const {
         video: { audio },
       } = data;
-      // Destructor audio array
+      // Destructure audio array
       [
         {
           source: oldAudioSource,
@@ -299,12 +302,13 @@ class EditVideo extends Component {
           tags: oldTagsObj,
           defaultVolume: oldDefaultVolume,
           language: oldLanguage,
+          customThumbnail: oldCusThumbnail,
         },
       ] = audio.filter(audioFile => audioFile.id === audioId);
     }
     let oldTags = '';
     Object.values(oldTagsObj).forEach(val => {
-      oldTags = oldTags + val.text + ' ';
+      oldTags = `${oldTags}${val.text} `;
     });
     return {
       oldOriginId,
@@ -318,6 +322,7 @@ class EditVideo extends Component {
       oldOriginTitle,
       oldOriginChannel,
       oldOriginTags,
+      oldCusThumbnail,
     };
   };
 
@@ -346,6 +351,7 @@ class EditVideo extends Component {
       isDefaultVolume,
       audioSource,
       secureUrl,
+      cusThumbnailSecUrl,
     } = this.state;
     // if fields unchanged, use default values
     const {
@@ -413,6 +419,7 @@ class EditVideo extends Component {
           description,
           tags,
           defaultVolume,
+          customThumbnail: cusThumbnailSecUrl,
         },
       }));
     }
@@ -425,6 +432,12 @@ class EditVideo extends Component {
       query: { id, audioId: redirectAudioParam },
     });
   };
+
+  setCusThumbnailUrl = (cusThumbnailSecUrl, cusThumbnailDelToken) =>
+    this.setState({
+      cusThumbnailSecUrl,
+      cusThumbnailDelToken,
+    });
 
   render() {
     const { id, audioId } = this.props;
@@ -476,6 +489,7 @@ class EditVideo extends Component {
           if (loadingQueryVideo) return <Loader active />;
           if (!data.video) return <p>No Video Found for {id}</p>;
           const oldValuesObject = this.getDefaultValues(data);
+          console.log(this.state.cusThumbnailSecUrl)
           return (
             <>
               <Head>
@@ -527,6 +541,7 @@ class EditVideo extends Component {
                     onDeleteFileSubmit={this.onDeleteFileSubmit}
                     onAudioLoadedMetadata={this.onAudioLoadedMetadata}
                     onShowUpload={this.onShowUpload}
+                    setCusThumbnailUrl={this.setCusThumbnailUrl}
                   />
                 </Form>
               </Container>

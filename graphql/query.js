@@ -32,6 +32,7 @@ const CURRENT_USER_QUERY = gql`
       }
       audio {
         id
+        customThumbnail
         title
         video {
           id
@@ -73,6 +74,7 @@ const USER_QUERY = gql`
       audio {
         id
         title
+        customThumbnail
         video {
           id
           originTitle
@@ -88,6 +90,15 @@ const USER_QUERY = gql`
 const CLOUDINARY_AUTH_AUDIO = gql`
   query CLOUDINARY_AUTH_AUDIO($source: String!, $language: Language) {
     cloudinaryAuthAudio(source: $source, language: $language) {
+      signature
+      timestamp
+    }
+  }
+`;
+
+const CLOUDINARY_CUSTOM_THUMBNAIL = gql`
+  query CLOUDINARY_CUSTOM_THUMBNAIL($youtubeId: String!) {
+    cloudinaryAuthCusThumbnail(youtubeId: $youtubeId) {
       signature
       timestamp
     }
@@ -127,6 +138,7 @@ const VIDEO_QUERY = gql`
       }
       audio(where: { id: $audioId }) {
         id
+        customThumbnail
         source
         author {
           id
@@ -177,6 +189,7 @@ const ALL_VIDEOS_QUERY = gql`
           }
           audio(where: { language_in: $contentLanguage }) {
             id
+            customThumbnail
             title
             author {
               id
@@ -264,6 +277,7 @@ export {
   USER_QUERY,
   CLOUDINARY_AUTH_AUDIO,
   CLOUDINARY_AUTH_AVATAR,
+  CLOUDINARY_CUSTOM_THUMBNAIL,
   ALL_VIDEOS_QUERY,
   CONTENT_LANGUAGE_QUERY,
   VIDEO_QUERY,
