@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { useSignoutMutation } from './authHooks';
