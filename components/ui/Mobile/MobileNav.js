@@ -21,6 +21,10 @@ const StyledNav = styled.div`
     z-index: 2;
     border-top: 1px solid grey;
     border-radius: 0;
+    .item {
+      padding-right: 0.7em;
+      padding-left: 0.7em;
+    }
   }
   .ui.labeled.icon.menu .item {
     width: 20%;
@@ -34,7 +38,7 @@ const StyledNav = styled.div`
   @media (min-width: 639px) {
     display: none;
   }
-  @media (max-width: 321px) {
+  @media (max-width: 361px) {
     .ui.menu .item {
       padding-left: 0;
       padding-right: 0;
