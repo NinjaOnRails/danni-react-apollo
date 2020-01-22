@@ -34,6 +34,7 @@ const StyledHeader = styled.header`
 
     ul {
       display: flex;
+      padding: 0;
       li {
         margin-left: auto;
         padding: 10px 20px;
