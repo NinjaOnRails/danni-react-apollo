@@ -75,12 +75,14 @@ const MobileNav = () => {
             </Menu.Item>
           </Link>
         ))}
-        <Menu.Item>
-          <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
-            {toggleSideDrawer => <DrawerToggle clicked={toggleSideDrawer} />}
-          </Mutation>
-          Menu
-        </Menu.Item>
+        <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
+          {toggleSideDrawer => (
+            <Menu.Item onClick={toggleSideDrawer}>
+              <DrawerToggle clicked={() => {}} />
+              Menu
+            </Menu.Item>
+          )}
+        </Mutation>
       </Menu>
     </StyledNav>
   );
