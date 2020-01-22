@@ -24,7 +24,7 @@ import {
 
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import validateInput from './utils';
+import { validateInput } from './utils';
 
 /* eslint-disable */
 const signupMutation = ({ localState: { data }, variables, render }) => (
