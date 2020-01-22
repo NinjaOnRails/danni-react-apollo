@@ -1,13 +1,13 @@
-import React from 'react';
-import { Icon } from 'semantic-ui-react';
+import { useState } from 'react';
 import { Query } from 'react-apollo';
-import { adopt } from 'react-adopt';
-import { LOCAL_STATE_QUERY } from '../../graphql/query';
-import Signin, { closeAuthModal } from './Signin';
-import { user } from '../UI/ContentLanguage';
+import { Icon } from 'semantic-ui-react';
+import Signin from './Signin';
 import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
+import { useCurrentUserQuery, useLocalStateQuery } from './authHooks';
+import { useCloseAuthModalMutation } from '../UI/uiHooks';
+import { LOCAL_STATE_QUERY } from '../../graphql/query';
 
 /* eslint-disable */
 const localData = ({ render }) => (
@@ -15,95 +15,49 @@ const localData = ({ render }) => (
 );
 /* eslint-enable */
 
-const Composed = adopt({
-  closeAuthModal,
-  localData,
-  user,
-});
+const AuthModal = () => {
+  const [mode, setMode] = useState('signup');
+  const { showAuthModal } = useLocalStateQuery();
+  const [closeAuthModal] = useCloseAuthModalMutation();
+  const { currentUser } = useCurrentUserQuery();
 
-class AuthModal extends React.Component {
-  state = {
-    mode: 'signup',
-  };
-
-  onSigninClick = () => {
-    this.setState({ mode: 'signin' });
-  };
-
-  onSignupClick = () => {
-    this.setState({ mode: 'signup' });
-  };
-
-  renderForm = mode => {
-    if (mode === 'signup') {
-      return (
-        <div className="auth-section">
-          <Signup modal />
+  return (
+    <StyledModal show={showAuthModal && !currentUser}>
+      <Backdrop show={showAuthModal && !currentUser} clicked={closeAuthModal} />
+      <div className="Modal">
+        <div className="modal-container">
+          <h2 className="Logo">danni.tv</h2>
+          <div className="auth-modes">
+            <button
+              type="button"
+              className={`auth-mode ${mode === 'signin' ? 'active' : null} `}
+              onClick={() => setMode('signin')}
+            >
+              Đăng nhập
+            </button>
+            <button
+              type="button"
+              className={`auth-mode ${mode === 'signup' ? 'active' : null}`}
+              onClick={() => setMode('signup')}
+            >
+              Đăng ký
+            </button>
+          </div>
+          <Icon
+            inverted
+            name="close"
+            link
+            size="large"
+            onClick={closeAuthModal}
+          />
+          <div className="auth-section">
+            {mode === 'signup' ? <Signup modal /> : <Signin modal />}
+          </div>
         </div>
-      );
-    }
-    return (
-      <div className="auth-section">
-        <Signin modal />
       </div>
-    );
-  };
-
-  render() {
-    const { mode } = this.state;
-    return (
-      <Composed>
-        {({
-          closeAuthModal,
-          localData: {
-            data: { showAuthModal },
-          },
-          user: { currentUser },
-        }) => {
-          return (
-            <StyledModal show={showAuthModal && !currentUser}>
-              <Backdrop
-                show={showAuthModal && !currentUser}
-                clicked={closeAuthModal}
-              />
-              <div className="Modal">
-                <div className="modal-container">
-                  <h2 className="Logo">danni.tv</h2>
-                  <div className="auth-modes">
-                    <a
-                      className={`auth-mode ${
-                        mode === 'signin' ? 'active' : null
-                      } `}
-                      onClick={this.onSigninClick}
-                    >
-                      Đăng nhập
-                    </a>
-                    <a
-                      className={`auth-mode ${
-                        mode === 'signup' ? 'active' : null
-                      }`}
-                      onClick={this.onSignupClick}
-                    >
-                      Đăng ký
-                    </a>
-                  </div>
-                  <Icon
-                    inverted
-                    name="close"
-                    link
-                    size="large"
-                    onClick={closeAuthModal}
-                  />
-                  {this.renderForm(mode)}
-                </div>
-              </div>
-            </StyledModal>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+    </StyledModal>
+  );
+};
 
 export default AuthModal;
 
