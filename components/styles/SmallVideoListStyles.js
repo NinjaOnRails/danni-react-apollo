@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { List } from 'semantic-ui-react';
 
 export const SmallVideoListStyles = styled.div`
-  padding-top: 24px;
+  /* padding-top: 24px; */
 `;
 
 export const VideoItemStyles = styled.div`

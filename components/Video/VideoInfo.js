@@ -100,6 +100,7 @@ const createAudioVoteMutation = ({
     }
   </Mutation>
 );
+
 const createVideoVoteMutation = ({
   render,
   id,
@@ -367,14 +368,14 @@ export default class VideoInfo extends Component {
                         />
                       </Statistic.Label>
                     </Statistic>
-                    <Statistic size="mini" horizontal>
+                    {/* <Statistic size="mini" horizontal>
                       <Statistic.Value>
                         {audioId ? audio[0].comment.length : comment.length}
                       </Statistic.Value>
                       <Statistic.Label>
                         <Icon name="comment" size="large" />
                       </Statistic.Label>
-                    </Statistic>
+                    </Statistic> */}
                   </div>
                   <div>
                     <FacebookShareButton className="fb-share-button" url={url}>

@@ -180,14 +180,15 @@ const VIDEO_QUERY = gql`
 `;
 
 const ALL_VIDEOS_QUERY = gql`
-  query ALL_VIDEOS_QUERY($contentLanguage: [Language!], $cursor: String) {
+  query ALL_VIDEOS_QUERY($cursor: String) {
+    # query ALL_VIDEOS_QUERY($contentLanguage: [Language!], $cursor: String) {
     videosConnection(
       first: 18
       after: $cursor
       where: {
         OR: [
-          { language_in: $contentLanguage }
-          { audio_some: { language_in: $contentLanguage } }
+          { language_in: [VIETNAMESE] }
+          { audio_some: { language_in: [VIETNAMESE] } }
         ]
       }
       orderBy: createdAt_DESC
@@ -207,7 +208,7 @@ const ALL_VIDEOS_QUERY = gql`
             displayName
             avatar
           }
-          audio(where: { language_in: $contentLanguage }) {
+          audio(where: { language_in: [VIETNAMESE] }) {
             id
             customThumbnail
             title
@@ -238,7 +239,6 @@ const CONTENT_LANGUAGE_QUERY = gql`
 
 const VIDEO_COMMENTS_QUERY = gql`
   query VIDEO_COMMENTS_QUERY($video: ID!) {
-    hideSigninToComment @client
     comments(where: { video: { id: $video } }) {
       id
       text

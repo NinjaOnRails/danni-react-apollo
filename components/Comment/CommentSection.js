@@ -34,7 +34,6 @@ class CommentSection extends React.Component {
           <CommentForm
             videoId={videoId}
             client={client}
-            hideSigninToComment={data.hideSigninToComment}
             openAuthModal={openAuthModal}
             currentUser={currentUser}
           />

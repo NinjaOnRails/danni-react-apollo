@@ -45,7 +45,7 @@ const Videos = ({ videos: { data: initialVideoData } }) => (
     }) => (
       <>
         <LanguageMenuStyles>
-          <ContentLanguage loadingData={loadingVideos} />
+          {/* <ContentLanguage loadingData={loadingVideos} /> */}
         </LanguageMenuStyles>
         {errorVideos ? (
           <Error>Error: {errorVideos.message}</Error>

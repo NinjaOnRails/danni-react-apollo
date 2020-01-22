@@ -45,7 +45,10 @@ class WatchPage extends Component {
       : initialVideoData.language;
     return (
       <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
-        {({ data: { video } }) => {
+        {payload => {
+          if (payload.error) return <Error error={error} />;
+          if (payload.loading) return <Loader active inline="centered" />;
+          const { video } = payload.data;
           return (
             <>
               <VideoHeader video={video || initialVideoData} url={url} />

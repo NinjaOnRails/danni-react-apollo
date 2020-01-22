@@ -37,10 +37,10 @@ const SmallVideoList = props => {
       }) => (
         <>
           <LanguageMenuStyles>
-            <ContentLanguage
+            {/* <ContentLanguage
               currentWatchingLanguage={props.currentWatchingLanguage}
               loadingData={loadingVideos}
-            />
+            /> */}
           </LanguageMenuStyles>
           {errorVideos ? (
             <Error>Error: {errorVideos.message}</Error>
