@@ -230,6 +230,64 @@ const ALL_VIDEOS_QUERY = gql`
   }
 `;
 
+const VIDEOS_BY_TAGS_QUERY = gql`
+  query VIDEOS_BY_TAGS_QUERY(
+    $contentLanguage: [Language!]
+    $cursor: String
+    $tags: [String!]
+  ) {
+    videosConnection(
+      first: 18
+      after: $cursor
+      where: {
+        AND: [
+          { audio_some: { tags_some: { text_in: $tags } } }
+          {
+            OR: [
+              { language_in: $contentLanguage }
+              { audio_some: { language_in: $contentLanguage } }
+            ]
+          }
+        ]
+      }
+      orderBy: createdAt_DESC
+    ) {
+      edges {
+        node {
+          id
+          originThumbnailUrl
+          originThumbnailUrlSd
+          originTitle
+          duration
+          originAuthor
+          originViewCount
+          language
+          addedBy {
+            id
+            displayName
+            avatar
+          }
+          audio(where: { language_in: $contentLanguage }) {
+            id
+            title
+            author {
+              id
+              displayName
+              avatar
+            }
+          }
+        }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+`;
+
 const CONTENT_LANGUAGE_QUERY = gql`
   query {
     contentLanguage @client
@@ -301,6 +359,7 @@ export {
   CLOUDINARY_AUTH_AVATAR,
   CLOUDINARY_CUSTOM_THUMBNAIL,
   ALL_VIDEOS_QUERY,
+  VIDEOS_BY_TAGS_QUERY,
   CONTENT_LANGUAGE_QUERY,
   VIDEO_QUERY,
   VIDEO_COMMENTS_QUERY,
