@@ -1,30 +1,25 @@
-import { Loader, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { adopt } from 'react-adopt';
-import { Mutation } from 'react-apollo';
-import Signin from './Signin';
+import { ApolloConsumer, Mutation } from 'react-apollo';
+import { Loader, Message } from 'semantic-ui-react';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
-import { client, user } from '../UI/ContentLanguage';
-import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
+import Signin from './Signin';
 import { isBrowser } from '../../lib/withApolloClient';
-
+import { useCurrentUserQuery } from './authHooks';
+import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
 /* eslint-disable */
 const openAuthModal = ({ render }) => (
   <Mutation mutation={OPEN_AUTH_MODAL_MUTATION}>{render}</Mutation>
 );
 /* eslint-enable */
 
-const Composed = adopt({
-  client,
-  user,
-});
-
 const PleaseSignIn = ({ action, modal, children }) => {
   const router = useRouter();
+  const { currentUser, loading } = useCurrentUserQuery();
+
   return (
-    <Composed>
-      {({ user: { currentUser, loading }, client }) => {
+    <ApolloConsumer>
+      {client => {
         if (loading) return <Loader active inline="centered" />;
         if (!currentUser) {
           if (isBrowser && router && !modal) {
@@ -47,7 +42,7 @@ const PleaseSignIn = ({ action, modal, children }) => {
         }
         return children;
       }}
-    </Composed>
+    </ApolloConsumer>
   );
 };
 
