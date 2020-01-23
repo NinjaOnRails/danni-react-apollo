@@ -78,7 +78,7 @@ const MobileNav = () => {
         <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
           {toggleSideDrawer => (
             <Menu.Item onClick={toggleSideDrawer}>
-              <DrawerToggle clicked={() => {}} />
+              <Icon name="bars" size="large" />
               Menu
             </Menu.Item>
           )}
