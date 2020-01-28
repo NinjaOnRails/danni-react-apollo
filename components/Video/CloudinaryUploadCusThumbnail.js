@@ -19,8 +19,11 @@ import { user } from '../UI/ContentLanguage';
 import { uploadCusThumbnail } from '../../lib/cloudinaryUpload';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 
-const cloudinaryAuthCusThumbnail = ({ youtubeId, render }) => (
-  <Query query={CLOUDINARY_CUSTOM_THUMBNAIL} variables={{ youtubeId }}>
+const cloudinaryAuthCusThumbnail = ({ youtubeId, language, render }) => (
+  <Query
+    query={CLOUDINARY_CUSTOM_THUMBNAIL}
+    variables={{ youtubeId, language }}
+  >
     {render}
   </Query>
 );
@@ -53,7 +56,7 @@ class CloudinaryUploadCusThumbnail extends Component {
   };
 
   onUploadFileSubmit = async (cloudinaryAuthCusThumbnail, id, e) => {
-    const { setCusThumbnailUrl, youtubeId } = this.props;
+    const { setCusThumbnailUrl, youtubeId, language } = this.props;
     // Reset uploadError display and assign appropriate value to file
     this.setState({ uploadError: false });
     const { deleteToken, uploadImageUrl } = this.state;
@@ -75,7 +78,8 @@ class CloudinaryUploadCusThumbnail extends Component {
       file,
       id,
       cloudinaryAuthCusThumbnail,
-      youtubeId
+      youtubeId,
+      language
     );
 
     // Upload file with post request
@@ -127,9 +131,9 @@ class CloudinaryUploadCusThumbnail extends Component {
       secureUrl,
       startingUpload,
     } = this.state;
-    const { youtubeId } = this.props;
+    const { youtubeId, language } = this.props;
     return (
-      <Composed youtubeId={youtubeId}>
+      <Composed youtubeId={youtubeId} language={language}>
         {({
           cloudinaryAuthCusThumbnail: { loading, error, data },
           user: { currentUser, loading: loadingUser },
@@ -238,6 +242,7 @@ class CloudinaryUploadCusThumbnail extends Component {
 CloudinaryUploadCusThumbnail.propTypes = {
   setCusThumbnailUrl: PropTypes.func.isRequired,
   youtubeId: PropTypes.string.isRequired,
+  language: PropTypes.string.isRequired,
   oldCusThumbnail: PropTypes.string,
 };
 

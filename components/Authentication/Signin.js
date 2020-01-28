@@ -21,7 +21,7 @@ import {
 } from '../../graphql/mutation';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import validateInput from './utils';
+import { validateInput } from './utils';
 
 /* eslint-disable */
 const signinMutation = ({ render, variables }) => (
