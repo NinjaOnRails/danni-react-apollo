@@ -11,7 +11,7 @@ import AuthForm from './AuthenticationForm';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { resetFields } from './fieldTypes';
 import { RESET_PASSWORD_MUTATION } from '../../graphql/mutation';
-import validateInput from './utils';
+import { validateInput } from './utils';
 
 class Reset extends Component {
   state = {

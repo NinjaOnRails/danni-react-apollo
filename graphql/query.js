@@ -97,8 +97,8 @@ const CLOUDINARY_AUTH_AUDIO = gql`
 `;
 
 const CLOUDINARY_CUSTOM_THUMBNAIL = gql`
-  query CLOUDINARY_CUSTOM_THUMBNAIL($youtubeId: String!) {
-    cloudinaryAuthCusThumbnail(youtubeId: $youtubeId) {
+  query CLOUDINARY_CUSTOM_THUMBNAIL($youtubeId: String!, $language: Language!) {
+    cloudinaryAuthCusThumbnail(youtubeId: $youtubeId, language: $language) {
       signature
       timestamp
     }

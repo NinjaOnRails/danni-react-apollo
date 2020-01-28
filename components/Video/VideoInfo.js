@@ -269,7 +269,7 @@ export default class VideoInfo extends Component {
             //   const i = watchVote.type === 'UPVOTE' ? 1 : -1;
             //   return total + i;
             // }, 0);
-            for (let i = 0; i < watchVotes.length; i++) {
+            for (let i = 0; i < watchVotes.length; i += 1) {
               watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
             }
 
@@ -459,7 +459,6 @@ export default class VideoInfo extends Component {
 VideoInfo.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
-  video: PropTypes.object.isRequired,
   url: PropTypes.string.isRequired,
   showFullDescription: PropTypes.bool.isRequired,
   toggleFullDescription: PropTypes.func.isRequired,

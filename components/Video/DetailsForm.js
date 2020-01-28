@@ -9,6 +9,7 @@ const DetailsForm = ({
   tags,
   originTags,
   youtubeId,
+  language,
   setCusThumbnailUrl,
 }) => {
   const handleChange = ({ target: { name, value } }) =>
@@ -27,6 +28,7 @@ const DetailsForm = ({
       <CloudinaryUploadCusThumbnail
         setCusThumbnailUrl={setCusThumbnailUrl}
         youtubeId={youtubeId}
+        language={language}
       />
       <Form.TextArea
         label="Giới thiệu"
@@ -74,6 +76,7 @@ DetailsForm.propTypes = {
   description: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
   youtubeId: PropTypes.string.isRequired,
+  language: PropTypes.string.isRequired,
   originTags: PropTypes.arrayOf(string),
 };
 
