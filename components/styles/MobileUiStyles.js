@@ -74,7 +74,7 @@ export const StyledMobileSearch = styled.div`
 `;
 
 export const DrawerToggleStyles = styled.div`
-  width: 100%;
+  /* width: 100%;
   display: flex;
   justify-content: center;
   margin: auto 0;
@@ -87,5 +87,5 @@ export const DrawerToggleStyles = styled.div`
   }
   @media (min-width: 640px) {
     display: none;
-  }
+  } */
 `;

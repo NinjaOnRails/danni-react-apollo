@@ -307,6 +307,7 @@ class AddVideo extends Component {
                       tags={tags}
                       originTags={originTags}
                       youtubeId={youtubeId}
+                      language={language}
                       setCusThumbnailUrl={this.setCusThumbnailUrl}
                     />
                   )}
