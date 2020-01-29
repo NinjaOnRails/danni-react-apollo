@@ -1,102 +1,48 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button } from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
-import { adopt } from 'react-adopt';
 import Error from '../UI/ErrorMessage';
-import { CREATE_COMMENTREPLY_MUTATION } from '../../graphql/mutation';
-import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
+import { clearForm, onCommentFormChange } from './utils';
+import { useCreateCommentReplyMutation } from './commentHooks';
 
-/* eslint-disable */
+const CommentReplyForm = ({ id, videoId, closeReplyInput }) => {
+  const [replyFormValid, setReplyFormValid] = useState(false);
+  const [replyInput, setReplyInput] = useState('');
 
-const createCommentReplyMutation = ({ id, replyInput, videoId, render }) => (
-  <Mutation
-    mutation={CREATE_COMMENTREPLY_MUTATION}
-    variables={{ comment: id, text: replyInput }}
-    refetchQueries={[
-      { query: VIDEO_COMMENTS_QUERY, variables: { video: videoId } },
-    ]}
-  >
-    {(createCommentReply, createCommentReplyResult) => {
-      return render({ createCommentReply, createCommentReplyResult });
-    }}
-  </Mutation>
-);
+  const [
+    createCommentReply,
+    { error, loading },
+  ] = useCreateCommentReplyMutation({ id, text: replyInput, videoId });
 
-/* eslint-enable */
-
-const Composed = adopt({
-  createCommentReplyMutation,
-});
-
-class CommentReplyForm extends React.Component {
-  state = {
-    replyFormValid: false,
-    replyInput: '',
-  };
-
-  onTextChange = e => {
-    const { value, name } = e.target;
-    const form =
-      name === 'updateInput' ? 'updateCommentFormValid' : 'replyFormValid';
-
-    this.setState({ [name]: value, [form]: value.length > 0 });
-  };
-
-  onReplySubmit = async createCommentReply => {
-    const { closeReplyInput } = this.props;
+  const onReplySubmit = async () => {
     const { data } = await createCommentReply();
     if (data) {
-      this.setState({
-        replyInput: '',
-        replyFormValid: false,
-      });
+      clearForm(setReplyInput, setReplyFormValid);
       closeReplyInput();
     }
   };
 
-  renderReplyForm = ({
-    createCommentReply,
-    createCommentReplyResult: {
-      error: createCommentReplyError,
-      loading: createReplyLoading,
-    },
-  }) => {
-    const { replyFormValid, replyInput } = this.state;
-    return (
-      <Form
-        loading={createReplyLoading}
-        reply
-        onSubmit={() => {
-          this.onReplySubmit(createCommentReply);
-        }}
+  return (
+    <Form
+      loading={loading}
+      reply
+      onSubmit={() => {
+        onReplySubmit(createCommentReply);
+      }}
+      autoComplete="off"
+    >
+      <Form.Input
+        name="replyInput"
+        placeholder="Viết trả lời..."
+        onChange={e => onCommentFormChange(e, setReplyInput, setReplyFormValid)}
+        value={replyInput}
         autoComplete="off"
-      >
-        <Form.Input
-          name="replyInput"
-          placeholder="Viết trả lời..."
-          onChange={this.onTextChange}
-          value={replyInput}
-          autoComplete="off"
-        />
-        <Error error={createCommentReplyError} />
-        <Button content="Đăng" primary disabled={!replyFormValid} />
-      </Form>
-    );
-  };
-
-  render() {
-    const { replyInput } = this.state;
-    const { id, videoId } = this.props;
-    return (
-      <Composed replyInput={replyInput} id={id} videoId={videoId}>
-        {({ createCommentReplyMutation }) => {
-          return this.renderReplyForm(createCommentReplyMutation);
-        }}
-      </Composed>
-    );
-  }
-}
+      />
+      <Error error={error} />
+      <Button content="Đăng" primary disabled={!replyFormValid} />
+    </Form>
+  );
+};
 
 CommentReplyForm.propTypes = {
   id: PropTypes.string.isRequired,
