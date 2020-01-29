@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Menu, Icon } from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
 import Link from 'next/link';
 import styled from 'styled-components';
-import DrawerToggle from './DrawerToggle';
-import { TOGGLE_SIDEDRAWER_MUTATION } from '../../../graphql/mutation';
+import { useToggleSideDrawerMutation } from '../uiHooks';
 
 const StyledNav = styled.div`
   .ui.menu {
@@ -55,7 +53,7 @@ const sidebarItems = [
 
 const MobileNav = () => {
   const [activeItem, setActiveItem] = useState('home');
-
+  const [toggleSideDrawer] = useToggleSideDrawerMutation();
   return (
     <StyledNav>
       <Menu icon="labeled" borderless>
@@ -75,10 +73,9 @@ const MobileNav = () => {
             </Menu.Item>
           </Link>
         ))}
-        <Menu.Item>
-          <Mutation mutation={TOGGLE_SIDEDRAWER_MUTATION}>
-            {toggleSideDrawer => <DrawerToggle clicked={toggleSideDrawer} />}
-          </Mutation>
+
+        <Menu.Item onClick={toggleSideDrawer}>
+          <Icon name="bars" size="large" />
           Menu
         </Menu.Item>
       </Menu>
