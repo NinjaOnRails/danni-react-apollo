@@ -161,6 +161,7 @@ const EditVideoForm = ({
               setCusThumbnailUrl={setCusThumbnailUrl}
               youtubeId={youtubeId}
               oldCusThumbnail={oldCusThumbnail}
+              language={language || oldLanguage}
             />
             <label htmlFor="description">
               <input
