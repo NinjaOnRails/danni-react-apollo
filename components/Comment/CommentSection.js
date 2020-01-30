@@ -1,85 +1,48 @@
-import React from 'react';
-import { Comment, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
-import { adopt } from 'react-adopt';
+import { Comment, Loader } from 'semantic-ui-react';
 import CommentSectionStyles from '../styles/Commentstyles';
 import Error from '../UI/ErrorMessage';
-import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
-import CommentList from './CommentList';
-import { user } from '../UI/ContentLanguage';
 import CommentForm from './CommentForm';
-import { openAuthModal } from '../Authentication/PleaseSignIn';
+import VideoComment from './Comment';
+import { useCurrentUserQuery } from '../Authentication/authHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
+import { useCommentsQuery } from './commentHooks';
 
-/* eslint-disable */
-const videoComments = ({ videoId, render }) => (
-  <Query query={VIDEO_COMMENTS_QUERY} variables={{ video: videoId }}>
-    {render}
-  </Query>
-);
-/* eslint-enable */
+const CommentSection = ({ videoId }) => {
+  const { currentUser } = useCurrentUserQuery();
+  const { data, loading, error } = useCommentsQuery(videoId);
+  const [openAuthModal] = useOpenAuthModalMutation();
 
-const Composed = adopt({
-  user,
-  videoComments,
-  openAuthModal,
-});
-
-class CommentSection extends React.Component {
-  renderComments = (data, currentUser, openAuthModal) => {
-    const { videoId, client } = this.props;
-    return (
-      <CommentSectionStyles>
-        <Comment.Group size="large">
-          <CommentForm
-            videoId={videoId}
-            client={client}
-            openAuthModal={openAuthModal}
-            currentUser={currentUser}
-          />
-          {data.comments.length > 0 && (
-            <CommentList
-              comments={data.comments}
+  return (
+    <>
+      <Error error={error} />
+      {loading ? (
+        <Loader active inline="centered" />
+      ) : (
+        <CommentSectionStyles>
+          <Comment.Group size="large">
+            <CommentForm
               videoId={videoId}
-              client={client}
-              currentUser={currentUser}
               openAuthModal={openAuthModal}
+              currentUser={currentUser}
             />
-          )}
-        </Comment.Group>
-      </CommentSectionStyles>
-    );
-  };
-
-  render() {
-    const { videoId } = this.props;
-    return (
-      <Composed videoId={videoId}>
-        {({
-          user: { currentUser },
-          videoComments: {
-            error: commentsLoadingError,
-            loading: commentsLoading,
-            data,
-          },
-          openAuthModal,
-        }) => (
-          <>
-            <Error error={commentsLoadingError} />
-            {commentsLoading ? (
-              <Loader active inline="centered" />
-            ) : (
-              this.renderComments(data, currentUser, openAuthModal)
-            )}
-          </>
-        )}
-      </Composed>
-    );
-  }
-}
+            {data.comments.length > 0 &&
+              data.comments.map(comment => (
+                <VideoComment
+                  key={comment.id}
+                  comment={comment}
+                  videoId={videoId}
+                  currentUser={currentUser}
+                />
+              ))}
+          </Comment.Group>
+        </CommentSectionStyles>
+      )}
+    </>
+  );
+};
 
 CommentSection.propTypes = {
   videoId: PropTypes.string.isRequired,
-  client: PropTypes.object.isRequired,
 };
 export default CommentSection;

@@ -1,110 +1,58 @@
-import React from 'react';
-import { Button, Form } from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
-import { adopt } from 'react-adopt';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CREATE_COMMENT_MUTATION } from '../../graphql/mutation';
-import { VIDEO_COMMENTS_QUERY } from '../../graphql/query';
-import { user } from '../UI/ContentLanguage';
+import { Button, Form } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
+import { clearForm, onCommentFormChange } from './utils';
+import { useCreateCommentMutation } from './commentHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
 
-/* eslint-disable */
-const createCommentMutation = ({ commentInput, videoId, render }) => (
-  <Mutation
-    mutation={CREATE_COMMENT_MUTATION}
-    variables={{
-      video: videoId,
-      text: commentInput,
-    }}
-    refetchQueries={[
-      {
-        query: VIDEO_COMMENTS_QUERY,
-        variables: { video: videoId },
-      },
-    ]}
-  >
-    {(createComment, createCommentResult) => {
-      return render({ createComment, createCommentResult });
-    }}
-  </Mutation>
-);
-/* eslint-enable */
+const CommentForm = ({ videoId, currentUser }) => {
+  const [commentInput, setCommentInput] = useState('');
+  const [commentInputValid, setCommentInputValid] = useState(false);
 
-const Composed = adopt({
-  user,
-  createCommentMutation,
-});
+  const [
+    createComment,
+    { error: createCommentError, loading: createCommentLoading },
+  ] = useCreateCommentMutation({ text: commentInput, video: videoId });
 
-class CommentForm extends React.Component {
-  state = {
-    commentInput: '',
-    commentInputValid: false,
-  };
+  const [openAuthModal] = useOpenAuthModalMutation();
 
-  onChange = ({ target: { value } }) => {
-    this.setState({
-      commentInput: value,
-      commentInputValid: value.length > 0,
-    });
-  };
-
-  onCommentSubmit = async createComment => {
-    const { currentUser, openAuthModal } = this.props;
+  const onCommentSubmit = async () => {
     if (!currentUser) {
       openAuthModal();
     } else {
       const { data } = await createComment();
-      if (data) this.setState({ commentInput: '', commentInputValid: false });
+      if (data) {
+        clearForm(setCommentInput, setCommentInputValid);
+      }
     }
   };
 
-  renderCommentForm = (createCommentLoading, createComment) => {
-    const { commentInput, commentInputValid } = this.state;
-    return (
+  return (
+    <>
+      <Error error={createCommentError} />
       <Form
         loading={createCommentLoading}
         reply
         onSubmit={() => {
-          if (commentInput.length > 0) this.onCommentSubmit(createComment);
+          if (commentInput.length > 0) onCommentSubmit();
         }}
       >
         <Form.TextArea
           placeholder="Viết bình luận..."
-          onChange={this.onChange}
+          onChange={e =>
+            onCommentFormChange(e, setCommentInput, setCommentInputValid)
+          }
           value={commentInput}
         />
         <Button content="Đăng" primary disabled={!commentInputValid} />
       </Form>
-    );
-  };
-
-  render() {
-    const { videoId } = this.props;
-    const { commentInput } = this.state;
-    return (
-      <Composed videoId={videoId} commentInput={commentInput}>
-        {({
-          createCommentMutation: {
-            createComment,
-            createCommentResult: {
-              error: createCommentError,
-              loading: createCommentLoading,
-            },
-          },
-        }) => (
-          <>
-            <Error error={createCommentError} />
-            {this.renderCommentForm(createCommentLoading, createComment)}
-          </>
-        )}
-      </Composed>
-    );
-  }
-}
+    </>
+  );
+};
 
 CommentForm.propTypes = {
   videoId: PropTypes.string.isRequired,
-  openAuthModal: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
 };
 
