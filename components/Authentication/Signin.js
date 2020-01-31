@@ -8,7 +8,7 @@ import { Button, Icon, Loader, Header } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import { signinFields } from './newFieldTypes';
+import { signinFields } from './fieldTypes';
 import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
 import {
   inputChangeHandler,
