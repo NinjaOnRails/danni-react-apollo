@@ -3,7 +3,7 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
 // import Header from './Header';
-import Header from './NewHeader';
+import Header from './Header';
 import Footer, { pagesWithoutFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';

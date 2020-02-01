@@ -1,37 +1,17 @@
-import React from 'react';
 import Link from 'next/link';
+import { ApolloConsumer } from 'react-apollo';
 import { Icon, Menu, MenuItem } from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
-import { adopt } from 'react-adopt';
-import { onSignout } from '../../Authentication/Signout';
-import BackDrop from './Backdrop';
+import { onSignout } from '../../Authentication/utils';
 import { SideDrawerStyles } from '../../styles/MobileUiStyles';
-import ContentLanguage, { client, user } from '../ContentLanguage';
-import {
-  SIGN_OUT_MUTATION,
-  CLOSE_SIDEDRAWER_MUTATION,
-} from '../../../graphql/mutation';
-import { localData } from '../../Authentication/AuthModal';
-import { openAuthModal } from '../../Authentication/PleaseSignIn';
+import BackDrop from './Backdrop';
+import ContentLanguage from '../ContentLanguage';
 import LanguageMenuStyles from '../../styles/LanguageMenuStyles';
-/* eslint-disable */
-const signout = ({ render }) => (
-  <Mutation mutation={SIGN_OUT_MUTATION}>{render}</Mutation>
-);
-
-const closeSideDrawer = ({ render }) => (
-  <Mutation mutation={CLOSE_SIDEDRAWER_MUTATION}>{render}</Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  closeSideDrawer,
-  localData,
-  user,
-  client,
-  signout,
-  openAuthModal,
-});
+import {
+  useCurrentUserQuery,
+  useLocalStateQuery,
+  useSignoutMutation,
+} from '../../Authentication/authHooks';
+import { useCloseSideDrawerMutation } from '../uiHooks';
 
 const sidebarItems = [
   { linkName: 'Trang Chủ', link: '/', icon: 'home' },
@@ -41,19 +21,16 @@ const sidebarItems = [
 ];
 
 const SideDrawer = () => {
+  const [closeSideDrawer] = useCloseSideDrawerMutation();
+  const { currentUser } = useCurrentUserQuery();
+  const [signout] = useSignoutMutation();
+  const { showSide } = useLocalStateQuery();
   return (
-    <Composed>
-      {({
-        closeSideDrawer,
-        localData: { data },
-        user: { currentUser },
-        client,
-        signout,
-        openAuthModal,
-      }) => (
+    <ApolloConsumer>
+      {client => (
         <SideDrawerStyles>
-          <BackDrop clicked={closeSideDrawer} show={data.showSide} />
-          <div className={`SideDrawer ${data.showSide ? 'Open' : 'Close'}`}>
+          <BackDrop clicked={closeSideDrawer} show={showSide} />
+          <div className={`SideDrawer ${showSide ? 'Open' : 'Close'}`}>
             {/* <Logo inDrawer /> */}
             <div className="links">
               <Menu vertical icon="labeled" inverted>
@@ -91,7 +68,7 @@ const SideDrawer = () => {
           </div>
         </SideDrawerStyles>
       )}
-    </Composed>
+    </ApolloConsumer>
   );
 };
 

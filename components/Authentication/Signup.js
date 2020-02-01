@@ -9,7 +9,7 @@ import { Button, Icon, Loader, Header } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
-import { signupFields } from './newFieldTypes';
+import { signupFields } from './fieldTypes';
 import { trackSignUp } from '../../lib/mixpanel';
 import { inputChangeHandler, onFacebookLoginClick } from './utils';
 import {
