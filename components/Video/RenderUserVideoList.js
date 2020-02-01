@@ -1,101 +1,9 @@
 import PropTypes from 'prop-types';
-import { Card, Icon, Image, Button } from 'semantic-ui-react';
-import Link from 'next/link';
-import VideoDeleteButton from './VideoDeleteButton';
+import VideoItem from './VideoItem';
+import { useLocalStateQuery } from '../Authentication/authHooks';
 
-const formatDuration = duration => {
-  // Convert and format duration
-  const seconds = duration % 60;
-  return `${Math.round(duration / 60)}:${
-    seconds > 9 ? seconds : `0${seconds}`
-  }`;
-};
-
-const RenderUserVideoList = ({
-  dataVideos,
-  hideAuthor,
-  currentUser,
-  deleteAudVid,
-}) => {
-  const renderVideoItem = (
-    id,
-    originThumbnailUrl,
-    originThumbnailUrlSd,
-    title,
-    displayDuration,
-    originAuthor,
-    author,
-    audioId = null
-  ) => {
-    const query = {
-      id,
-    };
-
-    if (audioId) query.audioId = audioId;
-
-    return (
-      <div key={audioId || id}>
-        <Link
-          href={{
-            pathname: '/watch',
-            query,
-          }}
-        >
-          <a>
-            <Card fluid>
-              <Image
-                fluid
-                src={originThumbnailUrl || originThumbnailUrlSd}
-                alt={title}
-                label={{
-                  color: 'black',
-                  content: displayDuration,
-                  size: 'large',
-                }}
-              />
-              <Card.Content>
-                <Card.Header>{title}</Card.Header>
-                <Card.Meta>{originAuthor}</Card.Meta>
-              </Card.Content>
-            </Card>
-          </a>
-        </Link>
-        {!hideAuthor ? (
-          <div className="author">
-            <Link href={{ pathname: '/user', query: { id: author.id } }}>
-              <a>
-                <Image avatar src={author.avatar} />
-                <span>{author ? author.displayName : 'deleted user'}</span>
-              </a>
-            </Link>
-          </div>
-        ) : (
-          currentUser &&
-          currentUser.id === author.id && (
-            <div className="buttons">
-              <Link
-                href={{
-                  pathname: '/edit',
-                  query,
-                }}
-              >
-                <Button icon labelPosition="left">
-                  <Icon name="write" />
-                  Sửa
-                </Button>
-              </Link>
-              <VideoDeleteButton
-                deleteAudVid={deleteAudVid}
-                id={id}
-                audioId={audioId}
-                title={title}
-              />
-            </div>
-          )
-        )}
-      </div>
-    );
-  };
+const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
+  const { contentLanguage } = useLocalStateQuery();
 
   return (
     <>
@@ -111,34 +19,52 @@ const RenderUserVideoList = ({
           duration,
           addedBy,
         }) => {
-          const displayDuration = formatDuration(duration);
           if (audio.length === 0) {
-            return renderVideoItem(
+            const query = {
               id,
-              originThumbnailUrl,
-              originThumbnailUrlSd,
-              originTitle,
-              displayDuration,
-              originAuthor,
-              addedBy
+            };
+            return (
+              <VideoItem
+                key={id}
+                id={id}
+                thumbnail={originThumbnailUrl}
+                originThumbnailUrlSd={originThumbnailUrlSd}
+                title={originTitle}
+                duration={duration}
+                originAuthor={originAuthor}
+                author={addedBy}
+                hideAuthor={hideAuthor}
+                currentUser={currentUser}
+                query={query}
+                contentLanguage={contentLanguage}
+              />
             );
           }
-          return audio.map(
-            ({ title, id: audioId, author, customThumbnail }) => {
-              const thumbnail = customThumbnail || originThumbnailUrl;
+          return audio.map(({ title, id: audioId, author, customThumbnail }) => {
+            const thumbnail = customThumbnail || originThumbnailUrl;
 
-              return renderVideoItem(
-                id,
-                thumbnail,
-                originThumbnailUrlSd,
-                title,
-                displayDuration,
-                originAuthor,
-                author,
-                audioId
-              );
-            }
-          );
+            const query = {
+              id,
+              audioId,
+            };
+            return (
+              <VideoItem
+                key={audioId}
+                id={id}
+                audioId={audioId}
+                thumbnail={originThumbnailUrl}
+                originThumbnailUrlSd={originThumbnailUrlSd}
+                title={title}
+                duration={duration}
+                originAuthor={originAuthor}
+                author={author}
+                hideAuthor={hideAuthor}
+                currentUser={currentUser}
+                query={query}
+                contentLanguage={contentLanguage}
+              />
+            );
+          });
         }
       )}
     </>
@@ -147,13 +73,11 @@ const RenderUserVideoList = ({
 
 RenderUserVideoList.propTypes = {
   dataVideos: PropTypes.object.isRequired,
-  deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
 };
 
 RenderUserVideoList.defaultProps = {
-  deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
 };

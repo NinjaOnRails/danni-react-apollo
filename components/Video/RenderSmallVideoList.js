@@ -1,74 +1,8 @@
-import { List, Image, Loader } from 'semantic-ui-react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
-import {
-  VideoItemStyles,
-  ListDescriptionStyled,
-  ListHeaderStyled,
-  AuthorStyles,
-  SmallVideoListStyles,
-} from '../styles/SmallVideoListStyles';
-
-const renderVideoItem = (
-  onVideoItemClick,
-  id,
-  originThumbnailUrl,
-  originThumbnailUrlSd,
-  title,
-  displayDuration,
-  originAuthor,
-  author,
-  audioId = null
-) => {
-  const query = {
-    id,
-  };
-  if (audioId) query.audioId = audioId;
-  return (
-    <List.Item key={audioId || id} onClick={() => onVideoItemClick()}>
-      <Link
-        href={{
-          pathname: '/watch',
-          query,
-        }}
-      >
-        <a>
-          <VideoItemStyles>
-            <Image
-              src={originThumbnailUrl || originThumbnailUrlSd}
-              alt={title}
-              label={{
-                color: 'black',
-                content: displayDuration,
-              }}
-            />
-            <List.Content>
-              <ListHeaderStyled>{title}</ListHeaderStyled>
-              <ListDescriptionStyled>{originAuthor}</ListDescriptionStyled>
-            </List.Content>
-          </VideoItemStyles>
-        </a>
-      </Link>
-      <AuthorStyles>
-        <Link href={{ pathname: '/user', query: { id: author.id } }}>
-          <a className="author">
-            <Image avatar src={author.avatar} />
-            {author ? author.displayName : 'deleted user'}
-          </a>
-        </Link>
-      </AuthorStyles>
-    </List.Item>
-  );
-};
-
-const formatDuration = duration => {
-  // Convert and format duration
-  const seconds = duration % 60;
-  return `${Math.round(duration / 60)}:${
-    seconds > 9 ? seconds : `0${seconds}`
-  }`;
-};
+import { List, Loader } from 'semantic-ui-react';
+import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
+import SmallVideoItem from './SmallVideoItem';
 
 const RenderSmallVideoList = ({
   dataVideos,
@@ -77,7 +11,7 @@ const RenderSmallVideoList = ({
   onVideoItemClick,
   fetchMore,
 }) => {
-  const loadMore = () =>
+  const loadMore = () => {
     fetchMore({
       variables: {
         cursor: dataVideos.videosConnection.pageInfo.endCursor,
@@ -102,7 +36,7 @@ const RenderSmallVideoList = ({
             }
           : previousResult,
     });
-
+  };
   return (
     <InfiniteScroll
       pageStart={0}
@@ -125,32 +59,46 @@ const RenderSmallVideoList = ({
                 duration,
               },
             }) => {
-              const displayDuration = formatDuration(duration);
               if (audio.length === 0 && videoId !== id) {
-                return renderVideoItem(
-                  onVideoItemClick,
-                  videoId,
-                  originThumbnailUrl,
-                  originThumbnailUrlSd,
-                  originTitle,
-                  displayDuration,
-                  originAuthor,
-                  addedBy
+                const query = {
+                  id: videoId,
+                };
+                return (
+                  <SmallVideoItem
+                    key={videoId}
+                    onVideoItemClick={onVideoItemClick}
+                    id={videoId}
+                    thumbnail={originThumbnailUrl}
+                    originThumbnailUrlSd={originThumbnailUrlSd}
+                    duration={duration}
+                    originAuthor={originAuthor}
+                    title={originTitle}
+                    author={addedBy}
+                    query={query}
+                  />
                 );
               }
-              return audio.map(el => {
-                if (audioId !== el.id) {
-                  if (el.customThumbnail) originThumbnailUrl = el.customThumbnail;
-                  return renderVideoItem(
-                    onVideoItemClick,
-                    videoId,
-                    originThumbnailUrl,
-                    originThumbnailUrlSd,
-                    el.title,
-                    displayDuration,
-                    originAuthor,
-                    el.author,
-                    el.id
+              return audio.map(({ id: vidAudioId, title, author, video, customThumbnail }) => {
+                if (audioId !== vidAudioId) {
+                  const thumbnail = customThumbnail || originThumbnailUrl
+                  const query = {
+                    id: videoId,
+                    audioId: vidAudioId,
+                  };
+                  return (
+                    <SmallVideoItem
+                      key={vidAudioId}
+                      onVideoItemClick={onVideoItemClick}
+                      id={videoId}
+                      originThumbnailUrl={originThumbnailUrl}
+                      originThumbnailUrlSd={originThumbnailUrlSd}
+                      duration={duration}
+                      originAuthor={originAuthor}
+                      title={title}
+                      author={author}
+                      audioId={vidAudioId}
+                      query={query}
+                    />
                   );
                 }
                 return null;
@@ -168,10 +116,12 @@ RenderSmallVideoList.propTypes = {
   audioId: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
   dataVideos: PropTypes.object.isRequired,
+  fetchMore: PropTypes.func,
 };
 
 RenderSmallVideoList.defaultProps = {
   audioId: '',
+  fetchMore: undefined,
 };
 
 export default RenderSmallVideoList;

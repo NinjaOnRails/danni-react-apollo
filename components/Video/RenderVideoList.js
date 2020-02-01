@@ -1,106 +1,14 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Icon, Image, Button, Loader } from 'semantic-ui-react';
-import Link from 'next/link';
 import InfiniteScroll from 'react-infinite-scroller';
-import VideoDeleteButton from './VideoDeleteButton';
 import VideoListStyles from '../styles/VideoListStyles';
-
-const formatDuration = duration => {
-  // Convert and format duration
-  const seconds = duration % 60;
-  return `${Math.round(duration / 60)}:${
-    seconds > 9 ? seconds : `0${seconds}`
-  }`;
-};
+import VideoItem from './VideoItem';
 
 const RenderVideoList = ({
   dataVideos,
   hideAuthor,
   currentUser,
-  deleteAudVid,
   fetchMore,
 }) => {
-  const renderVideoItem = (
-    id,
-    originThumbnailUrl,
-    originThumbnailUrlSd,
-    title,
-    displayDuration,
-    originAuthor,
-    author,
-    audioId = null
-  ) => {
-    const query = {
-      id,
-    };
-
-    if (audioId) query.audioId = audioId;
-
-    return (
-      <div key={audioId || id}>
-        <Link
-          href={{
-            pathname: '/watch',
-            query,
-          }}
-        >
-          <a>
-            <Card fluid>
-              <Image
-                fluid
-                src={originThumbnailUrl || originThumbnailUrlSd}
-                alt={title}
-                label={{
-                  color: 'black',
-                  content: displayDuration,
-                  size: 'large',
-                }}
-              />
-              <Card.Content>
-                <Card.Header>{title}</Card.Header>
-                <Card.Meta>{originAuthor}</Card.Meta>
-              </Card.Content>
-            </Card>
-          </a>
-        </Link>
-        {!hideAuthor ? (
-          <div className="author">
-            <Link href={{ pathname: '/user', query: { id: author.id } }}>
-              <a>
-                <Image avatar src={author.avatar} />
-                <span>{author ? author.displayName : 'deleted user'}</span>
-              </a>
-            </Link>
-          </div>
-        ) : (
-          currentUser &&
-          currentUser.id === author.id && (
-            <div className="buttons">
-              <Link
-                href={{
-                  pathname: '/edit',
-                  query,
-                }}
-              >
-                <Button icon labelPosition="left">
-                  <Icon name="write" />
-                  Sửa
-                </Button>
-              </Link>
-              <VideoDeleteButton
-                deleteAudVid={deleteAudVid}
-                id={id}
-                audioId={audioId}
-                title={title}
-              />
-            </div>
-          )
-        )}
-      </div>
-    );
-  };
-
   const loadMore = () =>
     fetchMore({
       variables: {
@@ -126,13 +34,12 @@ const RenderVideoList = ({
             }
           : previousResult,
     });
-
   return (
     <InfiniteScroll
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      loader={<Loader active inline="centered" key={0} />}
+      // loader={<Loader active inline="centered" key={0} />}
     >
       <VideoListStyles>
         {dataVideos.videosConnection.edges.map(
@@ -147,40 +54,53 @@ const RenderVideoList = ({
               audio,
               duration,
               addedBy,
-              language,
             },
           }) => {
-            const displayDuration = formatDuration(duration);
-            return (
-              <React.Fragment key={id}>
-                {language &&
-                  renderVideoItem(
-                    id,
-                    originThumbnailUrl,
-                    originThumbnailUrlSd,
-                    originTitle,
-                    displayDuration,
-                    originAuthor,
-                    addedBy
-                  )}
-                {audio.length !== 0 &&
-                  audio.map(
-                    ({ title, id: audioId, author, customThumbnail }) => {
-                      if (customThumbnail) originThumbnailUrl = customThumbnail;
-                      return renderVideoItem(
-                        id,
-                        originThumbnailUrl,
-                        originThumbnailUrlSd,
-                        title,
-                        displayDuration,
-                        originAuthor,
-                        author,
-                        audioId
-                      );
-                    }
-                  )}
-              </React.Fragment>
-            );
+            if (audio.length === 0) {
+              const query = {
+                id,
+              };
+              return (
+                <VideoItem
+                  key={id}
+                  id={id}
+                  thumbnail={originThumbnailUrl}
+                  originThumbnailUrlSd={originThumbnailUrlSd}
+                  title={originTitle}
+                  duration={duration}
+                  originAuthor={originAuthor}
+                  author={addedBy}
+                  hideAuthor={hideAuthor}
+                  currentUser={currentUser}
+                  query={query}
+                />
+              );
+            }
+
+            return audio.map(({ title, id: audioId, author, customThumbnail }) => {
+              const query = {
+                id,
+                audioId,
+              };
+              const thumbnail = customThumbnail || originThumbnailUrl;
+
+              return (
+                <VideoItem
+                  key={audioId}
+                  id={id}
+                  audioId={audioId}
+                  thumbnail={originThumbnailUrl}
+                  originThumbnailUrlSd={originThumbnailUrlSd}
+                  title={title}
+                  duration={duration}
+                  originAuthor={originAuthor}
+                  author={author}
+                  hideAuthor={hideAuthor}
+                  currentUser={currentUser}
+                  query={query}
+                />
+              );
+            });
           }
         )}
       </VideoListStyles>
@@ -190,14 +110,12 @@ const RenderVideoList = ({
 
 RenderVideoList.propTypes = {
   dataVideos: PropTypes.object.isRequired,
-  fetchMore: PropTypes.func,
-  deleteAudVid: PropTypes.func,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
+  fetchMore: PropTypes.func,
 };
 
 RenderVideoList.defaultProps = {
-  deleteAudVid: null,
   hideAuthor: false,
   currentUser: null,
   fetchMore: undefined,
