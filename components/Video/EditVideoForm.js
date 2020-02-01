@@ -159,7 +159,7 @@ const EditVideoForm = ({
             </label>
             <CloudinaryUploadCusThumbnail
               setCusThumbnailUrl={setCusThumbnailUrl}
-              youtubeId={youtubeId}
+              youtubeId={youtubeId || oldOriginId}
               oldCusThumbnail={oldCusThumbnail}
               language={language || oldLanguage}
             />
