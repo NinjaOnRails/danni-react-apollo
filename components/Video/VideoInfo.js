@@ -1,16 +1,27 @@
 import { useState, useEffect, useRef } from 'react';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
-import { Segment, Header, Image, Button, Icon } from 'semantic-ui-react';
+import {
+  Segment,
+  Header,
+  Image,
+  Button,
+  Icon,
+  Statistic,
+} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import YoutubeViews from './YoutubeViews';
 import VideoDeleteButton from './VideoDeleteButton';
 import VideoInfoStyles from '../styles/VideoInfoStyles';
-
 import {
   useCurrentUserQuery,
   useLocalStateQuery,
 } from '../Authentication/authHooks';
+import { useOpenAuthModalMutation } from '../UI/uiHooks';
+import {
+  useCreateAudioVoteMutation,
+  useCreateVideoVoteMutation,
+} from './videoHooks';
 
 const VideoInfo = ({
   video: {
@@ -20,6 +31,7 @@ const VideoInfo = ({
     originAuthor,
     addedBy,
     originDescription,
+    vote,
   },
   url,
   showFullDescription,
@@ -31,6 +43,18 @@ const VideoInfo = ({
 
   const { currentUser } = useCurrentUserQuery();
   const { contentLanguage } = useLocalStateQuery();
+
+  const [openAuthModal] = useOpenAuthModalMutation();
+  const [createAudioVote] = useCreateAudioVoteMutation({
+    id,
+    audioId,
+    currentUser,
+  });
+  const [createVideoVote] = useCreateVideoVoteMutation({
+    id,
+    audioId,
+    currentUser,
+  });
   const descriptionDiv = useRef(null);
 
   const isDescriptionOverflow = () => {
@@ -44,20 +68,67 @@ const VideoInfo = ({
     }
   };
 
+  const onVideoLike = type => {
+    if (currentUser) {
+      if (!audioId) {
+        createVideoVote({
+          variables: { video: id, type },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createVideoVote: {
+              id: Math.round(Math.random() * -100000000),
+              type,
+              user: { id: currentUser.id, __typename: 'User' },
+              __typename: 'VideoVote',
+            },
+          },
+        });
+      } else {
+        createAudioVote({
+          variables: { audio: audioId, type },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createAudioVote: {
+              id: Math.round(Math.random() * -100000000),
+              type,
+              user: { id: currentUser.id, __typename: 'User' },
+              __typename: 'AudioVote',
+            },
+          },
+        });
+      }
+    } else {
+      openAuthModal();
+    }
+  };
+
   const query = { id };
   const title = audio[0] ? audio[0].title : originTitle;
   if (audioId) query.audioId = audioId;
 
-  const isVideoOwner = currentUser && currentUser.id === addedBy.id && !audioId;
-  let isAudioOwner = false;
-  if (audioId) {
-    const videoAudio = audio.filter(vidAud => vidAud.id === audioId)[0];
-    isAudioOwner = currentUser && currentUser.id === videoAudio.author.id;
-  }
-
   useEffect(() => {
     isDescriptionOverflow();
   }, [id, audioId]);
+
+  const watchVotes = audioId ? audio[0].vote : vote;
+  let userVoteType = null;
+  let upVoteCount = 0;
+  let downVoteCount = 0;
+  if (watchVotes.length > 0) {
+    // voteCount = watchVotes.reduce((total, watchVote) => {
+    //   const i = watchVote.type === 'UPVOTE' ? 1 : -1;
+    //   return total + i;
+    // }, 0);
+    for (let i = 0; i < watchVotes.length; i += 1) {
+      watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
+    }
+
+    if (currentUser) {
+      userVoteType = watchVotes.find(
+        watchVote => watchVote.user.id === currentUser.id
+      );
+    }
+  }
 
   return (
     <VideoInfoStyles>
@@ -65,33 +136,75 @@ const VideoInfo = ({
         <Header>
           <h1>{title}</h1>
         </Header>
-        {(isAudioOwner || isVideoOwner) && (
+        {currentUser && currentUser.id === addedBy.id && (
           <div className="buttons">
-            <>
-              <Link
-                href={{
-                  pathname: '/edit',
-                  query,
-                }}
-              >
-                <Button icon labelPosition="left">
-                  <Icon name="write" />
-                  Sửa
-                </Button>
-              </Link>
-              <VideoDeleteButton
-                id={id}
-                audioId={audioId}
-                title={title}
-                userId={currentUser.id}
-                contentLanguage={contentLanguage}
-                redirect
-              />
-            </>
+            <Link
+              href={{
+                pathname: '/edit',
+                query,
+              }}
+            >
+              <Button icon labelPosition="left">
+                <Icon name="write" />
+                Sửa
+              </Button>
+            </Link>
+            <VideoDeleteButton
+              id={id}
+              audioId={audioId}
+              title={title}
+              userId={currentUser.id}
+              contentLanguage={contentLanguage}
+              redirect
+            />
           </div>
         )}
         <div className="views-social">
-          <YoutubeViews originId={originId} />
+          <div className="vid-statistic">
+            <YoutubeViews originId={originId} />
+            <Statistic size="mini" horizontal>
+              <Statistic.Value>{upVoteCount} </Statistic.Value>
+              <Statistic.Label>
+                <Icon
+                  id="UPVOTE"
+                  name="thumbs up"
+                  link
+                  color={
+                    userVoteType && userVoteType.type === 'UPVOTE'
+                      ? 'green'
+                      : 'black'
+                  }
+                  size="large"
+                  onClick={e => onVideoLike(e.target.id)}
+                />
+              </Statistic.Label>
+            </Statistic>
+            <Statistic size="mini" horizontal>
+              <Statistic.Value>{downVoteCount}</Statistic.Value>
+              <Statistic.Label>
+                <Icon
+                  id="DOWNVOTE"
+                  name="thumbs down"
+                  link
+                  color={
+                    userVoteType && userVoteType.type === 'DOWNVOTE'
+                      ? 'red'
+                      : 'black'
+                  }
+                  size="large"
+                  onClick={e => onVideoLike(e.target.id)}
+                />
+              </Statistic.Label>
+            </Statistic>
+            {/* <Statistic size="mini" horizontal>
+            <Statistic.Value>
+              {audioId ? audio[0].comment.length : comment.length}
+            </Statistic.Value>
+            <Statistic.Label>
+              <Icon name="comment" size="large" />
+            </Statistic.Label>
+          </Statistic> */}
+          </div>
           <div>
             <FacebookShareButton className="fb-share-button" url={url}>
               <FacebookIcon size={32} round />

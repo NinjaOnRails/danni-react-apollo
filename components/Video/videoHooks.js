@@ -14,6 +14,8 @@ import {
   UPDATE_VIDEO_MUTATION,
   UPDATE_AUDIO_MUTATION,
   VIDEO_DELETE,
+  CREATE_VIDEO_VOTE,
+  CREATE_AUDIO_VOTE,
 } from '../../graphql/mutation';
 
 const useVideoQuery = ({ id, audioId }) => {
@@ -90,6 +92,84 @@ const useDeleteVideoMutation = () => {
   return useMutation(VIDEO_DELETE);
 };
 
+const useCreateVideoVoteMutation = ({ currentUser, audioId, id }) => {
+  return useMutation(CREATE_VIDEO_VOTE, {
+    update: (proxy, { data: { createVideoVote } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+      });
+      const existingVote =
+        data.video.vote.length > 0
+          ? data.video.vote.find(
+              videoVote => videoVote.user.id === currentUser.id
+            )
+          : null;
+      if (!existingVote) {
+        data.video.vote = data.video.vote.concat([createVideoVote]);
+      } else if (existingVote && existingVote.type !== createVideoVote.type) {
+        data.video.vote = data.video.vote.map(videoVote => {
+          if (videoVote.user.id === currentUser.id) {
+            videoVote.type = createVideoVote.type;
+          }
+          return videoVote;
+        });
+      } else if (existingVote && existingVote.type === createVideoVote.type) {
+        data.video.vote = data.video.vote.filter(
+          videoVote => videoVote.user.id !== currentUser.id
+        );
+      }
+      proxy.writeQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+        data,
+      });
+    },
+  });
+};
+
+const useCreateAudioVoteMutation = ({ currentUser, audioId, id }) => {
+  return useMutation(CREATE_AUDIO_VOTE, {
+    update: (proxy, { data: { createAudioVote } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+      });
+
+      const existingVote =
+        data.video.audio[0].vote.length > 0
+          ? data.video.audio[0].vote.find(
+              audioVote => audioVote.user.id === currentUser.id
+            )
+          : null;
+      if (!existingVote) {
+        data.video.audio[0].vote = data.video.audio[0].vote.concat([
+          createAudioVote,
+        ]);
+      } else if (existingVote && existingVote.type !== createAudioVote.type) {
+        data.video.audio[0].vote = data.video.audio[0].vote.map(audioVote => {
+          if (audioVote.user.id === currentUser.id) {
+            audioVote.type = createAudioVote.type;
+          }
+          return audioVote;
+        });
+      } else if (existingVote && existingVote.type === createAudioVote.type) {
+        data.video.audio[0].vote = data.video.audio[0].vote.filter(
+          audioVote => audioVote.user.id !== currentUser.id
+        );
+      }
+      // data.video.audio[0].vote = vote;
+      proxy.writeQuery({
+        query: VIDEO_QUERY,
+        variables: { id, audioId },
+        data,
+      });
+    },
+  });
+};
+
 export {
   useAllVideosQuery,
   useVideoQuery,
@@ -100,4 +180,6 @@ export {
   useUpdateVideoMutation,
   useDeleteVideoMutation,
   useCloudinaryAuthAudioQuery,
+  useCreateVideoVoteMutation,
+  useCreateAudioVoteMutation,
 };

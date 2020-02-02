@@ -78,31 +78,33 @@ const RenderSmallVideoList = ({
                   />
                 );
               }
-              return audio.map(({ id: vidAudioId, title, author, video, customThumbnail }) => {
-                if (audioId !== vidAudioId) {
-                  const thumbnail = customThumbnail || originThumbnailUrl
-                  const query = {
-                    id: videoId,
-                    audioId: vidAudioId,
-                  };
-                  return (
-                    <SmallVideoItem
-                      key={vidAudioId}
-                      onVideoItemClick={onVideoItemClick}
-                      id={videoId}
-                      originThumbnailUrl={originThumbnailUrl}
-                      originThumbnailUrlSd={originThumbnailUrlSd}
-                      duration={duration}
-                      originAuthor={originAuthor}
-                      title={title}
-                      author={author}
-                      audioId={vidAudioId}
-                      query={query}
-                    />
-                  );
+              return audio.map(
+                ({ id: vidAudioId, title, author, video, customThumbnail }) => {
+                  if (audioId !== vidAudioId) {
+                    const thumbnail = customThumbnail || originThumbnailUrl;
+                    const query = {
+                      id: videoId,
+                      audioId: vidAudioId,
+                    };
+                    return (
+                      <SmallVideoItem
+                        key={vidAudioId}
+                        onVideoItemClick={onVideoItemClick}
+                        id={videoId}
+                        thumbnail={originThumbnailUrl}
+                        originThumbnailUrlSd={originThumbnailUrlSd}
+                        duration={duration}
+                        originAuthor={originAuthor}
+                        title={title}
+                        author={author}
+                        audioId={vidAudioId}
+                        query={query}
+                      />
+                    );
+                  }
+                  return null;
                 }
-                return null;
-              });
+              );
             }
           )}
         </List>
