@@ -40,31 +40,31 @@ const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
               />
             );
           }
-          return audio.map(({ title, id: audioId, author, customThumbnail }) => {
-            const thumbnail = customThumbnail || originThumbnailUrl;
-
-            const query = {
-              id,
-              audioId,
-            };
-            return (
-              <VideoItem
-                key={audioId}
-                id={id}
-                audioId={audioId}
-                thumbnail={originThumbnailUrl}
-                originThumbnailUrlSd={originThumbnailUrlSd}
-                title={title}
-                duration={duration}
-                originAuthor={originAuthor}
-                author={author}
-                hideAuthor={hideAuthor}
-                currentUser={currentUser}
-                query={query}
-                contentLanguage={contentLanguage}
-              />
-            );
-          });
+          return audio.map(
+            ({ title, id: audioId, author, customThumbnail }) => {
+              const query = {
+                id,
+                audioId,
+              };
+              return (
+                <VideoItem
+                  key={audioId}
+                  id={id}
+                  audioId={audioId}
+                  thumbnail={customThumbnail || originThumbnailUrl}
+                  originThumbnailUrlSd={originThumbnailUrlSd}
+                  title={title}
+                  duration={duration}
+                  originAuthor={originAuthor}
+                  author={author}
+                  hideAuthor={hideAuthor}
+                  currentUser={currentUser}
+                  query={query}
+                  contentLanguage={contentLanguage}
+                />
+              );
+            }
+          );
         }
       )}
     </>

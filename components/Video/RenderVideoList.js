@@ -77,30 +77,31 @@ const RenderVideoList = ({
               );
             }
 
-            return audio.map(({ title, id: audioId, author, customThumbnail }) => {
-              const query = {
-                id,
-                audioId,
-              };
-              const thumbnail = customThumbnail || originThumbnailUrl;
+            return audio.map(
+              ({ title, id: audioId, author, customThumbnail }) => {
+                const query = {
+                  id,
+                  audioId,
+                };
 
-              return (
-                <VideoItem
-                  key={audioId}
-                  id={id}
-                  audioId={audioId}
-                  thumbnail={originThumbnailUrl}
-                  originThumbnailUrlSd={originThumbnailUrlSd}
-                  title={title}
-                  duration={duration}
-                  originAuthor={originAuthor}
-                  author={author}
-                  hideAuthor={hideAuthor}
-                  currentUser={currentUser}
-                  query={query}
-                />
-              );
-            });
+                return (
+                  <VideoItem
+                    key={audioId}
+                    id={id}
+                    audioId={audioId}
+                    thumbnail={customThumbnail || originThumbnailUrl}
+                    originThumbnailUrlSd={originThumbnailUrlSd}
+                    title={title}
+                    duration={duration}
+                    originAuthor={originAuthor}
+                    author={author}
+                    hideAuthor={hideAuthor}
+                    currentUser={currentUser}
+                    query={query}
+                  />
+                );
+              }
+            );
           }
         )}
       </VideoListStyles>

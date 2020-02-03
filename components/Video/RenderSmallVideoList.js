@@ -42,7 +42,7 @@ const RenderSmallVideoList = ({
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      loader={<Loader active inline="centered" key={0} />}
+      // loader={<Loader active inline="centered" key={0} />}
     >
       <SmallVideoListStyles>
         <List divided relaxed>
@@ -81,7 +81,6 @@ const RenderSmallVideoList = ({
               return audio.map(
                 ({ id: vidAudioId, title, author, video, customThumbnail }) => {
                   if (audioId !== vidAudioId) {
-                    const thumbnail = customThumbnail || originThumbnailUrl;
                     const query = {
                       id: videoId,
                       audioId: vidAudioId,
@@ -91,7 +90,7 @@ const RenderSmallVideoList = ({
                         key={vidAudioId}
                         onVideoItemClick={onVideoItemClick}
                         id={videoId}
-                        thumbnail={originThumbnailUrl}
+                        thumbnail={customThumbnail || originThumbnailUrl}
                         originThumbnailUrlSd={originThumbnailUrlSd}
                         duration={duration}
                         originAuthor={originAuthor}
