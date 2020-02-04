@@ -17,13 +17,14 @@ class Watch extends Component {
     readyYoutube: false,
     playbackRates: [],
     playbackRate: 1,
-    showFullDescription: false,
     mixpanelEventsSent: [],
+    nextVidCountdown: 5,
+    intervalId: null,
   };
 
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
-    const { readyYoutube } = this.state;
+    const { readyYoutube, nextVidCountdown, intervalId } = this.state;
 
     if (
       this.youtubePlayer &&
@@ -36,11 +37,26 @@ class Watch extends Component {
       });
       if (readyYoutube) this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
     }
+    if (nextVidCountdown < 0) {
+      console.log('countdown ended');
+      clearInterval(intervalId);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
   }
 
   onProgressYoutube = (e, video) => {
-    const { playedYoutube, playedFilePlayer, mixpanelEventsSent } = this.state;
+    const {
+      playedYoutube,
+      playedFilePlayer,
+      mixpanelEventsSent,
+      intervalId,
+    } = this.state;
     const { playedSeconds } = e;
+    this.setState({ nextVidCountdown: 5 });
+    if (intervalId) window.clearInterval(this.intervalId);
 
     // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
     // to allow for synchronised seeking
@@ -81,14 +97,11 @@ class Watch extends Component {
     });
   };
 
-  onVideoItemClick = () => {
-    // Reset some states on different video click
-    this.setState({ showFullDescription: false, mixpanelEventsSent: [] });
-  };
-
-  toggleFullDescription = () => {
-    const { showFullDescription } = this.state;
-    this.setState({ showFullDescription: !showFullDescription });
+  startCountdown = () => {
+    console.log(this.state.nextVidCountdown);
+    this.setState(({ nextVidCountdown }) => ({
+      nextVidCountdown: nextVidCountdown - 1,
+    }));
   };
 
   renderVideoPlayer = video => {
@@ -114,11 +127,17 @@ class Watch extends Component {
           onPlay={() => this.setState({ playingFilePlayer: true })}
           onProgress={e => this.onProgressYoutube(e, video)}
           onStart={() => trackPlayStart(video)}
-          onEnded={() => trackPlayFinish(video)}
+          onEnded={() => {
+            trackPlayFinish(video);
+            this.setState({
+              intervalId: setInterval(this.startCountdown, 1000),
+            });
+          }}
           ref={youtubePlayer => {
             this.youtubePlayer = youtubePlayer;
           }}
           playbackRate={playbackRate}
+
           // config={{ facebook: { appId: '398428117464454' } }}
         />
       </YoutubeStyle>
@@ -149,15 +168,26 @@ class Watch extends Component {
         height="100%"
         width="100%"
         playbackRate={playbackRate}
+        // onEnded={() => {
+        //   console.log('countdown starts');
+        //   setInterval(() => {
+        //     console.log(this.state.nextVidCountdown);
+        //     this.setState(({ nextVidCountdown }) => ({
+        //       nextVidCountdown: nextVidCountdown - 1,
+        //     }));
+        //   }, 1000);
+        // }}
       />
     );
   };
 
   render() {
     const { readyYoutube } = this.state;
-    const { video } = this.props;
+    const { video, nextVideo } = this.props;
+    console.log(nextVideo);
     return (
       <>
+        {this.nextVidCountdown}
         {this.renderVideoPlayer(video)}
         {video.audio[0] && readyYoutube && this.renderFilePlayer(video.audio)}
       </>
@@ -169,6 +199,7 @@ Watch.propTypes = {
   id: PropTypes.string.isRequired,
   video: PropTypes.object.isRequired,
   audioId: PropTypes.string,
+  nextVideo: PropTypes.object.isRequired,
 };
 
 Watch.defaultProps = {

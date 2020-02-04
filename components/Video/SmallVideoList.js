@@ -61,7 +61,6 @@ SmallVideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
   currentWatchingLanguage: PropTypes.string,
-  onVideoItemClick: PropTypes.func.isRequired,
   videos: PropTypes.object.isRequired,
 };
 

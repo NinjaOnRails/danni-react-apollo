@@ -9,9 +9,9 @@ import {
   AuthorStyles,
   SmallVideoListStyles,
 } from '../styles/SmallVideoListStyles';
+import { useCloseFullDescriptionMutation } from '../UI/uiHooks';
 
 const renderVideoItem = (
-  onVideoItemClick,
   id,
   originThumbnailUrl,
   originThumbnailUrlSd,
@@ -24,9 +24,11 @@ const renderVideoItem = (
   const query = {
     id,
   };
+
+  const [closeFullDescription] = useCloseFullDescriptionMutation();
   if (audioId) query.audioId = audioId;
   return (
-    <List.Item key={audioId || id} onClick={() => onVideoItemClick()}>
+    <List.Item key={audioId || id} onClick={closeFullDescription}>
       <Link
         href={{
           pathname: '/watch',
@@ -70,13 +72,7 @@ const formatDuration = duration => {
   }`;
 };
 
-const RenderSmallVideoList = ({
-  dataVideos,
-  id,
-  audioId,
-  onVideoItemClick,
-  fetchMore,
-}) => {
+const RenderSmallVideoList = ({ dataVideos, id, audioId, fetchMore }) => {
   const loadMore = () =>
     fetchMore({
       variables: {
@@ -128,7 +124,6 @@ const RenderSmallVideoList = ({
               const displayDuration = formatDuration(duration);
               if (audio.length === 0 && videoId !== id) {
                 return renderVideoItem(
-                  onVideoItemClick,
                   videoId,
                   originThumbnailUrl,
                   originThumbnailUrlSd,
@@ -140,9 +135,9 @@ const RenderSmallVideoList = ({
               }
               return audio.map(el => {
                 if (audioId !== el.id) {
-                  if (el.customThumbnail) originThumbnailUrl = el.customThumbnail;
+                  if (el.customThumbnail)
+                    originThumbnailUrl = el.customThumbnail;
                   return renderVideoItem(
-                    onVideoItemClick,
                     videoId,
                     originThumbnailUrl,
                     originThumbnailUrlSd,

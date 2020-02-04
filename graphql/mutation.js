@@ -396,6 +396,16 @@ const CLOSE_AUTH_MODAL_MUTATION = gql`
     closeAuthModal @client
   }
 `;
+const CLOSE_FULL_DESCRIPTION_MUTATION = gql`
+  mutation {
+    closeFullDescription @client
+  }
+`;
+const TOGGLE_FULL_DESCRIPTION_MUTATION = gql`
+  mutation {
+    toggleFullDescription @client
+  }
+`;
 
 export {
   CREATE_AUDIO_MUTATION,
@@ -430,4 +440,6 @@ export {
   UPDATE_AVATAR_MUTATION,
   CREATE_VIDEO_VOTE,
   CREATE_AUDIO_VOTE,
+  CLOSE_FULL_DESCRIPTION_MUTATION,
+  TOGGLE_FULL_DESCRIPTION_MUTATION,
 };
