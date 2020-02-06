@@ -34,9 +34,9 @@ class WatchPage extends Component {
     }
     return {
       id: nextVideo.id,
-      audioId: (nextAudio && nextAudio.id) || null,
+      audioId: nextAudio && nextAudio.id,
       title: (nextAudio && nextAudio.title) || nextVideo.originTitle,
-      thumbmnail:
+      thumbnail:
         (nextAudio && nextAudio.customThumbnail) ||
         nextVideo.originThumbnailUrl,
     };

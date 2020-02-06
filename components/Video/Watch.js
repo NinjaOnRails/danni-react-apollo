@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import Router from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
+import { Button, Icon } from 'semantic-ui-react';
 import { YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,
@@ -20,11 +23,12 @@ class Watch extends Component {
     mixpanelEventsSent: [],
     nextVidCountdown: 5,
     intervalId: null,
+    showNextVideo: false,
   };
 
   componentDidUpdate(prevProps) {
     const { id, audioId } = this.props;
-    const { readyYoutube, nextVidCountdown, intervalId } = this.state;
+    const { readyYoutube, nextVidCountdown } = this.state;
 
     if (
       this.youtubePlayer &&
@@ -38,25 +42,19 @@ class Watch extends Component {
       if (readyYoutube) this.youtubePlayer.getInternalPlayer().unMute(); // Unmute after auto mute below in case new video opened has no separate audio
     }
     if (nextVidCountdown < 0) {
-      console.log('countdown ended');
-      clearInterval(intervalId);
+      this.onNextVideoClick();
+      this.cancelCountdown();
     }
   }
 
   componentWillUnmount() {
+    // this.cancelCountdown();
     clearInterval(this.state.intervalId);
   }
 
   onProgressYoutube = (e, video) => {
-    const {
-      playedYoutube,
-      playedFilePlayer,
-      mixpanelEventsSent,
-      intervalId,
-    } = this.state;
+    const { playedYoutube, playedFilePlayer, mixpanelEventsSent } = this.state;
     const { playedSeconds } = e;
-    this.setState({ nextVidCountdown: 5 });
-    if (intervalId) window.clearInterval(this.intervalId);
 
     // Synchronise FilePlayer progress with Youtube player progress within 2 seconds
     // to allow for synchronised seeking
@@ -88,6 +86,19 @@ class Watch extends Component {
     }
   };
 
+  onNextVideoClick = () => {
+    const {
+      nextVideo: { id, audioId },
+    } = this.props;
+    const query = { id };
+    if (audioId) query.audioId = audioId;
+    this.cancelCountdown();
+    Router.push({
+      pathname: '/watch',
+      query: { id, audioId },
+    });
+  };
+
   onReadyYoutube = () => {
     this.setState({
       readyYoutube: true,
@@ -98,14 +109,25 @@ class Watch extends Component {
   };
 
   startCountdown = () => {
-    console.log(this.state.nextVidCountdown);
     this.setState(({ nextVidCountdown }) => ({
       nextVidCountdown: nextVidCountdown - 1,
     }));
   };
 
-  renderVideoPlayer = video => {
-    const { playingFilePlayer, playbackRate } = this.state;
+  cancelCountdown = () => {
+    const { intervalId } = this.state;
+    this.setState({ nextVidCountdown: 5, showNextVideo: false });
+    if (intervalId) clearInterval(intervalId);
+  };
+
+  renderVideoPlayer = () => {
+    const {
+      playingFilePlayer,
+      playbackRate,
+      nextVidCountdown,
+      showNextVideo,
+    } = this.state;
+    const { video, nextVideo } = this.props;
     return (
       <YoutubeStyle
         onClick={() =>
@@ -113,7 +135,41 @@ class Watch extends Component {
             playingFilePlayer: !playingFilePlayer,
           })
         }
+        nextThumbnail={nextVideo.thumbnail}
+        showNextVideo={nextVidCountdown === 0}
       >
+        {showNextVideo && (
+          <div className="next-video-overlay">
+            <h4 id="next-text">Tiếp theo:</h4>
+            <p id="next-title">{nextVideo.title}</p>
+            <div id="thumb-count">
+              <Link
+                href={`/watch?id=${nextVideo.id}${
+                  nextVideo.audioId ? `&audioId=${nextVideo.audioId}` : ''
+                }`}
+              >
+                <a onClick={this.cancelCountdown}>
+                  <img
+                    src={nextVideo.thumbnail}
+                    alt="Next video thumbnail"
+                    id="next-thumbnail"
+                  />
+                </a>
+              </Link>
+              <div id="next-count">{nextVidCountdown}</div>
+            </div>
+            <div id="next-actions">
+              <Button onClick={this.cancelCountdown}>
+                <Icon name="cancel" /> Huỷ
+              </Button>
+
+              <Button onClick={this.onNextVideoClick}>
+                <Icon name="step forward" /> Xem Tiếp
+              </Button>
+            </div>
+          </div>
+        )}
+
         <ReactPlayer
           className="youtube-player"
           // url="https://www.facebook.com/NasDailyVietnamese/videos/457978568180650"
@@ -124,12 +180,16 @@ class Watch extends Component {
           playing={playingFilePlayer}
           controls
           onPause={() => this.setState({ playingFilePlayer: false })}
-          onPlay={() => this.setState({ playingFilePlayer: true })}
+          onPlay={() => {
+            this.cancelCountdown();
+            this.setState({ playingFilePlayer: true });
+          }}
           onProgress={e => this.onProgressYoutube(e, video)}
           onStart={() => trackPlayStart(video)}
           onEnded={() => {
             trackPlayFinish(video);
             this.setState({
+              showNextVideo: true,
               intervalId: setInterval(this.startCountdown, 1000),
             });
           }}
@@ -168,27 +228,17 @@ class Watch extends Component {
         height="100%"
         width="100%"
         playbackRate={playbackRate}
-        // onEnded={() => {
-        //   console.log('countdown starts');
-        //   setInterval(() => {
-        //     console.log(this.state.nextVidCountdown);
-        //     this.setState(({ nextVidCountdown }) => ({
-        //       nextVidCountdown: nextVidCountdown - 1,
-        //     }));
-        //   }, 1000);
-        // }}
       />
     );
   };
 
   render() {
     const { readyYoutube } = this.state;
-    const { video, nextVideo } = this.props;
-    console.log(nextVideo);
+    const { video } = this.props;
+
     return (
       <>
-        {this.nextVidCountdown}
-        {this.renderVideoPlayer(video)}
+        {this.renderVideoPlayer()}
         {video.audio[0] && readyYoutube && this.renderFilePlayer(video.audio)}
       </>
     );

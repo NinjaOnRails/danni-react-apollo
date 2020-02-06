@@ -161,7 +161,6 @@ const RenderSmallVideoList = ({ dataVideos, id, audioId, fetchMore }) => {
 RenderSmallVideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
-  onVideoItemClick: PropTypes.func.isRequired,
   dataVideos: PropTypes.object.isRequired,
 };
 
