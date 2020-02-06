@@ -2,34 +2,39 @@ import PropTypes from 'prop-types';
 import VideoItem from './VideoItem';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
-const renderVideoItem = (
-  onVideoItemClick,
-  id,
-  originThumbnailUrl,
-  originThumbnailUrlSd,
-  title,
-  displayDuration,
-  originAuthor,
-  author,
-  query,
-  audioId = null
-) => (
-  <VideoItem
-    key={audioId || id}
-    onVideoItemClick={onVideoItemClick}
-    id={id}
-    thumbnail={originThumbnailUrl}
-    originThumbnailUrlSd={originThumbnailUrlSd}
-    duration={displayDuration}
-    originAuthor={originAuthor}
-    title={title}
-    author={author}
-    query={query}
-  />
-);
-
-const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
+const RenderUserVideoList = ({ 
+  dataVideos, 
+  hideAuthor, 
+  currentUser,
+ }) => {
   const { contentLanguage } = useLocalStateQuery();
+
+  const renderVideoItem = (
+    id,
+    originThumbnailUrl,
+    originThumbnailUrlSd,
+    title,
+    displayDuration,
+    originAuthor,
+    author,
+    query,
+    audioId = null
+  ) => (
+    <VideoItem
+      key={audioId || id}
+      id={id}
+      thumbnail={originThumbnailUrl}
+      originThumbnailUrlSd={originThumbnailUrlSd}
+      title={title}
+      duration={displayDuration}
+      originAuthor={originAuthor}
+      author={author}
+      hideAuthor={hideAuthor}
+      currentUser={currentUser}
+      query={query}
+      contentLanguage={contentLanguage}
+    />
+  );
 
   return (
     <>
@@ -46,51 +51,59 @@ const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
           addedBy,
         }) => {
           if (audio.length === 0) {
-            const query = {
+            return renderVideoItem(
               id,
-            };
-            return (
-              <VideoItem
-                key={id}
-                id={id}
-                thumbnail={originThumbnailUrl}
-                originThumbnailUrlSd={originThumbnailUrlSd}
-                title={originTitle}
-                duration={duration}
-                originAuthor={originAuthor}
-                author={addedBy}
-                hideAuthor={hideAuthor}
-                currentUser={currentUser}
-                query={query}
-                contentLanguage={contentLanguage}
-              />
+              originThumbnailUrl,
+              originThumbnailUrlSd,
+              originTitle,
+              duration,
+              originAuthor,
+              addedBy,
+              { id }
             );
           }
           return audio.map(
             ({ title, id: audioId, author, customThumbnail }) => {
-              const query = {
+              const thumbnail = customThumbnail || originThumbnailUrl;
+
+              return renderVideoItem(
                 id,
-                audioId,
-              };
-              return (
-                <VideoItem
-                  key={audioId}
-                  id={id}
-                  audioId={audioId}
-                  thumbnail={customThumbnail || originThumbnailUrl}
-                  originThumbnailUrlSd={originThumbnailUrlSd}
-                  title={title}
-                  duration={duration}
-                  originAuthor={originAuthor}
-                  author={author}
-                  hideAuthor={hideAuthor}
-                  currentUser={currentUser}
-                  query={query}
-                  contentLanguage={contentLanguage}
-                />
+                thumbnail,
+                originThumbnailUrlSd,
+                title,
+                duration,
+                originAuthor,
+                author,
+                { id, audioId },
+                audioId
               );
             }
           );
+          // return audio.map(
+          //   ({ title, id: audioId, author, customThumbnail }) => {
+          //     const query = {
+          //       id,
+          //       audioId,
+          //     };
+          //     return (
+          //       <VideoItem
+          //         key={audioId}
+          //         id={id}
+          //         audioId={audioId}
+          //         thumbnail={customThumbnail || originThumbnailUrl}
+          //         originThumbnailUrlSd={originThumbnailUrlSd}
+          //         title={title}
+          //         duration={duration}
+          //         originAuthor={originAuthor}
+          //         author={author}
+          //         hideAuthor={hideAuthor}
+          //         currentUser={currentUser}
+          //         query={query}
+          //         contentLanguage={contentLanguage}
+          //       />
+          //     );
+          //   }
+          // );
         }
       )}
     </>
