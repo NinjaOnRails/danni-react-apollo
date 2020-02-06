@@ -4,6 +4,32 @@ import { List, Loader } from 'semantic-ui-react';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
 import SmallVideoItem from './SmallVideoItem';
 
+const renderVideoItem = (
+  onVideoItemClick,
+  videoId,
+  originThumbnailUrl,
+  originThumbnailUrlSd,
+  title,
+  displayDuration,
+  originAuthor,
+  author,
+  query,
+  audioId = null
+) => (
+  <SmallVideoItem
+    key={videoId}
+    onVideoItemClick={onVideoItemClick}
+    id={videoId}
+    thumbnail={originThumbnailUrl}
+    originThumbnailUrlSd={originThumbnailUrlSd}
+    duration={displayDuration}
+    originAuthor={originAuthor}
+    title={title}
+    author={author}
+    query={query}
+  />
+);
+
 const RenderSmallVideoList = ({
   dataVideos,
   id,
@@ -42,7 +68,7 @@ const RenderSmallVideoList = ({
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      // loader={<Loader active inline="centered" key={0} />}
+      loader={<Loader active inline="centered" key={0} />}
     >
       <SmallVideoListStyles>
         <List divided relaxed>
@@ -63,47 +89,68 @@ const RenderSmallVideoList = ({
                 const query = {
                   id: videoId,
                 };
-                return (
-                  <SmallVideoItem
-                    key={videoId}
-                    onVideoItemClick={onVideoItemClick}
-                    id={videoId}
-                    thumbnail={originThumbnailUrl}
-                    originThumbnailUrlSd={originThumbnailUrlSd}
-                    duration={duration}
-                    originAuthor={originAuthor}
-                    title={originTitle}
-                    author={addedBy}
-                    query={query}
-                  />
+                return renderVideoItem(
+                  onVideoItemClick,
+                  videoId,
+                  originThumbnailUrl,
+                  originThumbnailUrlSd,
+                  originTitle,
+                  duration,
+                  originAuthor,
+                  addedBy,
+                  query
                 );
+                // return (
+                //   <SmallVideoItem
+                //     key={videoId}
+                //     onVideoItemClick={onVideoItemClick}
+                //     id={videoId}
+                //     thumbnail={originThumbnailUrl}
+                //     originThumbnailUrlSd={originThumbnailUrlSd}
+                //     duration={duration}
+                //     originAuthor={originAuthor}
+                //     title={originTitle}
+                //     author={addedBy}
+                //     query={query}
+                //   />
+                // );
               }
-              return audio.map(
-                ({ id: vidAudioId, title, author, video, customThumbnail }) => {
-                  if (audioId !== vidAudioId) {
-                    const query = {
-                      id: videoId,
-                      audioId: vidAudioId,
-                    };
-                    return (
-                      <SmallVideoItem
-                        key={vidAudioId}
-                        onVideoItemClick={onVideoItemClick}
-                        id={videoId}
-                        thumbnail={customThumbnail || originThumbnailUrl}
-                        originThumbnailUrlSd={originThumbnailUrlSd}
-                        duration={duration}
-                        originAuthor={originAuthor}
-                        title={title}
-                        author={author}
-                        audioId={vidAudioId}
-                        query={query}
-                      />
-                    );
-                  }
-                  return null;
+              return audio.map(el => {
+                if (audioId !== el.id) {
+                  const query = {
+                    id: videoId,
+                    audioId: el.id,
+                  };
+                  return renderVideoItem(
+                    onVideoItemClick,
+                    videoId,
+                    originThumbnailUrl,
+                    originThumbnailUrlSd,
+                    el.title,
+                    duration,
+                    originAuthor,
+                    el.author,
+                    query,
+                    el.id
+                  );
+                  // return (
+                  //   <SmallVideoItem
+                  //     key={vidAudioId}
+                  //     onVideoItemClick={onVideoItemClick}
+                  //     id={videoId}
+                  //     thumbnail={customThumbnail || originThumbnailUrl}
+                  //     originThumbnailUrlSd={originThumbnailUrlSd}
+                  //     duration={duration}
+                  //     originAuthor={originAuthor}
+                  //     title={title}
+                  //     author={author}
+                  //     audioId={vidAudioId}
+                  //     query={query}
+                  //   />
+                  // );
                 }
-              );
+                return null;
+              });
             }
           )}
         </List>
@@ -117,12 +164,12 @@ RenderSmallVideoList.propTypes = {
   audioId: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
   dataVideos: PropTypes.object.isRequired,
-  fetchMore: PropTypes.func,
+  // fetchMore: PropTypes.func,
 };
 
 RenderSmallVideoList.defaultProps = {
   audioId: '',
-  fetchMore: undefined,
+  // fetchMore: undefined,
 };
 
 export default RenderSmallVideoList;
