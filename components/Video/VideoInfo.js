@@ -141,25 +141,29 @@ const VideoInfo = ({
                 </Header>
                 {currentUser && currentUser.id === addedBy.id && (
                   <div className="buttons">
-                    <Link
-                      href={{
-                        pathname: '/edit',
-                        query,
-                      }}
-                    >
-                      <Button icon labelPosition="left">
-                        <Icon name="write" />
-                        Sửa
-                      </Button>
-                    </Link>
-                    <VideoDeleteButton
-                      id={id}
-                      audioId={audioId}
-                      title={title}
-                      userId={currentUser.id}
-                      contentLanguage={contentLanguage}
-                      redirect
-                    />
+                    {true && (
+                      <>
+                        <Link
+                          href={{
+                            pathname: '/edit',
+                            query,
+                          }}
+                        >
+                          <Button icon labelPosition="left">
+                            <Icon name="write" />
+                            Sửa
+                          </Button>
+                        </Link>
+                        <VideoDeleteButton
+                          id={id}
+                          audioId={audioId}
+                          title={title}
+                          userId={currentUser.id}
+                          contentLanguage={contentLanguage}
+                          redirect
+                        />
+                      </>
+                    )}
                   </div>
                 )}
                 <div className="views-social">
@@ -200,13 +204,13 @@ const VideoInfo = ({
                       </Statistic.Label>
                     </Statistic>
                     {/* <Statistic size="mini" horizontal>
-     <Statistic.Value>
-       {audioId ? audio[0].comment.length : comment.length}
-     </Statistic.Value>
-     <Statistic.Label>
-       <Icon name="comment" size="large" />
-     </Statistic.Label>
-   </Statistic> */}
+                      <Statistic.Value>
+                        {audioId ? audio[0].comment.length : comment.length}
+                      </Statistic.Value>
+                      <Statistic.Label>
+                        <Icon name="comment" size="large" />
+                      </Statistic.Label>
+                    </Statistic> */}
                   </div>
                   <div>
                     <FacebookShareButton className="fb-share-button" url={url}>
