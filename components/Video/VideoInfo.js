@@ -110,24 +110,20 @@ const VideoInfo = ({
     isDescriptionOverflow();
   }, [id, audioId]);
 
-  const watchVotes = audioId ? audio[0].vote : vote;
-  let userVoteType = null;
-  let upVoteCount = 0;
-  let downVoteCount = 0;
-  if (watchVotes.length > 0) {
-    // voteCount = watchVotes.reduce((total, watchVote) => {
-    //   const i = watchVote.type === 'UPVOTE' ? 1 : -1;
-    //   return total + i;
-    // }, 0);
-    for (let i = 0; i < watchVotes.length; i += 1) {
-      watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
-    }
+        const watchVotes = audioId ? audio[0].vote : vote;
+        let userVoteType = null;
+        let upVoteCount = 0;
+        let downVoteCount = 0;
+        if (watchVotes.length > 0) {
+          for (let i = 0; i < watchVotes.length; i += 1) {
+            watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
+          }
 
-    if (currentUser) {
-      userVoteType = watchVotes.find(
-        watchVote => watchVote.user.id === currentUser.id
-      );
-    }
+          if (currentUser) {
+            userVoteType = watchVotes.find(
+                   watchVote => watchVote.user.id === currentUser.id
+            );
+          }
   }
   return (
     <>

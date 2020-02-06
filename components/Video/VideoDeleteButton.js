@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Icon, Confirm, Loader } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
 import { useDeleteAudVidMutation } from './videoHooks';
 
@@ -33,25 +33,27 @@ const VideoDeleteButton = ({
     );
   return (
     <>
-      <Button
-        icon
-        labelPosition="left"
-        color="red"
-        onClick={() => setOpenConfirm(true)}
-      >
-        <Icon name="trash" />
-        Xoá
-      </Button>
-      <Confirm
-        size="large"
-        open={openConfirm}
-        onCancel={() => setOpenConfirm(false)}
-        onConfirm={onConfirmDelete}
-        cancelButton="Huỷ"
-        confirmButton="Xác nhận"
-        content={`Xác nhận xoá Video: ${title}`}
-        header="Chú ý!"
-      />
+      <>
+        <Button
+          icon
+          labelPosition="left"
+          color="red"
+          onClick={() => setOpenConfirm(true)}
+        >
+          <Icon name="trash" />
+          Xoá
+        </Button>
+        <Confirm
+          size="large"
+          open={openConfirm}
+          onCancel={() => setOpenConfirm(false)}
+          onConfirm={onConfirmDelete}
+          cancelButton="Huỷ"
+          confirmButton="Xác nhận"
+          content={`Xác nhận xoá Video: ${title}`}
+          header="Chú ý!"
+        />
+      </>
     </>
   );
 };
