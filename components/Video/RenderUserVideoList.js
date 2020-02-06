@@ -2,6 +2,32 @@ import PropTypes from 'prop-types';
 import VideoItem from './VideoItem';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
+const renderVideoItem = (
+  onVideoItemClick,
+  id,
+  originThumbnailUrl,
+  originThumbnailUrlSd,
+  title,
+  displayDuration,
+  originAuthor,
+  author,
+  query,
+  audioId = null
+) => (
+  <VideoItem
+    key={audioId || id}
+    onVideoItemClick={onVideoItemClick}
+    id={id}
+    thumbnail={originThumbnailUrl}
+    originThumbnailUrlSd={originThumbnailUrlSd}
+    duration={displayDuration}
+    originAuthor={originAuthor}
+    title={title}
+    author={author}
+    query={query}
+  />
+);
+
 const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
   const { contentLanguage } = useLocalStateQuery();
 

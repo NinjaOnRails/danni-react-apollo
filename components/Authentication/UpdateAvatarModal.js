@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Modal,
   Button,
@@ -10,10 +9,11 @@ import {
   Header,
   Radio,
 } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import avatars from '../../lib/avatars';
 import CloudinaryUploadAvatar from './CloudinaryUploadAvatar';
 import UpdateAvatarModalStyles from '../styles/UpdateAvatarModalStyles';
 import Error from '../UI/ErrorMessage';
-import avatars from '../../lib/avatars';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { useUpdateAvatarMutation } from './authHooks';
 
@@ -89,7 +89,11 @@ const UpdateAvatarModal = ({
             <Modal.Header>Thay đổi avatar</Modal.Header>
             <Modal.Content>
               <Modal.Description>
-                <Header as="h2" attached="top" onClick={setChoiceTypeList}>
+                <Header
+                  as="h2"
+                  attached="top"
+                  onClick={() => setChoiceTypeList()}
+                >
                   <Radio
                     name="choiceType"
                     value="list"
@@ -99,7 +103,11 @@ const UpdateAvatarModal = ({
                   Chọn avatar có sẵn
                 </Header>
                 <Segment attached>{renderAvatarList()}</Segment>
-                <Header as="h2" attached="top" onClick={setChoiceTypeUpload}>
+                <Header
+                  as="h2"
+                  attached="top"
+                  onClick={() => setChoiceTypeUpload()}
+                >
                   <Radio
                     name="choiceType"
                     value="upload"

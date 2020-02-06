@@ -1,12 +1,12 @@
+import { List, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
-import { List, Loader } from 'semantic-ui-react';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
 import SmallVideoItem from './SmallVideoItem';
 
 const renderVideoItem = (
   onVideoItemClick,
-  videoId,
+  id,
   originThumbnailUrl,
   originThumbnailUrlSd,
   title,
@@ -17,9 +17,9 @@ const renderVideoItem = (
   audioId = null
 ) => (
   <SmallVideoItem
-    key={videoId}
+    key={audioId || id}
     onVideoItemClick={onVideoItemClick}
-    id={videoId}
+    id={id}
     thumbnail={originThumbnailUrl}
     originThumbnailUrlSd={originThumbnailUrlSd}
     duration={displayDuration}
@@ -37,7 +37,7 @@ const RenderSmallVideoList = ({
   onVideoItemClick,
   fetchMore,
 }) => {
-  const loadMore = () => {
+  const loadMore = () =>
     fetchMore({
       variables: {
         cursor: dataVideos.videosConnection.pageInfo.endCursor,
@@ -62,13 +62,12 @@ const RenderSmallVideoList = ({
             }
           : previousResult,
     });
-  };
   return (
     <InfiniteScroll
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      loader={<Loader active inline="centered" key={0} />}
+      // loader={<Loader active inline="centered" key={0} />}
     >
       <SmallVideoListStyles>
         <List divided relaxed>
@@ -124,7 +123,7 @@ const RenderSmallVideoList = ({
                   return renderVideoItem(
                     onVideoItemClick,
                     videoId,
-                    originThumbnailUrl,
+                    el.customThumbnail || originThumbnailUrl,
                     originThumbnailUrlSd,
                     el.title,
                     duration,
@@ -164,12 +163,10 @@ RenderSmallVideoList.propTypes = {
   audioId: PropTypes.string,
   onVideoItemClick: PropTypes.func.isRequired,
   dataVideos: PropTypes.object.isRequired,
-  // fetchMore: PropTypes.func,
 };
 
 RenderSmallVideoList.defaultProps = {
   audioId: '',
-  // fetchMore: undefined,
 };
 
 export default RenderSmallVideoList;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Head from 'next/head';
 import { Container, Item, Loader, Icon } from 'semantic-ui-react';
+import Head from 'next/head';
 import RenderUserVideoList from '../Video/RenderUserVideoList';
 import VideoListStyles from '../styles/VideoListStyles';
 import UserInfo from './UserInfo';
