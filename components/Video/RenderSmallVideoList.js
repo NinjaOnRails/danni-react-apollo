@@ -13,22 +13,27 @@ const renderVideoItem = (
   displayDuration,
   originAuthor,
   author,
-  query,
   audioId = null
-) => (
-  <SmallVideoItem
-    key={audioId || id}
-    onVideoItemClick={onVideoItemClick}
-    id={id}
-    thumbnail={originThumbnailUrl}
-    originThumbnailUrlSd={originThumbnailUrlSd}
-    duration={displayDuration}
-    originAuthor={originAuthor}
-    title={title}
-    author={author}
-    query={query}
-  />
-);
+) => {
+  const query = {
+    id,
+  };
+  if (audioId) query.audioId = audioId;
+  return (
+    <SmallVideoItem
+      key={audioId || id}
+      onVideoItemClick={onVideoItemClick}
+      id={id}
+      thumbnail={originThumbnailUrl}
+      originThumbnailUrlSd={originThumbnailUrlSd}
+      duration={displayDuration}
+      originAuthor={originAuthor}
+      title={title}
+      author={author}
+      query={query}
+    />
+  );
+};
 
 const RenderSmallVideoList = ({
   dataVideos,
@@ -67,7 +72,7 @@ const RenderSmallVideoList = ({
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      // loader={<Loader active inline="centered" key={0} />}
+      loader={<Loader active inline="centered" key={0} />}
     >
       <SmallVideoListStyles>
         <List divided relaxed>
@@ -85,9 +90,6 @@ const RenderSmallVideoList = ({
               },
             }) => {
               if (audio.length === 0 && videoId !== id) {
-                const query = {
-                  id: videoId,
-                };
                 return renderVideoItem(
                   onVideoItemClick,
                   videoId,
@@ -96,30 +98,11 @@ const RenderSmallVideoList = ({
                   originTitle,
                   duration,
                   originAuthor,
-                  addedBy,
-                  query
+                  addedBy
                 );
-                // return (
-                //   <SmallVideoItem
-                //     key={videoId}
-                //     onVideoItemClick={onVideoItemClick}
-                //     id={videoId}
-                //     thumbnail={originThumbnailUrl}
-                //     originThumbnailUrlSd={originThumbnailUrlSd}
-                //     duration={duration}
-                //     originAuthor={originAuthor}
-                //     title={originTitle}
-                //     author={addedBy}
-                //     query={query}
-                //   />
-                // );
               }
               return audio.map(el => {
                 if (audioId !== el.id) {
-                  const query = {
-                    id: videoId,
-                    audioId: el.id,
-                  };
                   return renderVideoItem(
                     onVideoItemClick,
                     videoId,
@@ -129,24 +112,8 @@ const RenderSmallVideoList = ({
                     duration,
                     originAuthor,
                     el.author,
-                    query,
                     el.id
                   );
-                  // return (
-                  //   <SmallVideoItem
-                  //     key={vidAudioId}
-                  //     onVideoItemClick={onVideoItemClick}
-                  //     id={videoId}
-                  //     thumbnail={customThumbnail || originThumbnailUrl}
-                  //     originThumbnailUrlSd={originThumbnailUrlSd}
-                  //     duration={duration}
-                  //     originAuthor={originAuthor}
-                  //     title={title}
-                  //     author={author}
-                  //     audioId={vidAudioId}
-                  //     query={query}
-                  //   />
-                  // );
                 }
                 return null;
               });
