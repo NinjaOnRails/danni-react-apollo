@@ -115,13 +115,13 @@ const VideoInfo = ({
           let upVoteCount = 0;
           let downVoteCount = 0;
           if (watchVotes.length > 0) {
-            for (let i = 0; i < watchVotes.length; i += 1) {
+            for (let i = 0; i < watchVotes.length; i ++) {
               watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
             }
 
             if (currentUser) {
               userVoteType = watchVotes.find(
-                     watchVote => watchVote.user.id === currentUser.id
+                  watchVote => watchVote.user.id === currentUser.id
               );
             }
           }
