@@ -2,11 +2,7 @@ import PropTypes from 'prop-types';
 import VideoItem from './VideoItem';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
-const RenderUserVideoList = ({ 
-  dataVideos, 
-  hideAuthor, 
-  currentUser,
- }) => {
+const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
   const { contentLanguage } = useLocalStateQuery();
 
   const renderVideoItem = (
@@ -17,24 +13,30 @@ const RenderUserVideoList = ({
     displayDuration,
     originAuthor,
     author,
-    query,
     audioId = null
-  ) => (
-    <VideoItem
-      key={audioId || id}
-      id={id}
-      thumbnail={originThumbnailUrl}
-      originThumbnailUrlSd={originThumbnailUrlSd}
-      title={title}
-      duration={displayDuration}
-      originAuthor={originAuthor}
-      author={author}
-      hideAuthor={hideAuthor}
-      currentUser={currentUser}
-      query={query}
-      contentLanguage={contentLanguage}
-    />
-  );
+  ) => {
+    const query = {
+      id,
+    };
+
+    if (audioId) query.audioId = audioId;
+    return (
+      <VideoItem
+        key={audioId || id}
+        id={id}
+        thumbnail={originThumbnailUrl}
+        originThumbnailUrlSd={originThumbnailUrlSd}
+        title={title}
+        duration={displayDuration}
+        originAuthor={originAuthor}
+        author={author}
+        hideAuthor={hideAuthor}
+        currentUser={currentUser}
+        query={query}
+        contentLanguage={contentLanguage}
+      />
+    );
+  };
 
   return (
     <>
@@ -58,8 +60,7 @@ const RenderUserVideoList = ({
               originTitle,
               duration,
               originAuthor,
-              addedBy,
-              { id }
+              addedBy
             );
           }
           return audio.map(
@@ -74,36 +75,10 @@ const RenderUserVideoList = ({
                 duration,
                 originAuthor,
                 author,
-                { id, audioId },
                 audioId
               );
             }
           );
-          // return audio.map(
-          //   ({ title, id: audioId, author, customThumbnail }) => {
-          //     const query = {
-          //       id,
-          //       audioId,
-          //     };
-          //     return (
-          //       <VideoItem
-          //         key={audioId}
-          //         id={id}
-          //         audioId={audioId}
-          //         thumbnail={customThumbnail || originThumbnailUrl}
-          //         originThumbnailUrlSd={originThumbnailUrlSd}
-          //         title={title}
-          //         duration={duration}
-          //         originAuthor={originAuthor}
-          //         author={author}
-          //         hideAuthor={hideAuthor}
-          //         currentUser={currentUser}
-          //         query={query}
-          //         contentLanguage={contentLanguage}
-          //       />
-          //     );
-          //   }
-          // );
         }
       )}
     </>
