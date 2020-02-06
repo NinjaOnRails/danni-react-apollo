@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
 import VideoListStyles from '../styles/VideoListStyles';
@@ -9,6 +10,38 @@ const RenderVideoList = ({
   currentUser,
   fetchMore,
 }) => {
+  const renderVideoItem = (
+    id,
+    originThumbnailUrl,
+    originThumbnailUrlSd,
+    title,
+    displayDuration,
+    originAuthor,
+    author,
+    audioId = null
+  ) => {
+    const query = {
+      id,
+    };
+    if (audioId) query.audioId = audioId;
+
+    return (
+      <VideoItem
+        key={id}
+        id={id}
+        thumbnail={originThumbnailUrl}
+        originThumbnailUrlSd={originThumbnailUrlSd}
+        title={title}
+        duration={displayDuration}
+        originAuthor={originAuthor}
+        author={author}
+        hideAuthor={hideAuthor}
+        currentUser={currentUser}
+        query={query}
+      />
+    );
+  };
+
   const loadMore = () =>
     fetchMore({
       variables: {
@@ -54,55 +87,35 @@ const RenderVideoList = ({
               audio,
               duration,
               addedBy,
+              language,
             },
-          }) => {
-            if (audio.length === 0) {
-              const query = {
-                id,
-              };
-              return (
-                <VideoItem
-                  key={id}
-                  id={id}
-                  thumbnail={originThumbnailUrl}
-                  originThumbnailUrlSd={originThumbnailUrlSd}
-                  title={originTitle}
-                  duration={duration}
-                  originAuthor={originAuthor}
-                  author={addedBy}
-                  hideAuthor={hideAuthor}
-                  currentUser={currentUser}
-                  query={query}
-                />
-              );
-            }
-
-            return audio.map(
-              ({ title, id: audioId, author, customThumbnail }) => {
-                const query = {
+          }) => (
+            <Fragment key={id}>
+              {language &&
+                renderVideoItem(
                   id,
-                  audioId,
-                };
-
-                return (
-                  <VideoItem
-                    key={audioId}
-                    id={id}
-                    audioId={audioId}
-                    thumbnail={customThumbnail || originThumbnailUrl}
-                    originThumbnailUrlSd={originThumbnailUrlSd}
-                    title={title}
-                    duration={duration}
-                    originAuthor={originAuthor}
-                    author={author}
-                    hideAuthor={hideAuthor}
-                    currentUser={currentUser}
-                    query={query}
-                  />
-                );
-              }
-            );
-          }
+                  originThumbnailUrl,
+                  originThumbnailUrlSd,
+                  originTitle,
+                  duration,
+                  originAuthor,
+                  addedBy
+                )}
+              {audio.length !== 0 &&
+                audio.map(({ title, id: audioId, author, customThumbnail }) => {
+                  return renderVideoItem(
+                    id,
+                    customThumbnail || originThumbnailUrl,
+                    originThumbnailUrlSd,
+                    title,
+                    duration,
+                    originAuthor,
+                    author,
+                    audioId
+                  );
+                })}
+            </Fragment>
+          )
         )}
       </VideoListStyles>
     </InfiniteScroll>
