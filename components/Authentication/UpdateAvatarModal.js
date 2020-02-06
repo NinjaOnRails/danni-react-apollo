@@ -78,69 +78,75 @@ const UpdateAvatarModal = ({
   };
 
   return (
-    <UpdateAvatarModalStyles
-      closeIcon
-      open={showUpdateAvatarModal}
-      onClose={closeUpdateAvatarModal}
-    >
-      <Modal.Header>Thay đổi avatar</Modal.Header>
-      <Modal.Content>
-        <Modal.Description>
-          <Header as="h2" attached="top" onClick={setChoiceTypeList}>
-            <Radio
-              name="choiceType"
-              value="list"
-              checked={choiceType === 'list'}
-              onChange={setChoiceTypeList}
-            />
-            Chọn avatar có sẵn
-          </Header>
-          <Segment attached>{renderAvatarList()}</Segment>
-          <Header as="h2" attached="top" onClick={setChoiceTypeUpload}>
-            <Radio
-              name="choiceType"
-              value="upload"
-              checked={choiceType === 'upload'}
-              onChange={setChoiceTypeUpload}
-            />
-            Tải ảnh mới lên
-          </Header>
-          <CloudinaryUploadAvatar
-            chooseUpload={setChoiceTypeUpload}
-            setSecureUrl={setSecureUrl}
-          />
-        </Modal.Description>
-        <Error error={error} />
-      </Modal.Content>
-      <Modal.Actions>
-        <Button
-          primary
-          icon
-          labelPosition="left"
-          size="big"
-          disabled={
-            loading ||
-            !choiceType ||
-            (choiceType === 'list' && !activeItem) ||
-            (choiceType === 'upload' && !secureUrlState)
-          }
-          onClick={() => onSubmit(updateAvatar)}
-        >
-          <Icon name="check" />
-          {loading && 'Đang '}Xác nhận
-        </Button>
-        <Button
-          type="button"
-          icon
-          labelPosition="left"
-          size="big"
-          onClick={closeUpdateAvatarModal}
-        >
-          <Icon name="cancel" />
-          Huỷ
-        </Button>
-      </Modal.Actions>
-    </UpdateAvatarModalStyles>
+    <>
+      <>
+        <>
+          <UpdateAvatarModalStyles
+            closeIcon
+            open={showUpdateAvatarModal}
+            onClose={closeUpdateAvatarModal}
+          >
+            <Modal.Header>Thay đổi avatar</Modal.Header>
+            <Modal.Content>
+              <Modal.Description>
+                <Header as="h2" attached="top" onClick={setChoiceTypeList}>
+                  <Radio
+                    name="choiceType"
+                    value="list"
+                    checked={choiceType === 'list'}
+                    onChange={setChoiceTypeList}
+                  />
+                  Chọn avatar có sẵn
+                </Header>
+                <Segment attached>{renderAvatarList()}</Segment>
+                <Header as="h2" attached="top" onClick={setChoiceTypeUpload}>
+                  <Radio
+                    name="choiceType"
+                    value="upload"
+                    checked={choiceType === 'upload'}
+                    onChange={setChoiceTypeUpload}
+                  />
+                  Tải ảnh mới lên
+                </Header>
+                <CloudinaryUploadAvatar
+                  chooseUpload={setChoiceTypeUpload}
+                  setSecureUrl={setSecureUrl}
+                />
+              </Modal.Description>
+              <Error error={error} />
+            </Modal.Content>
+            <Modal.Actions>
+              <Button
+                primary
+                icon
+                labelPosition="left"
+                size="big"
+                disabled={
+                  loading ||
+                  !choiceType ||
+                  (choiceType === 'list' && !activeItem) ||
+                  (choiceType === 'upload' && !secureUrlState)
+                }
+                onClick={() => onSubmit(updateAvatar)}
+              >
+                <Icon name="check" />
+                {loading && 'Đang '}Xác nhận
+              </Button>
+              <Button
+                type="button"
+                icon
+                labelPosition="left"
+                size="big"
+                onClick={closeUpdateAvatarModal}
+              >
+                <Icon name="cancel" />
+                Huỷ
+              </Button>
+            </Modal.Actions>
+          </UpdateAvatarModalStyles>
+        </>
+      </>
+    </>
   );
 };
 
