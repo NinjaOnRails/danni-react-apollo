@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
+import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
@@ -11,6 +12,7 @@ import {
   trackPlayFinish,
   trackPlayedDuration,
 } from '../../lib/mixpanel';
+import { LOCAL_STATE_QUERY } from '../../graphql/query';
 
 class Watch extends Component {
   state = {
@@ -43,7 +45,6 @@ class Watch extends Component {
     }
     if (nextVidCountdown < 0) {
       this.onNextVideoClick();
-      this.cancelCountdown();
     }
   }
 
@@ -120,7 +121,7 @@ class Watch extends Component {
     if (intervalId) clearInterval(intervalId);
   };
 
-  renderVideoPlayer = () => {
+  renderVideoPlayer = allowAutoPlay => {
     const {
       playingFilePlayer,
       playbackRate,
@@ -188,10 +189,12 @@ class Watch extends Component {
           onStart={() => trackPlayStart(video)}
           onEnded={() => {
             trackPlayFinish(video);
-            this.setState({
-              showNextVideo: true,
-              intervalId: setInterval(this.startCountdown, 1000),
-            });
+            if (allowAutoPlay) {
+              this.setState({
+                showNextVideo: true,
+                intervalId: setInterval(this.startCountdown, 1000),
+              });
+            }
           }}
           ref={youtubePlayer => {
             this.youtubePlayer = youtubePlayer;
@@ -237,10 +240,18 @@ class Watch extends Component {
     const { video } = this.props;
 
     return (
-      <>
-        {this.renderVideoPlayer()}
-        {video.audio[0] && readyYoutube && this.renderFilePlayer(video.audio)}
-      </>
+      <Query query={LOCAL_STATE_QUERY}>
+        {({ data: { allowAutoplay } }) => {
+          return (
+            <>
+              {this.renderVideoPlayer(allowAutoplay)}
+              {video.audio[0] &&
+                readyYoutube &&
+                this.renderFilePlayer(video.audio)}
+            </>
+          );
+        }}
+      </Query>
     );
   }
 }

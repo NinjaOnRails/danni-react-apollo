@@ -292,6 +292,7 @@ const LOCAL_STATE_QUERY = gql`
     previousPage @client
     contentLanguage @client
     showFullDescription @client
+    allowAutoplay @client
   }
 `;
 
