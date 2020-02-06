@@ -45,6 +45,7 @@ const Me = () => {
             videosWithAudio.push({ ...audio[i].video });
           });
           const videos = [...videosWithAudio, ...videosWithLang];
+
           return (
             <>
               <Head>
@@ -99,16 +100,18 @@ const Me = () => {
                   </Item.Group>
                 </UserProfileStyles>
                 <h1>Uploads:</h1>
-                {/* <Error error={error} />
-              {loading ? <Loader active inline="centered" /> : <div></div>} */}
-                <VideoListStyles>
-                  <RenderUserVideoList
-                    dataVideos={{ videos }}
-                    hideAuthor
-                    currentUser={currentUser}
-                  />
-                </VideoListStyles>
-                {/* )} */}
+                {/* <Error error={error} /> */}
+                {true ? (
+                  <Loader active inline="centered" />
+                ) : (
+                  <VideoListStyles>
+                    <RenderUserVideoList
+                      dataVideos={{ videos }}
+                      hideAuthor
+                      currentUser={currentUser}
+                    />
+                  </VideoListStyles>
+                )}
               </Container>
             </>
           );
