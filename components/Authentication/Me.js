@@ -15,100 +15,105 @@ const Me = () => {
   const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false);
 
   const { currentUser } = useCurrentUserQuery();
-  if (!currentUser) return <Loader active inline="centered" />;
-  const { id, video, audio, avatar, displayName } = currentUser;
 
   return (
     <>
-      {() => {
-        // Only display videos added by user intentionally, ie language is specified
-        const videosWithLang = video.filter(el => el.language);
+      <>
+        {() => {
+          if (!currentUser) return <Loader active inline="centered" />;
+          const { id, video, audio, avatar, displayName } = currentUser;
 
-        // To be displayed by RenderUserVideoList component they need to satisty this condition
-        videosWithLang.forEach((el, i) => {
-          videosWithLang[i].audio = [];
-        });
+          // Only display videos added by user intentionally, ie language is specified
+          const videosWithLang = video.filter(el => el.language);
 
-        // Create video objects from user's audio uploads
-        const videosWithAudio = [];
-        audio.forEach(({ id: audioId, title, customThumbnail }, i) => {
-          audio[i].video.audio = [
-            {
-              id: audioId,
-              title,
-              customThumbnail,
-              author: { id, displayName },
-            },
-          ];
-          videosWithAudio.push({ ...audio[i].video });
-        });
-        const videos = [...videosWithAudio, ...videosWithLang];
-        return (
-          <>
-            <Head>
-              <title key="title">Danni TV - Tài khoản</title>
-              <meta
-                key="metaTitle"
-                name="title"
-                content="Danni TV - Tài khoản"
-              />
-            </Head>
-            <Container>
-              <UserProfileStyles>
-                <UpdateAvatarModal
-                  showUpdateAvatarModal={showUpdateAvatarModal}
-                  closeUpdateAvatarModal={() => setShowUpdateAvatarModal(false)}
-                  userId={id}
+          // To be displayed by RenderUserVideoList component they need to satisty this condition
+          videosWithLang.forEach((el, i) => {
+            videosWithLang[i].audio = [];
+          });
+
+          // Create video objects from user's audio uploads
+          const videosWithAudio = [];
+          audio.forEach(({ id: audioId, title, customThumbnail }, i) => {
+            audio[i].video.audio = [
+              {
+                id: audioId,
+                title,
+                customThumbnail,
+                author: { id, displayName },
+              },
+            ];
+            videosWithAudio.push({ ...audio[i].video });
+          });
+          const videos = [...videosWithAudio, ...videosWithLang];
+          return (
+            <>
+              <Head>
+                <title key="title">Danni TV - Tài khoản</title>
+                <meta
+                  key="metaTitle"
+                  name="title"
+                  content="Danni TV - Tài khoản"
                 />
-                <Item.Group>
-                  <Item>
-                    <Icon.Group size="big">
-                      <Item.Image
-                        src={avatar}
-                        alt={displayName}
-                        size="medium"
-                      />
-                      <Icon
-                        corner="top left"
-                        name="write"
-                        bordered
-                        link
-                        onClick={() => setShowUpdateAvatarModal(true)}
-                      />
-                    </Icon.Group>
-                    {editMode ? (
-                      <UserInfoForm
-                        currentUser={currentUser}
-                        onCancelClick={() => setEditMode(false)}
-                      />
-                    ) : (
-                      <UserInfo
-                        user={currentUser}
-                        userId={currentUser.id}
-                        currentUser={currentUser}
-                        onUserInfoEditClick={() => setEditMode(true)}
-                        uploadsTotal={audio.length}
-                        me
-                      />
-                    )}
-                  </Item>
-                </Item.Group>
-              </UserProfileStyles>
-              <h1>Uploads:</h1>
-              {/* <Error error={error} />
+              </Head>
+              <Container>
+                <UserProfileStyles>
+                  <UpdateAvatarModal
+                    showUpdateAvatarModal={showUpdateAvatarModal}
+                    closeUpdateAvatarModal={() =>
+                      setShowUpdateAvatarModal(false)
+                    }
+                    userId={id}
+                  />
+                  <Item.Group>
+                    <Item>
+                      <Icon.Group size="big">
+                        <Item.Image
+                          src={avatar}
+                          alt={displayName}
+                          size="medium"
+                        />
+                        <Icon
+                          corner="top left"
+                          name="write"
+                          bordered
+                          link
+                          onClick={() => setShowUpdateAvatarModal(true)}
+                        />
+                      </Icon.Group>
+                      {editMode ? (
+                        <UserInfoForm
+                          currentUser={currentUser}
+                          onCancelClick={() => setEditMode(false)}
+                        />
+                      ) : (
+                        <UserInfo
+                          user={currentUser}
+                          userId={currentUser.id}
+                          currentUser={currentUser}
+                          onUserInfoEditClick={() => setEditMode(true)}
+                          uploadsTotal={audio.length}
+                          me
+                        />
+                      )}
+                    </Item>
+                  </Item.Group>
+                </UserProfileStyles>
+                <h1>Uploads:</h1>
+                {/* <Error error={error} />
               {loading ? <Loader active inline="centered" /> : <div></div>} */}
-              <VideoListStyles>
-                <RenderUserVideoList
-                  dataVideos={{ videos }}
-                  hideAuthor
-                  currentUser={currentUser}
-                />
-              </VideoListStyles>
-              {/* )} */}
-            </Container>
-          </>
-        );
-      }}
+                <VideoListStyles>
+                  <RenderUserVideoList
+                    dataVideos={{ videos }}
+                    hideAuthor
+                    currentUser={currentUser}
+                  />
+                </VideoListStyles>
+                {/* )} */}
+              </Container>
+            </>
+          );
+        }}
+      </>
     </>
   );
 };
