@@ -60,14 +60,13 @@ const RenderSmallVideoList = ({ dataVideos, id, audioId, fetchMore }) => {
                   <SmallVideoItem
                     key={videoId}
                     closeFullDescription={closeFullDescription}
-                    id={videoId}
                     thumbnail={originThumbnailUrl}
                     originThumbnailUrlSd={originThumbnailUrlSd}
                     duration={duration}
                     originAuthor={originAuthor}
                     title={originTitle}
                     author={addedBy}
-                    query={{ id }}
+                    query={{ id: videoId }}
                   />
                 );
               }
@@ -77,7 +76,6 @@ const RenderSmallVideoList = ({ dataVideos, id, audioId, fetchMore }) => {
                     <SmallVideoItem
                       key={el.id}
                       closeFullDescription={closeFullDescription}
-                      id={videoId}
                       thumbnail={el.customThumbnail || originThumbnailUrl}
                       originThumbnailUrlSd={originThumbnailUrlSd}
                       duration={duration}
