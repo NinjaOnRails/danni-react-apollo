@@ -122,7 +122,9 @@ const VideoInfo = ({
     //   return total + i;
     // }, 0);
     for (let i = 0; i < watchVotes.length; i += 1) {
-      watchVotes[i].type === 'UPVOTE' ? upVoteCount++ : downVoteCount++;
+      watchVotes[i].type === 'UPVOTE'
+        ? (upVoteCount += 1)
+        : (downVoteCount += 1);
     }
 
     if (currentUser) {

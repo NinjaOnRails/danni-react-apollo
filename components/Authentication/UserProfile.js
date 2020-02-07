@@ -139,7 +139,7 @@ class UserProfile extends Component {
                   <UpdateAvatarModal
                     showUpdateAvatarModal={showUpdateAvatarModal}
                     closeUpdateAvatarModal={this.closeUpdateAvatarModal}
-                    currentUser={currentUser}
+                    userId={currentUser.id}
                   />
                 )}
                 <Item.Group>

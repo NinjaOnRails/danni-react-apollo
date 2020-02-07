@@ -10,10 +10,7 @@ import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
 import { signinFields } from './fieldTypes';
 import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
-import {
-  inputChangeHandler,
-  // onFacebookLoginClick
-} from './utils';
+import { inputChangeHandler, onFacebookLoginClick } from './utils';
 import {
   useSigninMutation,
   useFacebookLoginMutation,
@@ -53,56 +50,6 @@ const closeAuthModal = ({ render }) => (
   <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
 );
 /* eslint-enable */
-
-const onFacebookLoginClick = ({
-  facebookLogin,
-  contentLanguage,
-  client,
-  data: { previousPage },
-  closeSideDrawer = null,
-  closeAuthModal = null,
-}) => {
-  FB.login(
-    async res => {
-      if (res.status === 'connected') {
-        const {
-          authResponse: { accessToken, userID },
-        } = res;
-        const { data } = await facebookLogin({
-          variables: {
-            contentLanguage,
-            accessToken,
-            facebookUserId: userID,
-          },
-        });
-        if (data) {
-          const {
-            facebookLogin: { user, firstLogin },
-          } = data;
-          if (firstLogin) {
-            trackSignUp(user);
-          } else {
-            trackSignIn(user.id);
-          }
-          if (closeSideDrawer) {
-            closeSideDrawer();
-          } else if (closeAuthModal) {
-            closeAuthModal();
-          } else {
-            Router.push(
-              localStorage.getItem('previousPage') || previousPage || '/'
-            );
-            localStorage.removeItem('previousPage');
-            client.writeData({ data: { previousPage: null } });
-          }
-        }
-      }
-    },
-    {
-      scope: 'public_profile',
-    }
-  );
-};
 
 const Signin = ({ modal }) => {
   const [signinForm, setSigninForm] = useState({

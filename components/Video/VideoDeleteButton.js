@@ -1,21 +1,44 @@
-import React, { Component } from 'react';
-import { Button, Icon, Confirm } from 'semantic-ui-react';
+import { useState } from 'react';
+import { Button, Icon, Confirm, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import Error from '../UI/ErrorMessage';
+import { useDeleteAudVidMutation } from './videoHooks';
 
-export default class VideoDeleteButton extends Component {
-  state = { openConfirm: false };
-
-  render() {
-    const { openConfirm } = this.state;
-    const { deleteAudVid, id, audioId, title } = this.props;
-
+const VideoDeleteButton = ({
+  id,
+  audioId,
+  title,
+  userId,
+  redirect,
+  contentLanguage,
+}) => {
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [deleteAudVid, { loading, error }] = useDeleteAudVidMutation({
+    contentLanguage,
+    userId,
+    redirect,
+  });
+  const onConfirmDelete = async () => {
+    setOpenConfirm(false);
+    deleteAudVid({
+      variables: { id, audioId },
+    });
+  };
+  if (error) return <Error error={error} />;
+  if (loading)
     return (
+      <Loader active inline="centered">
+        Đang xoá video...
+      </Loader>
+    );
+  return (
+    <>
       <>
         <Button
           icon
           labelPosition="left"
           color="red"
-          onClick={() => this.setState({ openConfirm: true })}
+          onClick={() => setOpenConfirm(true)}
         >
           <Icon name="trash" />
           Xoá
@@ -23,28 +46,30 @@ export default class VideoDeleteButton extends Component {
         <Confirm
           size="large"
           open={openConfirm}
-          onCancel={() => this.setState({ openConfirm: false })}
-          onConfirm={() => {
-            deleteAudVid({ variables: { id, audioId } });
-            this.setState({ openConfirm: false });
-          }}
+          onCancel={() => setOpenConfirm(false)}
+          onConfirm={onConfirmDelete}
           cancelButton="Huỷ"
           confirmButton="Xác nhận"
           content={`Xác nhận xoá Video: ${title}`}
           header="Chú ý!"
         />
       </>
-    );
-  }
-}
+    </>
+  );
+};
 
 VideoDeleteButton.propTypes = {
-  deleteAudVid: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  contentLanguage: PropTypes.array.isRequired,
   audioId: PropTypes.string,
+  redirect: PropTypes.bool,
 };
 
 VideoDeleteButton.defaultProps = {
   audioId: null,
+  redirect: false,
 };
+
+export default VideoDeleteButton;

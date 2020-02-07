@@ -96,7 +96,7 @@ class Watch extends Component {
     this.cancelCountdown();
     Router.push({
       pathname: '/watch',
-      query: { id, audioId },
+      query,
     });
   };
 
@@ -121,14 +121,14 @@ class Watch extends Component {
     if (intervalId) clearInterval(intervalId);
   };
 
-  renderVideoPlayer = allowAutoPlay => {
+  renderVideoPlayer = allowAutoplay => {
     const {
       playingFilePlayer,
       playbackRate,
       nextVidCountdown,
       showNextVideo,
     } = this.state;
-    const { video, nextVideo } = this.props;
+    const { video, nextVideo, audioId } = this.props;
     return (
       <YoutubeStyle
         onClick={() =>
@@ -189,7 +189,7 @@ class Watch extends Component {
           onStart={() => trackPlayStart(video)}
           onEnded={() => {
             trackPlayFinish(video);
-            if (allowAutoPlay) {
+            if (allowAutoplay && !audioId) {
               this.setState({
                 showNextVideo: true,
                 intervalId: setInterval(this.startCountdown, 1000),
@@ -207,7 +207,7 @@ class Watch extends Component {
     );
   };
 
-  renderFilePlayer = audio => {
+  renderFilePlayer = (audio, allowAutoplay) => {
     const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
@@ -216,6 +216,14 @@ class Watch extends Component {
           file: {
             forceAudio: true,
           },
+        }}
+        onEnded={() => {
+          if (allowAutoplay) {
+            this.setState({
+              showNextVideo: true,
+              intervalId: setInterval(this.startCountdown, 1000),
+            });
+          }
         }}
         onProgress={e => {
           this.setState({
@@ -247,7 +255,7 @@ class Watch extends Component {
               {this.renderVideoPlayer(allowAutoplay)}
               {video.audio[0] &&
                 readyYoutube &&
-                this.renderFilePlayer(video.audio)}
+                this.renderFilePlayer(video.audio, allowAutoplay)}
             </>
           );
         }}

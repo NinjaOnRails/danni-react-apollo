@@ -9,3 +9,4 @@ config/
 now.json
 bundles/
 .env.build
+.now
