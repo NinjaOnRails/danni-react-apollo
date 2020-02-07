@@ -1,14 +1,8 @@
-import { List, Image, Loader } from 'semantic-ui-react';
-import Link from 'next/link';
+import { List, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
-import {
-  VideoItemStyles,
-  ListDescriptionStyled,
-  ListHeaderStyled,
-  AuthorStyles,
-  SmallVideoListStyles,
-} from '../styles/SmallVideoListStyles';
+import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
+import SmallVideoItem from './SmallVideoItem';
 
 const renderVideoItem = (
   onVideoItemClick,
@@ -26,48 +20,19 @@ const renderVideoItem = (
   };
   if (audioId) query.audioId = audioId;
   return (
-    <List.Item key={audioId || id} onClick={() => onVideoItemClick()}>
-      <Link
-        href={{
-          pathname: '/watch',
-          query,
-        }}
-      >
-        <a>
-          <VideoItemStyles>
-            <Image
-              src={originThumbnailUrl || originThumbnailUrlSd}
-              alt={title}
-              label={{
-                color: 'black',
-                content: displayDuration,
-              }}
-            />
-            <List.Content>
-              <ListHeaderStyled>{title}</ListHeaderStyled>
-              <ListDescriptionStyled>{originAuthor}</ListDescriptionStyled>
-            </List.Content>
-          </VideoItemStyles>
-        </a>
-      </Link>
-      <AuthorStyles>
-        <Link href={{ pathname: '/user', query: { id: author.id } }}>
-          <a className="author">
-            <Image avatar src={author.avatar} />
-            {author ? author.displayName : 'deleted user'}
-          </a>
-        </Link>
-      </AuthorStyles>
-    </List.Item>
+    <SmallVideoItem
+      key={audioId || id}
+      onVideoItemClick={onVideoItemClick}
+      id={id}
+      thumbnail={originThumbnailUrl}
+      originThumbnailUrlSd={originThumbnailUrlSd}
+      duration={displayDuration}
+      originAuthor={originAuthor}
+      title={title}
+      author={author}
+      query={query}
+    />
   );
-};
-
-const formatDuration = duration => {
-  // Convert and format duration
-  const seconds = duration % 60;
-  return `${Math.round(duration / 60)}:${
-    seconds > 9 ? seconds : `0${seconds}`
-  }`;
 };
 
 const RenderSmallVideoList = ({
@@ -102,7 +67,6 @@ const RenderSmallVideoList = ({
             }
           : previousResult,
     });
-
   return (
     <InfiniteScroll
       pageStart={0}
@@ -125,7 +89,6 @@ const RenderSmallVideoList = ({
                 duration,
               },
             }) => {
-              const displayDuration = formatDuration(duration);
               if (audio.length === 0 && videoId !== id) {
                 return renderVideoItem(
                   onVideoItemClick,
@@ -133,21 +96,20 @@ const RenderSmallVideoList = ({
                   originThumbnailUrl,
                   originThumbnailUrlSd,
                   originTitle,
-                  displayDuration,
+                  duration,
                   originAuthor,
                   addedBy
                 );
               }
               return audio.map(el => {
                 if (audioId !== el.id) {
-                  if (el.customThumbnail) originThumbnailUrl = el.customThumbnail;
                   return renderVideoItem(
                     onVideoItemClick,
                     videoId,
-                    originThumbnailUrl,
+                    el.customThumbnail || originThumbnailUrl,
                     originThumbnailUrlSd,
                     el.title,
-                    displayDuration,
+                    duration,
                     originAuthor,
                     el.author,
                     el.id
