@@ -5,44 +5,9 @@ import { useCloseFullDescriptionMutation } from '../UI/uiHooks';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
 import SmallVideoItem from './SmallVideoItem';
 
-const renderVideoItem = (
-  id,
-  originThumbnailUrl,
-  originThumbnailUrlSd,
-  title,
-  displayDuration,
-  originAuthor,
-  author,
-  audioId = null
-) => {
-  const query = {
-    id,
-  };
-
+const RenderSmallVideoList = ({ dataVideos, id, audioId, fetchMore }) => {
   const [closeFullDescription] = useCloseFullDescriptionMutation();
-  if (audioId) query.audioId = audioId;
-  return (
-    <SmallVideoItem
-      key={audioId || id}
-      closeFullDescription={closeFullDescription}
-      id={id}
-      thumbnail={originThumbnailUrl}
-      originThumbnailUrlSd={originThumbnailUrlSd}
-      duration={displayDuration}
-      originAuthor={originAuthor}
-      title={title}
-      author={author}
-      query={query}
-    />
-  );
-};
 
-const RenderSmallVideoList = ({
-  dataVideos,
-  id,
-  audioId,
-  fetchMore,
-}) => {
   const loadMore = () =>
     fetchMore({
       variables: {
@@ -91,27 +56,36 @@ const RenderSmallVideoList = ({
               },
             }) => {
               if (audio.length === 0 && videoId !== id) {
-                return renderVideoItem(
-                  videoId,
-                  originThumbnailUrl,
-                  originThumbnailUrlSd,
-                  originTitle,
-                  duration,
-                  originAuthor,
-                  addedBy
+                return (
+                  <SmallVideoItem
+                    key={videoId}
+                    closeFullDescription={closeFullDescription}
+                    id={videoId}
+                    thumbnail={originThumbnailUrl}
+                    originThumbnailUrlSd={originThumbnailUrlSd}
+                    duration={duration}
+                    originAuthor={originAuthor}
+                    title={originTitle}
+                    author={addedBy}
+                    query={{ id }}
+                  />
                 );
               }
               return audio.map(el => {
                 if (audioId !== el.id) {
-                  return renderVideoItem(
-                    videoId,
-                    el.customThumbnail || originThumbnailUrl,
-                    originThumbnailUrlSd,
-                    el.title,
-                    duration,
-                    originAuthor,
-                    el.author,
-                    el.id
+                  return (
+                    <SmallVideoItem
+                      key={el.id}
+                      closeFullDescription={closeFullDescription}
+                      id={videoId}
+                      thumbnail={el.customThumbnail || originThumbnailUrl}
+                      originThumbnailUrlSd={originThumbnailUrlSd}
+                      duration={duration}
+                      originAuthor={originAuthor}
+                      title={el.title}
+                      author={el.author}
+                      query={{ id: videoId, audioId: el.id }}
+                    />
                   );
                 }
                 return null;
