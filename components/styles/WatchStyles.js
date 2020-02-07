@@ -68,7 +68,7 @@ export const YoutubeStyle = styled.div`
     transition: 0.5s ease;
     background-size: cover;
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.9);
     text-align: center;
 
     #next-text {
@@ -94,7 +94,7 @@ export const YoutubeStyle = styled.div`
     #next-count {
       font-size: 30px;
       margin: auto;
-      background-color: rgba(225, 225, 225, 0.3);
+      background-color: rgba(0, 0, 0, 0.3);
       height: 60px;
       width: 60px;
       border-radius: 50%;

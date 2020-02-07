@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { isMobile } from 'mobile-device-detect';
 import Router from 'next/router';
 import Link from 'next/link';
 import { Query } from 'react-apollo';
@@ -36,6 +37,7 @@ class Watch extends Component {
       this.youtubePlayer &&
       (id !== prevProps.id || audioId !== prevProps.audioId)
     ) {
+      if (isMobile) this.setState({ playingFilePlayer: false });
       this.setState({
         playedFilePlayer: 0,
         playedYoutube: 0,
