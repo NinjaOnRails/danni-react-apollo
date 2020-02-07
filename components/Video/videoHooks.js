@@ -14,8 +14,9 @@ import {
   UPDATE_VIDEO_MUTATION,
   UPDATE_AUDIO_MUTATION,
   VIDEO_DELETE,
-  CREATE_VIDEO_VOTE,
   CREATE_AUDIO_VOTE,
+  CREATE_VIDEO_VOTE,
+  TOGGLE_ALLOW_AUTOPLAY_MUTATION,
 } from '../../graphql/mutation';
 
 const useVideoQuery = ({ id, audioId }) => {
@@ -170,6 +171,9 @@ const useCreateAudioVoteMutation = ({ currentUser, audioId, id }) => {
   });
 };
 
+const useToggleAutoplayMutation = () => {
+  return useMutation(TOGGLE_ALLOW_AUTOPLAY_MUTATION);
+};
 export {
   useAllVideosQuery,
   useVideoQuery,
@@ -180,6 +184,7 @@ export {
   useUpdateVideoMutation,
   useDeleteVideoMutation,
   useCloudinaryAuthAudioQuery,
-  useCreateVideoVoteMutation,
   useCreateAudioVoteMutation,
+  useCreateVideoVoteMutation,
+  useToggleAutoplayMutation,
 };

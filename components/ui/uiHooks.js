@@ -7,6 +7,8 @@ import {
   ADD_CONTENT_LANGUAGE_MUTATION,
   UPDATE_CONTENT_LANGUAGE_MUTATION,
   OPEN_SIDEDRAWER_MUTATION,
+  CLOSE_FULL_DESCRIPTION_MUTATION,
+  TOGGLE_FULL_DESCRIPTION_MUTATION,
 } from '../../graphql/mutation';
 
 const useOpenAuthModalMutation = () => {
@@ -37,6 +39,14 @@ const useUpdateContentLanguageMutation = () => {
   return useMutation(UPDATE_CONTENT_LANGUAGE_MUTATION);
 };
 
+const useToggleFullDescriptionMutation = () => {
+  return useMutation(TOGGLE_FULL_DESCRIPTION_MUTATION);
+};
+
+const useCloseFullDescriptionMutation = () => {
+  return useMutation(CLOSE_FULL_DESCRIPTION_MUTATION);
+};
+
 export {
   useOpenAuthModalMutation,
   useCloseAuthModalMutation,
@@ -45,4 +55,6 @@ export {
   useToggleContentLanguageMutation,
   useAddContentLanguageMutation,
   useUpdateContentLanguageMutation,
+  useToggleFullDescriptionMutation,
+  useCloseFullDescriptionMutation,
 };

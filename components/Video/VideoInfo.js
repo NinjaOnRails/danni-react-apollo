@@ -17,7 +17,10 @@ import {
   useCurrentUserQuery,
   useLocalStateQuery,
 } from '../Authentication/authHooks';
-import { useOpenAuthModalMutation } from '../UI/uiHooks';
+import {
+  useOpenAuthModalMutation,
+  useToggleFullDescriptionMutation,
+} from '../UI/uiHooks';
 import {
   useCreateAudioVoteMutation,
   useCreateVideoVoteMutation,
@@ -34,17 +37,16 @@ const VideoInfo = ({
     vote,
   },
   url,
-  showFullDescription,
-  toggleFullDescription,
   id,
   audioId,
 }) => {
   const [descriptionOverflow, setDescriptionOverflow] = useState(false);
 
   const { currentUser } = useCurrentUserQuery();
-  const { contentLanguage } = useLocalStateQuery();
+  const { contentLanguage, showFullDescription } = useLocalStateQuery();
 
   const [openAuthModal] = useOpenAuthModalMutation();
+  const [toggleFullDescription] = useToggleFullDescriptionMutation();
   const [createAudioVote] = useCreateAudioVoteMutation({
     id,
     audioId,
@@ -115,12 +117,14 @@ const VideoInfo = ({
   let upVoteCount = 0;
   let downVoteCount = 0;
   if (watchVotes.length > 0) {
+    // voteCount = watchVotes.reduce((total, watchVote) => {
+    //   const i = watchVote.type === 'UPVOTE' ? 1 : -1;
+    //   return total + i;
+    // }, 0);
     for (let i = 0; i < watchVotes.length; i += 1) {
-      if (watchVotes[i].type === 'UPVOTE') {
-        upVoteCount += 1;
-      } else {
-        downVoteCount += 1;
-      }
+      watchVotes[i].type === 'UPVOTE'
+        ? (upVoteCount += 1)
+        : (downVoteCount += 1);
     }
 
     if (currentUser) {
@@ -129,6 +133,7 @@ const VideoInfo = ({
       );
     }
   }
+
   return (
     <VideoInfoStyles>
       <div className="basic-info">
@@ -137,29 +142,25 @@ const VideoInfo = ({
         </Header>
         {currentUser && currentUser.id === addedBy.id && (
           <div className="buttons">
-            {true && (
-              <>
-                <Link
-                  href={{
-                    pathname: '/edit',
-                    query,
-                  }}
-                >
-                  <Button icon labelPosition="left">
-                    <Icon name="write" />
-                    Sửa
-                  </Button>
-                </Link>
-                <VideoDeleteButton
-                  id={id}
-                  audioId={audioId}
-                  title={title}
-                  userId={currentUser.id}
-                  contentLanguage={contentLanguage}
-                  redirect
-                />
-              </>
-            )}
+            <Link
+              href={{
+                pathname: '/edit',
+                query,
+              }}
+            >
+              <Button icon labelPosition="left">
+                <Icon name="write" />
+                Sửa
+              </Button>
+            </Link>
+            <VideoDeleteButton
+              id={id}
+              audioId={audioId}
+              title={title}
+              userId={currentUser.id}
+              contentLanguage={contentLanguage}
+              redirect
+            />
           </div>
         )}
         <div className="views-social">
@@ -200,13 +201,13 @@ const VideoInfo = ({
               </Statistic.Label>
             </Statistic>
             {/* <Statistic size="mini" horizontal>
-                      <Statistic.Value>
-                        {audioId ? audio[0].comment.length : comment.length}
-                      </Statistic.Value>
-                      <Statistic.Label>
-                        <Icon name="comment" size="large" />
-                      </Statistic.Label>
-                    </Statistic> */}
+            <Statistic.Value>
+              {audioId ? audio[0].comment.length : comment.length}
+            </Statistic.Value>
+            <Statistic.Label>
+              <Icon name="comment" size="large" />
+            </Statistic.Label>
+          </Statistic> */}
           </div>
           <div>
             <FacebookShareButton className="fb-share-button" url={url}>
@@ -268,7 +269,7 @@ const VideoInfo = ({
         {descriptionOverflow && (
           <button
             type="button"
-            onClick={() => toggleFullDescription()}
+            onClick={toggleFullDescription}
             className="ui button"
           >
             {showFullDescription ? 'Đóng' : 'Tiếp'}
@@ -282,10 +283,8 @@ const VideoInfo = ({
 VideoInfo.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
-  url: PropTypes.string.isRequired,
-  showFullDescription: PropTypes.bool.isRequired,
-  toggleFullDescription: PropTypes.func.isRequired,
   video: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 VideoInfo.defaultProps = {

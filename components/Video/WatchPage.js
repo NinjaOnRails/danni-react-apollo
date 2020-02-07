@@ -12,17 +12,34 @@ import { WatchPageStyles } from '../styles/WatchStyles';
 import { VIDEO_QUERY } from '../../graphql/query';
 
 class WatchPage extends Component {
-  state = {
-    showFullDescription: false,
+  randomNumber = max => {
+    if (max === 0 || max === 1) {
+      return 0;
+    }
+    return Math.floor(Math.random() * Math.floor(max - 1));
   };
 
-  onVideoItemClick = () => {
-    this.setState({ showFullDescription: false, mixpanelEventsSent: [] });
-  };
-
-  toggleFullDescription = () => {
-    const { showFullDescription } = this.state;
-    this.setState({ showFullDescription: !showFullDescription });
+  randomizeNextVideo = videos => {
+    const { id } = this.props;
+    const max = videos.length;
+    let nextVideo = { id };
+    let nextAudio;
+    while (nextVideo.id === id) {
+      const randomVideoIndex = this.randomNumber(max);
+      const randomAudioIndex = this.randomNumber(
+        videos[randomVideoIndex].node.audio.length
+      );
+      nextVideo = videos[randomVideoIndex].node;
+      nextAudio = nextVideo.audio[randomAudioIndex];
+    }
+    return {
+      id: nextVideo.id,
+      audioId: nextAudio && nextAudio.id,
+      title: (nextAudio && nextAudio.title) || nextVideo.originTitle,
+      thumbnail:
+        (nextAudio && nextAudio.customThumbnail) ||
+        nextVideo.originThumbnailUrl,
+    };
   };
 
   render() {
@@ -32,8 +49,8 @@ class WatchPage extends Component {
       payload: { error, loading, data },
       client,
       audioId,
+      videos,
     } = this.props;
-    const { showFullDescription } = this.state;
     const url = `https://www.danni.tv${asPath}
     `;
     if (error) return <Error error={error} />;
@@ -58,14 +75,15 @@ class WatchPage extends Component {
                     video={video || initialVideoData}
                     id={id}
                     audioId={audioId}
+                    nextVideo={this.randomizeNextVideo(
+                      videos.data.videosConnection.edges
+                    )}
                   />
                   <Container fluid className="tablet-padding">
                     <VideoInfo
                       {...this.props}
                       video={video || initialVideoData}
                       url={url}
-                      showFullDescription={showFullDescription}
-                      toggleFullDescription={this.toggleFullDescription}
                     />
                     <CommentSection
                       videoId={id}
@@ -80,7 +98,6 @@ class WatchPage extends Component {
                   <SmallVideoList
                     {...this.props}
                     currentWatchingLanguage={currentWatchingLanguage}
-                    onVideoItemClick={() => this.onVideoItemClick(client)}
                   />
                 </div>
               </WatchPageStyles>

@@ -10,7 +10,7 @@ import {
 import { formatDuration } from './utils';
 
 const VideoItem = ({
-  onVideoItemClick,
+  closeFullDescription,
   thumbnail,
   originThumbnailUrlSd,
   duration,
@@ -19,7 +19,7 @@ const VideoItem = ({
   author,
   query,
 }) => (
-  <List.Item onClick={() => onVideoItemClick()}>
+  <List.Item onClick={() => closeFullDescription()}>
     <Link
       href={{
         pathname: '/watch',
@@ -55,7 +55,7 @@ const VideoItem = ({
 );
 
 VideoItem.propTypes = {
-  onVideoItemClick: PropTypes.func.isRequired,
+  closeFullDescription: PropTypes.func.isRequired,
   thumbnail: PropTypes.string.isRequired,
   originThumbnailUrlSd: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,

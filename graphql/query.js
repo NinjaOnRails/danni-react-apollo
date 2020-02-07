@@ -291,6 +291,8 @@ const LOCAL_STATE_QUERY = gql`
     showAuthModal @client
     previousPage @client
     contentLanguage @client
+    showFullDescription @client
+    allowAutoplay @client
   }
 `;
 

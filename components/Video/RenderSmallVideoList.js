@@ -1,11 +1,11 @@
 import { List, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
+import { useCloseFullDescriptionMutation } from '../UI/uiHooks';
 import { SmallVideoListStyles } from '../styles/SmallVideoListStyles';
 import SmallVideoItem from './SmallVideoItem';
 
 const renderVideoItem = (
-  onVideoItemClick,
   id,
   originThumbnailUrl,
   originThumbnailUrlSd,
@@ -18,11 +18,13 @@ const renderVideoItem = (
   const query = {
     id,
   };
+
+  const [closeFullDescription] = useCloseFullDescriptionMutation();
   if (audioId) query.audioId = audioId;
   return (
     <SmallVideoItem
       key={audioId || id}
-      onVideoItemClick={onVideoItemClick}
+      closeFullDescription={closeFullDescription}
       id={id}
       thumbnail={originThumbnailUrl}
       originThumbnailUrlSd={originThumbnailUrlSd}
@@ -39,7 +41,6 @@ const RenderSmallVideoList = ({
   dataVideos,
   id,
   audioId,
-  onVideoItemClick,
   fetchMore,
 }) => {
   const loadMore = () =>
@@ -91,7 +92,6 @@ const RenderSmallVideoList = ({
             }) => {
               if (audio.length === 0 && videoId !== id) {
                 return renderVideoItem(
-                  onVideoItemClick,
                   videoId,
                   originThumbnailUrl,
                   originThumbnailUrlSd,
@@ -104,7 +104,6 @@ const RenderSmallVideoList = ({
               return audio.map(el => {
                 if (audioId !== el.id) {
                   return renderVideoItem(
-                    onVideoItemClick,
                     videoId,
                     el.customThumbnail || originThumbnailUrl,
                     originThumbnailUrlSd,
@@ -128,7 +127,6 @@ const RenderSmallVideoList = ({
 RenderSmallVideoList.propTypes = {
   id: PropTypes.string.isRequired,
   audioId: PropTypes.string,
-  onVideoItemClick: PropTypes.func.isRequired,
   dataVideos: PropTypes.object.isRequired,
 };
 
