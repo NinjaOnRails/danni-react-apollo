@@ -37,7 +37,11 @@ class Watch extends Component {
       this.youtubePlayer &&
       (id !== prevProps.id || audioId !== prevProps.audioId)
     ) {
-      if (isMobile) this.setState({ playingFilePlayer: false });
+      if (isMobile) {
+        this.setState({ playingFilePlayer: false });
+      } else {
+        this.setState({ playingFilePlayer: true });
+      }
       this.setState({
         playedFilePlayer: 0,
         playedYoutube: 0,
