@@ -231,6 +231,9 @@ class Watch extends Component {
             });
           }
         }}
+        onPlay={() => {
+          this.cancelCountdown();
+        }}
         onProgress={e => {
           this.setState({
             playedFilePlayer: e.playedSeconds,
