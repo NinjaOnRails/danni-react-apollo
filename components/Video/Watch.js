@@ -17,7 +17,7 @@ import { LOCAL_STATE_QUERY } from '../../graphql/query';
 
 class Watch extends Component {
   state = {
-    playingFilePlayer: false,
+    playingFilePlayer: !isMobile,
     playedYoutube: 0,
     playedFilePlayer: 0,
     readyYoutube: false,
@@ -39,6 +39,7 @@ class Watch extends Component {
     ) {
       if (isMobile) this.setState({ playingFilePlayer: false });
       this.setState({
+        playingFilePlayer: !isMobile,
         playedFilePlayer: 0,
         playedYoutube: 0,
         readyYoutube: false,
@@ -191,7 +192,10 @@ class Watch extends Component {
           onStart={() => trackPlayStart(video)}
           onEnded={() => {
             trackPlayFinish(video);
-            if (allowAutoplay && !audioId) {
+            if (
+              allowAutoplay &&
+              (!audioId || video.audio[0].duration > video.duration)
+            ) {
               this.setState({
                 showNextVideo: true,
                 intervalId: setInterval(this.startCountdown, 1000),
@@ -209,7 +213,7 @@ class Watch extends Component {
     );
   };
 
-  renderFilePlayer = (audio, allowAutoplay) => {
+  renderFilePlayer = (audio, allowAutoplay, videoDuration) => {
     const { playingFilePlayer, playbackRate } = this.state;
     return (
       <FilePlayer
@@ -220,7 +224,7 @@ class Watch extends Component {
           },
         }}
         onEnded={() => {
-          if (allowAutoplay) {
+          if (allowAutoplay && audio[0].duration <= videoDuration) {
             this.setState({
               showNextVideo: true,
               intervalId: setInterval(this.startCountdown, 1000),
@@ -257,7 +261,11 @@ class Watch extends Component {
               {this.renderVideoPlayer(allowAutoplay)}
               {video.audio[0] &&
                 readyYoutube &&
-                this.renderFilePlayer(video.audio, allowAutoplay)}
+                this.renderFilePlayer(
+                  video.audio,
+                  allowAutoplay,
+                  video.duration
+                )}
             </>
           );
         }}
