@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Progress } from 'semantic-ui-react';
 import { YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,
@@ -142,10 +142,17 @@ class Watch extends Component {
         nextThumbnail={nextVideo.thumbnail}
         showNextVideo={nextVidCountdown === 0}
       >
-        {showNextVideo && (
+        {/* {showNextVideo && ( */}
           <div className="next-video-overlay">
             <h4 id="next-text">Tiếp theo:</h4>
-            <p id="next-title">{nextVideo.title}</p>
+
+            <p id="next-title">
+              {/* {nextVideo.title} */}
+              67:14POP LATINO MIX 2019 // Lo Mejor de POP Latino 2019 with Luis
+              Fonsi Sebastián Yatra Nicky Jam Maluma POP LATINO MIX 2019 // Lo
+              Mejor de POP Latino 2019 with Luis Fonsi Sebastián Yatra Nicky Jam
+              Maluma Chill Club
+            </p>
             <div id="thumb-count">
               <Link
                 href={`/watch?id=${nextVideo.id}${
@@ -160,19 +167,19 @@ class Watch extends Component {
                   />
                 </a>
               </Link>
-              <div id="next-count">{nextVidCountdown}</div>
+              {/* <div id="next-count">{nextVidCountdown}</div> */}
             </div>
             <div id="next-actions">
               <Button onClick={this.cancelCountdown}>
                 <Icon name="cancel" /> Huỷ
               </Button>
-
               <Button onClick={this.onNextVideoClick}>
+                <Progress total={5} value={5 - nextVidCountdown} color="blue" />
                 <Icon name="step forward" /> Xem Tiếp
               </Button>
             </div>
           </div>
-        )}
+        {/* )} */}
 
         <ReactPlayer
           className="youtube-player"
