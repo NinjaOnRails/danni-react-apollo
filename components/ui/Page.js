@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Query } from 'react-apollo';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
 import { adopt } from 'react-adopt';
@@ -7,9 +8,10 @@ import Header from './Header';
 import Footer, { pagesWithoutFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
 // import SideDrawer from './SemanticSidebar';
-import AuthModal, { localData } from '../Authentication/AuthModal';
+import AuthModal from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 import MobileNav from './Mobile/MobileNav';
+import { LOCAL_STATE_QUERY } from '../../graphql/query';
 
 const defaultTheme = {
   white: ' #fff',
@@ -86,6 +88,12 @@ const GlobalStyle = createGlobalStyle`
     bottom: 50px !important;
   }
 `;
+
+/* eslint-disable */
+const localData = ({ render }) => (
+  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
+);
+/* eslint-enable */
 
 const Composed = adopt({
   localData,

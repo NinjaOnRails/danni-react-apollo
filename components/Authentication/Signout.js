@@ -1,15 +1,6 @@
 import { ApolloConsumer } from 'react-apollo';
-import { CURRENT_USER_QUERY } from '../../graphql/query';
 import { useSignoutMutation } from './authHooks';
-// import { onSignout } from './utils';
-
-const onSignout = async ({ signout, client }) => {
-  await signout();
-  localStorage.clear();
-  await client.resetStore();
-  if (FB && FB.getAccessToken()) FB.logout();
-  return client.query({ query: CURRENT_USER_QUERY });
-};
+import { onSignout } from './utils';
 
 const Signout = () => {
   const [signout] = useSignoutMutation();

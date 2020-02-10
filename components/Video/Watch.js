@@ -142,17 +142,11 @@ class Watch extends Component {
         nextThumbnail={nextVideo.thumbnail}
         showNextVideo={nextVidCountdown === 0}
       >
-        {/* {showNextVideo && ( */}
+        {showNextVideo && (
           <div className="next-video-overlay">
             <h4 id="next-text">Tiếp theo:</h4>
 
-            <p id="next-title">
-              {/* {nextVideo.title} */}
-              67:14POP LATINO MIX 2019 // Lo Mejor de POP Latino 2019 with Luis
-              Fonsi Sebastián Yatra Nicky Jam Maluma POP LATINO MIX 2019 // Lo
-              Mejor de POP Latino 2019 with Luis Fonsi Sebastián Yatra Nicky Jam
-              Maluma Chill Club
-            </p>
+            <p id="next-title">{nextVideo.title}</p>
             <div id="thumb-count">
               <Link
                 href={`/watch?id=${nextVideo.id}${
@@ -167,7 +161,6 @@ class Watch extends Component {
                   />
                 </a>
               </Link>
-              {/* <div id="next-count">{nextVidCountdown}</div> */}
             </div>
             <div id="next-actions">
               <Button onClick={this.cancelCountdown}>
@@ -179,11 +172,10 @@ class Watch extends Component {
               </Button>
             </div>
           </div>
-        {/* )} */}
+        )}
 
         <ReactPlayer
           className="youtube-player"
-          // url="https://www.facebook.com/NasDailyVietnamese/videos/457978568180650"
           url={`https://www.youtube.com/embed/${video.originId}`}
           width="100%"
           height="100%"

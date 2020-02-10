@@ -3,53 +3,20 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import { ApolloConsumer, Mutation } from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import { Button, Icon, Loader, Header } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
 import { signinFields } from './fieldTypes';
-import { trackSignIn, trackSignUp } from '../../lib/mixpanel';
+import { trackSignIn } from '../../lib/mixpanel';
 import { inputChangeHandler, onFacebookLoginClick } from './utils';
 import {
   useSigninMutation,
   useFacebookLoginMutation,
   useLocalStateQuery,
 } from './authHooks';
-import { CURRENT_USER_QUERY } from '../../graphql/query';
-import {
-  CLOSE_AUTH_MODAL_MUTATION,
-  FACEBOOK_LOGIN_MUTATION,
-  SIGNIN_MUTATION,
-} from '../../graphql/mutation';
 import { useCloseAuthModalMutation } from '../UI/uiHooks';
-
-/* eslint-disable */
-const signinMutation = ({ render, variables }) => (
-  <Mutation
-    mutation={SIGNIN_MUTATION}
-    variables={variables}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
-    {(signin, signinResult) => render({ signin, signinResult })}
-  </Mutation>
-);
-
-const facebookLoginMutation = ({ render }) => (
-  <Mutation
-    mutation={FACEBOOK_LOGIN_MUTATION}
-    refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-  >
-    {(facebookLogin, facebookLoginResult) =>
-      render({ facebookLogin, facebookLoginResult })
-    }
-  </Mutation>
-);
-
-const closeAuthModal = ({ render }) => (
-  <Mutation mutation={CLOSE_AUTH_MODAL_MUTATION}>{render}</Mutation>
-);
-/* eslint-enable */
 
 const Signin = ({ modal }) => {
   const [signinForm, setSigninForm] = useState({
@@ -196,9 +163,3 @@ Signin.defaultProps = {
 };
 
 export default Signin;
-export {
-  onFacebookLoginClick,
-  facebookLoginMutation,
-  signinMutation,
-  closeAuthModal,
-};

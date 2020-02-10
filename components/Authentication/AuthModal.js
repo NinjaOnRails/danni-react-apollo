@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Query } from 'react-apollo';
 import { Icon } from 'semantic-ui-react';
 import Signin from './Signin';
 import Signup from './Signup';
@@ -7,13 +6,6 @@ import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
 import { useCurrentUserQuery, useLocalStateQuery } from './authHooks';
 import { useCloseAuthModalMutation } from '../UI/uiHooks';
-import { LOCAL_STATE_QUERY } from '../../graphql/query';
-
-/* eslint-disable */
-const localData = ({ render }) => (
-  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
-);
-/* eslint-enable */
 
 const AuthModal = () => {
   const [mode, setMode] = useState('signup');
@@ -60,5 +52,3 @@ const AuthModal = () => {
 };
 
 export default AuthModal;
-
-export { localData };

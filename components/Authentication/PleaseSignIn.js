@@ -1,17 +1,11 @@
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { ApolloConsumer, Mutation } from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import { Loader, Message } from 'semantic-ui-react';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import Signin from './Signin';
 import { isBrowser } from '../../lib/withApolloClient';
 import { useCurrentUserQuery } from './authHooks';
-import { OPEN_AUTH_MODAL_MUTATION } from '../../graphql/mutation';
-/* eslint-disable */
-const openAuthModal = ({ render }) => (
-  <Mutation mutation={OPEN_AUTH_MODAL_MUTATION}>{render}</Mutation>
-);
-/* eslint-enable */
 
 const PleaseSignIn = ({ action, modal, children }) => {
   const router = useRouter();
@@ -62,4 +56,3 @@ PleaseSignIn.defaultProps = {
 };
 
 export default PleaseSignIn;
-export { openAuthModal };
