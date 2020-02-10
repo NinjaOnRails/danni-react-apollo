@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import FilePlayer from 'react-player/lib/players/FilePlayer';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Progress } from 'semantic-ui-react';
 import { YoutubeStyle } from '../styles/WatchStyles';
 import {
   trackPlayStart,
@@ -145,6 +145,7 @@ class Watch extends Component {
         {showNextVideo && (
           <div className="next-video-overlay">
             <h4 id="next-text">Tiếp theo:</h4>
+
             <p id="next-title">{nextVideo.title}</p>
             <div id="thumb-count">
               <Link
@@ -160,14 +161,13 @@ class Watch extends Component {
                   />
                 </a>
               </Link>
-              <div id="next-count">{nextVidCountdown}</div>
             </div>
             <div id="next-actions">
               <Button onClick={this.cancelCountdown}>
                 <Icon name="cancel" /> Huỷ
               </Button>
-
               <Button onClick={this.onNextVideoClick}>
+                <Progress total={5} value={5 - nextVidCountdown} color="blue" />
                 <Icon name="step forward" /> Xem Tiếp
               </Button>
             </div>
@@ -176,7 +176,6 @@ class Watch extends Component {
 
         <ReactPlayer
           className="youtube-player"
-          // url="https://www.facebook.com/NasDailyVietnamese/videos/457978568180650"
           url={`https://www.youtube.com/embed/${video.originId}`}
           width="100%"
           height="100%"

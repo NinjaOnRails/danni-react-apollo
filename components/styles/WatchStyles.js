@@ -28,12 +28,10 @@ export const WatchPageStyles = styled.div`
 
   @media (min-width: 1200px) {
     grid-template-columns: auto 402px;
-
+    margin: 0 24px;
     .main {
       padding-right: 24px;
     }
-
-    margin: 0 24px;
   }
 `;
 
@@ -50,7 +48,6 @@ export const YoutubeStyle = styled.div`
     top: 0;
     left: 0;
     z-index: 1;
-    /* background: red; */
     @media (min-width: 793px) {
       position: absolute;
       height: 85%;
@@ -58,8 +55,6 @@ export const YoutubeStyle = styled.div`
   }
 
   .next-video-overlay {
-    /* display: flex;
-    justify-content: center; */
     height: 90%;
     font-family: ${props => props.theme.font};
     color: white;
@@ -78,6 +73,7 @@ export const YoutubeStyle = styled.div`
       z-index: 801;
       margin: 0;
     }
+
     #next-title {
       font-size: 25px;
       margin: auto;
@@ -124,9 +120,22 @@ export const YoutubeStyle = styled.div`
       .ui.buttons .button,
       .ui.buttons .or {
         font-size: 1.5rem;
+        position: relative;
       }
     }
-
+    .ui.progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      z-index: -1;
+      .bar {
+        height: 100%;
+        min-width: 0;
+      }
+    }
     @media (max-width: 479px) {
       #next-text {
         font-size: 15px;
@@ -144,7 +153,6 @@ export const YoutubeStyle = styled.div`
         max-height: 75px;
       }
       #next-actions {
-        /* margin-top: 10px; */
         .ui.button,
         .ui.buttons .button,
         .ui.buttons .or {
@@ -153,16 +161,6 @@ export const YoutubeStyle = styled.div`
       }
     }
   }
-
-  /* .next-video-overlay:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-  } */
 
   .youtube-player {
     position: absolute;
