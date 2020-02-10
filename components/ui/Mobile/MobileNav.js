@@ -1,48 +1,7 @@
-import { useState } from 'react';
 import { Menu, Icon } from 'semantic-ui-react';
 import Link from 'next/link';
-import styled from 'styled-components';
-import { useToggleSideDrawerMutation } from '../uiHooks';
-
-const StyledNav = styled.div`
-  .ui.menu {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    overflow: hidden;
-    background-color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 48px;
-    z-index: 2;
-    border-top: 1px solid grey;
-    border-radius: 0;
-    .item {
-      padding-right: 0.7em;
-      padding-left: 0.7em;
-    }
-  }
-  .ui.labeled.icon.menu .item {
-    width: 20%;
-  }
-  i.large.icon,
-  i.large.icons {
-    margin: 0 auto 0.5rem;
-    font-size: 1.71428571em;
-  }
-
-  @media (min-width: 639px) {
-    display: none;
-  }
-  @media (max-width: 361px) {
-    .ui.menu .item {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-`;
+import { useOpenSideDrawerMutation } from '../uiHooks';
+import { StyledNav } from '../../styles/MobileUiStyles';
 
 const sidebarItems = [
   { linkName: 'Trang Chủ', link: '/', icon: 'home' },
@@ -52,18 +11,13 @@ const sidebarItems = [
 ];
 
 const MobileNav = () => {
-  const [activeItem, setActiveItem] = useState('home');
-  const [toggleSideDrawer] = useToggleSideDrawerMutation();
+  const [openSideDrawer] = useOpenSideDrawerMutation();
   return (
     <StyledNav>
       <Menu icon="labeled" borderless>
         {sidebarItems.map(({ linkName, link, icon, miniIcon }) => (
           <Link href={link} key={icon}>
-            <Menu.Item
-              name={icon}
-              // active={activeItem === icon}
-              // onClick={() => setActiveItem(icon)}
-            >
+            <Menu.Item name={icon}>
               <Icon.Group size="large">
                 <Icon name={icon} />
                 {miniIcon && <Icon color="grey" name="plus" size="tiny" />}
@@ -74,7 +28,7 @@ const MobileNav = () => {
           </Link>
         ))}
 
-        <Menu.Item onClick={toggleSideDrawer}>
+        <Menu.Item onClick={openSideDrawer}>
           <Icon name="bars" size="large" />
           Menu
         </Menu.Item>
