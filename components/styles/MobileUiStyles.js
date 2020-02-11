@@ -73,19 +73,42 @@ export const StyledMobileSearch = styled.div`
   }
 `;
 
-export const DrawerToggleStyles = styled.div`
-  /* width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: auto 0;
-  i.icon {
-    margin: 0;
+export const StyledNav = styled.div`
+  .ui.menu {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    z-index: 2;
+    border-top: 1px solid grey;
+    border-radius: 0;
+    .item {
+      padding-right: 0.7em;
+      padding-left: 0.7em;
+    }
+  }
+  .ui.labeled.icon.menu .item {
+    width: 20%;
   }
   i.large.icon,
   i.large.icons {
-    font-size: 2em;
+    margin: 0 auto 0.5rem;
+    font-size: 1.71428571em;
   }
-  @media (min-width: 640px) {
+
+  @media (min-width: 639px) {
     display: none;
-  } */
+  }
+  @media (max-width: 361px) {
+    .ui.menu .item {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 `;

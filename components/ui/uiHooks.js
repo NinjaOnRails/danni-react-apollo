@@ -23,7 +23,7 @@ const useCloseSideDrawerMutation = () => {
   return useMutation(CLOSE_SIDEDRAWER_MUTATION);
 };
 
-const useToggleSideDrawerMutation = () => {
+const useOpenSideDrawerMutation = () => {
   return useMutation(OPEN_SIDEDRAWER_MUTATION);
 };
 
@@ -50,7 +50,7 @@ const useCloseFullDescriptionMutation = () => {
 export {
   useOpenAuthModalMutation,
   useCloseAuthModalMutation,
-  useToggleSideDrawerMutation,
+  useOpenSideDrawerMutation,
   useCloseSideDrawerMutation,
   useToggleContentLanguageMutation,
   useAddContentLanguageMutation,
