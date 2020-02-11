@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'semantic-ui-react';
 import Signin from './Signin';
 import Signup from './Signup';
 import Backdrop from '../UI/Mobile/Backdrop';
 import StyledModal from '../styles/AuthModalStyles';
-import { useCurrentUserQuery, useLocalStateQuery } from './authHooks';
+import { useCurrentUserQuery } from './authHooks';
 import { useCloseAuthModalMutation } from '../UI/uiHooks';
 
-const AuthModal = () => {
+const AuthModal = ({ showAuthModal }) => {
   const [mode, setMode] = useState('signup');
-  const { showAuthModal } = useLocalStateQuery();
   const [closeAuthModal] = useCloseAuthModalMutation();
   const { currentUser } = useCurrentUserQuery();
 
@@ -49,6 +49,9 @@ const AuthModal = () => {
       </div>
     </StyledModal>
   );
+};
+AuthModal.propTypes = {
+  showAuthModal: PropTypes.bool.isRequired,
 };
 
 export default AuthModal;
