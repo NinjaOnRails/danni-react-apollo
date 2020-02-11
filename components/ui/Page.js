@@ -116,7 +116,9 @@ class Page extends Component {
                 {/* <GDPR /> */}
                 <Header />
                 <SideDrawer />
-                {data.showAuthModal && <AuthModal />}
+                {data.showAuthModal && (
+                  <AuthModal showAuthModal={data.showAuthModal} />
+                )}
                 <Inner route={route}>{children}</Inner>
                 <MobileNav />
                 {!pagesWithoutFooter.includes(route) && <Footer />}

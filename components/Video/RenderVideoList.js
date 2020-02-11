@@ -10,38 +10,6 @@ const RenderVideoList = ({
   currentUser,
   fetchMore,
 }) => {
-  const renderVideoItem = (
-    id,
-    originThumbnailUrl,
-    originThumbnailUrlSd,
-    title,
-    displayDuration,
-    originAuthor,
-    author,
-    audioId = null
-  ) => {
-    const query = {
-      id,
-    };
-    if (audioId) query.audioId = audioId;
-
-    return (
-      <VideoItem
-        key={id}
-        id={id}
-        thumbnail={originThumbnailUrl}
-        originThumbnailUrlSd={originThumbnailUrlSd}
-        title={title}
-        duration={displayDuration}
-        originAuthor={originAuthor}
-        author={author}
-        hideAuthor={hideAuthor}
-        currentUser={currentUser}
-        query={query}
-      />
-    );
-  };
-
   const loadMore = () =>
     fetchMore({
       variables: {
@@ -91,27 +59,38 @@ const RenderVideoList = ({
             },
           }) => (
             <Fragment key={id}>
-              {language &&
-                renderVideoItem(
-                  id,
-                  originThumbnailUrl,
-                  originThumbnailUrlSd,
-                  originTitle,
-                  duration,
-                  originAuthor,
-                  addedBy
-                )}
+              {language && (
+                <VideoItem
+                  key={id}
+                  id={id}
+                  thumbnail={originThumbnailUrl}
+                  originThumbnailUrlSd={originThumbnailUrlSd}
+                  title={originTitle}
+                  duration={duration}
+                  originAuthor={originAuthor}
+                  author={addedBy}
+                  hideAuthor={hideAuthor}
+                  currentUser={currentUser}
+                  query={{ id }}
+                />
+              )}
               {audio.length !== 0 &&
                 audio.map(({ title, id: audioId, author, customThumbnail }) => {
-                  return renderVideoItem(
-                    id,
-                    customThumbnail || originThumbnailUrl,
-                    originThumbnailUrlSd,
-                    title,
-                    duration,
-                    originAuthor,
-                    author,
-                    audioId
+                  return (
+                    <VideoItem
+                      key={audioId}
+                      id={id}
+                      audioId={audioId}
+                      thumbnail={customThumbnail || originThumbnailUrl}
+                      originThumbnailUrlSd={originThumbnailUrlSd}
+                      title={title}
+                      duration={duration}
+                      originAuthor={originAuthor}
+                      author={author}
+                      hideAuthor={hideAuthor}
+                      currentUser={currentUser}
+                      query={{ id, audioId }}
+                    />
                   );
                 })}
             </Fragment>
