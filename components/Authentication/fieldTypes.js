@@ -47,42 +47,79 @@ const requestResetFields = {
 
 const resetFields = {
   password: {
-    ...signinFields.password,
     inputConfig: {
-      ...signinFields.password.inputConfig,
       label: 'Mật khẩu mới',
+      type: 'password',
+      name: 'password',
     },
+    validation: {
+      required: true,
+      minLength: 6,
+    },
+    modified: false,
+    valid: false,
+    value: '',
   },
   confirmPassword: {
-    ...signinFields.password,
     inputConfig: {
       label: 'Lặp lại m/k mới',
       type: 'password',
       name: 'confirmPassword',
     },
+    validation: {
+      required: true,
+      minLength: 6,
+    },
+    modified: false,
+    valid: false,
+    value: '',
   },
 };
 
 const userPasswordFields = {
   password: {
-    ...resetFields.password,
+    inputConfig: {
+      label: 'Mật khẩu cũ',
+      type: 'password',
+      name: 'password',
+    },
     validation: {
       required: true,
     },
-    inputConfig: {
-      ...resetFields.password.inputConfig,
-      label: 'Mật khẩu cũ',
-    },
+    modified: false,
+    valid: false,
+    value: '',
   },
   newPassword: {
-    ...resetFields.password,
     inputConfig: {
-      ...resetFields.password.inputConfig,
       name: 'newPassword',
+      label: 'Mật khẩu mới',
+      type: 'password',
     },
+    validation: {
+      required: true,
+      minLength: 6,
+    },
+    modified: false,
+    valid: false,
+    value: '',
     mustMatch: true,
   },
-  confirmPassword: { ...resetFields.confirmPassword, mustMatch: true },
+  confirmPassword: {
+    inputConfig: {
+      label: 'Lặp lại m/k mới',
+      type: 'password',
+      name: 'confirmPassword',
+    },
+    validation: {
+      required: true,
+      minLength: 6,
+    },
+    modified: false,
+    valid: false,
+    value: '',
+    mustMatch: true,
+  },
 };
 
 const userInfoFields = {

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { withRouter } from 'next/router';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Header } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
 import AuthForm from './AuthenticationForm';
@@ -72,7 +72,9 @@ const Reset = ({ router }) => {
         />
       </Head>
       <Form method="post" onSubmit={onSubmit}>
-        <p className="auth-title">Tạo mật khẩu mới</p>
+        <Header as="h1" textAlign="center">
+          Tạo mật khẩu mới
+        </Header>
         <fieldset disabled={loading} aria-busy={loading}>
           <Error error={error} />
           <Error error={passwordsMatch} />
