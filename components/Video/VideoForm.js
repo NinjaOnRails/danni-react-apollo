@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { Form, Button, Icon, Loader } from 'semantic-ui-react';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import PropTypes from 'prop-types';
@@ -7,14 +7,17 @@ import youtube from '../../lib/youtube';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import Error from '../UI/ErrorMessage';
 
-export default class VideoForm extends Component {
-  state = {
-    fetchingYoutube: false,
-    error: null,
-  };
+export default function VideoForm({
+  language,
+  youtubeId,
+  source,
+  setAddVideoState,
+  videoValid,
+}) {
+  const [fetchingYoutube, setFetchingYoutube] = useState(false);
+  const [error, setError] = useState(null);
 
-  handleChange = (e, { name, value }) => {
-    const { setAddVideoState } = this.props;
+  const handleChange = (e, { name, value }) => {
     // Check video source input to refetch preview if necessary
     if (name === 'language') {
       setAddVideoState({ language: value });
@@ -25,11 +28,11 @@ export default class VideoForm extends Component {
         videoValid: false,
         source: value,
       });
-      if (value.length >= 11) this.onSourceFill(value);
+      if (value.length >= 11) onSourceFill(value);
     }
   };
 
-  onSourceFill = source => {
+  const onSourceFill = () => {
     // Check if source is YouTube, extract ID from it and fetch data
     const isYouTube = isYouTubeSource(source);
     let originId;
@@ -39,66 +42,54 @@ export default class VideoForm extends Component {
     } else if (source.length === youtubeIdLength) {
       originId = source;
     } else {
-      return this.setState({
-        error: { message: 'Thông tin không hợp lệ' },
-      });
+      return setError({ error: { message: 'Thông tin không hợp lệ' } });
     }
 
-    return this.fetchYoutube(originId);
+    return fetchYoutube(originId);
   };
 
-  fetchYoutube = async id => {
-    const { setAddVideoState } = this.props;
+  const fetchYoutube = async () => {
     // Fetch data from Youtube for info preview
     try {
-      this.setState({ fetchingYoutube: true });
+      setFetchingYoutube(true);
       const res = await youtube.get('/videos', {
         params: {
-          id,
+          id: youtubeId,
           part: 'snippet',
           key: process.env.YOUTUBE_API_KEY,
         },
       });
-      this.setState({ fetchingYoutube: false, error: null });
+      setFetchingYoutube(false);
+      setError(null);
       setAddVideoState({
         originTags: res.data.items[0].snippet.tags,
-        youtubeId: id,
+        youtubeId,
       });
     } catch (err) {
-      this.setState({
+      setError({
         error: { message: 'Lỗi mạng hoặc sai YouTube ID' },
       });
     }
   };
 
-  onButtonClick = () => {
-    const { videoValid, setAddVideoState } = this.props;
+  const onButtonClick = () => {
     if (videoValid) {
       setAddVideoState({ activeStep: 'audio', videoValid: false });
     } else {
-      this.setState({
+      setError({
         error: { message: 'Phải có YouTube Video hợp lệ để tiếp tục' },
       });
     }
   };
 
-  render() {
-    const {
-      language,
-      youtubeId,
-      source,
-      setAddVideoState,
-      videoValid,
-    } = this.props;
-    const { fetchingYoutube, error } = this.state;
-
-    return (
+  return (
+    <>
       <>
         <Form.Dropdown
           label="Ngôn ngữ thuyết minh"
           selection
           options={flagOptions}
-          onChange={this.handleChange}
+          onChange={handleChange}
           value={language}
           name="language"
         />
@@ -106,7 +97,7 @@ export default class VideoForm extends Component {
           label="YouTube ID hoặc đường link (URL)  "
           placeholder="36A5bOSP334 hoặc www.youtube.com/watch?v=36A5bOSP334"
           value={source}
-          onChange={this.handleChange}
+          onChange={handleChange}
           name="source"
         />
         <Loader
@@ -133,15 +124,15 @@ export default class VideoForm extends Component {
             icon
             labelPosition="right"
             primary
-            onClick={() => this.onButtonClick()}
+            onClick={onButtonClick}
           >
             Tiếp tục
             <Icon name="right arrow" />
           </Button>
         </div>
       </>
-    );
-  }
+    </>
+  );
 }
 
 VideoForm.propTypes = {
