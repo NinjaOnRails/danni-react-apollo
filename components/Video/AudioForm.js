@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, createRef } from 'react';
 import {
   Button,
   Form,
@@ -17,6 +17,8 @@ import Error from '../UI/ErrorMessage';
 import { CLOUDINARY_AUTH_AUDIO } from '../../graphql/query';
 import { user } from '../UI/ContentLanguage';
 import { uploadAudio } from '../../lib/cloudinaryUpload';
+import { useCloudinaryAuthAudioQuery } from './videoHooks';
+import { useCurrentUserQuery } from '../Authentication/authHooks';
 
 /* eslint-disable */
 const cloudinaryAuthAudioQuery = ({ youtubeId, language, render }) => (
@@ -37,29 +39,45 @@ const Composed = adopt({
   user,
 });
 
-export default class AudioForm extends Component {
-  state = {
-    uploadProgress: 0,
-    startingUpload: false,
-    uploadError: false,
-    error: null,
-  };
+export default function AudioForm({
+  setAddVideoState,
+  isAudioSource,
+  audioUrl,
+  language,
+  youtubeId,
+  secureUrl,
+  onDeleteFileSubmit,
+  deleteToken,
+  editVideo,
+}) {
+  const [startingUpload, setStartingUpload] = useState(false);
+  const [uploadError, setUploadError] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [error, setError] = useState(null);
 
-  fileInputRef = React.createRef();
+  const fileInputRef = createRef();
 
-  onUploadFileSubmit = async (cloudinaryAuthAudio, id, e) => {
-    const { setAddVideoState, audioUrl, youtubeId, language } = this.props;
+  const { loading, error: queryError, data } = useCloudinaryAuthAudioQuery(
+    youtubeId,
+    language
+  );
+  const { currentUser, loading: loadingUser } = useCurrentUserQuery();
 
+  if (loading || loadingUser) return <Loader active />;
+  if (queryError) return <Error error={queryError} />;
+  const { id } = currentUser;
+
+  const onUploadFileSubmit = async (cloudinaryAuthAudio, e) => {
     // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false, error: null });
+    setUploadError(false);
+    setError(null);
     const file = e ? e.target.files[0] : audioUrl;
 
     if (!file) return; // Do nothing if no file selected
 
     // More initial state reset
-    this.setState({
-      uploadProgress: 0,
-    });
+    setUploadProgress(0);
+
     setAddVideoState({ deleteToken: '', secureUrl: '' });
 
     // Prepare cloudinary upload params
@@ -81,9 +99,7 @@ export default class AudioForm extends Component {
         data,
         onUploadProgress: p => {
           // Show upload progress
-          this.setState({
-            uploadProgress: Math.floor((p.loaded / p.total) * 100),
-          });
+          setUploadProgress(Math.floor((p.loaded / p.total) * 100));
         },
       });
       setAddVideoState({
@@ -92,60 +108,35 @@ export default class AudioForm extends Component {
         audioUrl: '',
       });
     } catch (err) {
-      this.setState({
-        uploadError: true,
-      });
+      setUploadError(true);
     }
   };
 
-  onUploadButtonClick = async (cloudinaryAuthAudio, id) => {
-    const { setAddVideoState } = this.props;
+  const onUploadButtonClick = async cloudinaryAuthAudio => {
     setAddVideoState({ isAudioSource: true });
-    this.setState({ startingUpload: true });
-    await this.onUploadFileSubmit(cloudinaryAuthAudio, id);
-    this.setState({ startingUpload: false });
+    setStartingUpload(true);
+    await onUploadFileSubmit(cloudinaryAuthAudio, id);
+    setStartingUpload(false);
   };
 
-  onNextButtonClick = () => {
-    const { setAddVideoState, secureUrl } = this.props;
+  const onNextButtonClick = () => {
     if (secureUrl) {
       setAddVideoState({ activeStep: 'details' });
     } else {
-      this.setState({
-        error: {
-          message:
-            'Vui lòng tải file thuyết minh lên hoặc chọn "Video đã có thuyết minh" để tiếp tục',
-        },
+      setError({
+        message:
+          'Vui lòng tải file thuyết minh lên hoặc chọn "Video đã có thuyết minh" để tiếp tục',
       });
     }
   };
 
-  render() {
-    const {
-      setAddVideoState,
-      isAudioSource,
-      audioUrl,
-      language,
-      youtubeId,
-      secureUrl,
-      onDeleteFileSubmit,
-      deleteToken,
-    } = this.props;
-
-    const { uploadError, uploadProgress, startingUpload, error } = this.state;
-
-    return (
-      <Composed youtubeId={youtubeId} language={language}>
-        {({
-          cloudinaryAuthAudioQuery: { loading, error: queryError, data },
-          user: { currentUser, loading: loadingUser },
-        }) => {
-          if (loading || loadingUser) return <Loader active />;
-          if (queryError) return <Error error={queryError} />;
-          const { id } = currentUser;
-
-          return (
+  return (
+    <>
+      <>
+        <>
+          <>
             <>
+              {/* {!editVideo && ( */}
               <Header
                 as="h2"
                 attached="top"
@@ -156,6 +147,7 @@ export default class AudioForm extends Component {
                 <Radio value="upload" checked={isAudioSource} />
                 Tải file thuyết minh lên
               </Header>
+              {/* )} */}
               <Segment attached>
                 {(uploadProgress > 0 && uploadProgress < 100 && (
                   <Progress percent={uploadProgress} progress success />
@@ -192,7 +184,7 @@ export default class AudioForm extends Component {
                           onChange={(e, { value }) => {
                             setAddVideoState({ audioUrl: value });
                           }}
-                          value={audioUrl}
+                          defaultValue={audioUrl}
                           name="audioUrl"
                           label="Đường link (URL)"
                           placeholder="spotify.com/audiofile.mp3"
@@ -200,10 +192,7 @@ export default class AudioForm extends Component {
                         <Button
                           positive
                           onClick={() =>
-                            this.onUploadButtonClick(
-                              data.cloudinaryAuthAudio,
-                              id
-                            )
+                            onUploadButtonClick(data.cloudinaryAuthAudio)
                           }
                         >
                           <Icon name="upload" />
@@ -221,30 +210,27 @@ export default class AudioForm extends Component {
                         icon="file audio"
                         onClick={() => {
                           setAddVideoState({ isAudioSource: true });
-                          this.fileInputRef.current.click();
+                          fileInputRef.current.click();
                         }}
                       />
                       <input
-                        ref={this.fileInputRef}
+                        ref={fileInputRef}
                         type="file"
                         id="file"
                         name="file"
                         accept=".mp3,.aac,.aiff,.amr,.flac,.m4a,.ogg,.wav"
                         hidden
                         onChange={async e => {
-                          this.setState({ startingUpload: true });
-                          await this.onUploadFileSubmit(
-                            data.cloudinaryAuthAudio,
-                            id,
-                            e
-                          );
-                          this.setState({ startingUpload: false });
+                          setStartingUpload(true);
+                          await onUploadFileSubmit(data.cloudinaryAuthAudio, e);
+                          setStartingUpload(false);
                         }}
                       />
                     </>
                   )}
               </Segment>
 
+              {/* {!editVideo && ( */}
               <Segment>
                 <Header
                   as="h2"
@@ -256,8 +242,10 @@ export default class AudioForm extends Component {
                   Video đã có sẵn thuyết minh
                 </Header>
               </Segment>
+              {/* )} */}
 
               <Error error={error} />
+              {/* {!editVideo && ( */}
 
               <div className="buttons">
                 <Button
@@ -280,7 +268,7 @@ export default class AudioForm extends Component {
                     icon
                     labelPosition="right"
                     primary
-                    onClick={() => this.onNextButtonClick()}
+                    onClick={onNextButtonClick}
                   >
                     Tiếp tục
                     <Icon name="right arrow" />
@@ -298,12 +286,13 @@ export default class AudioForm extends Component {
                   </Button>
                 )}
               </div>
+              {/* )} */}
             </>
-          );
-        }}
-      </Composed>
-    );
-  }
+          </>
+        </>
+      </>
+    </>
+  );
 }
 
 AudioForm.propTypes = {
@@ -316,4 +305,9 @@ AudioForm.propTypes = {
   youtubeId: PropTypes.string.isRequired,
   source: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
+  editVideo: PropTypes.bool,
+};
+
+AudioForm.defaultProps = {
+  editVideo: false,
 };

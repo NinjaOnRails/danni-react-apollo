@@ -11,6 +11,7 @@ const DetailsForm = ({
   youtubeId,
   language,
   setCusThumbnailUrl,
+  editVideo,
 }) => {
   const handleChange = ({ target: { name, value } }) =>
     setAddVideoState({ [name]: value });
@@ -19,7 +20,7 @@ const DetailsForm = ({
       <Form.Input
         required
         label="Tiêu đề"
-        value={title}
+        defaultValue={title}
         onChange={handleChange}
         name="title"
         placeholder="bắt buộc"
@@ -32,14 +33,14 @@ const DetailsForm = ({
       />
       <Form.TextArea
         label="Giới thiệu"
-        value={description}
+        defaultValue={description}
         onChange={handleChange}
         name="description"
         maxLength="5000"
       />
       <Form.Input
         label="Tags"
-        value={tags}
+        defaultValue={tags}
         onChange={handleChange}
         name="tags"
         maxLength="500"
@@ -50,6 +51,7 @@ const DetailsForm = ({
           {originTags.join(' ')}
         </Segment>
       )}
+      {/* {!editVideo && ( */}
       <div className="buttons">
         <Button
           size="big"
@@ -65,6 +67,7 @@ const DetailsForm = ({
           <Icon name="check" />
         </Button>
       </div>
+      {/* )} */}
     </>
   );
 };
@@ -78,10 +81,12 @@ DetailsForm.propTypes = {
   youtubeId: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
   originTags: PropTypes.arrayOf(string),
+  editVideo: PropTypes.bool,
 };
 
 DetailsForm.defaultProps = {
   originTags: [],
+  editVideo: false,
 };
 
 export default DetailsForm;
