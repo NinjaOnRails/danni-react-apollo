@@ -184,7 +184,7 @@ export default function AudioForm({
                           onChange={(e, { value }) => {
                             setAddVideoState({ audioUrl: value });
                           }}
-                          value={audioUrl}
+                          defaultValue={audioUrl}
                           name="audioUrl"
                           label="Đường link (URL)"
                           placeholder="spotify.com/audiofile.mp3"
