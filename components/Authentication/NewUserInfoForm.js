@@ -35,8 +35,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
 
     if (boxName) {
       variables[boxName] = infoVisibility[boxName];
-    }
-    if (userInfoForm[key].value) {
+    } else {
       variables[key] = userInfoForm[key].value;
     }
     formElArr.push({
@@ -204,4 +203,4 @@ UserInfoForm.defaultProps = {
   currentUser: null,
 };
 
-export default UserInfoForm
+export default UserInfoForm;
