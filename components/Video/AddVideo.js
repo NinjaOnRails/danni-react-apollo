@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
 import { Segment, Form, Loader } from 'semantic-ui-react';
-import { adopt } from 'react-adopt';
-import { Mutation } from 'react-apollo';
 import Router from 'next/router';
 import Head from 'next/head';
 import { defaultLanguage } from '../../lib/supportedLanguages';
 import Error from '../UI/ErrorMessage';
-import {
-  ALL_VIDEOS_QUERY,
-  CURRENT_USER_QUERY,
-  USER_QUERY,
-} from '../../graphql/query';
 import VideoForm from './VideoForm';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
 import { trackNewVideo } from '../../lib/mixpanel';
-import {
-  CREATE_AUDIO_MUTATION,
-  CREATE_VIDEO_MUTATION,
-} from '../../graphql/mutation';
-import { contentLanguageQuery, user } from '../UI/ContentLanguage';
 import AddVideoSteps from './AddVideoSteps';
 import AudioForm from './AudioForm';
 import AddVideoStyles from '../styles/AddVideoStyles';
@@ -28,64 +16,6 @@ import {
   useCurrentUserQuery,
   useLocalStateQuery,
 } from '../Authentication/authHooks';
-
-/* eslint-disable */
-const createAudioMutation = ({
-  user: {
-    currentUser: { id },
-  },
-  contentLanguageQuery: { contentLanguage },
-  render,
-}) => (
-  <Mutation
-    mutation={CREATE_AUDIO_MUTATION}
-    refetchQueries={[
-      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-    ]}
-  >
-    {(createAudio, createAudioResult) =>
-      render({ createAudio, createAudioResult })
-    }
-  </Mutation>
-);
-
-const createVideoMutation = ({
-  youtubeId,
-  language,
-  isAudioSource,
-  contentLanguageQuery: { contentLanguage },
-  user: {
-    currentUser: { id },
-  },
-  render,
-}) => (
-  <Mutation
-    mutation={CREATE_VIDEO_MUTATION}
-    variables={{
-      source: youtubeId,
-      language: isAudioSource ? null : language,
-    }}
-    refetchQueries={[
-      { query: ALL_VIDEOS_QUERY, variables: { contentLanguage } },
-      { query: CURRENT_USER_QUERY },
-      { query: USER_QUERY, variables: { id } },
-    ]}
-  >
-    {(createVideo, createVideoResult) =>
-      render({ createVideo, createVideoResult })
-    }
-  </Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  user,
-  contentLanguageQuery,
-  createAudioMutation,
-  createVideoMutation,
-});
 
 const AddVideo = () => {
   const [addVideoForm, setAddVideoForm] = useState({
@@ -108,7 +38,27 @@ const AddVideo = () => {
     cusThumbnailSecUrl: '',
     cusThumbnailDelToken: '',
   });
-  const {activeStep,language,source,videoValid,originTags,youtubeId,title,description,audioUrl,tags,isAudioSource,secureUrl,deleteToken,error,audioDuration,redirecting,cusThumbnailSecUrl,cusThumbnailDelToken,} = addVideoForm;
+
+  const {
+    activeStep,
+    language,
+    source,
+    videoValid,
+    originTags,
+    youtubeId,
+    title,
+    description,
+    audioUrl,
+    tags,
+    isAudioSource,
+    secureUrl,
+    deleteToken,
+    error,
+    audioDuration,
+    redirecting,
+    cusThumbnailSecUrl,
+    cusThumbnailDelToken,
+  } = addVideoForm;
 
   const { currentUser } = useCurrentUserQuery();
   const { contentLanguage } = useLocalStateQuery();
@@ -210,8 +160,8 @@ const AddVideo = () => {
     });
   };
 
-  const setCusThumbnailUrl = () =>
-    setAddVideoState({ cusThumbnailSecUrl, cusThumbnailDelToken });
+  const setCusThumbnailUrl = (url, token) =>
+    setAddVideoState({ cusThumbnailSecUrl: url, cusThumbnailDelToken: token });
 
   if (redirecting)
     return (
@@ -219,71 +169,61 @@ const AddVideo = () => {
         Đang chuyển trang...
       </Loader>
     );
+
   return (
     <>
-      <>
-        <>
-          <>
-            <Head>
-              <title key="title">Danni TV - Thêm Video</title>
-              <meta
-                key="metaTitle"
-                name="title"
-                content="Danni TV - Thêm Video"
+      <Head>
+        <title key="title">Danni TV - Thêm Video</title>
+        <meta key="metaTitle" name="title" content="Danni TV - Thêm Video" />
+      </Head>
+      <AddVideoStyles>
+        <AddVideoSteps activeStep={activeStep} />
+        <Segment>
+          <Error error={errorCreateAudio} />
+          <Error error={errorCreateVideo} />
+          <Error error={{ message: error }} />
+          <Form
+            loading={loadingCreateAudio || loadingCreateVideo}
+            size="big"
+            onSubmit={onFormSubmit}
+          >
+            {activeStep === 'video' ? (
+              <VideoForm
+                setAddVideoState={setAddVideoState}
+                language={language}
+                source={source}
+                youtubeId={youtubeId}
+                videoValid={videoValid}
               />
-            </Head>
-            <AddVideoStyles>
-              <AddVideoSteps activeStep={activeStep} />
-              <Segment>
-                <Error error={errorCreateAudio} />
-                <Error error={errorCreateVideo} />
-                <Error error={{ message: error }} />
-                <Form
-                  loading={loadingCreateAudio || loadingCreateVideo}
-                  size="big"
-                  onSubmit={onFormSubmit}
-                >
-                  {activeStep === 'video' ? (
-                    <VideoForm
-                      setAddVideoState={setAddVideoState}
-                      language={language}
-                      source={source}
-                      youtubeId={youtubeId}
-                      videoValid={videoValid}
-                    />
-                  ) : activeStep === 'audio' ? (
-                    <AudioForm
-                      setAddVideoState={setAddVideoState}
-                      isAudioSource={isAudioSource}
-                      audioUrl={audioUrl}
-                      secureUrl={secureUrl}
-                      deleteToken={deleteToken}
-                      language={language}
-                      source={source}
-                      onDeleteFileSubmit={onDeleteFileSubmit}
-                      youtubeId={youtubeId}
-                    />
-                  ) : (
-                    <DetailsForm
-                      setAddVideoState={setAddVideoState}
-                      title={title}
-                      description={description}
-                      tags={tags}
-                      originTags={originTags}
-                      youtubeId={youtubeId}
-                      language={language}
-                      setCusThumbnailUrl={setCusThumbnailUrl}
-                    />
-                  )}
-                </Form>
-              </Segment>
-            </AddVideoStyles>
-          </>
-        </>
-      </>
+            ) : activeStep === 'audio' ? (
+              <AudioForm
+                setAddVideoState={setAddVideoState}
+                isAudioSource={isAudioSource}
+                audioUrl={audioUrl}
+                secureUrl={secureUrl}
+                deleteToken={deleteToken}
+                language={language}
+                source={source}
+                onDeleteFileSubmit={onDeleteFileSubmit}
+                youtubeId={youtubeId}
+              />
+            ) : (
+              <DetailsForm
+                setAddVideoState={setAddVideoState}
+                title={title}
+                description={description}
+                tags={tags}
+                originTags={originTags}
+                youtubeId={youtubeId}
+                language={language}
+                setCusThumbnailUrl={setCusThumbnailUrl}
+              />
+            )}
+          </Form>
+        </Segment>
+      </AddVideoStyles>
     </>
   );
 };
 
 export default AddVideo;
-export { createAudioMutation, createVideoMutation };

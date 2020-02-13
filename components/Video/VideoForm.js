@@ -7,15 +7,53 @@ import youtube from '../../lib/youtube';
 import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
 import Error from '../UI/ErrorMessage';
 
-export default function VideoForm({
+const VideoForm = ({
   language,
   youtubeId,
   source,
   setAddVideoState,
   videoValid,
-}) {
+  editVideo,
+}) => {
   const [fetchingYoutube, setFetchingYoutube] = useState(false);
   const [error, setError] = useState(null);
+
+  const fetchYoutube = async id => {
+    // Fetch data from Youtube for info preview
+    try {
+      setFetchingYoutube(true);
+      const res = await youtube.get('/videos', {
+        params: {
+          id,
+          part: 'snippet',
+          key: process.env.YOUTUBE_API_KEY,
+        },
+      });
+      setFetchingYoutube(false);
+      setError(null);
+      setAddVideoState({
+        originTags: res.data.items[0].snippet.tags,
+        youtubeId: id,
+      });
+    } catch (err) {
+      setError({ message: 'Lỗi mạng hoặc sai YouTube ID' });
+    }
+  };
+
+  const onSourceFill = inputSource => {
+    // Check if source is YouTube, extract ID from it and fetch data
+    const isYouTube = isYouTubeSource(inputSource);
+    let originId;
+    if (isYouTube) {
+      const { length } = isYouTube;
+      originId = inputSource.slice(length, length + youtubeIdLength);
+    } else if (inputSource.length === youtubeIdLength) {
+      originId = inputSource;
+    } else {
+      return setError({ message: 'Thông tin không hợp lệ' });
+    }
+    return fetchYoutube(originId);
+  };
 
   const handleChange = (e, { name, value }) => {
     // Check video source input to refetch preview if necessary
@@ -32,108 +70,62 @@ export default function VideoForm({
     }
   };
 
-  const onSourceFill = () => {
-    // Check if source is YouTube, extract ID from it and fetch data
-    const isYouTube = isYouTubeSource(source);
-    let originId;
-    if (isYouTube) {
-      const { length } = isYouTube;
-      originId = source.slice(length, length + youtubeIdLength);
-    } else if (source.length === youtubeIdLength) {
-      originId = source;
-    } else {
-      return setError({ error: { message: 'Thông tin không hợp lệ' } });
-    }
-
-    return fetchYoutube(originId);
-  };
-
-  const fetchYoutube = async () => {
-    // Fetch data from Youtube for info preview
-    try {
-      setFetchingYoutube(true);
-      const res = await youtube.get('/videos', {
-        params: {
-          id: youtubeId,
-          part: 'snippet',
-          key: process.env.YOUTUBE_API_KEY,
-        },
-      });
-      setFetchingYoutube(false);
-      setError(null);
-      setAddVideoState({
-        originTags: res.data.items[0].snippet.tags,
-        youtubeId,
-      });
-    } catch (err) {
-      setError({
-        error: { message: 'Lỗi mạng hoặc sai YouTube ID' },
-      });
-    }
-  };
-
   const onButtonClick = () => {
     if (videoValid) {
       setAddVideoState({ activeStep: 'audio', videoValid: false });
     } else {
-      setError({
-        error: { message: 'Phải có YouTube Video hợp lệ để tiếp tục' },
-      });
+      setError({ message: 'Phải có YouTube Video hợp lệ để tiếp tục' });
     }
   };
 
   return (
     <>
-      <>
-        <Form.Dropdown
-          label="Ngôn ngữ thuyết minh"
-          selection
-          options={flagOptions}
-          onChange={handleChange}
-          defaultValue={language}
-          name="language"
-        />
-        <Form.Input
-          label="YouTube ID hoặc đường link (URL)  "
-          placeholder="36A5bOSP334 hoặc www.youtube.com/watch?v=36A5bOSP334"
-          defaultValue={source}
-          onChange={handleChange}
-          name="source"
-        />
-        <Loader
-          active={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
-        />
-        {youtubeId|| (editVideo && source) && (
-          <div className="youtube-player">
-            <YouTubePlayer
-              url={`https://www.youtube.com/embed/${source}`}
-              controls
-              width="100%"
-              height="100%"
-              className="react-player"
-              onReady={() => setAddVideoState({ videoValid: true })}
-            />
-          </div>
-        )}
-        <Error error={error} />
-        <div className="buttons">
-          <Button
-            size="big"
-            disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
-            type="button"
-            icon
-            labelPosition="right"
-            primary
-            onClick={onButtonClick}
-          >
-            Tiếp tục
-            <Icon name="right arrow" />
-          </Button>
+      <Form.Dropdown
+        label="Ngôn ngữ thuyết minh"
+        selection
+        options={flagOptions}
+        onChange={handleChange}
+        defaultValue={language}
+        name="language"
+      />
+      <Form.Input
+        label="YouTube ID hoặc đường link (URL)  "
+        placeholder="36A5bOSP334 hoặc www.youtube.com/watch?v=36A5bOSP334"
+        defaultValue={source}
+        onChange={handleChange}
+        name="source"
+      />
+      <Loader active={fetchingYoutube || (Boolean(youtubeId) && !videoValid)} />
+      {(youtubeId || (editVideo && source)) && (
+        <div className="youtube-player">
+          <YouTubePlayer
+            url={`https://www.youtube.com/embed/${source}`}
+            controls
+            width="100%"
+            height="100%"
+            className="react-player"
+            onReady={() => setAddVideoState({ videoValid: true })}
+          />
         </div>
-      </>
+      )}
+      <Error error={error} />
+      <div className="buttons">
+        <Button
+          size="big"
+          disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
+          type="button"
+          icon
+          labelPosition="right"
+          primary
+          onClick={onButtonClick}
+        >
+          Tiếp tục
+          <Icon name="right arrow" />
+        </Button>
+      </div>
     </>
   );
-}
+};
 
 VideoForm.propTypes = {
   language: PropTypes.string.isRequired,
@@ -141,4 +133,11 @@ VideoForm.propTypes = {
   youtubeId: PropTypes.string.isRequired,
   videoValid: PropTypes.bool.isRequired,
   setAddVideoState: PropTypes.func.isRequired,
+  editVideo: PropTypes.bool,
 };
+
+VideoForm.defaultProps = {
+  editVideo: false,
+};
+
+export default VideoForm;

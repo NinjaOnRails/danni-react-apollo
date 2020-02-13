@@ -15,6 +15,7 @@ const DetailsForm = ({
 }) => {
   const handleChange = ({ target: { name, value } }) =>
     setAddVideoState({ [name]: value });
+
   return (
     <>
       <Form.Input
@@ -51,23 +52,23 @@ const DetailsForm = ({
           {originTags.join(' ')}
         </Segment>
       )}
-      {/* {!editVideo && ( */}
-      <div className="buttons">
-        <Button
-          size="big"
-          icon
-          labelPosition="left"
-          onClick={() => setAddVideoState({ activeStep: 'audio' })}
-        >
-          Quay lại
-          <Icon name="left arrow" />
-        </Button>
-        <Button type="submit" size="big" icon labelPosition="right" primary>
-          Xác nhận
-          <Icon name="check" />
-        </Button>
-      </div>
-      {/* )} */}
+      {!editVideo && (
+        <div className="buttons">
+          <Button
+            size="big"
+            icon
+            labelPosition="left"
+            onClick={() => setAddVideoState({ activeStep: 'audio' })}
+          >
+            Quay lại
+            <Icon name="left arrow" />
+          </Button>
+          <Button type="submit" size="big" icon labelPosition="right" primary>
+            Xác nhận
+            <Icon name="check" />
+          </Button>
+        </div>
+      )}
     </>
   );
 };
