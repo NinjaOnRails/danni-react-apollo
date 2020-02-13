@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Query } from 'react-apollo';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
@@ -99,37 +99,32 @@ const Composed = adopt({
   localData,
 });
 
-class Page extends Component {
-  render() {
-    const { children, route } = this.props;
-    return (
-      <Composed>
-        {({ localData: { data } }) => {
-          if (!data) return <div>Loading...</div>;
-          return (
-            <ThemeProvider theme={defaultTheme}>
-              <StyledPage>
-                <GlobalStyle
-                  showSide={data.showSide}
-                  showAuthModal={data.showAuthModal}
-                />
-                {/* <GDPR /> */}
-                <Header />
-                <SideDrawer />
-                {data.showAuthModal && (
-                  <AuthModal showAuthModal={data.showAuthModal} />
-                )}
-                <Inner route={route}>{children}</Inner>
-                <MobileNav />
-                {!pagesWithoutFooter.includes(route) && <Footer />}
-              </StyledPage>
-            </ThemeProvider>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+const Page = ({ children, route }) => (
+  <Composed>
+    {({ localData: { data } }) => {
+      if (!data) return <div>Loading...</div>;
+      return (
+        <ThemeProvider theme={defaultTheme}>
+          <StyledPage>
+            <GlobalStyle
+              showSide={data.showSide}
+              showAuthModal={data.showAuthModal}
+            />
+            {/* <GDPR /> */}
+            <Header />
+            <SideDrawer />
+            {data.showAuthModal && (
+              <AuthModal showAuthModal={data.showAuthModal} />
+            )}
+            <Inner route={route}>{children}</Inner>
+            <MobileNav />
+            {!pagesWithoutFooter.includes(route) && <Footer />}
+          </StyledPage>
+        </ThemeProvider>
+      );
+    }}
+  </Composed>
+);
 
 Page.propTypes = {
   children: PropTypes.oneOfType([
