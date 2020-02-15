@@ -1,371 +1,149 @@
-import React, { Component } from 'react';
-import { Mutation, Query } from 'react-apollo';
+import { useState } from 'react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import { Loader, Container } from 'semantic-ui-react';
-import { adopt } from 'react-adopt';
-import axios from 'axios';
-import Head from 'next/head';
-import Form from '../styles/OldFormStyles';
-import Error from '../UI/ErrorMessage';
-import { VIDEO_QUERY, ALL_VIDEOS_QUERY } from '../../graphql/query';
 import {
-  UPDATE_AUDIO_MUTATION,
-  VIDEO_DELETE,
-  UPDATE_VIDEO_MUTATION,
-} from '../../graphql/mutation';
-import isYouTubeSource, { youtubeIdLength } from '../../lib/isYouTubeSource';
-import youtube from '../../lib/youtube';
-import { createAudioMutation } from './AddVideo';
-import EditVideoForm from './EditVideoForm';
+  Loader,
+  Form,
+  Segment,
+  Message,
+  Button,
+  Icon,
+  Header,
+  Image,
+} from 'semantic-ui-react';
+import Head from 'next/head';
+import Error from '../UI/ErrorMessage';
+import EditVideoStyles from '../styles/AddVideoStyles';
 import deleteFile from '../../lib/cloudinaryDeleteFile';
-import { uploadAudio } from '../../lib/cloudinaryUpload';
-import { contentLanguageQuery, user } from '../UI/ContentLanguage';
+import {
+  useVideoQuery,
+  useCreateAudioMutation,
+  useUpdateAudioMutation,
+  useUpdateVideoMutation,
+} from './videoHooks';
+import {
+  useCurrentUserQuery,
+  useLocalStateQuery,
+} from '../Authentication/authHooks';
+import { getDefaultValues } from './utils';
+import AudioForm from './AudioForm';
+import VideoForm from './VideoForm';
+import DetailsForm from './DetailsForm';
 
-/* eslint-disable */
-const videoQuery = ({ render, id, audioId }) => (
-  <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
-    {render}
-  </Query>
-);
-
-const updateAudioMutation = ({ render, id }) => (
-  <Mutation
-    mutation={UPDATE_AUDIO_MUTATION}
-    refetchQueries={[{ query: VIDEO_QUERY, variables: { id } }]}
-  >
-    {(updateAudio, updateAudioResult) =>
-      render({ updateAudio, updateAudioResult })
-    }
-  </Mutation>
-);
-
-const updateVideoMutation = ({ render, id }) => (
-  <Mutation
-    mutation={UPDATE_VIDEO_MUTATION}
-    refetchQueries={[{ query: VIDEO_QUERY, variables: { id } }]}
-  >
-    {(updateVideo, updateVideoResult) =>
-      render({ updateVideo, updateVideoResult })
-    }
-  </Mutation>
-);
-
-const deleteVideoMutation = ({ render }) => (
-  <Mutation
-    mutation={VIDEO_DELETE}
-    refetchQueries={[{ query: ALL_VIDEOS_QUERY }]}
-  >
-    {(deleteVideo, deleteVideoResult) =>
-      render({ deleteVideo, deleteVideoResult })
-    }
-  </Mutation>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  user,
-  contentLanguageQuery,
-  videoQuery,
-  createAudioMutation,
-  updateAudioMutation,
-  updateVideoMutation,
-  deleteVideoMutation,
-});
-
-class EditVideo extends Component {
-  state = {
-    redirecting: false,
-    isDescription: true,
-    isAudioSource: false,
-    isTags: true,
-    isDefaultVolume: true,
-    fetchingYoutube: false,
-    youtubeIdStatus: '',
+const EditVideo = ({ id, audioId }) => {
+  const [editVideoForm, setEditVideoForm] = useState({
+    language: null,
+    source: null,
+    videoValid: true,
+    originTags: null,
     youtubeId: '',
+    title: null,
+    description: null,
+    audioUrl: '',
+    tags: null,
+    isAudioSource: false,
     secureUrl: '',
-    uploadProgress: 0,
-    uploadError: false,
     deleteToken: '',
-    error: '',
-    audioDuration: 0,
+    error: null,
+    audioDuration: null,
+    redirecting: false,
+    cusThumbnailSecUrl: null,
+    cusThumbnailDelToken: null,
     showUpload: false,
-    cusThumbnailSecUrl: '',
-    cusThumbnailDelToken: '',
-  };
+    showUploadThumbnail: false,
+  });
 
-  handleChange = ({ target: { name, type, value, checked } }) => {
-    // Controlled logic
-    const val =
-      type === 'checkbox'
-        ? checked
-        : name === 'defaultVolume' && value > 100
-        ? 100
-        : type === 'number'
-        ? parseInt(value, 10)
-        : value;
+  const {
+    language,
+    source,
+    videoValid,
+    originTags,
+    youtubeId,
+    title,
+    description,
+    audioUrl,
+    tags,
+    isAudioSource,
+    secureUrl,
+    deleteToken,
+    error,
+    audioDuration,
+    redirecting,
+    cusThumbnailSecUrl,
+    cusThumbnailDelToken,
+    showUpload,
+    showUploadThumbnail,
+  } = editVideoForm;
 
-    // Check video source input to refetch preview if necessary
-    if (name === 'source' && val.length >= 11) this.onSourceFill(val.trim());
+  const {
+    data,
+    loading: loadingQueryVideo,
+    error: errorQueryVideo,
+  } = useVideoQuery({ id, audioId });
 
-    // Controlled set state
-    this.setState({ [name]: val });
-  };
+  const { currentUser } = useCurrentUserQuery();
+  const { contentLanguage } = useLocalStateQuery();
+  const [
+    createAudio,
+    { loading: loadingCreateAudio, error: errorCreateAudio },
+  ] = useCreateAudioMutation(currentUser.id, contentLanguage);
+  // Passing videoId for refetchQueries
+  const [
+    updateAudio,
+    { loading: loadingUpdateAudio, error: errorUpdateAudio },
+  ] = useUpdateAudioMutation(id);
 
-  handleDropdown = (e, { value }) => {
-    const { language, deleteToken } = this.state;
-    if (language !== value && deleteToken) {
-      this.onDeleteFileSubmit();
-    }
-    this.setState({ language: value });
-  };
+  const [
+    updateVideo,
+    { loading: loadingUpdateVideo, error: errorUpdateVideo },
+  ] = useUpdateVideoMutation(id);
 
-  onSourceFill = source => {
-    // Check if source is YouTube, extract ID from it and fetch data
-    const isYouTube = isYouTubeSource(source);
-    let originId;
-    if (isYouTube) {
-      const { length } = isYouTube;
-      originId = source.slice(length, length + youtubeIdLength);
-    } else if (source.length === youtubeIdLength) {
-      originId = source;
-    } else {
-      this.setState({
-        youtubeIdStatus: 'Invalid source',
-        image: '',
-        originTitle: '',
-        channelTitle: '',
-      });
-      throw new Error('No valid YouTube source was provided');
-    }
-
-    this.fetchYoutube(originId);
-  };
-
-  fetchYoutube = async id => {
-    // Fetch data from Youtube for info preview
-    try {
-      this.setState({ fetchingYoutube: true });
-      const res = await youtube.get('/videos', {
-        params: {
-          id,
-          part: 'snippet',
-          key: process.env.YOUTUBE_API_KEY,
-        },
-      });
-
-      if (!res.data.items.length) {
-        this.setState({
-          youtubeIdStatus: 'Not found on Youtube',
-          image: '',
-          originTitle: '',
-          channelTitle: '',
-          fetchingYoutube: false,
-        });
-        throw new Error('Video not found on Youtube');
-      }
-
-      // Destructure response
-      const {
-        thumbnails: {
-          medium: { url },
-        },
-        channelTitle,
-        localized: { title },
-        tags: originTags,
-      } = res.data.items[0].snippet;
-
-      this.setState({
-        youtubeIdStatus: '',
-        youtubeId: id,
-        image: url,
-        originTitle: title,
-        channelTitle,
-        originTags,
-        fetchingYoutube: false,
-      });
-    } catch (err) {
-      this.setState({
-        youtubeIdStatus: 'Network error',
-        image: '',
-        originTitle: '',
-        channelTitle: '',
-        fetchingYoutube: false,
-      });
-    }
-  };
-
-  onUploadFileSubmit = async (cloudinaryAuth, id, e, defaultValues) => {
-    // Reset uploadError display and assign appropriate value to file
-    this.setState({ uploadError: false, error: '' });
-    const { audioSource, youtubeId, language, deleteToken } = this.state;
-    const file = e ? e.target.files[0] : audioSource;
-    const { oldOriginId, oldLanguage } = defaultValues;
-    if (!file) return; // Do nothing if no file selected
-
-    if (deleteToken) await this.onDeleteFileSubmit();
-
-    // More initial state reset
-    this.setState({
-      uploadProgress: 0,
-      deleteToken: '',
-      secureUrl: '',
-    });
-    // Prepare cloudinary upload params
-    const { url, data } = uploadAudio(
-      file,
-      youtubeId || oldOriginId,
-      language || oldLanguage,
-      id,
-      cloudinaryAuth
+  if (errorQueryVideo) return <p>Error</p>;
+  if (loadingQueryVideo) return <Loader active />;
+  if (!data.video) return <p>No Video Found for {id}</p>;
+  if (redirecting)
+    return (
+      <Loader indeterminate active>
+        Đang chuyển trang...
+      </Loader>
     );
-    // Upload file with post request
 
-    try {
-      const {
-        data: { secure_url: secureUrl, delete_token: newDeleteToken },
-      } = await axios({
-        method: 'post',
-        url,
-        data,
-        onUploadProgress: p => {
-          // Show upload progress
-          this.setState({
-            uploadProgress: Math.floor((p.loaded / p.total) * 100),
-          });
-        },
-      });
-      this.setState({
-        secureUrl,
-        deleteToken: newDeleteToken,
-        audioSource: '',
-      });
-    } catch (err) {
-      console.log(err);
-      this.setState({
-        uploadError: true,
-      });
-    }
-  };
+  const {
+    oldOriginId,
+    oldTitleVi,
+    oldDescriptionVi,
+    oldTags,
+    oldAudioSource,
+    oldLanguage,
+    oldOriginTags,
+    oldCusThumbnail,
+  } = getDefaultValues(data, audioId);
 
-  onDeleteFileSubmit = async () => {
-    const { deleteToken } = this.state;
-    this.setState({
+  const setEditVideoState = newState =>
+    setEditVideoForm(prevState => ({ ...prevState, ...newState }));
+
+  const onDeleteFileSubmit = async () => {
+    setEditVideoState({
       uploadProgress: 0,
       secureUrl: '',
       error: '',
     });
     const res = await deleteFile(deleteToken);
     if (res.status === 200) {
-      this.setState({
+      setEditVideoState({
         deleteToken: '',
       });
     }
   };
 
-  onAudioLoadedMetadata = e => {
-    this.setState({ audioDuration: Math.round(e.target.duration) });
-  };
-
-  getDefaultValues = data => {
-    const { audioId } = this.props;
-    const {
-      video: {
-        originId: oldOriginId,
-        originThumbnailUrl: oldImage,
-        originTitle: oldOriginTitle,
-        originAuthor: oldOriginChannel,
-        originTags: oldOriginTags,
-      },
-    } = data;
-    let oldTitleVi = '';
-    let oldDescriptionVi = '';
-    let oldDefaultVolume = 30;
-    let oldTagsObj = '';
-    let oldAudioSource = '';
-    let oldLanguage;
-    let oldCusThumbnail = '';
-    if (!audioId) {
-      ({
-        video: { language: oldLanguage },
-      } = data);
-    } else {
-      const {
-        video: { audio },
-      } = data;
-      // Destructure audio array
-      [
-        {
-          source: oldAudioSource,
-          title: oldTitleVi,
-          description: oldDescriptionVi,
-          tags: oldTagsObj,
-          defaultVolume: oldDefaultVolume,
-          language: oldLanguage,
-          customThumbnail: oldCusThumbnail,
-        },
-      ] = audio.filter(audioFile => audioFile.id === audioId);
-    }
-    let oldTags = '';
-    Object.values(oldTagsObj).forEach(val => {
-      oldTags = `${oldTags}${val.text} `;
-    });
-    return {
-      oldOriginId,
-      oldTitleVi,
-      oldDescriptionVi,
-      oldDefaultVolume,
-      oldTags,
-      oldAudioSource,
-      oldLanguage,
-      oldImage,
-      oldOriginTitle,
-      oldOriginChannel,
-      oldOriginTags,
-      oldCusThumbnail,
-    };
-  };
-
-  onShowUpload = () => this.setState({ showUpload: true });
-
-  onSubmit = async (
-    e,
-    updateVideo,
-    createAudio,
-    updateAudio,
-    oldValuesObject
-  ) => {
-    // Stop form from submitting
+  const onSubmit = async e => {
     e.preventDefault();
-    const { id, audioId } = this.props;
-    const {
-      source,
-      title,
-      description,
-      tags,
-      defaultVolume,
-      language,
-      audioDuration,
-      isTags,
-      isDescription,
-      isDefaultVolume,
-      audioSource,
-      secureUrl,
-      cusThumbnailSecUrl,
-    } = this.state;
-    // if fields unchanged, use default values
-    const {
-      oldTitleVi,
-      oldDescriptionVi,
-      oldDefaultVolume,
-      oldTags,
-      oldAudioSource,
-      oldLanguage,
-    } = oldValuesObject;
     let redirectAudioParam;
-    // Call updateVideo mutation
+    // Update video when
+    // Video has no audio, no audio file/url added and either language or source must be changed
+    // Video has audio, but changed source
     if (
-      (!audioId && !audioSource && (language || source)) ||
+      (!audioId && !audioUrl && !secureUrl && (language || source)) ||
       (audioId && source)
     ) {
       await updateVideo({
@@ -377,10 +155,14 @@ class EditVideo extends Component {
       });
       redirectAudioParam = audioId;
     }
+    // Create new audio when
+    // No current or previous audio and new audio file/url added or new audio is different to previous audio
     if (
       !audioId &&
-      (audioSource || secureUrl) &&
-      (!oldAudioSource || oldAudioSource !== audioSource)
+      (audioUrl || secureUrl) &&
+      (!oldAudioSource ||
+        oldAudioSource !== audioUrl ||
+        oldAudioSource !== secureUrl)
     ) {
       ({
         data: {
@@ -388,43 +170,46 @@ class EditVideo extends Component {
         },
       } = await createAudio({
         variables: {
-          source: secureUrl || oldAudioSource,
-          // source: audioSource || oldAudioSource,
-          language: language || oldLanguage,
-          title: title || oldTitleVi,
-          description: isDescription
-            ? description || oldDescriptionVi
-            : undefined,
-          tags: isTags ? tags || oldTags : undefined,
-          duration: audioDuration,
-          defaultVolume: isDefaultVolume
-            ? defaultVolume || oldDefaultVolume
-            : undefined,
           video: id,
+          source: secureUrl || audioUrl,
+          language: language || oldLanguage,
+          // title,
+          // description,
+          // tags,
+          title: title || oldTitleVi,
+          description: description || oldDescriptionVi,
+          tags: tags || oldTags,
+          duration: audioDuration,
         },
       }));
     } else if (audioId) {
+      const variables = {
+        language,
+        source: secureUrl || audioUrl,
+        duration: audioDuration,
+        title,
+        description,
+        tags,
+        customThumbnail: cusThumbnailSecUrl,
+      };
+      // Remove null fields to avoid backend error
+      Object.keys(variables).forEach(
+        key => variables[key] === null && delete variables[key]
+      );
+
       ({
         data: {
           updateAudio: { id: redirectAudioParam },
         },
       } = await updateAudio({
         variables: {
-          language,
           id: audioId,
-          // source: audioSource,
-          source: secureUrl || oldAudioSource,
-          duration: audioDuration,
-          title,
-          description,
-          tags,
-          defaultVolume,
-          customThumbnail: cusThumbnailSecUrl,
+          ...variables,
         },
       }));
     }
 
-    this.setState({ redirecting: true });
+    setEditVideoState({ redirecting: true });
 
     // Redirect to newly updated Video watch page
     Router.push({
@@ -432,125 +217,129 @@ class EditVideo extends Component {
       query: { id, audioId: redirectAudioParam },
     });
   };
-
-  setCusThumbnailUrl = (cusThumbnailSecUrl, cusThumbnailDelToken) =>
-    this.setState({
-      cusThumbnailSecUrl,
-      cusThumbnailDelToken,
-    });
-
-  render() {
-    const { id, audioId } = this.props;
-    const { redirecting } = this.state;
-    if (redirecting)
-      return (
-        <Loader indeterminate active>
-          Đang chuyển trang...
-        </Loader>
-      );
-    return (
-      <Composed id={id} audioId={audioId}>
-        {({
-          videoQuery: {
-            data,
-            loading: loadingQueryVideo,
-            error: errorQueryVideo,
-          },
-          createAudioMutation: {
-            createAudio,
-            createAudioResult: {
-              loading: loadingCreateAudio,
-              error: errorCreateAudio,
-            },
-          },
-          updateAudioMutation: {
-            updateAudio,
-            updateAudioResult: {
-              loading: loadingUpdateAudio,
-              error: errorUpdateAudio,
-            },
-          },
-          updateVideoMutation: {
-            updateVideo,
-            updateVideoResult: {
-              loading: loadingUpdateVideo,
-              error: errorUpdateVideo,
-            },
-          },
-          // deleteVideoMutation: {
-          //   deleteVideo,
-          //   deleteVideoResult: {
-          //     loading: loadingDeleteVideo,
-          //     error: errorDeleteVideo,
-          //   },
-          // },
-        }) => {
-          if (errorQueryVideo) return <p>Error</p>;
-          if (loadingQueryVideo) return <Loader active />;
-          if (!data.video) return <p>No Video Found for {id}</p>;
-          const oldValuesObject = this.getDefaultValues(data);
-          return (
-            <>
-              <Head>
-                <title key="title">
-                  {audioId ? data.video.audio[0].title : data.video.originTitle}{' '}
-                  | Danni TV - Sửa video
-                </title>
-                <meta
-                  key="metaTitle"
-                  name="title"
-                  content={`${
-                    audioId ? data.video.audio[0].title : data.video.originTitle
-                  } | Danni TV - Sửa video`}
-                />
-              </Head>
-              <Container>
-                <Form
-                  data-test="form"
-                  onSubmit={e =>
-                    this.onSubmit(
-                      e,
-                      updateVideo,
-                      createAudio,
-                      updateAudio,
-                      oldValuesObject
-                    )
-                  }
-                >
-                  <Error error={errorCreateAudio} />
-                  <Error error={errorUpdateVideo} />
-                  <Error error={errorUpdateAudio} />
-                  <EditVideoForm
-                    {...this.state}
-                    {...oldValuesObject}
-                    audioId={audioId}
-                    loadingUpdateVideo={loadingUpdateVideo}
-                    loadingCreateAudio={loadingCreateAudio}
-                    loadingUpdateAudio={loadingUpdateAudio}
-                    handleChange={this.handleChange}
-                    handleDropdown={this.handleDropdown}
-                    onUploadFileSubmit={(cloudinaryAuth, id, e) =>
-                      this.onUploadFileSubmit(
-                        cloudinaryAuth,
-                        id,
-                        e,
-                        oldValuesObject
-                      )
-                    }
-                    onDeleteFileSubmit={this.onDeleteFileSubmit}
-                    onAudioLoadedMetadata={this.onAudioLoadedMetadata}
-                    onShowUpload={this.onShowUpload}
-                    setCusThumbnailUrl={this.setCusThumbnailUrl}
+  return (
+    <>
+      <Head>
+        <title key="title">
+          {audioId ? data.video.audio[0].title : data.video.originTitle} | Danni
+          TV - Sửa video
+        </title>
+        <meta
+          key="metaTitle"
+          name="title"
+          content={`${
+            audioId ? data.video.audio[0].title : data.video.originTitle
+          } | Danni TV - Sửa video`}
+        />
+      </Head>
+      <EditVideoStyles editVideo>
+        <Segment>
+          <Error error={errorCreateAudio} />
+          <Error error={errorUpdateVideo} />
+          <Error error={errorUpdateAudio} />
+          <Error error={{ message: error }} />
+          <Form
+            onSubmit={onSubmit}
+            size="big"
+            loading={
+              loadingUpdateVideo || loadingCreateAudio || loadingUpdateAudio
+            }
+          >
+            <VideoForm
+              setAddVideoState={setEditVideoState}
+              language={language || oldLanguage}
+              source={source || oldOriginId}
+              youtubeId={youtubeId}
+              videoValid={videoValid}
+              editVideo
+            />
+            {!audioId && (
+              <Button
+                content={
+                  isAudioSource
+                    ? 'Thôi thêm thuyết minh cho video'
+                    : 'Thêm thuyết minh cho video'
+                }
+                className="add-audio-button"
+                color={isAudioSource ? 'red' : 'green'}
+                onClick={e => {
+                  e.preventDefault();
+                  setEditVideoState({ isAudioSource: !isAudioSource });
+                }}
+              />
+            )}
+            {(audioId || isAudioSource) && (
+              <>
+                {!secureUrl && !audioUrl && oldAudioSource && (
+                  <>
+                    <Header as="h3" content="File thuyết minh hiện tại:" />
+                    <audio controls src={oldAudioSource}>
+                      <track kind="captions" />
+                    </audio>
+                  </>
+                )}
+                <Header as="h3" content="Tải file thuyết minh mới:" />
+                {showUpload || isAudioSource ? (
+                  <AudioForm
+                    setAddVideoState={setEditVideoState}
+                    isAudioSource={isAudioSource}
+                    audioUrl={audioUrl}
+                    secureUrl={secureUrl}
+                    deleteToken={deleteToken}
+                    language={language || oldLanguage}
+                    source={source || oldAudioSource}
+                    onDeleteFileSubmit={onDeleteFileSubmit}
+                    youtubeId={youtubeId}
+                    editVideo
                   />
-                </Form>
-              </Container>
-            </>
-          );
-        }}
-      </Composed>
-    );
-  }
-}
+                ) : (
+                  <Message warning visible>
+                    <p>
+                      Tải tệp file mới lên sẽ lập tức xoá vĩnh viễn tệp cũ.
+                      <Button
+                        content="Tiếp tục"
+                        negative
+                        onClick={() => setEditVideoState({ showUpload: true })}
+                      />
+                    </p>
+                  </Message>
+                )}
+                <DetailsForm
+                  setAddVideoState={setEditVideoState}
+                  title={title || oldTitleVi}
+                  description={description || oldDescriptionVi}
+                  tags={tags || oldTags}
+                  originTags={originTags || oldOriginTags}
+                  youtubeId={youtubeId || oldOriginId}
+                  language={language || oldLanguage}
+                  cusThumbnailSecUrl={cusThumbnailSecUrl}
+                  oldCusThumbnail={oldCusThumbnail}
+                  showUploadThumbnail={showUploadThumbnail}
+                  editVideo
+                />
+              </>
+            )}
+            <div className="buttons">
+              <Button
+                disabled={
+                  !videoValid || (isAudioSource && !secureUrl && !audioUrl)
+                }
+                type="submit"
+                size="big"
+                icon
+                labelPosition="right"
+                primary
+              >
+                Lưu thay đổi
+                <Icon name="check" />
+              </Button>
+            </div>
+          </Form>
+        </Segment>
+      </EditVideoStyles>
+    </>
+  );
+};
 
 EditVideo.propTypes = {
   id: PropTypes.string.isRequired,

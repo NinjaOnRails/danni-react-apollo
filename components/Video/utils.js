@@ -8,14 +8,21 @@ const formatDuration = duration => {
 
 const getDefaultValues = (data, audioId) => {
   const {
-    video: { originId: oldOriginId, originTags: oldOriginTagsObj },
+    video: {
+      originId: oldOriginId,
+      originThumbnailUrl: oldImage,
+      originTitle: oldOriginTitle,
+      originAuthor: oldOriginChannel,
+      originTags: oldOriginTags,
+    },
   } = data;
-  let oldTitleVi = data.video.originTitle;
+  let oldTitleVi = '';
   let oldDescriptionVi = '';
-  let oldTagsObj = {};
+  let oldDefaultVolume = 30;
+  let oldTagsObj = '';
   let oldAudioSource = '';
   let oldLanguage;
-
+  let oldCusThumbnail = '';
   if (!audioId) {
     ({
       video: { language: oldLanguage },
@@ -24,34 +31,36 @@ const getDefaultValues = (data, audioId) => {
     const {
       video: { audio },
     } = data;
-    // Destructor audio array
+    // Destructure audio array
     [
       {
         source: oldAudioSource,
         title: oldTitleVi,
         description: oldDescriptionVi,
         tags: oldTagsObj,
+        defaultVolume: oldDefaultVolume,
         language: oldLanguage,
+        customThumbnail: oldCusThumbnail,
       },
     ] = audio.filter(audioFile => audioFile.id === audioId);
   }
   let oldTags = '';
-
   Object.values(oldTagsObj).forEach(val => {
-    oldTags = oldTags + val.text + ' ';
+    oldTags = `${oldTags}${val.text} `;
   });
-  const oldOriginTags = oldOriginTagsObj.map(tagObj => {
-    return tagObj.text;
-  });
-
   return {
     oldOriginId,
     oldTitleVi,
     oldDescriptionVi,
+    oldDefaultVolume,
     oldTags,
     oldAudioSource,
     oldLanguage,
+    oldImage,
+    oldOriginTitle,
+    oldOriginChannel,
     oldOriginTags,
+    oldCusThumbnail,
   };
 };
 

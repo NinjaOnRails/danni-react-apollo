@@ -1,4 +1,12 @@
-import { Form, Button, Icon, Segment, Header } from 'semantic-ui-react';
+import {
+  Form,
+  Button,
+  Icon,
+  Segment,
+  Header,
+  Image,
+  Message,
+} from 'semantic-ui-react';
 import PropTypes, { string } from 'prop-types';
 import CloudinaryUploadCusThumbnail from './CloudinaryUploadCusThumbnail';
 
@@ -10,12 +18,16 @@ const DetailsForm = ({
   originTags,
   youtubeId,
   language,
-  setCusThumbnailUrl,
+  cusThumbnailSecUrl,
+  oldCusThumbnail,
+  showUploadThumbnail,
   editVideo,
 }) => {
   const handleChange = ({ target: { name, value } }) =>
     setAddVideoState({ [name]: value });
 
+  const setCusThumbnailUrl = (url, token) =>
+    setAddVideoState({ cusThumbnailSecUrl: url, cusThumbnailDelToken: token });
   return (
     <>
       <Form.Input
@@ -27,11 +39,33 @@ const DetailsForm = ({
         placeholder="bắt buộc"
         maxLength="100"
       />
-      <CloudinaryUploadCusThumbnail
-        setCusThumbnailUrl={setCusThumbnailUrl}
-        youtubeId={youtubeId}
-        language={language}
-      />
+      {editVideo && oldCusThumbnail && !cusThumbnailSecUrl && (
+        <>
+          <Header as="h3" content="Ảnh thu nhỏ hiện tại:" />
+          <Image src={oldCusThumbnail} size="tiny" />
+        </>
+      )}
+      <Header as="h3" content={editVideo ? 'Tải ảnh mới:' : 'Ảnh thu nhỏ:'} />
+      {(editVideo && showUploadThumbnail) || !editVideo ? (
+        <>
+          <CloudinaryUploadCusThumbnail
+            setCusThumbnailUrl={setCusThumbnailUrl}
+            youtubeId={youtubeId}
+            language={language}
+          />
+        </>
+      ) : (
+        <Message warning visible>
+          <p>
+            Tải tệp file mới lên sẽ lập tức xoá vĩnh viễn tệp cũ.
+            <Button
+              content="Tiếp tục"
+              negative
+              onClick={() => setAddVideoState({ showUploadThumbnail: true })}
+            />
+          </p>
+        </Message>
+      )}
       <Form.TextArea
         label="Giới thiệu"
         defaultValue={description}
@@ -46,7 +80,7 @@ const DetailsForm = ({
         name="tags"
         maxLength="500"
       />
-      {originTags.length > 0 && (
+      {(originTags.length > 0 || editVideo) && (
         <Segment>
           <Header as="h4">Tags của Video gốc:</Header>
           {originTags.join(' ')}
@@ -75,19 +109,24 @@ const DetailsForm = ({
 
 DetailsForm.propTypes = {
   setAddVideoState: PropTypes.func.isRequired,
-  setCusThumbnailUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
   youtubeId: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
   originTags: PropTypes.arrayOf(string),
+  cusThumbnailSecUrl: PropTypes.string,
+  oldCusThumbnail: PropTypes.string,
+  showUploadThumbnail: PropTypes.bool,
   editVideo: PropTypes.bool,
 };
 
 DetailsForm.defaultProps = {
   originTags: [],
   editVideo: false,
+  showUploadThumbnail: false,
+  cusThumbnailSecUrl: '',
+  oldCusThumbnail: '',
 };
 
 export default DetailsForm;
