@@ -144,94 +144,98 @@ class CloudinaryUploadCusThumbnail extends Component {
           const { id } = currentUser;
 
           return (
-            <Segment
-              attached
-              loading={
-                startingUpload &&
-                !uploadError &&
-                !(uploadProgress > 0 && uploadProgress < 100)
-              }
-            >
-              {(!uploadError && uploadProgress > 0 && uploadProgress < 100 && (
-                <Progress percent={uploadProgress} progress success />
-              )) ||
-                (secureUrl && (
-                  <>
-                    <Header as="h3">Ảnh được tải lên:</Header>
-                    <Button
-                      negative
-                      onClick={this.onDeleteFileSubmit}
-                      type="button"
-                    >
-                      Xoá
-                    </Button>
-                    <Image src={secureUrl} />
-                  </>
-                )) || (
-                  <>
-                    {uploadError && (
-                      <Progress percent={100} error>
-                        Lỗi mạng hoặc ảnh có vấn đề. Vui lòng thử sau.
-                      </Progress>
-                    )}
-                    <Button
-                      type="button"
-                      positive
-                      size="huge"
-                      className="choose-file-button"
-                      content="Chọn ảnh trong máy"
-                      labelPosition="left"
-                      icon="file image"
-                      onClick={() => {
-                        this.fileInputRef.current.click();
-                      }}
-                    />
-                    <input
-                      hidden
-                      ref={this.fileInputRef}
-                      type="file"
-                      id="file"
-                      name="file"
-                      accept=".jpg,.png"
-                      onChange={async e => {
-                        this.setState({ startingUpload: true });
-                        await this.onUploadFileSubmit(
-                          data.cloudinaryAuthCusThumbnail,
-                          id,
-                          e
-                        );
-                        this.setState({ startingUpload: false });
-                      }}
-                    />
-                    <Header>hoặc</Header>
-                    <Header as="h3">Tải từ đường link:</Header>
-                    <div className="uploadImageUrl">
-                      <Input
-                        label="URL"
-                        placeholder="file.jpg"
-                        type="text"
-                        id="uploadImageUrl"
-                        name="uploadImageUrl"
-                        onChange={this.handleChange}
-                      />
+            <>
+              <Segment
+                attached
+                loading={
+                  startingUpload &&
+                  !uploadError &&
+                  !(uploadProgress > 0 && uploadProgress < 100)
+                }
+              >
+                {(!uploadError &&
+                  uploadProgress > 0 &&
+                  uploadProgress < 100 && (
+                    <Progress percent={uploadProgress} progress success />
+                  )) ||
+                  (secureUrl && (
+                    <>
+                      <Header as="h3">Ảnh được tải lên:</Header>
                       <Button
+                        negative
+                        onClick={this.onDeleteFileSubmit}
+                        type="button"
+                      >
+                        Xoá
+                      </Button>
+                      <Image src={secureUrl} />
+                    </>
+                  )) || (
+                    <>
+                      {uploadError && (
+                        <Progress percent={100} error>
+                          Lỗi mạng hoặc ảnh có vấn đề. Vui lòng thử sau.
+                        </Progress>
+                      )}
+                      <Button
+                        type="button"
                         positive
-                        onClick={async () => {
+                        size="huge"
+                        className="choose-file-button"
+                        content="Chọn ảnh trong máy"
+                        labelPosition="left"
+                        icon="file image"
+                        onClick={() => {
+                          this.fileInputRef.current.click();
+                        }}
+                      />
+                      <input
+                        hidden
+                        ref={this.fileInputRef}
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".jpg,.png"
+                        onChange={async e => {
                           this.setState({ startingUpload: true });
                           await this.onUploadFileSubmit(
                             data.cloudinaryAuthCusThumbnail,
-                            id
+                            id,
+                            e
                           );
                           this.setState({ startingUpload: false });
                         }}
-                      >
-                        <Icon name="upload" />
-                        Tải lên
-                      </Button>
-                    </div>
-                  </>
-                )}
-            </Segment>
+                      />
+                      <Header>hoặc</Header>
+                      <Header as="h3">Tải từ đường link:</Header>
+                      <div className="uploadImageUrl">
+                        <Input
+                          label="URL"
+                          placeholder="file.jpg"
+                          type="text"
+                          id="uploadImageUrl"
+                          name="uploadImageUrl"
+                          onChange={this.handleChange}
+                        />
+                        <Button
+                          positive
+                          onClick={async () => {
+                            this.setState({ startingUpload: true });
+                            await this.onUploadFileSubmit(
+                              data.cloudinaryAuthCusThumbnail,
+                              id
+                            );
+                            this.setState({ startingUpload: false });
+                          }}
+                        >
+                          <Icon name="upload" />
+                          Tải lên
+                        </Button>
+                      </div>
+                    </>
+                  )}
+              </Segment>
+            </>
           );
         }}
       </Composed>

@@ -89,11 +89,6 @@ const AddVideo = () => {
       setAddVideoState({ deleteToken: '' });
     }
   };
-
-  const onAudioLoadedMetadata = e => {
-    setAddVideoState({ audioDuration: Math.round(e.target.duration) });
-  };
-
   const onFormSubmit = async e => {
     // Stop form from submitting
     e.preventDefault();
@@ -160,16 +155,12 @@ const AddVideo = () => {
     });
   };
 
-  const setCusThumbnailUrl = (url, token) =>
-    setAddVideoState({ cusThumbnailSecUrl: url, cusThumbnailDelToken: token });
-
   if (redirecting)
     return (
       <Loader indeterminate active>
         Đang chuyển trang...
       </Loader>
     );
-
   return (
     <>
       <Head>
@@ -216,7 +207,6 @@ const AddVideo = () => {
                 originTags={originTags}
                 youtubeId={youtubeId}
                 language={language}
-                setCusThumbnailUrl={setCusThumbnailUrl}
               />
             )}
           </Form>

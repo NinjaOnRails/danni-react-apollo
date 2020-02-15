@@ -9,17 +9,52 @@ export default styled.div`
   }
 
   form.ui.form {
-    min-height: 525.69px;
+    min-height: ${props => (props.editVideo ? 'auto' : '525.69px')};
+    position: relative;
+    padding-bottom: 50px;
     @media (max-width: 375px) {
-      min-height: 400px;
+      min-height: ${props => (props.editVideo ? 'auto' : '400px')};
     }
   }
 
-  div.buttons {
+  .thumbnail-label {
+    display: block;
+    margin: 0 0 0.28571429rem 0;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 0.92857143em;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  .ui.negative.button {
+    margin-left: 7px;
+  }
+  .submit-edit-button {
+    margin: auto;
+  }
+  .add-audio-button {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .buttons {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    .ui[class*='right labeled'].icon.button {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+  }
+  /* .ui[class*='right labeled'].icon.button {
     position: absolute;
     right: 0;
     bottom: 0;
-  }
+  } */
 
   .choose-file-button {
     display: block;

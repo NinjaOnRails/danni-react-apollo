@@ -107,6 +107,9 @@ const AudioForm = ({
     }
   };
 
+  const onAudioLoadedMetadata = e => {
+    setAddVideoState({ audioDuration: Math.round(e.target.duration) });
+  };
   return (
     <>
       {!editVideo && (
@@ -128,7 +131,11 @@ const AudioForm = ({
           (secureUrl && (
             <>
               <Header as="h3">File được tải lên:</Header>
-              <audio controls src={secureUrl}>
+              <audio
+                controls
+                src={secureUrl}
+                onLoadedMetadata={onAudioLoadedMetadata}
+              >
                 <track kind="captions" />
               </audio>
               <Button negative onClick={onDeleteFileSubmit} type="button">

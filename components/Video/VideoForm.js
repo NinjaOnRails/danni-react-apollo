@@ -96,7 +96,7 @@ const VideoForm = ({
         name="source"
       />
       <Loader active={fetchingYoutube || (Boolean(youtubeId) && !videoValid)} />
-      {(youtubeId || (editVideo && source)) && (
+      {(youtubeId || (editVideo && source && !error)) && (
         <div className="youtube-player">
           <YouTubePlayer
             url={`https://www.youtube.com/embed/${source}`}
@@ -109,20 +109,22 @@ const VideoForm = ({
         </div>
       )}
       <Error error={error} />
-      <div className="buttons">
-        <Button
-          size="big"
-          disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
-          type="button"
-          icon
-          labelPosition="right"
-          primary
-          onClick={onButtonClick}
-        >
-          Tiếp tục
-          <Icon name="right arrow" />
-        </Button>
-      </div>
+      {!editVideo && (
+        <div className="buttons">
+          <Button
+            size="big"
+            disabled={fetchingYoutube || (Boolean(youtubeId) && !videoValid)}
+            type="button"
+            icon
+            labelPosition="right"
+            primary
+            onClick={onButtonClick}
+          >
+            Tiếp tục
+            <Icon name="right arrow" />
+          </Button>
+        </div>
+      )}
     </>
   );
 };

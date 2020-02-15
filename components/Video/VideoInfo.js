@@ -133,7 +133,6 @@ const VideoInfo = ({
       );
     }
   }
-
   return (
     <VideoInfoStyles>
       <div className="basic-info">
