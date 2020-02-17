@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Button, Icon, Loader } from 'semantic-ui-react';
 import YouTubePlayer from 'react-player/lib/players/YouTube';
 import PropTypes from 'prop-types';
@@ -17,7 +17,6 @@ const VideoForm = ({
 }) => {
   const [fetchingYoutube, setFetchingYoutube] = useState(false);
   const [error, setError] = useState(null);
-
   const fetchYoutube = async id => {
     // Fetch data from Youtube for info preview
     try {
@@ -77,6 +76,10 @@ const VideoForm = ({
       setError({ message: 'Phải có YouTube Video hợp lệ để tiếp tục' });
     }
   };
+
+  useEffect(() => {
+    if (editVideo) fetchYoutube(source);
+  }, []);
 
   return (
     <>

@@ -32,23 +32,23 @@ import DetailsForm from './DetailsForm';
 
 const EditVideo = ({ id, audioId }) => {
   const [editVideoForm, setEditVideoForm] = useState({
-    language: null,
-    source: null,
+    language: '',
+    source: '',
     videoValid: true,
-    originTags: null,
+    originTags: [],
     youtubeId: '',
-    title: null,
-    description: null,
+    title: '',
+    description: '',
     audioUrl: '',
-    tags: null,
+    tags: '',
     isAudioSource: false,
     secureUrl: '',
     deleteToken: '',
     error: null,
     audioDuration: null,
     redirecting: false,
-    cusThumbnailSecUrl: null,
-    cusThumbnailDelToken: null,
+    cusThumbnailSecUrl: '',
+    cusThumbnailDelToken: '',
     showUpload: false,
     showUploadThumbnail: false,
   });
@@ -115,7 +115,6 @@ const EditVideo = ({ id, audioId }) => {
     oldTags,
     oldAudioSource,
     oldLanguage,
-    oldOriginTags,
     oldCusThumbnail,
   } = getDefaultValues(data, audioId);
 
@@ -194,9 +193,10 @@ const EditVideo = ({ id, audioId }) => {
       };
       // Remove null fields to avoid backend error
       Object.keys(variables).forEach(
-        key => variables[key] === null && delete variables[key]
+        key =>
+          (variables[key] === '' || variables[key] === null) &&
+          delete variables[key]
       );
-
       ({
         data: {
           updateAudio: { id: redirectAudioParam },
@@ -307,9 +307,9 @@ const EditVideo = ({ id, audioId }) => {
                 <DetailsForm
                   setAddVideoState={setEditVideoState}
                   title={title || oldTitleVi}
-                  description={description || oldDescriptionVi}
+                  description={description || oldDescriptionVi || ''}
                   tags={tags || oldTags}
-                  originTags={originTags || oldOriginTags}
+                  originTags={originTags}
                   youtubeId={youtubeId || oldOriginId}
                   language={language || oldLanguage}
                   cusThumbnailSecUrl={cusThumbnailSecUrl}
