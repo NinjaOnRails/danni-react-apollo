@@ -12,6 +12,7 @@ import AuthModal from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 import MobileNav from './Mobile/MobileNav';
 import { LOCAL_STATE_QUERY } from '../../graphql/query';
+import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const defaultTheme = {
   white: ' #fff',
@@ -99,32 +100,24 @@ const Composed = adopt({
   localData,
 });
 
-const Page = ({ children, route }) => (
-  <Composed>
-    {({ localData: { data } }) => {
-      if (!data) return <div>Loading...</div>;
-      return (
-        <ThemeProvider theme={defaultTheme}>
-          <StyledPage>
-            <GlobalStyle
-              showSide={data.showSide}
-              showAuthModal={data.showAuthModal}
-            />
-            {/* <GDPR /> */}
-            <Header />
-            <SideDrawer />
-            {data.showAuthModal && (
-              <AuthModal showAuthModal={data.showAuthModal} />
-            )}
-            <Inner route={route}>{children}</Inner>
-            <MobileNav />
-            {!pagesWithoutFooter.includes(route) && <Footer />}
-          </StyledPage>
-        </ThemeProvider>
-      );
-    }}
-  </Composed>
-);
+const Page = ({ children, route }) => {
+  const { showSide, showAuthModal } = useLocalStateQuery();
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <StyledPage>
+        <GlobalStyle showSide={showSide} showAuthModal={showAuthModal} />
+        {/* <GDPR /> */}
+        <Header />
+        <SideDrawer />
+        {showAuthModal && <AuthModal showAuthModal={showAuthModal} />}
+        <Inner route={route}>{children}</Inner>
+        <MobileNav />
+        {!pagesWithoutFooter.includes(route) && <Footer />}
+      </StyledPage>
+    </ThemeProvider>
+  );
+};
 
 Page.propTypes = {
   children: PropTypes.oneOfType([
