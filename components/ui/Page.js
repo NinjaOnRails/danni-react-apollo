@@ -1,17 +1,13 @@
 import React from 'react';
-import { Query } from 'react-apollo';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
-import { adopt } from 'react-adopt';
 // import Header from './Header';
 import Header from './Header';
 import Footer, { pagesWithoutFooter } from './Footer';
 import SideDrawer from './Mobile/SideDrawer';
-// import SideDrawer from './SemanticSidebar';
 import AuthModal from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 import MobileNav from './Mobile/MobileNav';
-import { LOCAL_STATE_QUERY } from '../../graphql/query';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const defaultTheme = {
@@ -89,16 +85,6 @@ const GlobalStyle = createGlobalStyle`
     bottom: 50px !important;
   }
 `;
-
-/* eslint-disable */
-const localData = ({ render }) => (
-  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
-);
-/* eslint-enable */
-
-const Composed = adopt({
-  localData,
-});
 
 const Page = ({ children, route }) => {
   const { showSide, showAuthModal } = useLocalStateQuery();

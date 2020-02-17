@@ -1,13 +1,11 @@
-import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Radio } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
 import RenderSmallVideoList from './RenderSmallVideoList';
-import { videos } from './Videos';
 import { useLocalStateQuery } from '../Authentication/authHooks';
-import { useToggleAutoplayMutation } from './videoHooks';
+import { useToggleAutoplayMutation, useAllVideosQuery } from './videoHooks';
 
 const AutoplayToggle = styled.div`
   font-weight: 600;
@@ -29,58 +27,48 @@ const LanguageMenuStyles = styled.div`
   }
 `;
 
-const Composed = adopt({
-  contentLanguageQuery,
-  videos,
-});
-
 const SmallVideoList = props => {
   const {
     videos: { data: initialVideoData },
   } = props;
   const { allowAutoplay } = useLocalStateQuery();
+  const {
+    data: dataVideos,
+    fetchMore,
+    errorVideos,
+    loading: loadingVideos,
+  } = useAllVideosQuery();
   const [toggleAllowAutoplay] = useToggleAutoplayMutation();
 
   return (
-    <Composed>
-      {({
-        videos: {
-          loading: loadingVideos,
-          errorVideos,
-          data: dataVideos,
-          fetchMore,
-        },
-      }) => (
-        <>
-          <LanguageMenuStyles>
-            {/* <ContentLanguage
+    <>
+      <LanguageMenuStyles>
+        {/* <ContentLanguage
               currentWatchingLanguage={props.currentWatchingLanguage}
               loadingData={loadingVideos}
             /> */}
-          </LanguageMenuStyles>
-          <AutoplayToggle>
-            Tự động phát
-            <div className="radio-button">
-              <Radio
-                toggle
-                onChange={toggleAllowAutoplay}
-                checked={allowAutoplay}
-              />
-            </div>
-          </AutoplayToggle>
+      </LanguageMenuStyles>
+      <AutoplayToggle>
+        Tự động phát
+        <div className="radio-button">
+          <Radio
+            toggle
+            onChange={toggleAllowAutoplay}
+            checked={allowAutoplay}
+          />
+        </div>
+      </AutoplayToggle>
 
-          {errorVideos ? (
-            <Error>Error: {errorVideos.message}</Error>
-          ) : (
-            <RenderSmallVideoList
-              dataVideos={dataVideos || initialVideoData}
-              fetchMore={fetchMore}
-              {...props}
-            />
-          )}
-        </>
+      {errorVideos ? (
+        <Error>Error: {errorVideos.message}</Error>
+      ) : (
+        <RenderSmallVideoList
+          dataVideos={dataVideos || initialVideoData}
+          fetchMore={fetchMore}
+          {...props}
+        />
       )}
-    </Composed>
+    </>
   );
 };
 
