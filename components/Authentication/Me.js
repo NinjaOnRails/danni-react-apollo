@@ -46,7 +46,7 @@ const Me = () => {
   return (
     <>
       <Head>
-        <title key="title">Danni TV - Tài khoản</title>
+        <title key="title">Danni TV - My account</title>
         <meta key="metaTitle" name="title" content="Danni TV - Tài khoản" />
       </Head>
       <Container>
