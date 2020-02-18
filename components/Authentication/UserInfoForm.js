@@ -32,18 +32,15 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
   }
   Object.keys(userInfoForm).forEach(key => {
     const { boxName } = userInfoForm[key];
-
     if (boxName) {
       variables[boxName] = infoVisibility[boxName];
     } 
     variables[key] = userInfoForm[key].value;
-    
     formElArr.push({
       id: key,
       input: userInfoForm[key],
     });
   });
-  console.log(variables);
   const [updateUser, { loading, error }] = useUpdateUserMutation({
     id,
     variables,
