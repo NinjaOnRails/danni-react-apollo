@@ -121,7 +121,7 @@ const AudioForm = ({
           }}
         >
           <Radio value="upload" checked={isAudioSource} />
-          Tải file thuyết minh lên
+          Upload audio file
         </Header>
       )}
       <Segment attached>
@@ -130,7 +130,7 @@ const AudioForm = ({
         )) ||
           (secureUrl && (
             <>
-              <Header as="h3">File được tải lên:</Header>
+              <Header as="h3">Uploaded file:</Header>
               <audio
                 controls
                 src={secureUrl}
@@ -139,7 +139,7 @@ const AudioForm = ({
                 <track kind="captions" />
               </audio>
               <Button negative onClick={onDeleteFileSubmit} type="button">
-                xoá
+                remove
               </Button>
             </>
           )) ||
@@ -149,7 +149,7 @@ const AudioForm = ({
             <>
               {uploadError && (
                 <Progress percent={100} error>
-                  Lỗi mạng hoặc file không hợp lệ.
+                  Network error or invalid file.
                 </Progress>
               )}
               <div className="audioUrl">
@@ -160,7 +160,7 @@ const AudioForm = ({
                   }}
                   defaultValue={audioUrl}
                   name="audioUrl"
-                  label="Đường link (URL)"
+                  label="Link (URL)"
                   placeholder="spotify.com/audiofile.mp3"
                 />
                 <Button
@@ -168,16 +168,16 @@ const AudioForm = ({
                   onClick={() => onUploadButtonClick(data.cloudinaryAuthAudio)}
                 >
                   <Icon name="upload" />
-                  Tải lên
+                  Upload
                 </Button>
               </div>
-              <Header>hoặc</Header>
+              <Header>- OR -</Header>
               <Button
                 type="button"
                 positive
                 size="huge"
                 className="choose-file-button"
-                content="Chọn file trong máy"
+                content="Choose file"
                 labelPosition="left"
                 icon="file audio"
                 onClick={() => {
@@ -210,7 +210,7 @@ const AudioForm = ({
             }}
           >
             <Radio value="upload" checked={!isAudioSource} />
-            Video đã có sẵn thuyết minh
+            Video already dubbed
           </Header>
         </Segment>
       )}
@@ -223,7 +223,7 @@ const AudioForm = ({
             labelPosition="left"
             onClick={() => setAddVideoState({ activeStep: 'video' })}
           >
-            Quay lại
+            Back
             <Icon name="left arrow" />
           </Button>
           {isAudioSource ? (
@@ -238,12 +238,12 @@ const AudioForm = ({
               primary
               onClick={onNextButtonClick}
             >
-              Tiếp tục
+              Next
               <Icon name="right arrow" />
             </Button>
           ) : (
             <Button type="submit" size="big" icon labelPosition="right" primary>
-              Xác nhận
+              Submit
               <Icon name="check" />
             </Button>
           )}

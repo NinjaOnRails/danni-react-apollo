@@ -83,7 +83,7 @@ const UpdateAvatarModal = ({
       open={showUpdateAvatarModal}
       onClose={closeUpdateAvatarModal}
     >
-      <Modal.Header>Thay đổi avatar</Modal.Header>
+      <Modal.Header>Update avatar</Modal.Header>
       <Modal.Content>
         <Modal.Description>
           <Header as="h2" attached="top" onClick={() => setChoiceTypeList()}>
@@ -93,7 +93,7 @@ const UpdateAvatarModal = ({
               checked={choiceType === 'list'}
               onChange={setChoiceTypeList}
             />
-            Chọn avatar có sẵn
+            System avatars
           </Header>
           <Segment attached>{renderAvatarList()}</Segment>
           <Header as="h2" attached="top" onClick={() => setChoiceTypeUpload()}>
@@ -103,7 +103,7 @@ const UpdateAvatarModal = ({
               checked={choiceType === 'upload'}
               onChange={setChoiceTypeUpload}
             />
-            Tải ảnh mới lên
+            Upload new image
           </Header>
           <CloudinaryUploadAvatar
             chooseUpload={setChoiceTypeUpload}
@@ -127,7 +127,7 @@ const UpdateAvatarModal = ({
           onClick={() => onSubmit(updateAvatar)}
         >
           <Icon name="check" />
-          {loading && 'Đang '}Xác nhận
+          Submit{loading && 'ting'}
         </Button>
         <Button
           type="button"
@@ -137,7 +137,7 @@ const UpdateAvatarModal = ({
           onClick={closeUpdateAvatarModal}
         >
           <Icon name="cancel" />
-          Huỷ
+          Cancel
         </Button>
       </Modal.Actions>
     </UpdateAvatarModalStyles>

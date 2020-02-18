@@ -14,7 +14,7 @@ const signinFields = {
     value: '',
   },
   password: {
-    inputConfig: { label: 'Mật khẩu', type: 'password', name: 'password' },
+    inputConfig: { label: 'Password', type: 'password', name: 'password' },
     validation: {
       required: true,
       minLength: 6,
@@ -29,7 +29,7 @@ const signupFields = {
   ...signinFields,
   displayName: {
     inputConfig: {
-      label: 'Tên hiển thị',
+      label: 'Display name',
       type: 'text',
       name: 'displayName',
     },
@@ -48,7 +48,7 @@ const requestResetFields = {
 const resetFields = {
   password: {
     inputConfig: {
-      label: 'Mật khẩu mới',
+      label: 'New password',
       type: 'password',
       name: 'password',
     },
@@ -62,7 +62,7 @@ const resetFields = {
   },
   confirmPassword: {
     inputConfig: {
-      label: 'Lặp lại m/k mới',
+      label: 'Confirm password',
       type: 'password',
       name: 'confirmPassword',
     },
@@ -79,7 +79,7 @@ const resetFields = {
 const userPasswordFields = {
   password: {
     inputConfig: {
-      label: 'Mật khẩu cũ',
+      label: 'Old password',
       type: 'password',
       name: 'password',
     },
@@ -93,7 +93,7 @@ const userPasswordFields = {
   newPassword: {
     inputConfig: {
       name: 'newPassword',
-      label: 'Mật khẩu mới',
+      label: 'New password',
       type: 'password',
     },
     validation: {
@@ -107,7 +107,7 @@ const userPasswordFields = {
   },
   confirmPassword: {
     inputConfig: {
-      label: 'Lặp lại m/k mới',
+      label: 'Repeat new pwd',
       type: 'password',
       name: 'confirmPassword',
     },
@@ -125,7 +125,7 @@ const userPasswordFields = {
 const userInfoFields = {
   displayName: {
     inputConfig: {
-      label: 'Tên hiển thị',
+      label: 'Display name',
       type: 'text',
       name: 'displayName',
     },
@@ -137,7 +137,7 @@ const userInfoFields = {
   },
   name: {
     inputConfig: {
-      label: 'Họ và tên',
+      label: 'Name',
       name: 'name',
       type: 'text',
     },
@@ -147,7 +147,7 @@ const userInfoFields = {
   },
   bio: {
     inputConfig: {
-      label: 'Giới thiệu',
+      label: 'Info',
       name: 'bio',
       type: 'text',
     },
@@ -157,7 +157,7 @@ const userInfoFields = {
   },
   location: {
     inputConfig: {
-      label: 'Nơi sống',
+      label: 'Location',
       name: 'location',
       type: 'text',
     },

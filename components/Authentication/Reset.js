@@ -42,7 +42,7 @@ const Reset = ({ router }) => {
     if (password.value !== confirmPassword.value) {
       clearForm(resetFields, setResetForm, setFormValid);
       setPasswordsMatch({
-        message: 'Mật khẩu không khớp. Xin vui lòng điền lại',
+        message: 'Passwords do not match',
       });
     } else {
       setPasswordsMatch(null);
@@ -57,23 +57,23 @@ const Reset = ({ router }) => {
   if (redirecting)
     return (
       <Loader indeterminate active>
-        Đang chuyển trang...
+        Redirecting...
       </Loader>
     );
 
   return (
     <>
       <Head>
-        <title key="title">Danni TV - Lập mật khẩu mới</title>
+        <title key="title">Danni TV - Reset password</title>
         <meta
           key="metaTitle"
           name="title"
-          content="Danni TV - Lập mật khẩu mới"
+          content="Danni TV - Reset password"
         />
       </Head>
       <Form method="post" onSubmit={onSubmit}>
         <Header as="h1" textAlign="center">
-          Tạo mật khẩu mới
+          Reset password
         </Header>
         <fieldset disabled={loading} aria-busy={loading}>
           <Error error={error} />
@@ -94,13 +94,13 @@ const Reset = ({ router }) => {
           ))}
           <div className="center">
             <button type="submit" disabled={loading || !formValid}>
-              Xác nhận
+              Submit
             </button>
           </div>
         </fieldset>
         <div className="auth-links">
           <Link href="/requestReset">
-            <a>Gửi lại yêu cầu đổi mật khẩu</a>
+            <a>Resend password reset request</a>
           </Link>
         </div>
       </Form>

@@ -158,14 +158,14 @@ const AddVideo = () => {
   if (redirecting)
     return (
       <Loader indeterminate active>
-        Đang chuyển trang...
+        Redirecting...
       </Loader>
     );
   return (
     <>
       <Head>
-        <title key="title">Danni TV - Thêm Video</title>
-        <meta key="metaTitle" name="title" content="Danni TV - Thêm Video" />
+        <title key="title">Danni TV - Add Video</title>
+        <meta key="metaTitle" name="title" content="Danni TV - Add Video" />
       </Head>
       <AddVideoStyles>
         <AddVideoSteps activeStep={activeStep} />

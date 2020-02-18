@@ -144,7 +144,7 @@ class Watch extends Component {
       >
         {showNextVideo && (
           <div className="next-video-overlay">
-            <h4 id="next-text">Tiếp theo:</h4>
+            <h4 id="next-text">Next video:</h4>
 
             <p id="next-title">{nextVideo.title}</p>
             <div id="thumb-count">
@@ -164,11 +164,11 @@ class Watch extends Component {
             </div>
             <div id="next-actions">
               <Button onClick={this.cancelCountdown}>
-                <Icon name="cancel" /> Huỷ
+                <Icon name="cancel" /> Cancel
               </Button>
               <Button onClick={this.onNextVideoClick}>
                 <Progress total={5} value={5 - nextVidCountdown} color="blue" />
-                <Icon name="step forward" /> Xem Tiếp
+                <Icon name="step forward" /> Continue
               </Button>
             </div>
           </div>

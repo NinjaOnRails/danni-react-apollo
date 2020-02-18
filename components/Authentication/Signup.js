@@ -76,7 +76,7 @@ const Signup = ({ modal }) => {
   if (redirecting)
     return (
       <Loader indeterminate active>
-        Đang chuyển trang...
+        Redirecting...
       </Loader>
     );
   return (
@@ -85,8 +85,12 @@ const Signup = ({ modal }) => {
         return (
           <>
             <Head>
-              <title key="title">Danni TV - Đăng ký</title>
-              <meta key="metaTitle" name="title" content="Danni TV - Đăng ký" />
+              <title key="title">Danni TV - Register</title>
+              <meta
+                key="metaTitle"
+                name="title"
+                content="Danni TV - Register"
+              />
             </Head>
             <StyledForm
               method="post"
@@ -99,7 +103,7 @@ const Signup = ({ modal }) => {
               modal={modal}
             >
               <Header as="h1" textAlign="center">
-                Tạo tài khoản miễn phí
+                Create a new account
               </Header>
               <fieldset
                 disabled={loading || fbLoginLoading}
@@ -127,9 +131,9 @@ const Signup = ({ modal }) => {
                 ))}
                 <div className="center">
                   <button type="submit" disabled={loading || fbLoginLoading}>
-                    {(loading || fbLoginLoading) && 'Đang '}Đăng Ký
+                    Submit{(loading || fbLoginLoading) && 'ting'}
                   </button>
-                  <p className="or">hoặc dùng</p>
+                  <p className="or">- OR -</p>
                   <Button
                     type="button"
                     color="facebook"
@@ -144,18 +148,18 @@ const Signup = ({ modal }) => {
                     }
                   >
                     <Icon name="facebook" />
-                    Facebook
+                    Log in with Facebook
                   </Button>
                 </div>
                 {!modal && (
                   <div className="auth-links">
                     <Link href="/signin">
-                      <a>Đã có tài khoản</a>
+                      <a>Already have an account</a>
                     </Link>
                     <Link href="/requestReset">
                       <a>
                         <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                          Quên mật khẩu
+                          Forgot password?
                         </span>
                       </a>
                     </Link>

@@ -4,7 +4,7 @@ import About from '../components/About';
 const AboutPage = () => (
   <>
     <Header as="h1" textAlign="center">
-      Giới thiệu
+      About us
     </Header>
     <About />
   </>

@@ -14,10 +14,10 @@ import {
 import { useCloseSideDrawerMutation } from '../uiHooks';
 
 const sidebarItems = [
-  { linkName: 'Trang Chủ', link: '/', icon: 'home' },
-  { linkName: 'Thêm Video', link: '/new', icon: 'video', miniIcon: true },
-  { linkName: 'Giới Thiệu', link: '/about', icon: 'info' },
-  { linkName: 'Tài Khoản', link: '/me', icon: 'user' },
+  { linkName: 'Home', link: '/', icon: 'home' },
+  { linkName: 'Add Video', link: '/new', icon: 'video', miniIcon: true },
+  { linkName: 'About us', link: '/about', icon: 'info' },
+  { linkName: 'Account', link: '/me', icon: 'user' },
 ];
 
 const SideDrawer = () => {
@@ -56,13 +56,13 @@ const SideDrawer = () => {
                   >
                     <div className="link-container">
                       <Icon name="sign-out" size="large" />
-                      <span className="link-name">Đăng Xuất</span>
+                      <span className="link-name">Log out</span>
                     </div>
                   </MenuItem>
                 )}
               </Menu>
               <LanguageMenuStyles>
-                <ContentLanguage sideDrawer loadingData={false} />
+                {/* <ContentLanguage sideDrawer loadingData={false} /> */}
               </LanguageMenuStyles>
             </div>
           </div>

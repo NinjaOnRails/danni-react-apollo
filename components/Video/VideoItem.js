@@ -65,7 +65,7 @@ const VideoItem = ({
           >
             <Button icon labelPosition="left">
               <Icon name="write" />
-              Sửa
+              Update
             </Button>
           </Link>
           <VideoDeleteButton

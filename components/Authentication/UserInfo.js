@@ -17,7 +17,7 @@ const UserInfo = ({
         {isOwner && (
           <Popup
             trigger={<Icon link name="write" onClick={onUserInfoEditClick} />}
-            content="Sửa thông tin cá nhân"
+            content="Update personal info"
           />
         )}
       </Item.Header>
@@ -31,7 +31,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showName ? 'Công khai' : 'Giấu'}
+                content={currentUser.showName ? 'Public' : 'Hidden'}
                 trigger={
                   <Icon name={currentUser.showName ? 'eye' : 'eye slash'} />
                 }
@@ -44,7 +44,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showBio ? 'Công khai' : 'Giấu'}
+                content={currentUser.showBio ? 'Public' : 'Hidden'}
                 trigger={
                   <Icon name={currentUser.showBio ? 'eye' : 'eye slash'} />
                 }
@@ -59,7 +59,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showLocation ? 'Công khai' : 'Giấu'}
+                content={currentUser.showLocation ? 'Public' : 'Hidden'}
                 trigger={
                   <Icon name={currentUser.showLocation ? 'eye' : 'eye slash'} />
                 }
@@ -72,7 +72,7 @@ const UserInfo = ({
           <p>
             {me && (
               <Popup
-                content={currentUser.showEmail ? 'Công khai' : 'Giấu'}
+                content={currentUser.showEmail ? 'Public' : 'Hidden'}
                 trigger={
                   <Icon name={currentUser.showEmail ? 'eye' : 'eye slash'} />
                 }

@@ -29,13 +29,13 @@ const Header = () => {
           <ul>
             <li>
               <Link href="/">
-                <a>Trang chủ</a>
+                <a>Home</a>
               </Link>
             </li>
 
             <li>
               <Link href="/about">
-                <a>Giới thiệu</a>
+                <a>About us</a>
               </Link>
             </li>
 
@@ -43,7 +43,7 @@ const Header = () => {
               <>
                 <li>
                   <Link href="/me">
-                    <a>Tài khoản</a>
+                    <a>Account</a>
                   </Link>
                 </li>
                 <li>
@@ -54,12 +54,12 @@ const Header = () => {
               <>
                 <li>
                   <Link href="/signin">
-                    <a>Đăng Nhập</a>
+                    <a>Log in</a>
                   </Link>
                 </li>
                 <li className="signup">
                   <Link href="/signup">
-                    <a>Đăng Ký</a>
+                    <a>Register</a>
                   </Link>
                 </li>
               </>
@@ -70,7 +70,7 @@ const Header = () => {
           {/* <Search /> */}
           <Link href="/new">
             <Button primary size="huge">
-              <Icon name="plus" /> Thêm Video
+              <Icon name="plus" /> Add Video
             </Button>
           </Link>
         </div>

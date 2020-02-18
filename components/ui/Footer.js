@@ -28,27 +28,27 @@ const Footer = () => (
       </ul>
       <ul className="footer-list-top">
         <li>
-          <h4 className="footer-list-header">Về danni.tv</h4>
+          <h4 className="footer-list-header">About danni.tv</h4>
         </li>
         <li>
           <Link href="/about">
-            <a className="link-list-item">MỤC ĐÍCH CỦA CHÚNG TÔI</a>
+            <a className="link-list-item">OUR MISSION</a>
           </Link>
         </li>
         <li>
           <a className="link-list-item">PROMOS</a>
         </li>
         <li>
-          <a className="link-list-item">THUYẾT MINH VIDEO</a>
+          <a className="link-list-item">DUB A VIDEO</a>
         </li>
       </ul>
       <ul className="footer-list-top">
         <li id="help">
-          <h4 className="footer-list-header">Trợ giúp</h4>
+          <h4 className="footer-list-header">Support</h4>
         </li>
         <li>
           <Link href="/about">
-            <a className="link-list-item">LIÊN LẠC</a>
+            <a className="link-list-item">CONTACT</a>
           </Link>
         </li>
         <li>
@@ -58,7 +58,7 @@ const Footer = () => (
         </li>
         <li id="find-a-store">
           <Link href="/about">
-            <a className="link-list-item">HƯỚNG DẪN SỬ DỤNG</a>
+            <a className="link-list-item">HOW TO</a>
           </Link>
         </li>
       </ul>
@@ -72,11 +72,11 @@ const Footer = () => (
         </div>
         <div className="footer-bottom-wrapper">
           <a className="terms-privacy" rel="nofollow">
-            ĐIỀU KHOẢN
+            TERMS
           </a>{' '}
           |{' '}
           <a className="terms-privacy" rel="nofollow">
-            QUYỀN RIÊNG TƯ
+            PRIVACY
           </a>
         </div>
       </section>

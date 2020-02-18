@@ -35,7 +35,7 @@ const VideoForm = ({
         youtubeId: id,
       });
     } catch (err) {
-      setError({ message: 'Lỗi mạng hoặc sai YouTube ID' });
+      setError({ message: 'Network error or invalid YouTube ID' });
     }
   };
 
@@ -49,7 +49,7 @@ const VideoForm = ({
     } else if (inputSource.length === youtubeIdLength) {
       originId = inputSource;
     } else {
-      return setError({ message: 'Thông tin không hợp lệ' });
+      return setError({ message: 'Invalid YouTube ID' });
     }
     return fetchYoutube(originId);
   };
@@ -73,7 +73,7 @@ const VideoForm = ({
     if (videoValid) {
       setAddVideoState({ activeStep: 'audio', videoValid: false });
     } else {
-      setError({ message: 'Phải có YouTube Video hợp lệ để tiếp tục' });
+      setError({ message: 'YouTube Video missing or invalid' });
     }
   };
 
@@ -84,7 +84,7 @@ const VideoForm = ({
   return (
     <>
       <Form.Dropdown
-        label="Ngôn ngữ thuyết minh"
+        label="Target language"
         selection
         options={flagOptions}
         onChange={handleChange}
@@ -92,8 +92,8 @@ const VideoForm = ({
         name="language"
       />
       <Form.Input
-        label="YouTube ID hoặc đường link (URL)  "
-        placeholder="36A5bOSP334 hoặc www.youtube.com/watch?v=36A5bOSP334"
+        label="YouTube ID or link (URL)  "
+        placeholder="36A5bOSP334 or www.youtube.com/watch?v=36A5bOSP334"
         defaultValue={source}
         onChange={handleChange}
         name="source"
@@ -123,7 +123,7 @@ const VideoForm = ({
             primary
             onClick={onButtonClick}
           >
-            Tiếp tục
+            Next
             <Icon name="right arrow" />
           </Button>
         </div>

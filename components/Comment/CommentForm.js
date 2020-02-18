@@ -39,13 +39,13 @@ const CommentForm = ({ videoId, currentUser }) => {
         }}
       >
         <Form.TextArea
-          placeholder="Viết bình luận..."
+          placeholder="Write a comment..."
           onChange={e =>
             onCommentFormChange(e, setCommentInput, setCommentInputValid)
           }
           value={commentInput}
         />
-        <Button content="Đăng" primary disabled={!commentInputValid} />
+        <Button content="Submit" primary disabled={!commentInputValid} />
       </Form>
     </>
   );

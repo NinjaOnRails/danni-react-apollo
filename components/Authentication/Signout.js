@@ -16,7 +16,7 @@ const Signout = () => {
     <ApolloConsumer>
       {client => (
         <button type="button" onClick={() => onSignout({ signout, client })}>
-          Đăng Xuất
+          Log out
         </button>
       )}
     </ApolloConsumer>

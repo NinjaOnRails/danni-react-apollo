@@ -149,7 +149,7 @@ const VideoInfo = ({
             >
               <Button icon labelPosition="left">
                 <Icon name="write" />
-                Sửa
+                Update
               </Button>
             </Link>
             <VideoDeleteButton
@@ -217,7 +217,7 @@ const VideoInfo = ({
       </div>
       <Segment>
         <Header>
-          <h2>Tác giả: {originAuthor}</h2>
+          <h2>Channel: {originAuthor}</h2>
         </Header>
         {(audio[0] && (
           <Header>
@@ -271,7 +271,7 @@ const VideoInfo = ({
             onClick={toggleFullDescription}
             className="ui button"
           >
-            {showFullDescription ? 'Đóng' : 'Tiếp'}
+            {showFullDescription ? 'See less' : 'See more'}
           </button>
         )}
       </Segment>

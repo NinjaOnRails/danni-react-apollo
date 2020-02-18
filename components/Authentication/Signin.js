@@ -67,7 +67,7 @@ const Signin = ({ modal }) => {
   if (redirecting)
     return (
       <Loader indeterminate active>
-        Đang chuyển trang...
+        Redirecting...
       </Loader>
     );
   return (
@@ -75,7 +75,7 @@ const Signin = ({ modal }) => {
       {client => (
         <>
           <Head>
-            <title key="title">Danni TV - Đăng nhập</title>
+            <title key="title">Danni TV - Log in</title>
             <meta key="metaTitle" name="title" content="Danni TV - Đăng nhập" />
           </Head>
           <StyledForm
@@ -89,7 +89,7 @@ const Signin = ({ modal }) => {
             modal={modal}
           >
             <Header as="h1" textAlign="center">
-              Đăng nhập {modal && 'để tiếp tục'}
+              Log in {modal && 'to continue'}
             </Header>
             <fieldset
               disabled={loading || fbLoginLoading}
@@ -112,9 +112,9 @@ const Signin = ({ modal }) => {
               ))}
               <div className="center">
                 <button type="submit" disabled={loading || fbLoginLoading}>
-                  {(loading || fbLoginLoading) && 'Đang '}Đăng Nhập
+                  Log{(loading || fbLoginLoading) && 'ging'} in
                 </button>
-                <p className="or">hoặc dùng</p>
+                <p className="or">- OR -</p>
                 <Button
                   type="button"
                   color="facebook"
@@ -129,19 +129,19 @@ const Signin = ({ modal }) => {
                   }
                 >
                   <Icon name="facebook" />
-                  Facebook
+                  Log in with Facebook
                 </Button>
               </div>
               <div className="auth-links">
                 {!modal && (
                   <Link href="/signup">
-                    <a>Tạo tài khoản mới</a>
+                    <a>New account</a>
                   </Link>
                 )}
                 <Link href="/requestReset">
                   <a>
                     <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Quên mật khẩu?
+                      Forgot password?
                     </span>
                   </a>
                 </Link>

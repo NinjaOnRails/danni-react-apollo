@@ -39,7 +39,7 @@ export default function YoutubeViews({ originId }) {
       }
       content={
         <>
-          Nguồn:{' '}
+          Source:{' '}
           <a href={`https://www.youtube.com/watch?v=${originId}`}>
             www.youtube.com/watch?v={originId}
           </a>

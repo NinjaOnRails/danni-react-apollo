@@ -4,10 +4,10 @@ import { useOpenSideDrawerMutation } from '../uiHooks';
 import { StyledNav } from '../../styles/MobileUiStyles';
 
 const sidebarItems = [
-  { linkName: 'Trang Chủ', link: '/', icon: 'home' },
-  { linkName: 'Thêm Video', link: '/new', icon: 'video', miniIcon: true },
-  { linkName: 'Tài Khoản', link: '/me', icon: 'user' },
-  { linkName: 'Giới Thiệu', link: '/about', icon: 'info' },
+  { linkName: 'Home', link: '/', icon: 'home' },
+  { linkName: 'Add Video', link: '/new', icon: 'video', miniIcon: true },
+  { linkName: 'Account', link: '/me', icon: 'user' },
+  { linkName: 'About us', link: '/about', icon: 'info' },
 ];
 
 const MobileNav = () => {

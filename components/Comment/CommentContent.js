@@ -138,22 +138,22 @@ const CommentContent = ({
                     onClick={e => onVoteClick(e, createCommentVote)}
                   />
                   <Comment.Action onClick={onReplyClick}>
-                    Trả lời
+                    Reply
                   </Comment.Action>
                   {currentUser && author && author.id === currentUser.id ? (
                     <>
                       <Comment.Action onClick={openEditInput}>
-                        Sửa
+                        Edit
                       </Comment.Action>
                       <StyledPopup
-                        trigger={<Comment.Action>Xoá</Comment.Action>}
+                        trigger={<Comment.Action>Delete</Comment.Action>}
                         on="click"
                         position="bottom right"
                       >
                         <Button
                           fluid
                           color="red"
-                          content="Xoá bình luận"
+                          content="Delete comment"
                           onClick={deleteComment}
                         />
                       </StyledPopup>

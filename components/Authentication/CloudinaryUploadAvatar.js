@@ -105,9 +105,9 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
       )) ||
         (secureUrlState && (
           <>
-            <Header as="h3">Ảnh được tải lên:</Header>
+            <Header as="h3">Uploaded image:</Header>
             <Button negative onClick={onDeleteFileSubmit} type="button">
-              Xoá
+              remove
             </Button>
             <Image src={secureUrlState} />
           </>
@@ -115,7 +115,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
           <>
             {uploadError && (
               <Progress percent={100} error>
-                Lỗi mạng hoặc ảnh có vấn đề. Vui lòng thử sau.
+                Network error or invalid image file. Try again later
               </Progress>
             )}
             <Button
@@ -123,7 +123,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
               positive
               size="huge"
               className="choose-file-button"
-              content="Chọn ảnh trong máy"
+              content="Choose file"
               labelPosition="left"
               icon="file image"
               onClick={() => {
@@ -144,8 +144,8 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
                 setStartingUpload(false);
               }}
             />
-            <Header>hoặc</Header>
-            <Header as="h3">Tải từ đường link:</Header>
+            <Header>- OR -</Header>
+            <Header as="h3">Provide URL:</Header>
             <div className="uploadImageUrl">
               <Input
                 onClick={() => chooseUpload()}
@@ -165,7 +165,7 @@ const CloudinaryUploadAvatar = ({ chooseUpload, setSecureUrl }) => {
                 }}
               >
                 <Icon name="upload" />
-                Tải lên
+                Upload
               </Button>
             </div>
           </>

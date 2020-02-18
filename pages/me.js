@@ -5,7 +5,7 @@ import PleaseSignIn from '../components/Authentication/PleaseSignIn';
 const MePage = () => (
   <>
     <Header as="h1" textAlign="center">
-      Tài khoản của tôi
+      My Account
     </Header>
     <PleaseSignIn>
       <Me />

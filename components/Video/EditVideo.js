@@ -104,7 +104,7 @@ const EditVideo = ({ id, audioId }) => {
   if (redirecting)
     return (
       <Loader indeterminate active>
-        Đang chuyển trang...
+        Redirecting...
       </Loader>
     );
 
@@ -222,14 +222,14 @@ const EditVideo = ({ id, audioId }) => {
       <Head>
         <title key="title">
           {audioId ? data.video.audio[0].title : data.video.originTitle} | Danni
-          TV - Sửa video
+          TV - Update video/dubbing
         </title>
         <meta
           key="metaTitle"
           name="title"
           content={`${
             audioId ? data.video.audio[0].title : data.video.originTitle
-          } | Danni TV - Sửa video`}
+          } | Danni TV - Update video`}
         />
       </Head>
       <EditVideoStyles editVideo>
@@ -257,8 +257,8 @@ const EditVideo = ({ id, audioId }) => {
               <Button
                 content={
                   isAudioSource
-                    ? 'Thôi thêm thuyết minh cho video'
-                    : 'Thêm thuyết minh cho video'
+                    ? 'Cancel current audio/dubbing file'
+                    : 'Add audio/dubbing'
                 }
                 className="add-audio-button"
                 color={isAudioSource ? 'red' : 'green'}
@@ -272,13 +272,13 @@ const EditVideo = ({ id, audioId }) => {
               <>
                 {!secureUrl && !audioUrl && oldAudioSource && (
                   <>
-                    <Header as="h3" content="File thuyết minh hiện tại:" />
+                    <Header as="h3" content="Current audio file:" />
                     <audio controls src={oldAudioSource}>
                       <track kind="captions" />
                     </audio>
                   </>
                 )}
-                <Header as="h3" content="Tải file thuyết minh mới:" />
+                <Header as="h3" content="Upload a new audio file:" />
                 {showUpload || isAudioSource ? (
                   <AudioForm
                     setAddVideoState={setEditVideoState}
@@ -295,9 +295,10 @@ const EditVideo = ({ id, audioId }) => {
                 ) : (
                   <Message warning visible>
                     <p>
-                      Tải tệp file mới lên sẽ lập tức xoá vĩnh viễn tệp cũ.
+                      Uploading a new file will immediately permanently delete
+                      the current file.
                       <Button
-                        content="Tiếp tục"
+                        content="Continue"
                         negative
                         onClick={() => setEditVideoState({ showUpload: true })}
                       />
@@ -330,9 +331,13 @@ const EditVideo = ({ id, audioId }) => {
                 labelPosition="right"
                 primary
               >
-                Lưu thay đổi
+                Save changes
                 <Icon name="check" />
               </Button>
+              {/* <Button type="button" size="big" icon labelPosition="right">
+                Cancel
+                <Icon name="cancel" />
+              </Button> */}
             </div>
           </Form>
         </Segment>

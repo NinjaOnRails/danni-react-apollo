@@ -104,7 +104,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
               />
               {boxName && (
                 <Checkbox
-                  label="Công khai"
+                  label="Public"
                   name={boxName}
                   defaultChecked={currentUser[boxName]}
                   onChange={handleChange}
@@ -150,7 +150,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
                 {name === 'password' && (
                   <Popup
                     content={
-                      displayPassword ? 'Giấu mật khẩu' : 'Hiển thị mật khẩu'
+                      displayPassword ? 'Hide password' : 'Show password'
                     }
                     trigger={
                       <Icon
@@ -170,14 +170,14 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
                 setShowPasswordChange(true);
               }}
             >
-              Đổi mật khẩu
+              Change password
             </Button>
           </p>
         )}
 
         <Button type="submit" primary icon labelPosition="left" size="big">
           <Icon name="check" />
-          {loading && 'Đang '}Xác nhận
+          Submit{loading && 'ting'}
         </Button>
         <Button
           type="button"
@@ -187,7 +187,7 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
           onClick={onCancelClick}
         >
           <Icon name="cancel" />
-          Huỷ
+          Cancel
         </Button>
       </Form>
     </Item.Content>

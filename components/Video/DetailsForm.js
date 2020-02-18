@@ -32,20 +32,20 @@ const DetailsForm = ({
     <>
       <Form.Input
         required
-        label="Tiêu đề"
+        label="Title"
         defaultValue={title}
         onChange={handleChange}
         name="title"
-        placeholder="bắt buộc"
+        placeholder="required"
         maxLength="100"
       />
       {editVideo && oldCusThumbnail && !cusThumbnailSecUrl && (
         <>
-          <Header as="h3" content="Ảnh thu nhỏ hiện tại:" />
+          <Header as="h3" content="Thumbnail:" />
           <Image src={oldCusThumbnail} size="tiny" />
         </>
       )}
-      <Header as="h3" content={editVideo ? 'Tải ảnh mới:' : 'Ảnh thu nhỏ:'} />
+      <Header as="h3" content="Thumbnail:" />
       {(editVideo && showUploadThumbnail) || !editVideo ? (
         <>
           <CloudinaryUploadCusThumbnail
@@ -57,9 +57,10 @@ const DetailsForm = ({
       ) : (
         <Message warning visible>
           <p>
-            Tải tệp file mới lên sẽ lập tức xoá vĩnh viễn tệp cũ.
+            Uploading a new file will immediately permanently delete the current
+            file.
             <Button
-              content="Tiếp tục"
+              content="Continue"
               negative
               onClick={() => setAddVideoState({ showUploadThumbnail: true })}
             />
@@ -67,7 +68,7 @@ const DetailsForm = ({
         </Message>
       )}
       <Form.TextArea
-        label="Giới thiệu"
+        label="Description"
         defaultValue={description}
         onChange={handleChange}
         name="description"
@@ -82,7 +83,7 @@ const DetailsForm = ({
       />
       {(originTags.length > 0 || editVideo) && (
         <Segment>
-          <Header as="h4">Tags của Video gốc:</Header>
+          <Header as="h4">Source tags:</Header>
           {originTags.join(' ')}
         </Segment>
       )}
@@ -94,11 +95,11 @@ const DetailsForm = ({
             labelPosition="left"
             onClick={() => setAddVideoState({ activeStep: 'audio' })}
           >
-            Quay lại
+            Back
             <Icon name="left arrow" />
           </Button>
           <Button type="submit" size="big" icon labelPosition="right" primary>
-            Xác nhận
+            Submit
             <Icon name="check" />
           </Button>
         </div>

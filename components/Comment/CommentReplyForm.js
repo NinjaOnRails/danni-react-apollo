@@ -33,13 +33,13 @@ const CommentReplyForm = ({ id, videoId, closeReplyInput }) => {
     >
       <Form.Input
         name="replyInput"
-        placeholder="Viết trả lời..."
+        placeholder="Write a reply..."
         onChange={e => onCommentFormChange(e, setReplyInput, setReplyFormValid)}
         value={replyInput}
         autoComplete="off"
       />
       <Error error={error} />
-      <Button content="Đăng" primary disabled={!replyFormValid} />
+      <Button content="Submit" primary disabled={!replyFormValid} />
     </Form>
   );
 };

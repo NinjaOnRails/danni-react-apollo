@@ -16,39 +16,32 @@ const AboutStyles = styled.div`
 const About = () => (
   <>
     <Head>
-      <title key="title">Danni TV - Giới thiệu</title>
+      <title key="title">Danni TV - About us</title>
       <meta key="metaTitle" name="title" content="Danni TV - Giới thiệu" />
     </Head>
     <AboutStyles>
       <Container text>
         <Header as="h2" textAlign="center">
-          🌍 MỤC ĐÍCH CỦA CHÚNG TÔI 🌍
+          🌍 OUR MISSION 🌍
         </Header>
-        <p>Phổ biến hóa kiến ​​thức toàn cầu.</p>
+        <p>To help democratise global knowledge.</p>
         <Header as="h2" textAlign="center">
-          💪 CHÚNG TÔI LÀM GÌ 💪
+          💪 WHAT WE DO 💪
         </Header>
         <p>
-          Cộng đồng của chúng tôi tìm hiểu, dịch và lồng tiếng cho các video
-          trực tuyến sang các ngôn ngữ khác. Chúng tôi tập trung vào các nội
-          dung có các yếu tố liên quan tới giáo dục, phát triển bản thân và
-          chuyên môn, giải trí thông minh, với mong muốn chia sẻ những góc nhìn
-          sâu sắc hơn về các vấn đề quan trọng trong xã hội. Thông qua hoạt động
-          này, chúng tôi hy vọng nội dung của các video thú vị sẽ vượt qua được
-          các giới hạn về ngôn ngữ và không gian và tới được với đông đảo khán
-          giả.
+          Our community researches, translates and dubs relevant online videos
+          into other languages. We focus on video content which we believe to
+          contain elements of education, inspiration, personal and professional
+          growth, smart entertainment, and insights about issues that matter.
         </p>
         <Header as="h2" textAlign="center">
-          🚀 KÊU GỌI HÀNH ĐỘNG 🚀
+          🚀 CALL FOR ACTION 🚀
         </Header>
         <p>
-          Hãy cùng nhau vượt qua các rào cản ngôn ngữ để mọi người có thể truy
-          cập thư viện video tốt nhất của Internet.
+          Let's break down language barriers so everyone can access internet’s
+          finest video library.
         </p>
-        <p>
-          Các ngôn ngữ hiện đang được sử dụng: tiếng Séc, tiếng Anh và tiếng
-          Việt.
-        </p>
+        <p>Currently served languages: Czech, English, and Vietnamese.</p>
         {/* <Header as="h2">Join us!</Header>
             <p>
               BECOME A DUBBER Register and start dubbing. Use your phone or
@@ -70,7 +63,7 @@ const About = () => (
               posts. Join the team!
             </p> */}
         <Header as="h2" textAlign="center">
-          🤙 Liên lạc 🤙
+          🤙 Contact 🤙
         </Header>
         <p>info.dannitv@gmail.com</p>
         <p>(+420) 774897789</p>

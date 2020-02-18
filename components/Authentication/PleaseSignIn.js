@@ -27,7 +27,7 @@ const PleaseSignIn = ({ action, modal, children }) => {
             <>
               <StyledMessage>
                 <Message warning>
-                  <StyledHeader>{`Đăng nhập để ${action}`}</StyledHeader>
+                  <StyledHeader>{`Please log in to ${action}`}</StyledHeader>
                 </Message>
               </StyledMessage>
               <Signin noRedirect />
@@ -51,7 +51,7 @@ PleaseSignIn.propTypes = {
 
 PleaseSignIn.defaultProps = {
   children: null,
-  action: 'tiếp tục',
+  action: 'continue',
   modal: false,
 };
 

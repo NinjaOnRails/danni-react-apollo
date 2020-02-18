@@ -28,7 +28,7 @@ const VideoDeleteButton = ({
   if (loading)
     return (
       <Loader active inline>
-        Đang xoá video...
+        Deleting video...
       </Loader>
     );
   return (
@@ -40,7 +40,7 @@ const VideoDeleteButton = ({
         onClick={() => setOpenConfirm(true)}
       >
         <Icon name="trash" />
-        Xoá
+        Delete
       </Button>
       <Confirm
         size="large"

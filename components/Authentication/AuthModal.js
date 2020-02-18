@@ -25,14 +25,14 @@ const AuthModal = ({ showAuthModal }) => {
               className={`auth-mode ${mode === 'signin' ? 'active' : null} `}
               onClick={() => setMode('signin')}
             >
-              Đăng nhập
+              Log in
             </button>
             <button
               type="button"
               className={`auth-mode ${mode === 'signup' ? 'active' : null}`}
               onClick={() => setMode('signup')}
             >
-              Đăng ký
+              Register
             </button>
           </div>
           <Icon

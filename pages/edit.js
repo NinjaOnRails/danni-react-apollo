@@ -5,7 +5,7 @@ import PleaseSignIn from '../components/Authentication/PleaseSignIn';
 const Edit = ({ id, audioId }) => (
   <>
     <Header as="h1" textAlign="center">
-      Chỉnh sửa video
+      Update video/dubbing
     </Header>
     <PleaseSignIn>
       <EditVideo id={id} audioId={audioId} />

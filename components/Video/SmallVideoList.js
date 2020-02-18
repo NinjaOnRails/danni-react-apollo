@@ -59,7 +59,7 @@ const SmallVideoList = props => {
             /> */}
           </LanguageMenuStyles>
           <AutoplayToggle>
-            Tự động phát
+            Autoplay next video
             <div className="radio-button">
               <Radio
                 toggle

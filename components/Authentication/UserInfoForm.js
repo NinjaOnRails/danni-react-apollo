@@ -73,7 +73,7 @@ class UserInfoForm extends Component {
             >
               <Form.Group inline>
                 <Form.Input
-                  label="Tên hiển thị"
+                  label="Display name"
                   required
                   type="text"
                   id="displayName"
@@ -84,7 +84,7 @@ class UserInfoForm extends Component {
               </Form.Group>
               <Form.Group inline>
                 <Form.Input
-                  label="Họ và tên"
+                  label="Name"
                   type="text"
                   id="name"
                   name="name"
@@ -92,7 +92,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Công khai"
+                  label="Public"
                   name="showName"
                   defaultChecked={showName}
                   onChange={this.handleChange}
@@ -100,7 +100,7 @@ class UserInfoForm extends Component {
               </Form.Group>
               <Form.Group inline>
                 <Form.Input
-                  label="Giới thiệu"
+                  label="Info"
                   type="text"
                   id="bio"
                   name="bio"
@@ -108,7 +108,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Công khai"
+                  label="Public"
                   name="showBio"
                   defaultChecked={showBio}
                   onChange={this.handleChange}
@@ -116,7 +116,7 @@ class UserInfoForm extends Component {
               </Form.Group>
               <Form.Group inline>
                 <Form.Input
-                  label="Nơi sống"
+                  label="Location"
                   type="text"
                   id="location"
                   name="location"
@@ -124,7 +124,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Công khai"
+                  label="Public"
                   name="showLocation"
                   defaultChecked={showLocation}
                   onChange={this.handleChange}
@@ -141,7 +141,7 @@ class UserInfoForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Checkbox
-                  label="Công khai"
+                  label="Public"
                   name="showEmail"
                   defaultChecked={showEmail}
                   onChange={this.handleChange}
@@ -151,7 +151,7 @@ class UserInfoForm extends Component {
                 <>
                   <Form.Group inline>
                     <Form.Input
-                      label="Mật khẩu cũ"
+                      label="Old password"
                       type={displayPassword ? 'text' : 'password'}
                       id="password"
                       name="password"
@@ -160,7 +160,7 @@ class UserInfoForm extends Component {
                     />
                     <Popup
                       content={
-                        displayPassword ? 'Giấu mật khẩu' : 'Hiển thị mật khẩu'
+                        displayPassword ? 'Hide password' : 'Show password'
                       }
                       trigger={
                         <Icon
@@ -175,7 +175,7 @@ class UserInfoForm extends Component {
                   </Form.Group>
                   <Form.Group inline>
                     <Form.Input
-                      label="Mật khẩu mới"
+                      label="New password"
                       type={displayPassword ? 'text' : 'password'}
                       id="newPassword"
                       name="newPassword"
@@ -186,7 +186,7 @@ class UserInfoForm extends Component {
                   </Form.Group>
                   <Form.Group inline>
                     <Form.Input
-                      label="Lặp lại m/k mới"
+                      label="Confirm password"
                       type={displayPassword ? 'text' : 'password'}
                       id="confirmPassword"
                       name="confirmPassword"
@@ -200,7 +200,7 @@ class UserInfoForm extends Component {
                   <Button
                     onClick={() => this.setState({ showPasswordChange: true })}
                   >
-                    Đổi mật khẩu
+                    Change password
                   </Button>
                 </p>
               )}
@@ -213,7 +213,7 @@ class UserInfoForm extends Component {
                 size="big"
               >
                 <Icon name="check" />
-                {loading && 'Đang '}Xác nhận
+                Submit{loading && 'ting'}
               </Button>
               <Button
                 type="button"
@@ -223,7 +223,7 @@ class UserInfoForm extends Component {
                 onClick={onCancelClick}
               >
                 <Icon name="cancel" />
-                Huỷ
+                Cancel
               </Button>
             </Form>
           </Item.Content>

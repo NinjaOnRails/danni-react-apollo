@@ -24,11 +24,11 @@ const RequestReset = () => {
   return (
     <>
       <Head>
-        <title key="title">Danni TV - Yêu cầu đổi mật khẩu</title>
+        <title key="title">Danni TV - Request password reset</title>
         <meta
           key="metaTitle"
           name="title"
-          content="Danni TV - Yêu cầu đổi mật khẩu"
+          content="Danni TV - Request password reset"
         />
       </Head>
       <Form
@@ -45,7 +45,7 @@ const RequestReset = () => {
           style={{ marginTop: '10px', textAlign: 'center' }}
         >
           {!error && !loading && called && (
-            <Message info>Hãy kiểm tra e-mail của bạn để tiếp tục.</Message>
+            <Message info>Check your email to continue</Message>
           )}
 
           <AuthForm
@@ -66,7 +66,7 @@ const RequestReset = () => {
           />
           <div className="center">
             <button type="submit" disabled={loading || !formValid}>
-              Gửi
+              Submit
             </button>
           </div>
         </fieldset>

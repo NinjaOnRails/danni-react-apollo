@@ -28,7 +28,7 @@ export default function AddVideoSteps({ activeStep }) {
       >
         <Icon name="info" />
         <Step.Content>
-          <Step.Title>Chi tiết</Step.Title>
+          <Step.Title>Details</Step.Title>
         </Step.Content>
       </Step>
     </Step.Group>

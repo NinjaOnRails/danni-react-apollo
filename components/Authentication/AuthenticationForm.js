@@ -29,7 +29,7 @@ const AuthForm = ({
     <label htmlFor={config.name}>{config.label}</label>
     {config.type === 'password' && onShowPasswordToggle && (
       <Popup
-        content={displayPassword ? 'Giấu mật khẩu' : 'Hiển thị mật khẩu'}
+        content={displayPassword ? 'Hide password' : 'Show password'}
         trigger={
           <Icon
             style={{

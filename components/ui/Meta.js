@@ -2,8 +2,8 @@ import Head from 'next/head';
 
 const Meta = () => (
   <Head>
-    <title key="title">Danni TV - Trang chủ</title>
-    <meta key="metaTitle" name="title" content="Danni TV - Trang chủ" />
+    <title key="title">Danni TV - Home</title>
+    <meta key="metaTitle" name="title" content="Danni TV - Home" />
     <meta
       key="description"
       name="description"
