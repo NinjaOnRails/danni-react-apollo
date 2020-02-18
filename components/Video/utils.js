@@ -64,4 +64,11 @@ const getDefaultValues = (data, audioId) => {
   };
 };
 
-export { formatDuration, getDefaultValues };
+const randomNumber = max => {
+  if (max === 0 || max === 1) {
+    return 0;
+  }
+  return Math.floor(Math.random() * Math.floor(max - 1));
+};
+
+export { formatDuration, getDefaultValues, randomNumber };

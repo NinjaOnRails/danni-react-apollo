@@ -27,10 +27,11 @@ const LanguageMenuStyles = styled.div`
   }
 `;
 
-const SmallVideoList = props => {
-  const {
-    videos: { data: initialVideoData },
-  } = props;
+const SmallVideoList = ({
+  id,
+  audioId,
+  videos: { data: initialVideoData },
+}) => {
   const { allowAutoplay } = useLocalStateQuery();
   const {
     data: dataVideos,
@@ -65,7 +66,8 @@ const SmallVideoList = props => {
         <RenderSmallVideoList
           dataVideos={dataVideos || initialVideoData}
           fetchMore={fetchMore}
-          {...props}
+          id={id}
+          audioId={audioId}
         />
       )}
     </>
