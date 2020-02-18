@@ -50,6 +50,7 @@ const DetailsForm = ({
         <>
           <CloudinaryUploadCusThumbnail
             setCusThumbnailUrl={setCusThumbnailUrl}
+            oldCusThumbnail={oldCusThumbnail}
             youtubeId={youtubeId}
             language={language}
           />
