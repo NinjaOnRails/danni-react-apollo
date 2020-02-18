@@ -35,9 +35,9 @@ const UserInfoForm = ({ currentUser, onCancelClick }) => {
 
     if (boxName) {
       variables[boxName] = infoVisibility[boxName];
-    } else {
-      variables[key] = userInfoForm[key].value;
     }
+    variables[key] = userInfoForm[key].value;
+
     formElArr.push({
       id: key,
       input: userInfoForm[key],
