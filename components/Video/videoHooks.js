@@ -4,6 +4,7 @@ import {
   CURRENT_USER_QUERY,
   USER_QUERY,
   CLOUDINARY_AUTH_AUDIO,
+  CLOUDINARY_CUSTOM_THUMBNAIL,
   ALL_VIDEOS_QUERY,
   VIDEO_QUERY,
 } from '../../graphql/query';
@@ -32,6 +33,12 @@ const useAllVideosQuery = contentLanguage => {
 
 const useCloudinaryAuthAudioQuery = (source, language) => {
   return useQuery(CLOUDINARY_AUTH_AUDIO, { variables: { source, language } });
+};
+
+const useCloudinaryAuthCustomThumbnail = (youtubeId, language) => {
+  return useQuery(CLOUDINARY_CUSTOM_THUMBNAIL, {
+    variables: { youtubeId, language },
+  });
 };
 
 const useDeleteAudVidMutation = ({ contentLanguage, userId, redirect }) => {
@@ -184,6 +191,7 @@ export {
   useUpdateVideoMutation,
   useDeleteVideoMutation,
   useCloudinaryAuthAudioQuery,
+  useCloudinaryAuthCustomThumbnail,
   useCreateAudioVoteMutation,
   useCreateVideoVoteMutation,
   useToggleAutoplayMutation,
