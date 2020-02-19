@@ -1,8 +1,6 @@
 import React from 'react';
-import { Query } from 'react-apollo';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import PropTypes from 'prop-types';
-import { adopt } from 'react-adopt';
 // import Header from './Header';
 import Header from './Header';
 import Footer, { pagesWithoutFooter } from './Footer';
@@ -11,7 +9,7 @@ import SideDrawer from './Mobile/SideDrawer';
 import AuthModal from '../Authentication/AuthModal';
 import GDPR from './GDPR';
 import MobileNav from './Mobile/MobileNav';
-import { LOCAL_STATE_QUERY } from '../../graphql/query';
+import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const defaultTheme = {
   white: ' #fff',
@@ -89,42 +87,24 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-/* eslint-disable */
-const localData = ({ render }) => (
-  <Query query={LOCAL_STATE_QUERY}>{render}</Query>
-);
-/* eslint-enable */
+const Page = ({ children, route }) => {
+  const { showSide, showAuthModal } = useLocalStateQuery();
 
-const Composed = adopt({
-  localData,
-});
-
-const Page = ({ children, route }) => (
-  <Composed>
-    {({ localData: { data } }) => {
-      if (!data) return <div>Loading...</div>;
-      return (
-        <ThemeProvider theme={defaultTheme}>
-          <StyledPage>
-            <GlobalStyle
-              showSide={data.showSide}
-              showAuthModal={data.showAuthModal}
-            />
-            {/* <GDPR /> */}
-            <Header />
-            <SideDrawer />
-            {data.showAuthModal && (
-              <AuthModal showAuthModal={data.showAuthModal} />
-            )}
-            <Inner route={route}>{children}</Inner>
-            <MobileNav />
-            {!pagesWithoutFooter.includes(route) && <Footer />}
-          </StyledPage>
-        </ThemeProvider>
-      );
-    }}
-  </Composed>
-);
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <StyledPage>
+        <GlobalStyle showSide={showSide} showAuthModal={showAuthModal} />
+        {/* <GDPR /> */}
+        <Header />
+        <SideDrawer />
+        {showAuthModal && <AuthModal showAuthModal={showAuthModal} />}
+        <Inner route={route}>{children}</Inner>
+        <MobileNav />
+        {!pagesWithoutFooter.includes(route) && <Footer />}
+      </StyledPage>
+    </ThemeProvider>
+  );
+};
 
 Page.propTypes = {
   children: PropTypes.oneOfType([
