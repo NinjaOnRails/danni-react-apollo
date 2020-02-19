@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 import generateName from 'sillyname';
 import Head from 'next/head';
 import { Button, Icon, Loader, Header } from 'semantic-ui-react';
@@ -25,6 +25,8 @@ const Signup = ({ modal }) => {
   });
   const [redirecting, setRedirecting] = useState(false);
   const [displayPassword, setdisplayPassword] = useState(false);
+  const client = useApolloClient();
+  const router = useRouter();
 
   const variables = {};
   const formElArr = [];
@@ -55,7 +57,7 @@ const Signup = ({ modal }) => {
     });
   }, []);
 
-  const onSubmit = async ({ e, client }) => {
+  const onSubmit = async ({ e }) => {
     e.preventDefault();
     const { data } = await signup();
     if (data) {
@@ -64,7 +66,7 @@ const Signup = ({ modal }) => {
         closeAuthModal();
       } else {
         setRedirecting(true);
-        Router.push(
+        router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );
         localStorage.removeItem('previousPage');
@@ -80,98 +82,86 @@ const Signup = ({ modal }) => {
       </Loader>
     );
   return (
-    <ApolloConsumer>
-      {client => {
-        return (
-          <>
-            <Head>
-              <title key="title">Danni TV - Register</title>
-              <meta
-                key="metaTitle"
-                name="title"
-                content="Danni TV - Register"
-              />
-            </Head>
-            <StyledForm
-              method="post"
-              onSubmit={e =>
-                onSubmit({
-                  e,
+    <>
+      <Head>
+        <title key="title">Danni TV - Register</title>
+        <meta key="metaTitle" name="title" content="Danni TV - Register" />
+      </Head>
+      <StyledForm
+        method="post"
+        onSubmit={e =>
+          onSubmit({
+            e,
+            client,
+          })
+        }
+        modal={modal}
+      >
+        <Header as="h1" textAlign="center">
+          Create a new account
+        </Header>
+        <fieldset
+          disabled={loading || fbLoginLoading}
+          aria-busy={loading || fbLoginLoading}
+        >
+          <Error error={error} />
+          <Error error={fbLoginError} />
+          {formElArr.map(({ id, input }) => (
+            <AuthForm
+              key={id}
+              value={input.value}
+              config={input.inputConfig}
+              shouldValidate={input.validation}
+              invalid={!input.valid}
+              saveToState={e =>
+                inputChangeHandler(e, id, signupForm, setSignupForm)
+              }
+              touched={input.modified}
+              autoComplete="new-password"
+              displayPassword={displayPassword}
+              onShowPasswordToggle={() => setdisplayPassword(!displayPassword)}
+            />
+          ))}
+          <div className="center">
+            <button type="submit" disabled={loading || fbLoginLoading}>
+              Submit{(loading || fbLoginLoading) && 'ting'}
+            </button>
+            <p className="or">- OR -</p>
+            <Button
+              type="button"
+              color="facebook"
+              onClick={() =>
+                onFacebookLoginClick({
+                  facebookLogin,
+                  contentLanguage,
                   client,
+                  previousPage,
+                  closeAuthModal: modal && closeAuthModal,
                 })
               }
-              modal={modal}
             >
-              <Header as="h1" textAlign="center">
-                Create a new account
-              </Header>
-              <fieldset
-                disabled={loading || fbLoginLoading}
-                aria-busy={loading || fbLoginLoading}
-              >
-                <Error error={error} />
-                <Error error={fbLoginError} />
-                {formElArr.map(({ id, input }) => (
-                  <AuthForm
-                    key={id}
-                    value={input.value}
-                    config={input.inputConfig}
-                    shouldValidate={input.validation}
-                    invalid={!input.valid}
-                    saveToState={e =>
-                      inputChangeHandler(e, id, signupForm, setSignupForm)
-                    }
-                    touched={input.modified}
-                    autoComplete="new-password"
-                    displayPassword={displayPassword}
-                    onShowPasswordToggle={() =>
-                      setdisplayPassword(!displayPassword)
-                    }
-                  />
-                ))}
-                <div className="center">
-                  <button type="submit" disabled={loading || fbLoginLoading}>
-                    Submit{(loading || fbLoginLoading) && 'ting'}
-                  </button>
-                  <p className="or">- OR -</p>
-                  <Button
-                    type="button"
-                    color="facebook"
-                    onClick={() =>
-                      onFacebookLoginClick({
-                        facebookLogin,
-                        contentLanguage,
-                        client,
-                        previousPage,
-                        closeAuthModal: modal && closeAuthModal,
-                      })
-                    }
-                  >
-                    <Icon name="facebook" />
-                    Log in with Facebook
-                  </Button>
-                </div>
-                {!modal && (
-                  <div className="auth-links">
-                    <Link href="/signin">
-                      <a>Already have an account</a>
-                    </Link>
-                    <Link href="/requestReset">
-                      <a>
-                        <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                          Forgot password?
-                        </span>
-                      </a>
-                    </Link>
-                  </div>
-                )}
-                {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
-              </fieldset>
-            </StyledForm>
-          </>
-        );
-      }}
-    </ApolloConsumer>
+              <Icon name="facebook" />
+              Log in with Facebook
+            </Button>
+          </div>
+          {!modal && (
+            <div className="auth-links">
+              <Link href="/signin">
+                <a>Already have an account</a>
+              </Link>
+              <Link href="/requestReset">
+                <a>
+                  <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                    Forgot password?
+                  </span>
+                </a>
+              </Link>
+            </div>
+          )}
+          {/* <button type="submit">Sign{loading && 'ing'} Up</button> */}
+        </fieldset>
+      </StyledForm>
+    </>
   );
 };
 

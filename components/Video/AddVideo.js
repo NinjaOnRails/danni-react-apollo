@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Segment, Form, Loader } from 'semantic-ui-react';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { defaultLanguage } from '../../lib/supportedLanguages';
 import Error from '../UI/ErrorMessage';
@@ -62,7 +62,7 @@ const AddVideo = () => {
 
   const { currentUser } = useCurrentUserQuery();
   const { contentLanguage } = useLocalStateQuery();
-
+  const router = useRouter();
   const [
     createAudio,
     { loading: loadingCreateAudio, error: errorCreateAudio },
@@ -138,7 +138,7 @@ const AddVideo = () => {
       trackNewVideo(language);
 
       // Redirect to newly created Video watch page
-      return Router.push({
+      return router.push({
         pathname: '/watch',
         query: { id, audioId },
       });
@@ -149,7 +149,7 @@ const AddVideo = () => {
     // Mixpanel send stat
     trackNewVideo();
 
-    return Router.push({
+    return router.push({
       pathname: '/watch',
       query: { id },
     });

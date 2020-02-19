@@ -1,4 +1,4 @@
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 import { useSignoutMutation } from './authHooks';
 import { CURRENT_USER_QUERY } from '../../graphql/query';
 
@@ -12,14 +12,12 @@ const onSignout = async ({ signout, client }) => {
 
 const Signout = () => {
   const [signout] = useSignoutMutation();
+  const client = useApolloClient();
+
   return (
-    <ApolloConsumer>
-      {client => (
-        <button type="button" onClick={() => onSignout({ signout, client })}>
-          Log out
-        </button>
-      )}
-    </ApolloConsumer>
+    <button type="button" onClick={() => onSignout({ signout, client })}>
+      Log out
+    </button>
   );
 };
 export default Signout;

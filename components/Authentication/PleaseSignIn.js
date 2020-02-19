@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 import { Loader, Message } from 'semantic-ui-react';
 import { StyledMessage, StyledHeader } from '../styles/AuthenticationStyles';
 import Signin from './Signin';
@@ -10,34 +10,29 @@ import { useCurrentUserQuery } from './authHooks';
 const PleaseSignIn = ({ action, modal, children }) => {
   const router = useRouter();
   const { currentUser, loading } = useCurrentUserQuery();
+  const client = useApolloClient();
 
-  return (
-    <ApolloConsumer>
-      {client => {
-        if (loading) return <Loader active inline="centered" />;
-        if (!currentUser) {
-          if (isBrowser && router && !modal) {
-            const currentPath = router.asPath;
-            localStorage.setItem('previousPage', currentPath);
-            client.writeData({
-              data: { previousPage: currentPath },
-            });
-          }
-          return (
-            <>
-              <StyledMessage>
-                <Message warning>
-                  <StyledHeader>{`Please log in to ${action}`}</StyledHeader>
-                </Message>
-              </StyledMessage>
-              <Signin noRedirect />
-            </>
-          );
-        }
-        return children;
-      }}
-    </ApolloConsumer>
-  );
+  if (loading) return <Loader active inline="centered" />;
+  if (!currentUser) {
+    if (isBrowser && router && !modal) {
+      const currentPath = router.asPath;
+      localStorage.setItem('previousPage', currentPath);
+      client.writeData({
+        data: { previousPage: currentPath },
+      });
+    }
+    return (
+      <>
+        <StyledMessage>
+          <Message warning>
+            <StyledHeader>{`Please log in to ${action}`}</StyledHeader>
+          </Message>
+        </StyledMessage>
+        <Signin noRedirect />
+      </>
+    );
+  }
+  return children;
 };
 
 PleaseSignIn.propTypes = {
