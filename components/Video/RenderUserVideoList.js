@@ -1,9 +1,22 @@
 import PropTypes from 'prop-types';
+import { useApolloClient } from '@apollo/react-hooks';
+import { useRouter } from 'next/router';
 import VideoItem from './VideoItem';
 import { useLocalStateQuery } from '../Authentication/authHooks';
 
 const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
   const { contentLanguage } = useLocalStateQuery();
+
+  const client = useApolloClient();
+
+  const router = useRouter();
+
+  const clickEditVideo = () => {
+    localStorage.setItem('previousPage', router.asPath);
+    client.writeData({
+      data: { previousPage: router.asPath },
+    });
+  };
 
   return (
     <>
@@ -34,6 +47,7 @@ const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
                 currentUser={currentUser}
                 query={{ id }}
                 contentLanguage={contentLanguage}
+                clickEditVideo={clickEditVideo}
               />
             );
           }
@@ -54,6 +68,7 @@ const RenderUserVideoList = ({ dataVideos, hideAuthor, currentUser }) => {
                   currentUser={currentUser}
                   query={{ id, audioId }}
                   contentLanguage={contentLanguage}
+                  clickEditVideo={clickEditVideo}
                 />
               );
             }

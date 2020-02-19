@@ -9,6 +9,8 @@ import {
   Statistic,
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
+import { useApolloClient } from '@apollo/react-hooks';
 import Link from 'next/link';
 import YoutubeViews from './YoutubeViews';
 import VideoDeleteButton from './VideoDeleteButton';
@@ -44,6 +46,8 @@ const VideoInfo = ({
 
   const { currentUser } = useCurrentUserQuery();
   const { contentLanguage, showFullDescription } = useLocalStateQuery();
+  const router = useRouter();
+  const client = useApolloClient();
 
   const [openAuthModal] = useOpenAuthModalMutation();
   const [toggleFullDescription] = useToggleFullDescriptionMutation();
@@ -68,6 +72,13 @@ const VideoInfo = ({
         scrollHeight > clientHeight || scrollWidth > clientWidth
       );
     }
+  };
+
+  const onEditClick = () => {
+    localStorage.setItem('previousPage', router.asPath);
+    client.writeData({
+      data: { previousPage: router.asPath },
+    });
   };
 
   const onVideoLike = type => {
@@ -147,7 +158,7 @@ const VideoInfo = ({
                 query,
               }}
             >
-              <Button icon labelPosition="left">
+              <Button icon labelPosition="left" onClick={onEditClick}>
                 <Icon name="write" />
                 Update
               </Button>
