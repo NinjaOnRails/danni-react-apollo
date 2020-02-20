@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import Router from 'next/router';
+import { useApolloClient } from '@apollo/react-hooks';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import {
   Loader,
@@ -9,7 +10,6 @@ import {
   Button,
   Icon,
   Header,
-  Image,
 } from 'semantic-ui-react';
 import Head from 'next/head';
 import Error from '../UI/ErrorMessage';
@@ -81,8 +81,10 @@ const EditVideo = ({ id, audioId }) => {
     error: errorQueryVideo,
   } = useVideoQuery({ id, audioId });
 
+  const router = useRouter();
+  const client = useApolloClient();
   const { currentUser } = useCurrentUserQuery();
-  const { contentLanguage } = useLocalStateQuery();
+  const { contentLanguage, previousPage } = useLocalStateQuery();
   const [
     createAudio,
     { loading: loadingCreateAudio, error: errorCreateAudio },
@@ -133,6 +135,12 @@ const EditVideo = ({ id, audioId }) => {
         deleteToken: '',
       });
     }
+  };
+
+  const onCancelClick = () => {
+    router.push(localStorage.getItem('previousPage') || previousPage || '/');
+    localStorage.removeItem('previousPage');
+    client.writeData({ data: { previousPage: null } });
   };
 
   const onSubmit = async e => {
@@ -212,7 +220,7 @@ const EditVideo = ({ id, audioId }) => {
     setEditVideoState({ redirecting: true });
 
     // Redirect to newly updated Video watch page
-    Router.push({
+    router.push({
       pathname: '/watch',
       query: { id, audioId: redirectAudioParam },
     });
@@ -322,6 +330,16 @@ const EditVideo = ({ id, audioId }) => {
             )}
             <div className="buttons">
               <Button
+                type="button"
+                size="big"
+                icon
+                labelPosition="right"
+                onClick={onCancelClick}
+              >
+                Cancel
+                <Icon name="cancel" />
+              </Button>
+              <Button
                 disabled={
                   !videoValid || (isAudioSource && !secureUrl && !audioUrl)
                 }
@@ -334,10 +352,6 @@ const EditVideo = ({ id, audioId }) => {
                 Save changes
                 <Icon name="check" />
               </Button>
-              {/* <Button type="button" size="big" icon labelPosition="right">
-                Cancel
-                <Icon name="cancel" />
-              </Button> */}
             </div>
           </Form>
         </Segment>

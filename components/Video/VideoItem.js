@@ -17,6 +17,7 @@ const VideoItem = ({
   currentUser,
   query,
   contentLanguage,
+  clickEditVideo,
 }) => (
   <div>
     <Link
@@ -63,7 +64,7 @@ const VideoItem = ({
               query,
             }}
           >
-            <Button icon labelPosition="left">
+            <Button icon labelPosition="left" onClick={clickEditVideo}>
               <Icon name="write" />
               Update
             </Button>
@@ -94,6 +95,7 @@ VideoItem.propTypes = {
   contentLanguage: PropTypes.array,
   currentUser: PropTypes.object,
   hideAuthor: PropTypes.bool,
+  clickEditVideo: PropTypes.func,
 };
 
 VideoItem.defaultProps = {
@@ -102,6 +104,7 @@ VideoItem.defaultProps = {
   currentUser: null,
   originThumbnailUrlSd: '',
   contentLanguage: [],
+  clickEditVideo: null,
 };
 
 export default VideoItem;
