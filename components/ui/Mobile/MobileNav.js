@@ -7,7 +7,7 @@ const sidebarItems = [
   { linkName: 'Home', link: '/', icon: 'home' },
   { linkName: 'Add Video', link: '/new', icon: 'video', miniIcon: true },
   { linkName: 'Account', link: '/me', icon: 'user' },
-  { linkName: 'About us', link: '/about', icon: 'info' },
+  { linkName: 'About', link: '/about', icon: 'info' },
 ];
 
 const MobileNav = () => {

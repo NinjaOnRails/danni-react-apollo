@@ -107,7 +107,7 @@ const userPasswordFields = {
   },
   confirmPassword: {
     inputConfig: {
-      label: 'Repeat new pwd',
+      label: 'Confirm pwd',
       type: 'password',
       name: 'confirmPassword',
     },
@@ -147,7 +147,7 @@ const userInfoFields = {
   },
   bio: {
     inputConfig: {
-      label: 'Info',
+      label: 'About',
       name: 'bio',
       type: 'text',
     },
