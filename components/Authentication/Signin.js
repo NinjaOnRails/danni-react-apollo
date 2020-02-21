@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 import { Button, Icon, Loader, Header } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledForm from '../styles/Form';
@@ -29,11 +29,13 @@ const Signin = ({ modal }) => {
 
   const [closeAuthModal] = useCloseAuthModalMutation();
 
+  const router = useRouter();
   const [
     facebookLogin,
     { error: fbLoginError, loading: fbLoginLoading },
   ] = useFacebookLoginMutation();
 
+  const client = useApolloClient();
   const variables = {};
   const formElArr = [];
   Object.keys(signinForm).forEach(key => {
@@ -44,7 +46,7 @@ const Signin = ({ modal }) => {
     });
   });
 
-  const onSubmit = async ({ e, client }) => {
+  const onSubmit = async ({ e }) => {
     e.preventDefault();
     const { data } = await signin({
       variables: { ...variables },
@@ -55,7 +57,7 @@ const Signin = ({ modal }) => {
         closeAuthModal();
       } else {
         setRedirecting(true);
-        Router.push(
+        router.push(
           localStorage.getItem('previousPage') || previousPage || '/'
         );
         localStorage.removeItem('previousPage');
@@ -71,86 +73,82 @@ const Signin = ({ modal }) => {
       </Loader>
     );
   return (
-    <ApolloConsumer>
-      {client => (
-        <>
-          <Head>
-            <title key="title">Danni TV - Log in</title>
-            <meta key="metaTitle" name="title" content="Danni TV - Đăng nhập" />
-          </Head>
-          <StyledForm
-            method="post"
-            onSubmit={e =>
-              onSubmit({
-                e,
-                client,
-              })
-            }
-            modal={modal}
-          >
-            <Header as="h1" textAlign="center">
-              Log in {modal && 'to continue'}
-            </Header>
-            <fieldset
-              disabled={loading || fbLoginLoading}
-              aria-busy={loading || fbLoginLoading}
+    <>
+      <Head>
+        <title key="title">Danni TV - Log in</title>
+        <meta key="metaTitle" name="title" content="Danni TV - Đăng nhập" />
+      </Head>
+      <StyledForm
+        method="post"
+        onSubmit={e =>
+          onSubmit({
+            e,
+            client,
+          })
+        }
+        modal={modal}
+      >
+        <Header as="h1" textAlign="center">
+          Log in {modal && 'to continue'}
+        </Header>
+        <fieldset
+          disabled={loading || fbLoginLoading}
+          aria-busy={loading || fbLoginLoading}
+        >
+          <Error error={error} />
+          <Error error={fbLoginError} />
+          {formElArr.map(({ id, input }) => (
+            <AuthForm
+              key={id}
+              value={input.value}
+              config={input.inputConfig}
+              shouldValidate={input.validation}
+              invalid={!input.valid}
+              saveToState={e =>
+                inputChangeHandler(e, id, signinForm, setSigninForm)
+              }
+              touched={input.modified}
+            />
+          ))}
+          <div className="center">
+            <button type="submit" disabled={loading || fbLoginLoading}>
+              Log{(loading || fbLoginLoading) && 'ging'} in
+            </button>
+            <p className="or">- OR -</p>
+            <Button
+              type="button"
+              color="facebook"
+              onClick={() =>
+                onFacebookLoginClick({
+                  facebookLogin,
+                  contentLanguage,
+                  client,
+                  previousPage,
+                  closeAuthModal: modal && closeAuthModal,
+                })
+              }
             >
-              <Error error={error} />
-              <Error error={fbLoginError} />
-              {formElArr.map(({ id, input }) => (
-                <AuthForm
-                  key={id}
-                  value={input.value}
-                  config={input.inputConfig}
-                  shouldValidate={input.validation}
-                  invalid={!input.valid}
-                  saveToState={e =>
-                    inputChangeHandler(e, id, signinForm, setSigninForm)
-                  }
-                  touched={input.modified}
-                />
-              ))}
-              <div className="center">
-                <button type="submit" disabled={loading || fbLoginLoading}>
-                  Log{(loading || fbLoginLoading) && 'ging'} in
-                </button>
-                <p className="or">- OR -</p>
-                <Button
-                  type="button"
-                  color="facebook"
-                  onClick={() =>
-                    onFacebookLoginClick({
-                      facebookLogin,
-                      contentLanguage,
-                      client,
-                      previousPage,
-                      closeAuthModal: modal && closeAuthModal,
-                    })
-                  }
-                >
-                  <Icon name="facebook" />
-                  Log in with Facebook
-                </Button>
-              </div>
-              <div className="auth-links">
-                {!modal && (
-                  <Link href="/signup">
-                    <a>New account</a>
-                  </Link>
-                )}
-                <Link href="/requestReset">
-                  <a>
-                    <span role="link" tabIndex={0} onClick={closeAuthModal}>
-                      Forgot password?
-                    </span>
-                  </a>
-                </Link>
-              </div>
-            </fieldset>
-          </StyledForm>
-        </>
-      )}
-    </ApolloConsumer>
+              <Icon name="facebook" />
+              Log in with Facebook
+            </Button>
+          </div>
+          <div className="auth-links">
+            {!modal && (
+              <Link href="/signup">
+                <a>New account</a>
+              </Link>
+            )}
+            <Link href="/requestReset">
+              <a>
+                <span role="link" tabIndex={0} onClick={closeAuthModal}>
+                  Forgot password?
+                </span>
+              </a>
+            </Link>
+          </div>
+        </fieldset>
+      </StyledForm>
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { withRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { Loader, Header } from 'semantic-ui-react';
 import Form from '../styles/Form';
 import Error from '../UI/ErrorMessage';
@@ -11,13 +10,15 @@ import { resetFields } from './fieldTypes';
 import { inputChangeHandler, clearForm } from './utils';
 import { useResetPasswordMutation } from './authHooks';
 
-const Reset = ({ router }) => {
+const Reset = () => {
   const [resetForm, setResetForm] = useState({
     ...resetFields,
   });
   const [formValid, setFormValid] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(null);
+
+  const router = useRouter();
 
   const { password, confirmPassword } = resetForm;
 
@@ -108,8 +109,4 @@ const Reset = ({ router }) => {
   );
 };
 
-Reset.propTypes = {
-  router: PropTypes.object.isRequired,
-};
-
-export default withRouter(Reset);
+export default Reset;
