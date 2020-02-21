@@ -1,11 +1,9 @@
-import { Query } from 'react-apollo';
 import styled from 'styled-components';
-import { adopt } from 'react-adopt';
 import PropTypes from 'prop-types';
 import Error from '../UI/ErrorMessage';
-import { ALL_VIDEOS_QUERY } from '../../graphql/query';
 import RenderVideoList from './RenderVideoList';
 import ContentLanguage, { contentLanguageQuery } from '../UI/ContentLanguage';
+import { useAllVideosQuery } from './videoHooks';
 
 const LanguageMenuStyles = styled.div`
   padding-bottom: 2rem;
@@ -20,49 +18,32 @@ const LanguageMenuStyles = styled.div`
   }
 `;
 
-/* eslint-disable */
-const videos = ({ contentLanguageQuery: { contentLanguage }, render }) => (
-  /* eslint-enable */
-  <Query query={ALL_VIDEOS_QUERY} variables={{ contentLanguage }}>
-    {render}
-  </Query>
-);
-
-const Composed = adopt({
-  contentLanguageQuery,
-  videos,
-});
-
-const Videos = ({ videos: { data: initialVideoData } }) => (
-  <Composed>
-    {({
-      videos: {
-        loading: loadingVideos,
-        errorVideos,
-        data: dataVideos,
-        fetchMore,
-      },
-    }) => (
-      <>
-        <LanguageMenuStyles>
-          {/* <ContentLanguage loadingData={loadingVideos} /> */}
-        </LanguageMenuStyles>
-        {errorVideos ? (
-          <Error>Error: {errorVideos.message}</Error>
-        ) : (
-          <RenderVideoList
-            dataVideos={dataVideos || initialVideoData}
-            fetchMore={fetchMore}
-          />
-        )}
-      </>
-    )}
-  </Composed>
-);
+const Videos = ({ videos: { data: initialVideoData } }) => {
+  const {
+    data: dataVideos,
+    fetchMore,
+    errorVideos,
+    loading: loadingVideos,
+  } = useAllVideosQuery();
+  return (
+    <>
+      <LanguageMenuStyles>
+        {/* <ContentLanguage loadingData={loadingVideos} /> */}
+      </LanguageMenuStyles>
+      {errorVideos ? (
+        <Error>Error: {errorVideos.message}</Error>
+      ) : (
+        <RenderVideoList
+          dataVideos={dataVideos || initialVideoData}
+          fetchMore={fetchMore}
+        />
+      )}
+    </>
+  );
+};
 
 Videos.propTypes = {
   videos: PropTypes.object.isRequired,
 };
 
 export default Videos;
-export { videos };
