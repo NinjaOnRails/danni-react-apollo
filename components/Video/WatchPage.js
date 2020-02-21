@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
 import { Container, Loader } from 'semantic-ui-react';
 import SmallVideoList from './SmallVideoList';
 import CommentSection from '../Comment/CommentSection';
@@ -9,27 +7,44 @@ import VideoHeader from './VideoHeader';
 import Error from '../UI/ErrorMessage';
 import Watch from './Watch';
 import { WatchPageStyles } from '../styles/WatchStyles';
-import { VIDEO_QUERY } from '../../graphql/query';
+import { useVideoQuery } from './videoHooks';
+import { randomNumber } from './utils';
 
-class WatchPage extends Component {
-  randomNumber = max => {
-    if (max === 0 || max === 1) {
-      return 0;
-    }
-    return Math.floor(Math.random() * Math.floor(max - 1));
-  };
+const WatchPage = ({
+  id,
+  asPath,
+  payload: { error, loading, data },
+  client,
+  audioId,
+  videos,
+}) => {
+  const payload = useVideoQuery({ id, audioId });
 
-  randomizeNextVideo = videos => {
-    const { id } = this.props;
-    const max = videos.length;
+  if (error) return <Error error={error} />;
+  if (loading) return <Loader active inline="centered" />;
+  const { video: initialVideoData } = data;
+  if (!initialVideoData) return <p>No Video Found for ID: {id}</p>;
+  const currentWatchingLanguage = initialVideoData.audio[0]
+    ? initialVideoData.audio[0].language
+    : initialVideoData.language;
+
+  if (payload.error) return <Error error={error} />;
+  if (payload.loading) return <Loader active inline="centered" />;
+  const { video } = payload.data;
+  const url = `https://www.danni.tv${asPath}`;
+
+  const randomizeNextVideo = () => {
+    const loadedVideos = videos.data.videosConnection.edges;
+
+    const max = loadedVideos.length;
     let nextVideo = { id };
     let nextAudio;
     while (nextVideo.id === id) {
-      const randomVideoIndex = this.randomNumber(max);
-      const randomAudioIndex = this.randomNumber(
-        videos[randomVideoIndex].node.audio.length
+      const randomVideoIndex = randomNumber(max);
+      const randomAudioIndex = randomNumber(
+        loadedVideos[randomVideoIndex].node.audio.length
       );
-      nextVideo = videos[randomVideoIndex].node;
+      nextVideo = loadedVideos[randomVideoIndex].node;
       nextAudio = nextVideo.audio[randomAudioIndex];
     }
     return {
@@ -42,72 +57,45 @@ class WatchPage extends Component {
     };
   };
 
-  render() {
-    const {
-      id,
-      asPath,
-      payload: { error, loading, data },
-      client,
-      audioId,
-      videos,
-    } = this.props;
-    const url = `https://www.danni.tv${asPath}
-    `;
-    if (error) return <Error error={error} />;
-    if (loading) return <Loader active inline="centered" />;
-    const { video: initialVideoData } = data;
-    if (!initialVideoData) return <p>No Video Found for ID: {id}</p>;
-    const currentWatchingLanguage = initialVideoData.audio[0]
-      ? initialVideoData.audio[0].language
-      : initialVideoData.language;
-    return (
-      <Query query={VIDEO_QUERY} variables={{ id, audioId }}>
-        {payload => {
-          if (payload.error) return <Error error={error} />;
-          if (payload.loading) return <Loader active inline="centered" />;
-          const { video } = payload.data;
-          return (
-            <>
-              <VideoHeader video={video || initialVideoData} url={url} />
-              <WatchPageStyles>
-                <div className="main">
-                  <Watch
-                    video={video || initialVideoData}
-                    id={id}
-                    audioId={audioId}
-                    nextVideo={this.randomizeNextVideo(
-                      videos.data.videosConnection.edges
-                    )}
-                  />
-                  <Container fluid className="tablet-padding">
-                    <VideoInfo
-                      {...this.props}
-                      video={video || initialVideoData}
-                      url={url}
-                    />
-                    <CommentSection
-                      videoId={id}
-                      videoLanguage={
-                        (video && video.language) || initialVideoData.language
-                      }
-                      client={client}
-                    />
-                  </Container>
-                </div>
-                <div className="list tablet-padding">
-                  <SmallVideoList
-                    {...this.props}
-                    currentWatchingLanguage={currentWatchingLanguage}
-                  />
-                </div>
-              </WatchPageStyles>
-            </>
-          );
-        }}
-      </Query>
-    );
-  }
-}
+  return (
+    <>
+      <VideoHeader video={video || initialVideoData} url={url} />
+      <WatchPageStyles>
+        <div className="main">
+          <Watch
+            video={video || initialVideoData}
+            id={id}
+            audioId={audioId}
+            nextVideo={randomizeNextVideo()}
+          />
+          <Container fluid className="tablet-padding">
+            <VideoInfo
+              video={video || initialVideoData}
+              url={url}
+              id={id}
+              audioId={audioId}
+            />
+            <CommentSection
+              videoId={id}
+              videoLanguage={
+                (video && video.language) || initialVideoData.language
+              }
+              client={client}
+            />
+          </Container>
+        </div>
+        <div className="list tablet-padding">
+          <SmallVideoList
+            id={id}
+            audioId={audioId}
+            videos={videos}
+            currentWatchingLanguage={currentWatchingLanguage}
+          />
+        </div>
+      </WatchPageStyles>
+    </>
+  );
+};
 
 WatchPage.propTypes = {
   id: PropTypes.string.isRequired,
