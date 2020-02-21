@@ -42,7 +42,7 @@ const DetailsForm = ({
       {editVideo && oldCusThumbnail && !cusThumbnailSecUrl && (
         <>
           <Header as="h3" content="Thumbnail:" />
-          <Image src={oldCusThumbnail} size="tiny" />
+          <Image src={oldCusThumbnail} />
         </>
       )}
       <Header as="h3" content="Thumbnail:" />
