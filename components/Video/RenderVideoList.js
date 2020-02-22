@@ -40,7 +40,7 @@ const RenderVideoList = ({
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      // loader={<Loader active inline="centered" key={0} />}
+      loader={<Loader active inline="centered" key={0} />}
     >
       <VideoListStyles>
         {dataVideos.videosConnection.edges.map(
