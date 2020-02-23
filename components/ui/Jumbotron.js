@@ -5,7 +5,7 @@ import JumbotronStyles from '../styles/JumbotronStyles';
 const Jumbotron = () => (
   <JumbotronStyles>
     <div className="intro">
-      <Header as="h1">Community-dubbed video library</Header>
+      <Header as="h1">Fan-dubbed video library</Header>
       <Link href="/new">
         <Button primary size="big">
           Add Video <Icon name="right arrow" />
