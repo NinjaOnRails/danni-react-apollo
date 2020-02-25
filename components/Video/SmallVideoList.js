@@ -50,7 +50,7 @@ const SmallVideoList = ({
         /> */}
       </LanguageMenuStyles>
       <AutoplayToggle>
-        Tự động phát
+        Autoplay
         <div className="radio-button">
           <Radio
             toggle
