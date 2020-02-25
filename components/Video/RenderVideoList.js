@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
+import { Loader } from 'semantic-ui-react';
 import VideoListStyles from '../styles/VideoListStyles';
 import VideoItem from './VideoItem';
 
