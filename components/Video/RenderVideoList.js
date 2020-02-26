@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
+import { Loader } from 'semantic-ui-react';
 import VideoListStyles from '../styles/VideoListStyles';
 import VideoItem from './VideoItem';
 
@@ -40,7 +41,7 @@ const RenderVideoList = ({
       pageStart={0}
       loadMore={loadMore}
       hasMore={dataVideos.videosConnection.pageInfo.hasNextPage}
-      // loader={<Loader active inline="centered" key={0} />}
+      loader={<Loader active inline="centered" key={0} />}
     >
       <VideoListStyles>
         {dataVideos.videosConnection.edges.map(
