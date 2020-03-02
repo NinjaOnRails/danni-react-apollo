@@ -135,7 +135,7 @@ const Signin = ({ modal }) => {
           <div className="auth-links">
             {!modal && (
               <Link href="/signup">
-                <a>New account</a>
+                <a>Create a new account</a>
               </Link>
             )}
             <Link href="/requestReset">
