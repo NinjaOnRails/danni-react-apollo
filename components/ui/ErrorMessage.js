@@ -25,7 +25,7 @@ const DisplayError = ({ error }) => {
           <track kind="captions" />
         </audio>
         <StyledMessage>
-          Holy Moly!
+          Holy Guacamole!
           <p data-test="graphql-error">
             {error.message.replace('GraphQL error: ', '')}
           </p>
@@ -42,7 +42,7 @@ const DisplayError = ({ error }) => {
         <track kind="captions" />
       </audio>
       <StyledMessage>
-        Holy Moly!
+        Holy Guacamole!
         <p data-test="graphql-error">
           {error.message.replace('GraphQL error: ', '')}
         </p>

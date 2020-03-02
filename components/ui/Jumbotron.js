@@ -11,6 +11,9 @@ const Jumbotron = () => (
           Add Video <Icon name="right arrow" />
         </Button>
       </Link>
+      <Link href="/how">
+        <Button size="big">Learn More</Button>
+      </Link>
     </div>
     <figure>
       <img src="/static/GettyImages-1064233426.jpg" alt="bridge" />

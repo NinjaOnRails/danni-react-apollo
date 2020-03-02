@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useApolloClient } from '@apollo/react-hooks';
-import { Button, Icon, Loader, Header } from 'semantic-ui-react';
+import { Button, Icon, Loader, Header, Divider } from 'semantic-ui-react';
 import Error from '../UI/ErrorMessage';
 import StyledForm from '../styles/Form';
 import AuthForm from './AuthenticationForm';
@@ -114,7 +114,7 @@ const Signin = ({ modal }) => {
             <button type="submit" disabled={loading || fbLoginLoading}>
               Log{(loading || fbLoginLoading) && 'ging'} in
             </button>
-            <p className="or">- OR -</p>
+            <Divider horizontal>Or</Divider>
             <Button
               type="button"
               color="facebook"
