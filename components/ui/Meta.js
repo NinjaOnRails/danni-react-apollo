@@ -7,7 +7,7 @@ const Meta = () => (
     <meta
       key="description"
       name="description"
-      content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
+      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
     />
     <meta
       name="keywords"
@@ -28,7 +28,7 @@ const Meta = () => (
     <meta property="og:title" content="Danni TV" key="og:title" />
     <meta
       property="og:description"
-      content="Thư viện video thuyết minh Tiếng Việt bao gồm các chủ đề như giáo dục, khoa học, sức khoẻ, tâm lý, kinh tế và công nghệ."
+      content="Free videos on education, science, health, business and tech in multiple languages. Globalized smart entertainment platform."
       key="og:description"
     />
     <meta
