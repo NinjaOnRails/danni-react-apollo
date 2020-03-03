@@ -47,10 +47,10 @@ const VideoDeleteButton = ({
         open={openConfirm}
         onCancel={() => setOpenConfirm(false)}
         onConfirm={onConfirmDelete}
-        cancelButton="Huỷ"
-        confirmButton="Xác nhận"
-        content={`Xác nhận xoá Video: ${title}`}
-        header="Chú ý!"
+        cancelButton="Cancel"
+        confirmButton="Confirm"
+        content={`Are you sure you want to permanently remove video titled: "${title}"?`}
+        header="Warning!"
       />
     </>
   );
