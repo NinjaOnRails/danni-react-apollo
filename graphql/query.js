@@ -187,8 +187,8 @@ const ALL_VIDEOS_QUERY = gql`
       after: $cursor
       where: {
         OR: [
-          { language_in: [VIETNAMESE] }
-          { audio_some: { language_in: [VIETNAMESE] } }
+          { language_in: [VIETNAMESE, CZECH, ENGLISH] }
+          { audio_some: { language_in: [VIETNAMESE, CZECH, ENGLISH] } }
         ]
       }
       orderBy: createdAt_DESC
@@ -208,7 +208,7 @@ const ALL_VIDEOS_QUERY = gql`
             displayName
             avatar
           }
-          audio(where: { language_in: [VIETNAMESE] }) {
+          audio(where: { language_in: [VIETNAMESE, CZECH, ENGLISH] }) {
             id
             customThumbnail
             title
